@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+     xmlns:aop="http://www.springframework.org/schema/aop"
+     xsi:schemaLocation="
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd">
+
+ <bean id="defaultHandlerMapping" class="org.springframework.web.servlet.handler.BeanNameUrlHandlerMapping"/>
+
+  <bean id="sessMan" 
+        class="org.bedework.eventreg.spring.bus.SessionManager" 
+        scope="session">
+   <aop:scoped-proxy/>
+   <property name="eventregDb">
+      <ref bean="eventregDb"/>
+    </property>
+  </bean>
+
+  <bean name="/init.do"  
+        class="org.bedework.eventreg.spring.web.InitController"  
+        scope="session">
+    <aop:scoped-proxy/>
+    <property name="sessionManager">
+      <ref bean="sessMan"/>
+    </property>
+  </bean>
+
+ <bean id="eventregController"  
+       class="org.bedework.eventreg.spring.web.EventregController"  
+       scope="session">
+ <aop:scoped-proxy/>
+    <property name="sessionManager">
+      <ref bean="sessMan"/>
+    </property>
+  </bean>
+
+<bean id="outputCSVController"  
+      class="org.bedework.eventreg.spring.web.OutputCSVController"  
+      scope="session">
+ <aop:scoped-proxy/>
+    <property name="sessionManager">
+      <ref bean="sessMan"/>
+    </property>
+  </bean>
+
+  <bean id="superUserAgendaController"  class="org.bedework.eventreg.spring.web.SuperUserAgendaController"  scope="session">
+    <aop:scoped-proxy/>
+    <property name="sessionManager">
+      <ref bean="sessMan"/>
+    </property>
+  </bean>
+
+ <bean id="userAgendaController"  class="org.bedework.eventreg.spring.web.UserAgendaController"  scope="session">
+ <aop:scoped-proxy/>
+    <property name="sessionManager">
+      <ref bean="sessMan"/>
+    </property>
+  </bean>
+
+  <bean id="updateTicketController"  class="org.bedework.eventreg.spring.web.UpdateTicketController"  scope="session">
+  <aop:scoped-proxy/>
+    <property name="sessionManager">
+      <ref bean="sessMan"/>
+    </property>
+  </bean>
+
+  <bean id="removeTicketController"  class="org.bedework.eventreg.spring.web.RemoveTicketController"  scope="session">
+  <aop:scoped-proxy/>
+    <property name="sessionManager">
+      <ref bean="sessMan"/>
+    </property>
+  </bean>
+
+ <bean name="/userregSuccess.do"  class="org.bedework.eventreg.spring.web.UserregSuccessController" scope="session" >
+ <aop:scoped-proxy/>
+    <property name="sessionManager">
+      <ref bean="sessMan"/>
+    </property>
+  </bean>
+
+  <bean name="/confirm.do"  
+        class="org.bedework.eventreg.spring.web.ConfirmEmailRegistrationController"  
+        scope="session" >
+   <aop:scoped-proxy/>
+   <property name="sessionManager">
+      <ref bean="sessMan"/>
+    </property>
+  </bean>
+
+  <bean id="resendEmailConfirmationController"  
+        class="org.bedework.eventreg.spring.web.ResendEmailConfirmationController"  
+        scope="session" >
+   <aop:scoped-proxy/>
+   <property name="sessionManager">
+      <ref bean="sessMan"/>
+    </property>
+  </bean>
+
+  <bean id="authenticatedUrlMapping" 
+        class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+    <property name="interceptors">
+      <list>
+        <ref bean="initHandlers"/>
+      </list>
+    </property>
+    <property name="mappings">
+      <props>
+        <prop key="/eventreg.do">eventregController</prop>
+        <prop key="/userregalmost.do">userregAlmostController</prop>
+        <prop key="/userregalmost.do">userregResentController</prop>
+        <prop key="/agenda.do">userAgendaController</prop>
+        <prop key="/suagenda.do">superUserAgendaController</prop>
+        <prop key="/updateTicket.do">updateTicketController</prop>
+        <prop key="/removeTicket.do">removeTicketController</prop>
+        <prop key="/download.do">outputCSVController</prop>
+        <prop key="/resend.do">resendEmailConfirmationController</prop>
+      </props>
+    </property>
+  </bean>
+
+  <bean id="viewResolver" 
+        class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+    <property name="viewClass"><value>org.springframework.web.servlet.view.JstlView</value></property>
+    <property name="prefix"><value>/WEB-INF/jsp/</value></property>
+    <property name="suffix"><value>.jsp</value></property>
+  </bean>
+
+  <bean id="dataSource" 
+        class="org.springframework.jdbc.datasource.DriverManagerDataSource"  
+        scope="session">
+  <aop:scoped-proxy/>
+    <property name="driverClassName"><value>com.mysql.jdbc.Driver</value></property>
+    <property name="url">
+      <value>jdbc:mysql://serverurl:3306/empacreg</value>
+    </property>
+    <property name="username"><value>empacuser</value></property>
+    <property name="password"><value>$uperm@n</value></property>
+  </bean>
+
+  <bean id="eventregDb" 
+        class="org.bedework.eventreg.spring.db.EventregDb" 
+        scope="session">
+  <aop:scoped-proxy/>
+    <property name="dataSource">
+      <ref bean="dataSource"/>
+    </property>
+  </bean>
+
+  <bean id="initHandlers" 
+        class="edu.rpi.cct.spring.empacreg.web.InitHandlers"  
+        scope="session">
+  <aop:scoped-proxy/>
+    <property name="sessionManager">
+      <ref bean="sessMan"/>
+    </property>
+  </bean>
+</beans>
+

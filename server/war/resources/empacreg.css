@@ -1,0 +1,144 @@
+body {
+  font-family: Verdana, Arial, Helvetica, sans-serif;
+  font-size: 14px;
+  padding: 0;
+  margin: 0;
+  color: black;
+  background-color: #454545;
+}
+h1 {
+  font-size: 1.5em; margin: 0;
+}
+h3 {
+  font-size: 1.1em; margin: 3em 0 0 0;
+}
+h4 {
+  margin: 0;
+}
+p {
+  margin: 0 0 1em 0;
+}
+.box {
+  border-collapse: collapse;
+  padding: 14px;
+  width: 186px; /* 216 - 14 - 14 - 1 - 1 */
+  margin: auto;
+  color: black;
+  background-color: #ababab;
+}
+.wide1 {
+ width: 400px;
+}
+.wide2 {
+  width: 900px;
+  margin: 2em auto;
+  background-color: white;
+  color: black;
+}
+.rightLinks {
+  font-size: 0.8em;
+  text-align: right;
+  margin: -1em -1em 1em 1em;
+}
+.a {
+ color: black; background-color: #ffe;
+}
+.b {
+ color: black; background-color: #eee;
+}
+table {
+  width: 100%; font-size: 0.9em; margin: 0 0 1em 0;
+}
+th {
+  text-align: left;
+}
+td {
+  vertical-align: top;
+  white-space: nowrap;
+}
+form,
+p.superuserForm {
+  clear: both;
+}
+form .focus {
+  background: #ffc;
+}
+form .hover {
+  background: #ffc;
+}
+form#signin input {
+  width: 100px;
+}
+form#signin input.submit {
+  width: auto;
+}
+#message {
+  font-size: 0.8em;
+  color: black;
+  background-color: #ff3;
+  padding: 4px;
+  margin: 0 0 0.5em 0;
+}
+#userReg {
+  width: 400px;
+  margin: 2em auto;
+  padding: 2em;
+  color: black;
+  background-color: #ababab;
+}
+#userReg input {
+  width: 260px;
+}
+#userReg #rpi {
+  width: 20px;
+}
+#userReg #submit {
+  width: 120px;
+}
+#rpiTable td {
+  white-space: normal;
+  padding-right: 1em;
+}
+ul.errors {
+  width: 260px;
+  color: black;
+  background-color: #fdd;
+  padding: 2px;
+  margin: 0;
+}
+ul.errors li {
+  width: 260px;
+  white-space: normal;
+  list-style: none;
+  margin: 0;
+  padding: 2px;
+}
+#userInfo {
+  margin: 1em 0;
+}
+#empacInfo {
+  margin: 4em 0 0 0;
+  padding: 1em 0 0 0;
+  border-top: 1px solid #ccc;
+  font-size: 0.9em;
+}
+#empacInfo h3 {
+  margin: 0 0 1em 0;
+}
+.ticketInfo {
+}
+#deadlinePassed,
+#registrationFull {
+  font-size: 0.9em;
+}
+.msgUpdated {
+  text-align: right;
+  font-size: 0.8em;
+  margin-top: 1em;
+}
+.indent {
+  margin-left: 2em;
+}
+.strong {
+  font-weight: bold;
+}
