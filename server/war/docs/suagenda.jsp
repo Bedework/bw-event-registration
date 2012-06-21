@@ -1,6 +1,6 @@
-<%@ include file="/WEB-INF/jsp/include.jsp" %>
+<%@ include file="/docs/include.jsp" %>
 
-<%@ include file="head.jsp" %>
+<%@ include file="/docs/head.jsp" %>
 
     <c:if test="${sessMan.userInfo.type == 'superuser'}">
       <div class="box wide2">

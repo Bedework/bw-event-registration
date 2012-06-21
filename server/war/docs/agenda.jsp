@@ -1,6 +1,6 @@
-<%@ include file="/WEB-INF/jsp/include.jsp" %>
+<%@ include file="/docs/include.jsp" %>
 
-<%@ include file="head.jsp" %>
+<%@ include file="/docs/head.jsp" %>
 
   <div class="box wide2">
     <div class="rightLinks">

@@ -87,7 +87,7 @@ public class InitController implements Controller {
       }
 
       /* Set registrationFull to true or false */
-      int maxRegistrants = sessMan.getCurrEvent().getTotalRegistrants();
+      int maxRegistrants = sessMan.getCurrEvent().getMaxRegistrants();
       long curRegistrants = sessMan.getTicketCount();
       logger.debug("maxRegistrants: " + maxRegistrants);
       logger.debug("curRegistrants: " + curRegistrants);

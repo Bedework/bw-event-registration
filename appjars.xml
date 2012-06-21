@@ -16,29 +16,29 @@
     	
       <getJar lib="${org.bedework.temp.extrajars.dir}"
               libcache="${org.bedework.libcache.dir}"
-              name="bw-synch-common" version="${org.bedework.synch.version}"
+              name="bw-eventreg-common" version="${org.bedework.eventreg.version}"
               projecthome="${project.home}" />
       
       <getJar lib="${org.bedework.temp.extrajars.dir}"
               libcache="${org.bedework.libcache.dir}"
-              name="bw-synch" version="${org.bedework.synch.version}"
+              name="bw-eventreg" version="${org.bedework.eventreg.version}"
               projecthome="${project.home}" />
 
       <getJar lib="${org.bedework.temp.extrajars.dir}"
               libcache="${org.bedework.libcache.dir}"
-              name="bw-synchsvc" version="${org.bedework.synch.version}"
+              name="bw-eventregsvc" version="${org.bedework.eventreg.version}"
               projecthome="${project.home}" />
 
       <!-- ======================= Schema jars ============================= -->
 
       <getJar lib="${org.bedework.temp.extrajars.dir}"
               libcache="${org.bedework.libcache.dir}"
-              name="bw-exchangewsschema" version="${org.bedework.bwxml.version}"
+              name="bw-icalschema" version="${org.bedework.bwxml.version}"
               projecthome="${bedework.home}/../bwxml" />
 
       <getJar lib="${org.bedework.temp.extrajars.dir}"
               libcache="${org.bedework.libcache.dir}"
-              name="bw-synchwsschema" version="${org.bedework.bwxml.version}"
+              name="bw-calws-soapschema" version="${org.bedework.bwxml.version}"
               projecthome="${bedework.home}/../bwxml" />
 
       <!-- ====================== Bedework jars ============================ -->

@@ -52,12 +52,12 @@ public class EventregController implements Controller {
       Event currEvent = sessMan.getCurrEvent();
 
       int numTicketsRequested = sessMan.getTicketsRequested();
-      int totalTicketsAllowed = currEvent.getTotalRegistrants();
+      int maxTicketsAllowed = currEvent.getMaxRegistrants();
       long currentTicketCount = sessMan.getTicketCount();
 
       logger.debug("event registration start");
 
-      if ((numTicketsRequested + currentTicketCount) > totalTicketsAllowed) {
+      if ((numTicketsRequested + currentTicketCount) > maxTicketsAllowed) {
         sessMan.setRegistrationFull(true);
       }
 

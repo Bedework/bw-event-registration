@@ -1,4 +1,4 @@
-<%@ include file="/WEB-INF/jsp/include.jsp" %>
+<%@ include file="/docs/include.jsp" %>
 <%@ page contentType="application/vnd.ms-excel" %>
 <%response.setHeader("Content-disposition","attachment; filename=empacOpeningReg.csv"); %>
 event,date,time,location,ticketid,empacid,email,numtickets,type,comment,eventcreated,userid,rcsid,rin,fname,lname,street1,street2,city,state,zip,phone,country,usertype,rpi

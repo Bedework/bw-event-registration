@@ -1,6 +1,6 @@
-<%@ include file="/WEB-INF/jsp/include.jsp" %>
+<%@ include file="/docs/include.jsp" %>
 
-<%@ include file="head.jsp" %>
+<%@ include file="/docs/head.jsp" %>
 
   <c:choose>
     <c:when test="${sessMan.deadlinePassed}">

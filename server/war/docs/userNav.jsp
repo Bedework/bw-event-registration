@@ -1,4 +1,4 @@
-<%@ include file="/WEB-INF/jsp/include.jsp" %>
+<%@ include file="/docs/include.jsp" %>
 
       <div class="rightLinks">
         <c:choose>

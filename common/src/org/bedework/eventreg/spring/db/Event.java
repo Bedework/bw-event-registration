@@ -38,7 +38,7 @@ public class Event implements Comparable<Event> {
   private String summary;
   private String query;
   private int ticketsAllowed;
-  private int totalRegistrants;
+  private int maxRegistrants;
 
   /**
    * @return the href
@@ -113,15 +113,15 @@ public class Event implements Comparable<Event> {
   /**
    * @return total registrants?
    */
-  public int getTotalRegistrants() {
-    return totalRegistrants;
+  public int getMaxRegistrants() {
+    return maxRegistrants;
   }
 
   /**
    * @param val
    */
-  public void setTotalRegistrants(final int val) {
-    totalRegistrants = val;
+  public void setMaxRegistrants(final int val) {
+    maxRegistrants = val;
   }
 
   /**

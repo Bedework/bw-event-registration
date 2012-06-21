@@ -25,7 +25,7 @@
 
   <projectDefs name="event registration"
                version="${org.bedework.eventreg.version}" 
-               deployment-name="synch"
+               deployment-name="eventreg"
   />
 
   <import file="${project.home}/appjars.xml" />
@@ -54,11 +54,14 @@
     <property name="org.bedework.module.service.base"
               location="${project.home}/service" />
 
+    <property name="common.jar"
+              location="${dist.home}/bw-eventreg-common-${project.version}.jar" />
+
     <property name="server.jar"
               location="${dist.home}/bw-eventreg-${project.version}.jar" />
 
     <property name="service.jar"
-              location="${dist.home}/bw-eventreg-${project.version}.jar" />
+              location="${dist.home}/bw-eventregsvc-${project.version}.jar" />
   </target>
   
   <target name="build-init" depends="init">
@@ -109,10 +112,13 @@
     <getExtraJars/>
 
     <!-- ===============================================================
-         Build the callback web service war
+         Build the war
          =============================================================== -->
     
-    <forApp name="evenregwcb"
+    <property name="propval.app.login.directory"
+              location="${project.home}/resources/login" />
+    
+    <forApp name="eventreg"
             prefix="org.bedework.deploy"
             appPrefix="org.bedework.app"
             projectPrefix="org.bedework.project">

@@ -35,7 +35,7 @@ public class UpdateTicketController implements Controller {
 
       logger.debug("update ticket - super user type: " + sessMan.getSuperUser());
 
-      if (((numTickets + sessMan.getTicketCount()) <= currEvent.getTotalRegistrants()) ||
+      if (((numTickets + sessMan.getTicketCount()) <= currEvent.getMaxRegistrants()) ||
           (numTickets < sessMan.getUserTicketCount()) ||
           sessMan.getSuperUser()) {
           sessMan.updateTicketById(ticketId,

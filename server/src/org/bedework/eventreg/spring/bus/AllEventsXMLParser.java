@@ -109,9 +109,9 @@ public class AllEventsXMLParser extends DefaultHandler {
       currEvent.setEventType(content.trim());
     }
 
-    if (localName.equals("X-BEDEWORK-TOTAL-REGISTRANTS"))  {
+    if (localName.equals("X-BEDEWORK-MAX-REGISTRANTS"))  {
       content = contents.toString();
-      currEvent.setTotalRegistrants(new Integer(content.trim()).intValue());
+      currEvent.setMaxRegistrants(new Integer(content.trim()).intValue());
     }
 
     if (localName.equals("X-BEDEWORK-REGISTRATION-DEADLINE")) {
