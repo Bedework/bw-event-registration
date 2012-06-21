@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
  */
 
-package org.bedework.eventreg.spring.bus;
+package org.bedework.eventreg.bus;
 
 import org.bedework.eventreg.db.Event;
 
@@ -32,16 +32,18 @@ import org.xml.sax.helpers.XMLReaderFactory;
 
 import java.io.CharArrayWriter;
 import java.io.StringReader;
+import java.util.ArrayList;
 
-public class EventXMLParser extends DefaultHandler {
+public class AllEventsXMLParser extends DefaultHandler {
   protected final Log logger = LogFactory.getLog(getClass());
   private boolean inStart = false;
 
   Event currEvent;
+  ArrayList<Event> allEvents = new ArrayList<Event>();
 
   private CharArrayWriter contents = new CharArrayWriter();
 
-  public EventXMLParser() {
+  public AllEventsXMLParser() {
     logger.info("Starting XML Parser");
   }
 
@@ -49,12 +51,11 @@ public class EventXMLParser extends DefaultHandler {
   public void startElement(final String namespaceURI,
                            final String localName,
                            final String qName,
-                           final Attributes attr ) throws SAXException {
+                           final Attributes attr) throws SAXException {
     contents.reset();
 
-    if (localName.equals( "event")) {
+    if (localName.equals("event")) {
       logger.info("Event Parser - found properties");
-      inStart = false;
       currEvent = new Event();
     }
 
@@ -67,19 +68,13 @@ public class EventXMLParser extends DefaultHandler {
   @Override
   public void endElement(final String namespaceURI,
                          final String localName,
-                         final String qName ) throws SAXException {
+                         final String qName) throws SAXException {
+
     String content = "";
 
-    // set content
-
-    if (localName.equals("recurrenceId")) {
+    if (localName.equals("guid")) {
       content = contents.toString();
-      currEvent.setRecurrenceId(content.trim());
-    }
-
-    if (localName.equals("path")) {
-      content = contents.toString();
-      currEvent.setCalPath(content.trim());
+      currEvent.setUid(content.trim());
     }
 
     if (localName.equals("summary")) {
@@ -88,7 +83,6 @@ public class EventXMLParser extends DefaultHandler {
     }
 
     if (inStart) {
-
       if (localName.equals("longdate")) {
         content = contents.toString();
         currEvent.setDate(content.trim());
@@ -103,7 +97,6 @@ public class EventXMLParser extends DefaultHandler {
         content = contents.toString();
         currEvent.setUtc(content.trim());
       }
-
     }
 
     if (localName.equals("address")) {
@@ -132,12 +125,14 @@ public class EventXMLParser extends DefaultHandler {
     }
 
     // reset sections when out of a section block
-    if ( localName.equals("start") ) {
+    if (localName.equals("start")) {
       inStart = false;
     }
 
-    if ( localName.equals("event") ) {
+    if (localName.equals("event") ) {
+      allEvents.add(currEvent);
     }
+
   }
 
   @Override
@@ -147,13 +142,12 @@ public class EventXMLParser extends DefaultHandler {
     contents.write( ch, start, length );
   }
 
-  public Event getEvent() {
-    return currEvent;
+  public ArrayList<Event> getEvents()  {
+    return allEvents;
   }
 
   public String Parse(final String xmlDoc) {
     try {
-
       // Create SAX 2 parser...
       XMLReader xr = XMLReaderFactory.createXMLReader();
 
@@ -162,13 +156,12 @@ public class EventXMLParser extends DefaultHandler {
       xr.setContentHandler(this);
 
       // Parse the file...
-      xr.parse( new InputSource(new StringReader(xmlDoc)));
-    } catch (Exception e) {
+      xr.parse(new InputSource(new StringReader( xmlDoc )));
+    } catch (Exception e)  {
       e.printStackTrace();
       logger.info(e);
     }
 
     return "";
   }
-
 }

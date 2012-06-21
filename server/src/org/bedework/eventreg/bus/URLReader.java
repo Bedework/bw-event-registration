@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
  */
 
-package org.bedework.eventreg.spring.bus;
+package org.bedework.eventreg.bus;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;

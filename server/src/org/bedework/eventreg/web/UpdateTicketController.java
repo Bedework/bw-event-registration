@@ -1,7 +1,7 @@
 package org.bedework.eventreg.web;
 
+import org.bedework.eventreg.bus.SessionManager;
 import org.bedework.eventreg.db.Event;
-import org.bedework.eventreg.spring.bus.SessionManager;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
