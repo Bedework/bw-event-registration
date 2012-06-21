@@ -16,9 +16,8 @@ KIND, either express or implied. See the License for the
 specific language governing permissions and limitations
 under the License.
  */
-package org.bedework.eventreg.spring.web;
+package org.bedework.eventreg.web;
 
-import org.bedework.eventreg.db.Event;
 import org.bedework.eventreg.db.Registration;
 import org.bedework.eventreg.spring.bus.SessionManager;
 
@@ -38,40 +37,32 @@ import javax.servlet.http.HttpServletResponse;
  * @author douglm
  *
  */
-public class SuperUserAgendaController implements Controller {
-
+public class UserAgendaController implements Controller {
   protected final Log logger = LogFactory.getLog(getClass());
 
   private SessionManager sessMan;
 
   @Override
-  public ModelAndView handleRequest(final HttpServletRequest request, final HttpServletResponse response) throws Exception {
-    logger.debug("SuperUserAgendaController entry");
+  public ModelAndView handleRequest(final HttpServletRequest request,
+                                    final HttpServletResponse response) throws Exception {
+    logger.debug("UserAgendaController entry");
 
-    if (!sessMan.getSuperUser()) {
-      logger.warn("Non superuser attempted to access SuperUserAgenda.");
-      return new ModelAndView("error");
-    }
+    logger.debug("UserAgendaController - " + sessMan.getCurrentUser());
+
+    TreeSet<Registration> regs = new TreeSet<Registration>();
 
     try {
-      Event ev = sessMan.getCurrEvent();
-
-      TreeSet<Registration> regs = new TreeSet<Registration>();
-
-      for (Registration reg: sessMan.getRegistrationsByHref(ev.getHref())) {
-        reg.setEvent(ev);
+      for (Registration reg: sessMan.getRegistrationsByUser(sessMan.getCurrentUser())) {
+        reg.setEvent(sessMan.retrieveEvent(reg));
 
         regs.add(reg);
       }
 
       Map myModel = new HashMap();
-      myModel.put("suserAgenda", regs);
+      myModel.put("userAgenda", regs);
       myModel.put("sessMan", sessMan);
 
-      return new ModelAndView("suagenda", myModel);
-    } catch (Exception e) {
-      logger.error(this, e);
-      throw e;
+      return new ModelAndView("agenda", myModel);
     } catch (Throwable t) {
       logger.error(this, t);
       throw new Exception(t);

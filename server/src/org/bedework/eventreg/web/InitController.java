@@ -16,7 +16,7 @@ KIND, either express or implied. See the License for the
 specific language governing permissions and limitations
 under the License.
  */
-package org.bedework.eventreg.spring.web;
+package org.bedework.eventreg.web;
 
 import org.bedework.eventreg.db.Event;
 import org.bedework.eventreg.spring.bus.EventXMLParser;

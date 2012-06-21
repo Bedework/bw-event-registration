@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
  */
 
-package org.bedework.eventreg.spring.web;
+package org.bedework.eventreg.web;
 
 import org.bedework.eventreg.db.Registration;
 import org.bedework.eventreg.spring.bus.SessionManager;
