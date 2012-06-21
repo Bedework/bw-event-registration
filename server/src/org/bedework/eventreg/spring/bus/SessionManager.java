@@ -19,10 +19,10 @@ under the License.
 
 package org.bedework.eventreg.spring.bus;
 
-import org.bedework.eventreg.spring.db.Event;
-import org.bedework.eventreg.spring.db.EventregDb;
-import org.bedework.eventreg.spring.db.Registration;
-import org.bedework.eventreg.spring.db.SysInfo;
+import org.bedework.eventreg.db.Event;
+import org.bedework.eventreg.db.EventregDb;
+import org.bedework.eventreg.db.Registration;
+import org.bedework.eventreg.db.SysInfo;
 
 import edu.rpi.sss.util.Util;
 

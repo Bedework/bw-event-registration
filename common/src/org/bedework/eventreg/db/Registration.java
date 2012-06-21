@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
  */
 
-package org.bedework.eventreg.spring.db;
+package org.bedework.eventreg.db;
 
 
 

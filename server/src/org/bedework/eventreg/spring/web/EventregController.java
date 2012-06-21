@@ -19,8 +19,8 @@ under the License.
 
 package org.bedework.eventreg.spring.web;
 
+import org.bedework.eventreg.db.Event;
 import org.bedework.eventreg.spring.bus.SessionManager;
-import org.bedework.eventreg.spring.db.Event;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
