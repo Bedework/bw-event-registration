@@ -30,7 +30,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import java.sql.Timestamp;
-import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
@@ -55,6 +54,10 @@ public class SessionManager  {
    */
   public static final String reqparComment = "comment";
 
+  /** Request parameter - href
+   */
+  public static final String reqparHref = "href";
+
   /** Request parameter - number of tickets
    */
   public static final String reqparNumtickets = "numtickets";
@@ -74,6 +77,8 @@ public class SessionManager  {
 
   private String message = "";
 
+  private BwConnector cnctr;
+
   /**
    *
    */
@@ -89,6 +94,8 @@ public class SessionManager  {
       this.db = db;
 
       setSysInfo(db.getSys());
+
+      cnctr = new BwConnector(getSysInfo().getWsdlUri());
     } catch (Throwable t) {
       logger.error(this, t);
       throw new Exception(t);
@@ -205,10 +212,6 @@ public class SessionManager  {
     db.update(reg);
 
     return true;
-  }
-
-  public String getURL(final String url) throws Throwable {
-    return URLReader.read(url);
   }
 
   /**
@@ -510,13 +513,27 @@ public class SessionManager  {
   }
 
   /**
+   * @return href or null for no parameter
+   */
+  public String getHref() {
+    return getReqPar(reqparHref);
+  }
+
+  /**
    * @return type or null for no parameter
    */
   public String getType() {
     return getReqPar(reqparType);
   }
 
-  private HashMap<String, Event> events = new HashMap<String, Event>();
+  /**
+   * @param href
+   * @return event
+   * @throws Throwable
+   */
+  public Event retrieveEvent(final String href) throws Throwable {
+    return cnctr.getEvent(href);
+  }
 
   /**
    * @param reg
@@ -524,12 +541,6 @@ public class SessionManager  {
    * @throws Throwable
    */
   public Event retrieveEvent(final Registration reg) throws Throwable {
-//    EventXMLParser ep = new EventXMLParser();
-  //  ep.Parse(urltext);
-    //Event ev = ep.getEvent();
-
-    // events.put(reg.getHref(), ev);
-
-    return null;
+    return cnctr.getEvent(reg.getEventHref());
   }
 }

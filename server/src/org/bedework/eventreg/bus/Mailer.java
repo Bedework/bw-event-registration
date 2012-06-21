@@ -16,7 +16,6 @@ KIND, either express or implied. See the License for the
 specific language governing permissions and limitations
 under the License.
  */
-
 package org.bedework.eventreg.bus;
 
 import java.util.Properties;
@@ -28,7 +27,19 @@ import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
+/**
+ * @author douglm
+ *
+ */
 public class Mailer {
+  /**
+   * @param recipients
+   * @param subject
+   * @param message
+   * @param from
+   * @param id
+   * @throws MessagingException
+   */
   public static void postMail( final String recipients[ ],
                                final String subject,
                                final String message ,

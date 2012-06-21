@@ -115,5 +115,18 @@
         <version>${bedeworkDavutilVersion}</version>
         <scope>provided</scope>
       </dependency>
+      
+      <dependency>
+        <groupId>org.bedework.bwxml</groupId>
+        <artifactId>bw-icalschema</artifactId>
+        <version>${bedeworkBwxmlVersion}</version>
+      </dependency>
+          
+      <dependency>
+        <groupId>org.bedework.bwxml</groupId>
+        <artifactId>bw-calws-soapschema</artifactId>
+        <version>${bedeworkBwxmlVersion}</version>
+        <scope>provided</scope>
+      </dependency>
     </dependencies>
 </project>

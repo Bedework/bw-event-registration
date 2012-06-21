@@ -18,7 +18,6 @@ under the License.
  */
 package org.bedework.eventreg.web;
 
-import org.bedework.eventreg.bus.AllEventsXMLParser;
 import org.bedework.eventreg.bus.SessionManager;
 import org.bedework.eventreg.db.Registration;
 
@@ -39,14 +38,6 @@ import javax.servlet.http.HttpServletResponse;
  *
  */
 public class OutputCSVController implements Controller {
-  /**   */
-  public final static String EVENTINFOURL =
-      "http://events.rpi.edu/main/listEvents.do" +
-         "?start=2009-12-04" +
-          "&end=2009-12-07" +
-          "&setappvar=creator(agrp_EMPACSpecial)" +
-          "&skinName=empacreg";
-
   protected final Log logger = LogFactory.getLog(getClass());
 
   private SessionManager sessMan;
@@ -62,11 +53,6 @@ public class OutputCSVController implements Controller {
     }
 
     try {
-      String urltext = sessMan.getURL(EVENTINFOURL);
-
-      AllEventsXMLParser aep = new AllEventsXMLParser();
-      aep.Parse(urltext);
-
       TreeSet<Registration> regs = new TreeSet<Registration>();
 
       for (Registration reg: sessMan.getAllRegistrations()) {

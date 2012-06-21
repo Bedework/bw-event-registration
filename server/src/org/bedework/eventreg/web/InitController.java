@@ -18,7 +18,6 @@ under the License.
  */
 package org.bedework.eventreg.web;
 
-import org.bedework.eventreg.bus.EventXMLParser;
 import org.bedework.eventreg.bus.SessionManager;
 import org.bedework.eventreg.db.Event;
 
@@ -41,8 +40,6 @@ import javax.servlet.http.HttpServletResponse;
  *
  */
 public class InitController implements Controller {
-  /** */
-  public final static String EVENTINFOURL = "http://events.rpi.edu/event/eventView.do";
   protected final Log logger = LogFactory.getLog(getClass());
 
   private SessionManager sessMan;
@@ -53,31 +50,12 @@ public class InitController implements Controller {
     try {
       logger.debug("Init Controller entry");
 
-      String queryString = request.getQueryString();
+      String href = sessMan.getHref();
       sessMan.setMessage("");
 
-      if (queryString != null) {
-        logger.debug("Init Controller  - query string: " +
-            EVENTINFOURL +
-            "?" +
-            queryString +
-            "&skinName=empacreg");
-
-        String urltext;
-
-        urltext = sessMan.getURL(EVENTINFOURL +
-                                 "?" +
-                                 queryString +
-            "&skinName=empacreg");
-
-        logger.debug("Init Controller  -  got event xml ");
-
-        EventXMLParser ep = new EventXMLParser();
-        ep.Parse(urltext);
-        Event currEvent = ep.getEvent();
-        currEvent.setQuery(queryString);
+      if (href != null) {
+        Event currEvent = sessMan.retrieveEvent(href);
         sessMan.setCurrEvent(currEvent);
-        currEvent.setUid(request.getParameter("guid"));
       } else {
         logger.debug("Init Controller  - getting event from session");
         if (sessMan.getCurrEvent() == null) {
@@ -87,14 +65,14 @@ public class InitController implements Controller {
       }
 
       /* Set registrationFull to true or false */
-      int maxRegistrants = sessMan.getCurrEvent().getMaxRegistrants();
+      int maxRegistrants = sessMan.getCurrEvent().getMaxTickets();
       long curRegistrants = sessMan.getTicketCount();
       logger.debug("maxRegistrants: " + maxRegistrants);
       logger.debug("curRegistrants: " + curRegistrants);
       sessMan.setRegistrationFull(curRegistrants >= maxRegistrants);
 
       DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-      Date deadline = formatter.parse(sessMan.getCurrEvent().getRegDeadline());
+      Date deadline = formatter.parse(sessMan.getCurrEvent().getRegistrationEnd());
       Date now = new Date();
       if (now.before(deadline)) {
         sessMan.setDeadlinePassed(false);

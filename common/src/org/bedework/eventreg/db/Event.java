@@ -19,26 +19,182 @@ under the License.
 
 package org.bedework.eventreg.db;
 
+import edu.rpi.cmt.calendar.XcalUtil;
+import edu.rpi.cmt.calendar.XcalUtil.TzGetter;
+import edu.rpi.cmt.timezones.Timezones;
+
+import net.fortuna.ical4j.model.TimeZone;
+
+import ietf.params.xml.ns.icalendar_2.ArrayOfProperties;
+import ietf.params.xml.ns.icalendar_2.BaseComponentType;
+import ietf.params.xml.ns.icalendar_2.BasePropertyType;
+import ietf.params.xml.ns.icalendar_2.DateDatetimePropertyType;
+import ietf.params.xml.ns.icalendar_2.DtstartPropType;
+import ietf.params.xml.ns.icalendar_2.IntegerPropertyType;
+import ietf.params.xml.ns.icalendar_2.LocationPropType;
+import ietf.params.xml.ns.icalendar_2.RecurrenceIdPropType;
+import ietf.params.xml.ns.icalendar_2.SummaryPropType;
+import ietf.params.xml.ns.icalendar_2.TextPropertyType;
+import ietf.params.xml.ns.icalendar_2.UidPropType;
+import ietf.params.xml.ns.icalendar_2.XBedeworkMaxTicketsPerUserPropType;
+import ietf.params.xml.ns.icalendar_2.XBedeworkMaxTicketsPropType;
+import ietf.params.xml.ns.icalendar_2.XBedeworkRegistrationEndPropType;
+import ietf.params.xml.ns.icalendar_2.XBedeworkRegistrationStartPropType;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.xml.bind.JAXBElement;
 
 /**
  * @author douglm
  *
  */
 public class Event implements Comparable<Event> {
+  private BaseComponentType comp;
   private String href;
-  private String uid;
-  private String calPath;
-  private String recurrenceId;
-  private String eventType;
-  private String regDeadline;
-  private String date;
-  private String utc;
-  private String time;
-  private String location;
-  private String summary;
-  private String query;
-  private int ticketsAllowed;
-  private int maxRegistrants;
+
+  /* Everything else derived from comp. */
+
+  private ArrayOfProperties properties;
+
+  private static TzGetter tzs = new TzGetter() {
+    @Override
+    public TimeZone getTz(final String id) throws Throwable {
+      return Timezones.getTz(id);
+    }
+  };
+
+  /** An object of this class is present if the property has been searched for
+   * in the icalendar data.
+   */
+  private static abstract class Pinfo <T extends BasePropertyType> {
+    List<T> props;
+
+    void addProperty(final T p) {
+      getProps().add(p);
+    }
+
+    List<T> getProps() {
+      if (props == null) {
+        props = new ArrayList<T>();
+      }
+
+      return props;
+    }
+
+    int size() {
+      return getProps().size();
+    }
+
+    T getProp() {
+      if (size() != 1) {
+        return null;
+      }
+
+      return getProps().get(0);
+    }
+
+    abstract String getValue() throws Throwable;
+  }
+
+  private static class TextPinfo extends Pinfo<TextPropertyType> {
+    @Override
+    String getValue() {
+      TextPropertyType p = getProp();
+      if (p == null) {
+        return null;
+      }
+
+      return p.getText();
+    }
+  }
+
+  private static class IntPinfo extends Pinfo<IntegerPropertyType> {
+    @Override
+    String getValue() {
+      IntegerPropertyType p = getProp();
+      if (p == null) {
+        return null;
+      }
+
+      return String.valueOf(p.getInteger());
+    }
+
+    public Integer getInt() {
+      IntegerPropertyType p = getProp();
+      if (p == null) {
+        return null;
+      }
+
+      return p.getInteger().intValue();
+    }
+  }
+
+  private static class DateDatetimePinfo extends Pinfo<DateDatetimePropertyType> {
+    private String utc;
+
+    private XcalUtil.DtTzid dt;
+
+    @Override
+    String getValue() throws Throwable {
+      if (utc != null) {
+        return utc;
+      }
+
+      DateDatetimePropertyType p = getProp();
+      if (p == null) {
+        return null;
+      }
+
+      if (p.getDateTime() != null) {
+        utc = XcalUtil.getUTC(p, tzs);
+        return utc;
+      }
+
+      utc = XcalUtil.getIcalFormatDateTime(p.getDate()) + "T00:00:00";
+      return utc;
+    }
+
+    XcalUtil.DtTzid getDt() throws Throwable {
+      if (dt != null) {
+        return dt;
+      }
+
+      DateDatetimePropertyType p = getProp();
+      if (p == null) {
+        return null;
+      }
+
+      if (p.getDateTime() == null) {
+        return null;
+      }
+
+      dt = XcalUtil.getDtTzid(p);
+      return dt;
+    }
+  }
+
+  private TextPinfo uid;
+  private DateDatetimePinfo recurrenceId;
+  private IntPinfo ticketsAllowed;
+  private IntPinfo maxRegistrants;
+  private TextPinfo regDeadline;
+  private TextPinfo location;
+  private TextPinfo summary;
+  private DateDatetimePinfo dtStart;
+
+  /**
+   * @param comp
+   * @param href
+   */
+  public Event(final BaseComponentType comp,
+               final String href) {
+    this.comp = comp;
+    this.href = href;
+
+    properties = this.comp.getProperties();
+  }
 
   /**
    * @return the href
@@ -48,194 +204,197 @@ public class Event implements Comparable<Event> {
   }
 
   /**
-   * @param val
-   */
-  public void setHref(final String val) {
-    href = val;
-  }
-
-  /**
    * @return the uid
+   * @throws Throwable
    */
-  public String getUid() {
-    return uid;
-  }
+  public String getUid() throws Throwable {
+    if (uid == null) {
+      uid = new TextPinfo();
+      uid.addProperty((UidPropType)findProperty(UidPropType.class));
+    }
 
-  /**
-   * @param val
-   */
-  public void setUid(final String val) {
-    uid = val;
-  }
-
-  /**
-   * @return calendar path for the event
-   */
-  public String getCalPath() {
-    return calPath;
-  }
-
-  /**
-   * @param val
-   */
-  public void setCalPath(final String val) {
-    calPath = val;
+    return uid.getValue();
   }
 
   /**
    * @return recurrence id or null
+   * @throws Throwable
    */
-  public String getRecurrenceId() {
-    return recurrenceId;
+  public String getRecurrenceId() throws Throwable {
+    if (recurrenceId == null) {
+      recurrenceId = new DateDatetimePinfo();
+      recurrenceId.addProperty((RecurrenceIdPropType)findProperty(RecurrenceIdPropType.class));
+    }
+
+    return recurrenceId.getValue();
   }
 
   /**
-   * @param val
+   * @return max number of tickets per user
    */
-  public void setRecurrenceId(final String val) {
-    recurrenceId = val;
+  public int getMaxTicketsPerUser() {
+    if (ticketsAllowed == null) {
+      ticketsAllowed = new IntPinfo();
+      ticketsAllowed.addProperty((XBedeworkMaxTicketsPerUserPropType)findProperty(XBedeworkMaxTicketsPerUserPropType.class));
+    }
+
+    Integer i = ticketsAllowed.getInt();
+    if (i == null) {
+      return -1;
+    }
+
+    return  i;
   }
 
   /**
-   * @return max number of tickets
+   * @return max tickets for the whole event?
    */
-  public int getTicketsAllowed() {
-    return ticketsAllowed;
+  public int getMaxTickets() {
+    if (maxRegistrants == null) {
+      maxRegistrants = new IntPinfo();
+      maxRegistrants.addProperty((XBedeworkMaxTicketsPropType)findProperty(XBedeworkMaxTicketsPropType.class));
+    }
+
+    Integer i = maxRegistrants.getInt();
+    if (i == null) {
+      return -1;
+    }
+
+    return  i;
   }
 
   /**
-   * @param val
+   * @return the end of registration
    */
-  public void setTicketsAllowed(final int val) {
-    ticketsAllowed = val;
+  public String getRegistrationEnd() {
+    if (regDeadline == null) {
+      regDeadline = new TextPinfo();
+      regDeadline.addProperty((XBedeworkRegistrationEndPropType)findProperty(XBedeworkRegistrationEndPropType.class));
+    }
+
+    return regDeadline.getValue();
   }
 
   /**
-   * @return total registrants?
+   * @return the start of registration
    */
-  public int getMaxRegistrants() {
-    return maxRegistrants;
-  }
+  public String getRegistrationStart() {
+    if (regDeadline == null) {
+      regDeadline = new TextPinfo();
+      regDeadline.addProperty((XBedeworkRegistrationStartPropType)findProperty(XBedeworkRegistrationStartPropType.class));
+    }
 
-  /**
-   * @param val
-   */
-  public void setMaxRegistrants(final int val) {
-    maxRegistrants = val;
-  }
-
-  /**
-   * @return event type ?
-   */
-  public String getEventType() {
-    return eventType;
-  }
-
-  /**
-   * @param val
-   */
-  public void setEventType(final String val) {
-    eventType = val;
-  }
-
-  /**
-   * @return the deadline
-   */
-  public String getRegDeadline() {
-    return regDeadline;
-  }
-
-  /**
-   * @param val
-   */
-  public void setRegDeadline(final String val) {
-    regDeadline = val;
-  }
-
-  /**
-   * @return date part
-   */
-  public String getDate() {
-    return date;
-  }
-
-  /**
-   * @param val
-   */
-  public void setDate(final String val) {
-    date = val;
-  }
-
-  /**
-   * @return time part
-   */
-  public String getTime() {
-    return time;
-  }
-
-  /**
-   * @param val
-   */
-  public void setTime(final String val) {
-    time = val;
-  }
-
-  /**
-   * @return utc form of time
-   */
-  public String getUtc() {
-    return utc;
-  }
-
-  /**
-   * @param val
-   */
-  public void setUtc(final String val) {
-    utc = val;
+    return regDeadline.getValue();
   }
 
   /**
    * @return the location
    */
   public String getLocation() {
-    return location;
-  }
+    if (location == null) {
+      location = new TextPinfo();
+      location.addProperty((LocationPropType)findProperty(LocationPropType.class));
+    }
 
-  /**
-   * @param val
-   */
-  public void setLocation(final String val) {
-    location = val;
+    return location.getValue();
   }
 
   /**
    * @return summary for event
    */
   public String getSummary() {
-    return summary;
+    if (summary == null) {
+      summary = new TextPinfo();
+      summary.addProperty((SummaryPropType)findProperty(SummaryPropType.class));
+    }
+
+    return summary.getValue();
   }
 
   /**
-   * @param val
+   * @return recurrence id or null
+   * @throws Throwable
    */
-  public void setSummary(final String val) {
-    summary = val;
-  }
+  public DtstartPropType getDtStartProp() throws Throwable {
+    if (dtStart == null) {
+      dtStart = new DateDatetimePinfo();
+      dtStart.addProperty((DtstartPropType)findProperty(DtstartPropType.class));
+    }
 
-  /** XXX
-   * @return what?
-   */
-  public String getQuery() {
-    return query;
+    return (DtstartPropType)dtStart.getProp();
   }
 
   /**
-   * @param val
+   * @return date part
+   * @throws Throwable
    */
-  public void setQuery(final String val) {
-    query = val;
+  public String getDate() throws Throwable {
+    getDtStartProp();
+
+    XcalUtil.DtTzid dt = dtStart.getDt();
+
+    if (dt == null) {
+      return null;
+    }
+
+    return dt.dt.substring(0, 8);
   }
 
+  /**
+   * @return time part
+   * @throws Throwable
+   */
+  public String getTime() throws Throwable {
+    getDtStartProp();
+
+    XcalUtil.DtTzid dt = dtStart.getDt();
+
+    if ((dt == null) || dt.dateOnly) {
+      return null;
+    }
+
+    return dt.dt.substring(9);
+  }
+
+  /**
+   * @return tzid
+   * @throws Throwable
+   */
+  public String getTzid() throws Throwable {
+    getDtStartProp();
+
+    XcalUtil.DtTzid dt = dtStart.getDt();
+
+    if ((dt == null) || dt.dateOnly) {
+      return null;
+    }
+
+    return dt.tzid;
+  }
+
+  /**
+   * @return utc form of time
+   * @throws Throwable
+   */
+  public String getUtc() throws Throwable {
+    getDtStartProp();
+
+    return dtStart.getValue();
+  }
+
+  /* ====================================================================
+   *                   private methods
+   * ==================================================================== */
+
+  private BasePropertyType findProperty(final Class cl) {
+    for (JAXBElement<? extends BasePropertyType> p: properties.getBasePropertyOrTzid()) {
+      if (p.getValue().getClass().equals(cl)) {
+        return p.getValue();
+      }
+    }
+
+    return null;
+  }
 
   /* ====================================================================
    *                   Object methods
@@ -243,13 +402,17 @@ public class Event implements Comparable<Event> {
 
   @Override
   public int compareTo(final Event that) {
-    int c = getUtc().compareTo(that.getUtc());
+    try {
+      int c = getUtc().compareTo(that.getUtc());
 
-    if (c != 0) {
-      return c;
+      if (c != 0) {
+        return c;
+      }
+
+      return getHref().compareTo(that.getHref());
+    } catch (Throwable t) {
+      throw new RuntimeException(t);
     }
-
-    return getHref().compareTo(that.getHref());
   }
 
   @Override

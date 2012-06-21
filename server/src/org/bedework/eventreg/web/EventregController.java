@@ -52,7 +52,7 @@ public class EventregController implements Controller {
       Event currEvent = sessMan.getCurrEvent();
 
       int numTicketsRequested = sessMan.getTicketsRequested();
-      int maxTicketsAllowed = currEvent.getMaxRegistrants();
+      int maxTicketsAllowed = currEvent.getMaxTickets();
       long currentTicketCount = sessMan.getTicketCount();
 
       logger.debug("event registration start");
@@ -62,7 +62,7 @@ public class EventregController implements Controller {
       }
 
       DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-      Date deadline = formatter.parse(sessMan.getCurrEvent().getRegDeadline());
+      Date deadline = formatter.parse(sessMan.getCurrEvent().getRegistrationEnd());
       Date now = new Date();
 
       if (now.before(deadline)) {
@@ -87,7 +87,7 @@ public class EventregController implements Controller {
         return new ModelAndView("init", myModel);
       }
 
-      if ((numTicketsRequested > currEvent.getTicketsAllowed()) &&
+      if ((numTicketsRequested > currEvent.getMaxTicketsPerUser()) &&
           !sessMan.getSuperUser()) {
         sessMan.setMessage("Number of tickets requested exceeds number of tickets allowed.");
         logger.debug("Number of tickets requested exceeds number of tickets allowed.");

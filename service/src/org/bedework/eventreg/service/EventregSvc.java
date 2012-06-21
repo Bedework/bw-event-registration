@@ -220,6 +220,7 @@ public class EventregSvc implements EventregSvcMBean {
   /* (non-Javadoc)
    * @see org.bedework.dumprestore.BwDumpRestoreMBean#schema()
    */
+  @SuppressWarnings("deprecation")
   @Override
   public String schema() {
     String result = "Export complete: check logs";

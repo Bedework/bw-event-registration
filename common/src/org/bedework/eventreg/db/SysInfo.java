@@ -33,6 +33,10 @@ import java.util.TreeSet;
 public class SysInfo extends DbItem<SysInfo> implements PropertiesEntity {
   private String rootUsers;
 
+  /** Name for wsdl uri property
+   */
+  public static final String wsdlUriProp = "Eventreg:wsdlUri";
+
   private Set<BwProperty> properties;
 
   /**
@@ -262,6 +266,20 @@ public class SysInfo extends DbItem<SysInfo> implements PropertiesEntity {
     }
 
     return prop.getValue();
+  }
+
+  /**
+   * @return wsdl uri
+   */
+  public String getWsdlUri() {
+    return getProperty(wsdlUriProp);
+  }
+
+  /**
+   * @param val
+   */
+  public void setWsdlUri(final String val) {
+    setProperty(wsdlUriProp, val);
   }
 
   /* ====================================================================
