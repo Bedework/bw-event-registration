@@ -1,7 +1,24 @@
+/* ********************************************************************
+Licensed to Jasig under one or more contributor license
+agreements. See the NOTICE file distributed with this work
+for additional information regarding copyright ownership.
+Jasig licenses this file to you under the Apache License,
+Version 2.0 (the "License"); you may not use this file
+except in compliance with the License. You may obtain a
+copy of the License at:
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on
+an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied. See the License for the
+specific language governing permissions and limitations
+under the License.
+ */
 package org.bedework.eventreg.spring.web;
 
 import org.bedework.eventreg.spring.bus.AllEventsXMLParser;
-import org.bedework.eventreg.spring.bus.Event;
 import org.bedework.eventreg.spring.bus.SessionManager;
 import org.bedework.eventreg.spring.db.Registration;
 
@@ -10,9 +27,9 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.Controller;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeSet;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -44,52 +61,22 @@ public class OutputCSVController implements Controller {
       return new ModelAndView("error");
     }
 
-    String urltext;
-
     try {
-      urltext = sessMan.getURL(EVENTINFOURL);
+      String urltext = sessMan.getURL(EVENTINFOURL);
 
       AllEventsXMLParser aep = new AllEventsXMLParser();
       aep.Parse(urltext);
 
-      HashMap<String, Event> eventInfoHash = new HashMap<String, Event>();
-
-      for (Event currEvent: aep.getEvents()) {
-        eventInfoHash.put(currEvent.getEventGUID(), currEvent);
-        logger.info(currEvent.getEventGUID());
-      }
-
-      ArrayList allRegistrationInfo = new ArrayList();
+      TreeSet<Registration> regs = new TreeSet<Registration>();
 
       for (Registration reg: sessMan.getAllRegistrations()) {
-        HashMap currRegistrationHash = new HashMap();
+        reg.setEvent(sessMan.retrieveEvent(reg));
 
-        String currGUID = reg.getUid();
-
-        currRegistrationHash.put("eventguid",currGUID);
-
-        Event eventInfo = eventInfoHash.get(currGUID);
-        currRegistrationHash.put("event", eventInfo.getEventSummary());
-        currRegistrationHash.put("date", eventInfo.getEventDateStr());
-        currRegistrationHash.put("time", eventInfo.getEventTimeStr());
-        currRegistrationHash.put("location", eventInfo.getEventLocation());
-
-  //      currRegistrationHash.put("ticketid", reg.get("id"));
-    //    currRegistrationHash.put("empacid", reg.get("eventid"));
-        currRegistrationHash.put("email", reg.getEmail());
-        currRegistrationHash.put("numtickets", reg.getNumTickets());
-        currRegistrationHash.put("type", reg.getType());
-        currRegistrationHash.put("comment", reg.getComment());
-        currRegistrationHash.put("eventcreated", reg.getCreated());
-
-
-  // ???      currRegistrationHash.put("rpi", reg.get("rpi"));
-
-        allRegistrationInfo.add(currRegistrationHash);
+        regs.add(reg);
       }
 
       Map myModel = new HashMap();
-      myModel.put("registrations", allRegistrationInfo);
+      myModel.put("registrations", regs);
 
       return new ModelAndView("csv", myModel);
     } catch (Exception e) {
@@ -101,6 +88,9 @@ public class OutputCSVController implements Controller {
     }
   }
 
+  /**
+   * @param sm
+   */
   public void setSessionManager(final SessionManager sm) {
     sessMan = sm;
   }

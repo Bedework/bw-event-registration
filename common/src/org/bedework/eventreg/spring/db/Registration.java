@@ -20,25 +20,60 @@ under the License.
 package org.bedework.eventreg.spring.db;
 
 
+
 /**
  * @author douglm
  *
  */
 public class Registration extends DbItem<Registration> {
+  private String ticketid;
+  private String authid;
   private String email;
-  private String uid;
-  private String queryStr;
-  private String eventid;
+  private String query;
+  private String eventHref;
   private int numTickets;
+  private int ticketsRequested;
   private String type;
   private String created;
   private String comment;
+
+  /* Non db fields */
+
+  private Event event;
 
   /**
    *
    */
   public Registration() {
 
+  }
+
+  /**
+   * @param val
+   */
+  public void setTicketid(final String val) {
+    ticketid = val;
+  }
+
+  /**
+   * @return ticketid
+   */
+  public String getTicketid() {
+    return ticketid;
+  }
+
+  /**
+   * @param val
+   */
+  public void setAuthid(final String val) {
+    authid = val;
+  }
+
+  /**
+   * @return authid
+   */
+  public String getAuthid() {
+    return authid;
   }
 
   /**
@@ -58,47 +93,33 @@ public class Registration extends DbItem<Registration> {
   /**
    * @param val
    */
-  public void setUid(final String val) {
-    uid = val;
+  public void setQuery(final String val) {
+    query = val;
   }
 
   /**
-   * @return uid
+   * @return query
    */
-  public String getUid() {
-    return uid;
+  public String getQuery() {
+    return query;
   }
 
   /**
    * @param val
    */
-  public void setQueryStr(final String val) {
-    queryStr = val;
+  public void setEventHref(final String val) {
+    eventHref = val;
   }
 
   /**
-   * @return queryStr
+   * @return eventHref
    */
-  public String getQueryStr() {
-    return queryStr;
+  public String getEventHref() {
+    return eventHref;
   }
 
   /**
-   * @param val
-   */
-  public void setEventid(final String val) {
-    eventid = val;
-  }
-
-  /**
-   * @return eventid
-   */
-  public String getEventid() {
-    return eventid;
-  }
-
-  /**
-   * @param val
+   * @param val - tickets allocated
    */
   public void setNumTickets(final int val) {
     numTickets = val;
@@ -109,6 +130,20 @@ public class Registration extends DbItem<Registration> {
    */
   public int getNumTickets() {
     return numTickets;
+  }
+
+  /**
+   * @param val - ticketsRequested
+   */
+  public void setTicketsRequested(final int val) {
+    ticketsRequested = val;
+  }
+
+  /**
+   * @return ticketsRequested
+   */
+  public int getTicketsRequested() {
+    return ticketsRequested;
   }
 
   /**
@@ -154,24 +189,36 @@ public class Registration extends DbItem<Registration> {
   }
 
   /* ====================================================================
+   *                   Non db fields
+   * ==================================================================== */
+
+  /**
+   * @param val
+   */
+  public void setEvent(final Event val) {
+    event = val;
+  }
+
+  /**
+   * @return event
+   */
+  public Event getEvent() {
+    return event;
+  }
+
+  /* ====================================================================
    *                   Object methods
    * The following are required for a db object.
    * ==================================================================== */
 
   @Override
   public int compareTo(final Registration that) {
-    int i = getEmail().compareTo(that.getEmail());
-
-    if (i != 0) {
-      return i;
-    }
-
-    return getUid().compareTo(that.getUid());
+    return getTicketid().compareTo(that.getTicketid());
   }
 
   @Override
   public int hashCode() {
-    return getEmail().hashCode() * getUid().hashCode();
+    return getTicketid().hashCode();
   }
 }
 

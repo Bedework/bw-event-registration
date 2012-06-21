@@ -1,77 +1,71 @@
 package org.bedework.eventreg.spring.web;
 
-import java.util.HashMap;
-import java.util.Map;
+import org.bedework.eventreg.spring.bus.SessionManager;
+import org.bedework.eventreg.spring.db.Event;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.Controller;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.springframework.beans.support.PagedListHolder;
 
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.Controller;
-import org.springframework.web.util.WebUtils;
-
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import org.bedework.eventreg.spring.bus.Event;
-import org.bedework.eventreg.spring.bus.SessionManager;
-import org.bedework.eventreg.spring.db.SysInfo;
-
-
+/**
+ * @author douglm
+ */
 public class UpdateTicketController implements Controller {
+  protected final Log logger = LogFactory.getLog(getClass());
+  private SessionManager sessMan;
 
-    protected final Log logger = LogFactory.getLog(getClass());
-    private SessionManager sessMan;
+  @Override
+  public ModelAndView handleRequest(final HttpServletRequest request, final HttpServletResponse response) throws Exception {
+    try {
+      String ticketId = sessMan.getTicketId();
+      int numTickets = sessMan.getTicketsRequested();
+      String comment = sessMan.getComment();
+      String type = sessMan.getType();
 
-    public void setSessionManager(SessionManager sm) {
-        sessMan = sm;
+      if (type == null) {
+        type = "normal";
       }
 
-    public ModelAndView handleRequest(HttpServletRequest request, HttpServletResponse response) throws Exception {
+      Event currEvent = sessMan.getCurrEvent();
 
-        int ticketId = Integer.parseInt(request.getParameter("id"));
-        int numTickets = Integer.parseInt(request.getParameter("qty"));
+      logger.debug("update ticket - super user type: " + sessMan.getSuperUser());
 
-        String comment = request.getParameter("comment");
-        if (comment == null) {
-            comment = "";
-        }
+      if (((numTickets + sessMan.getTicketCount()) <= currEvent.getTotalRegistrants()) ||
+          (numTickets < sessMan.getUserTicketCount()) ||
+          sessMan.getSuperUser()) {
+          sessMan.updateTicketById(ticketId,
+                                   numTickets,
+                                   comment,
+                                   type);
+          sessMan.setMessage("Ticket number " + ticketId + " updated.");
+      } else {
+        logger.info("registration is full");
+        sessMan.setMessage("Registration is full: you may only decrease or remove tickets.");
+      }
 
-        String type = request.getParameter("type");
-        if (type == null || type.equals("")) {
-            type = "normal";
-        }
-
-        Event currEvent = sessMan.getCurrEvent();
-        String userType = sessMan.getUserInfo().getType();
-        if (userType == null || userType.equals("")) {
-            userType = "confirmed";
-        }
-        logger.info("update ticket - user type: " + userType);
-
-        if (numTickets + sessMan.getTicketCount() <= currEvent.getTotalRegistrants() ||
-            numTickets < sessMan.getUserTicketCount() ||
-            userType.equals("superuser")) {
-            try {
-                sessMan.updateTicketById(ticketId,numTickets,comment,type);
-                sessMan.setMessage("Ticket number " + ticketId + " updated.");
-            } catch (Throwable t) {
-                logger.info(t);
-                sessMan.setMessage(t.getMessage());
-            }
-        } else {
-            logger.info("registration is full");
-            sessMan.setMessage("Registration is full: you may only decrease or remove tickets.");
-        }
-
-        if (userType.equals("superuser")) {
-            return new ModelAndView("forward:suagenda.do");
-        } else {
-            return new ModelAndView("forward:agenda.do");
-        }
+      if (sessMan.getSuperUser()) {
+        return new ModelAndView("forward:suagenda.do");
+      } else {
+        return new ModelAndView("forward:agenda.do");
+      }
+    } catch (Exception e) {
+      logger.error(this, e);
+      throw e;
+    } catch (Throwable t) {
+      logger.error(this, t);
+      throw new Exception(t);
     }
+  }
 
+  /**
+   * @param sm
+   */
+  public void setSessionManager(final SessionManager sm) {
+    sessMan = sm;
+  }
 }

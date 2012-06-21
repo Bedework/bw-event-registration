@@ -19,7 +19,7 @@ under the License.
 
 package org.bedework.eventreg.spring.bus;
 
-import org.bedework.eventreg.spring.db.EmpacregDao;
+import org.bedework.eventreg.spring.db.Event;
 import org.bedework.eventreg.spring.db.EventregDb;
 import org.bedework.eventreg.spring.db.Registration;
 import org.bedework.eventreg.spring.db.SysInfo;
@@ -29,31 +29,48 @@ import edu.rpi.sss.util.Util;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import java.sql.Timestamp;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 
+/**
+ * @author douglm
+ *
+ */
 public class SessionManager  {
   protected final Log logger = LogFactory.getLog(getClass());
+//  public final static String EVENTINFOURL = "http://events.rpi.edu/event/eventView.do";
 
   private EventregDb db;
-  private EmpacregDao dao;
 
   private String currentUser;
   private boolean superUser;
 
   private HttpServletRequest request;
 
+  /** Request parameter - comment
+   */
+  public static final String reqparComment = "comment";
+
   /** Request parameter - number of tickets
    */
   public static final String reqparNumtickets = "numtickets";
+
+  /** Request parameter - ticket id
+   */
+  public static final String reqparTicketId = "ticketid";
+
+  /** Request parameter - type
+   */
+  public static final String reqparType = "type";
 
   private SysInfo sys;
   private Event currEvent;
   private boolean deadlinePassed;
   private boolean registrationFull;
-  private String lastStatusMessage = "";
 
   private String message = "";
 
@@ -120,75 +137,149 @@ public class SessionManager  {
 
   */
 
+  /**
+   * @param val
+   */
   public void setCurrentUser(final String val) {
     currentUser = val;
   }
 
+  /**
+   * @return current authenticated user
+   */
   public String getCurrentUser() {
     return currentUser;
   }
 
+  /**
+   * @return true if current user is a super user
+   */
   public boolean getSuperUser() {
     return superUser;
   }
 
+  /**
+   * @param currEvent
+   */
   public void setCurrEvent(final Event currEvent) {
     this.currEvent = currEvent;
   }
 
+  /**
+   * @return event
+   */
   public Event getCurrEvent() {
     return  this.currEvent;
   }
 
-  public void removeTicketById(final int id) throws Throwable {
-    try {
-      dao.removeTicketById(id,uif.getEmail(),uif.getType());
-    }
-    catch (Throwable t) {
-      logger.info(t);
-      setMessage(t.getMessage());
-    }
+  /**
+   * @param reg
+   * @throws Throwable
+   */
+  public void removeRegistration(final Registration reg) throws Throwable {
+    db.delete(reg);
   }
 
-  public void updateTicketById(final int id, final int numTickets,
-                               final String comment,
-                               final String type) throws Throwable {
-    try {
-      dao.updateTicketById(id,uif.getEmail(),numTickets,comment,type,uif.getType());
-    }
-    catch (Throwable t) {
-      logger.info(t);
-      setMessage(t.getMessage());
-    }
-  }
+  /**
+   * @param ticketId
+   * @param numTickets
+   * @param comment
+   * @param regType
+   * @return true if found and updated
+   * @throws Throwable
+   */
+  public boolean updateTicketById(final String ticketId,
+                                  final int numTickets,
+                                  final String comment,
+                                  final String regType) throws Throwable {
+    Registration reg = db.getByid(ticketId);
 
-  public void setEventGUID(final String eventGUID) {
-    this.currEvent.setEventGUID(eventGUID);
+    if (reg == null) {
+      return false;
+    }
+
+    reg.setNumTickets(numTickets);
+    reg.setComment(comment);
+    reg.setType(regType);
+
+    db.update(reg);
+
+    return true;
   }
 
   public String getURL(final String url) throws Throwable {
     return URLReader.read(url);
   }
 
-  public int registerUserInEvent(final int numTickets,
-                                 final String comment,
-                                 final String regType,
-                                 final boolean superUser) {
-    dao.registerUserInEvent(uif.getEmail(),
-                            this.currEvent,
-                            numTickets,
-                            comment,
-                            regType,
-                            superUser);
-    return 0;
+  /**
+   * @param numTickets
+   * @param eventHref
+   * @param comment
+   * @param regType
+   * @param superUser
+   * @return ticketId for registration
+   * @throws Throwable
+   */
+  public String registerUserInEvent(final int numTickets,
+                                    final String eventHref,
+                                    final String comment,
+                                    final String regType,
+                                    final boolean superUser) throws Throwable {
+    Timestamp  sqlDate = new Timestamp(new java.util.Date().getTime());
+
+    logger.debug("Event details: " + getCurrentUser() + " " +
+        eventHref + " " +
+        regType);
+
+    /* we  let superusers register over and over, but not regular users */
+
+    Registration reg;
+    if (!superUser) {
+      reg = db.getUserRegistration(eventHref, getCurrentUser());
+
+      if (reg != null) {
+        reg.setNumTickets(numTickets);
+        reg.setComment(comment);
+        reg.setType(regType);
+
+        db.update(reg);
+
+        return reg.getTicketid();
+      }
+    }
+
+    /* Create new entry */
+
+    reg = new Registration();
+
+    reg.setAuthid(getCurrentUser());
+    reg.setComment(comment);
+    reg.setEventHref(eventHref);
+    reg.setNumTickets(numTickets);
+    reg.setCreated(sqlDate.toString());
+    reg.setTicketid(UUID.randomUUID().toString());
+
+    db.add(reg);
+
+    return reg.getTicketid();
   }
 
-  public boolean validateEmail(final String activationCode) {
-    return dao.validateEmail(activationCode);
+  /**
+   * @param user
+   * @return list of registrations
+   * @throws Throwable
+   */
+  public List<Registration> getRegistrationsByUser(final String user) throws Throwable {
+    return db.getByUser(user);
   }
 
-  public List<Map> getUserRegistrations(final String email) {
-    return dao.getUserRegistrations(email);
+  /**
+   * @param id
+   * @return referenced registration
+   * @throws Throwable
+   */
+  public Registration getRegistrationById(final String id) throws Throwable {
+    return db.getByid(id);
   }
 
   /**
@@ -199,61 +290,100 @@ public class SessionManager  {
     return db.getAllRegistrations();
   }
 
-  public List getRegistrations(final String eventGUID) {
-    return dao.getRegistrations(eventGUID);
+  /**
+   * @param href
+   * @return list of registrations
+   * @throws Throwable
+   */
+  public List<Registration> getRegistrationsByHref(final String href) throws Throwable {
+    return db.getByEvent(href);
   }
 
+  /**
+   * @return true if current registration is full
+   */
   public boolean getRegistrationFull() {
     return registrationFull;
   }
 
-  public void setRegistrationFull(final boolean registrationFull) {
-    this.registrationFull = registrationFull;
+  /**
+   * @param val
+   */
+  public void setRegistrationFull(final boolean val) {
+    registrationFull = val;
   }
 
-  public int getRegistrantCount() {
-    return dao.getRegistrantCount(this.currEvent.getEventGUID());
+  /**
+   * @return count of registration entries
+   * @throws Throwable
+   */
+  public long getRegistrantCount() throws Throwable {
+    return db.getRegistrantCount(getCurrEvent().getHref());
   }
 
-  public int getTicketCount() {
-    return dao.getTicketCount(this.currEvent.getEventGUID());
+  /**
+   * @return count of tickets allocated
+   * @throws Throwable
+   */
+  public long getTicketCount() throws Throwable {
+    return db.getTicketCount(getCurrEvent().getHref());
   }
 
-  public int getUserTicketCount() {
-    return dao.getUserTicketCount(this.currEvent.getEventGUID(),this.uif.getEmail());
+  /**
+   * @return count of tickets allocated to user for event
+   * @throws Throwable
+   */
+  public long getUserTicketCount() throws Throwable {
+    return db.getUserTicketCount(getCurrEvent().getHref(),
+                                 getCurrentUser());
   }
 
+  /**
+   * @return true if deadline passed
+   */
   public boolean getDeadlinePassed() {
     return deadlinePassed;
   }
 
-  public void setDeadlinePassed(final boolean deadlinePassed) {
-    this.deadlinePassed = deadlinePassed;
+  /**
+   * @param val
+   */
+  public void setDeadlinePassed(final boolean val) {
+    deadlinePassed = val;
   }
 
+  /**
+   * @return current message string
+   */
   public String getMessage() {
-    return this.message;
+    return message;
   }
 
+  /**
+   * @param message
+   */
   public void setMessage(final String message) {
     this.message = message;
   }
 
+  /*
   public void resendConfirmationEmail(final int userid) {
     String [] recipients = new String [1];
-    recipients[0] = this.getUserInfo().getEmail();
+    recipients[0] = getUserInfo().getEmail();
 
     String body = "Thank you for registering to reserve tickets for EMPAC Opening events.";
-        body = body.concat("\n\nJust click this link to confirm your email address," );
-        body = body.concat("\nand you can start reserving tickets:\nhttp://reg.empac.rpi.edu/empacreg/confirm.do?activationCode="+this.getUserInfo().getGUID());
-        body = body.concat("\n\nSee you there!\n-EMPAC\n\nQuestions? Call us @ 518.276.3921" );
-        body = body.concat("\n\nExperimental Media and Performing Arts Center" );
-        body = body.concat("\nRensselaer Polytechnic Institute" );
-        body = body.concat("\n110 8th street" );
-        body = body.concat("\nTroy, NY 12180" );
-        body = body.concat("\nhttp://empac.rpi.edu" );
+    body = body.concat("\n\nJust click this link to confirm your email address," );
+    body = body.concat("\nand you can start reserving tickets:" +
+    		"\nhttp://reg.empac.rpi.edu/empacreg/confirm.do?activationCode=" +
+        this.getUserInfo().getGUID());
+    body = body.concat("\n\nSee you there!\n-EMPAC\n\nQuestions? Call us @ 518.276.3921" );
+    body = body.concat("\n\nExperimental Media and Performing Arts Center" );
+    body = body.concat("\nRensselaer Polytechnic Institute" );
+    body = body.concat("\n110 8th street" );
+    body = body.concat("\nTroy, NY 12180" );
+    body = body.concat("\nhttp://empac.rpi.edu" );
 
-        /*    body = body.concat("Tickets will be available at will call on the day of the performance.\n");
+    / *    body = body.concat("Tickets will be available at will call on the day of the performance.\n");
     body = body.concat("All tickets must be picked up 30 minutes before performance time;\n");
     body = body.concat("Unclaimed tickets will bereleased 30 minutes before performance time.\n\n ");
 
@@ -276,13 +406,17 @@ public class SessionManager  {
     body = body.concat("110 8th Street\n");
     body = body.concat("Troy, NY 12180\n");
     body = body.concat("518.276.4135\n");
-    body = body.concat("http://empac.rpi.edu\n");*/
+    body = body.concat("http://empac.rpi.edu\n");* /
 
-        try {
-          Mailer.postMail(recipients, "EMPAC Registration", body, "empacboxoffice@rpi.edu", this.getUserInfo().getGUID());
-        } catch (Exception e) {}
+    try {
+      Mailer.postMail(recipients,
+                      "EMPAC Registration",
+                      body,
+                      "empacboxoffice@rpi.edu",
+                      getUserInfo().getGUID());
+    } catch (Exception e) {}
 
-  }
+  }*/
 
   /* ====================================================================
    *                   Convenience methods
@@ -359,5 +493,43 @@ public class SessionManager  {
     } catch (Throwable t) {
       return -1; // XXX exception?
     }
+  }
+
+  /**
+   * @return ticket id or null for no parameter
+   */
+  public String getTicketId() {
+    return getReqPar(reqparTicketId);
+  }
+
+  /**
+   * @return comment or null for no parameter
+   */
+  public String getComment() {
+    return getReqPar(reqparComment);
+  }
+
+  /**
+   * @return type or null for no parameter
+   */
+  public String getType() {
+    return getReqPar(reqparType);
+  }
+
+  private HashMap<String, Event> events = new HashMap<String, Event>();
+
+  /**
+   * @param reg
+   * @return event referenced by registration
+   * @throws Throwable
+   */
+  public Event retrieveEvent(final Registration reg) throws Throwable {
+//    EventXMLParser ep = new EventXMLParser();
+  //  ep.Parse(urltext);
+    //Event ev = ep.getEvent();
+
+    // events.put(reg.getHref(), ev);
+
+    return null;
   }
 }

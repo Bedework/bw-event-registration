@@ -16,30 +16,29 @@ KIND, either express or implied. See the License for the
 specific language governing permissions and limitations
 under the License.
  */
-
 package org.bedework.eventreg.spring.web;
 
-import org.bedework.eventreg.spring.bus.Event;
-import org.bedework.eventreg.spring.bus.EventXMLParser;
 import org.bedework.eventreg.spring.bus.SessionManager;
-import org.bedework.eventreg.spring.db.SysInfo;
+import org.bedework.eventreg.spring.db.Registration;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.Controller;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.TreeMap;
+import java.util.TreeSet;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+/**
+ * @author douglm
+ *
+ */
 public class UserAgendaController implements Controller {
   protected final Log logger = LogFactory.getLog(getClass());
-  public final static String EVENTINFOURL = "http://events.rpi.edu/event/eventView.do";
 
   private SessionManager sessMan;
 
@@ -47,49 +46,32 @@ public class UserAgendaController implements Controller {
   public ModelAndView handleRequest(final HttpServletRequest request,
                                     final HttpServletResponse response) throws Exception {
     logger.debug("UserAgendaController entry");
-    SysInfo uif = sessMan.getUserInfo();
 
-    logger.debug("UserAgendaController - " + uif.getEmail());
+    logger.debug("UserAgendaController - " + sessMan.getCurrentUser());
 
-    TreeMap userRegistrationTreeMap = new TreeMap();
+    TreeSet<Registration> regs = new TreeSet<Registration>();
 
-    for (Map currEvent: sessMan.getUserRegistrations(uif.getEmail())) {
-      String urltext;
+    try {
+      for (Registration reg: sessMan.getRegistrationsByUser(sessMan.getCurrentUser())) {
+        reg.setEvent(sessMan.retrieveEvent(reg));
 
-      try {
-        urltext = sessMan.getURL(EVENTINFOURL +
-                                 "?" +
-                                 currEvent.get("queryStr") +
-                                 "&skinName=empacreg");
-      } catch (Throwable t) {
-        logger.error(this, t);
-        throw new Exception(t);
+        regs.add(reg);
       }
 
-      EventXMLParser ep = new EventXMLParser();
-      ep.Parse(urltext);
-      Event eventInfo = ep.getEvent();
-      HashMap eventMap = new HashMap();
-      eventMap.put("eventGUID",eventInfo.getEventGUID());
-      eventMap.put("eventDateStr",eventInfo.getEventDateStr());
-      eventMap.put("eventTimeStr",eventInfo.getEventTimeStr());
-      eventMap.put("eventLocation",eventInfo.getEventLocation());
-      eventMap.put("eventSummary",eventInfo.getEventSummary());
-      eventMap.put("ticketsRequested",currEvent.get("numtickets"));
-      eventMap.put("ticketsAllowed",eventInfo.getTicketsAllowed());
-      eventMap.put("ticketId",currEvent.get("id"));
-      userRegistrationTreeMap.put(eventInfo.getUtcStr(),eventMap);
+      Map myModel = new HashMap();
+      myModel.put("userAgenda", regs);
+      myModel.put("sessMan", sessMan);
+
+      return new ModelAndView("agenda", myModel);
+    } catch (Throwable t) {
+      logger.error(this, t);
+      throw new Exception(t);
     }
-
-    ArrayList userRegistrationsFull = new ArrayList(userRegistrationTreeMap.values());
-
-    Map myModel = new HashMap();
-    myModel.put("userAgenda", userRegistrationsFull);
-    myModel.put("sessMan", sessMan);
-
-    return new ModelAndView("agenda", myModel);
   }
 
+  /**
+   * @param sm
+   */
   public void setSessionManager(final SessionManager sm) {
     sessMan = sm;
   }

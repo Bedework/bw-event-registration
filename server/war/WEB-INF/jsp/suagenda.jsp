@@ -33,10 +33,10 @@
             <tr>
               <th>
                 Ticket ID
-              </th>
+              </th><!-- 
               <th>
                 Name
-              </th>
+              </th> -->
               <th>
                 UserID
               </th>
@@ -65,22 +65,22 @@
                 </c:otherwise>
               </c:choose>
                 <td>
-                  <c:out value="${reg['id']}"/>
+                  <c:out value="${reg.ticketId}"/>
                 </td>
-                <td>
+                <!-- <td>
                   <c:out value="${reg['fname']}"/>
                   <c:out value="${reg['lname']}"/>
+                </td> -->
+                <td>
+                  <c:out value="${reg.email}"/>
                 </td>
                 <td>
-                  <c:out value="${reg['email']}"/>
+                  <input name='numtickets<c:out value="${reg.ticketId}"/>' id='numtickets<c:out value="${reg.ticketId}"/>' type="text" value='<c:out value="${reg.numtickets}"/>' size="3"/>
                 </td>
                 <td>
-                  <input name='numtickets<c:out value="${reg['id']}"/>' id='numtickets<c:out value="${reg['id']}"/>' type="text" value='<c:out value="${reg['numtickets']}"/>' size="3"/>
-                </td>
-                <td>
-                  <select name='type<c:out value="${reg['id']}"/>' id='type<c:out value="${reg['id']}"/>'>
+                  <select name='type<c:out value="${reg.ticketId}"/>' id='type<c:out value="${reg.ticketId}"/>'>
                     <c:choose>
-                      <c:when test="${reg['type'] == 'hold'}">
+                      <c:when test="${reg.type == 'hold'}">
                         <option value="normal">normal</option>
                         <option value="hold" selected="selected">hold</option>
                       </c:when>
@@ -92,14 +92,14 @@
                   </select>
                 </td>
                 <td>
-                  <input name='comment<c:out value="${reg['id']}"/>' id='comment<c:out value="${reg['id']}"/>' type="text" value='<c:out value="${reg['comment']}"/>'/>
+                  <input name='comment<c:out value="${reg.ticketId}"/>' id='comment<c:out value="${reg.ticketId}"/>' type="text" value='<c:out value="${reg.comment}"/>'/>
                 </td>
                 <td>
-                  <c:out value="${reg['created_at']}"/>
+                  <c:out value="${reg.created}"/>
                 </td>
                 <td>
-                  <a href="javascript:doUpdateSuTicket('<c:out value="${reg['id']}"/>')" onclick="return confirmUpdateSuTicket()">update</a> |
-                  <a href='removeTicket.do?id=<c:out value="${reg['id']}"/>' onclick="return confirmRemoveSuTicket('<c:out value="${reg['email']}"/>')">remove</a>
+                  <a href="javascript:doUpdateSuTicket('<c:out value="${reg.ticketId}"/>')" onclick="return confirmUpdateSuTicket()">update</a> |
+                  <a href='removeTicket.do?id=<c:out value="${reg.ticketId}"/>' onclick="return confirmRemoveSuTicket('<c:out value="${reg.email}"/>')">remove</a>
                 </td>
               </tr>
             </c:forEach>

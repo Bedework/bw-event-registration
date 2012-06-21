@@ -16,12 +16,11 @@ KIND, either express or implied. See the License for the
 specific language governing permissions and limitations
 under the License.
  */
-
 package org.bedework.eventreg.spring.web;
 
-import org.bedework.eventreg.spring.bus.Event;
 import org.bedework.eventreg.spring.bus.EventXMLParser;
 import org.bedework.eventreg.spring.bus.SessionManager;
+import org.bedework.eventreg.spring.db.Event;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -51,68 +50,70 @@ public class InitController implements Controller {
   @Override
   public ModelAndView handleRequest(final HttpServletRequest request,
                                     final HttpServletResponse response) throws Exception {
-    logger.debug("Init Controller entry");
+    try {
+      logger.debug("Init Controller entry");
 
-    String queryString = request.getQueryString();
-    sessMan.setMessage("");
+      String queryString = request.getQueryString();
+      sessMan.setMessage("");
 
-    if (queryString != null) {
-      logger.debug("Init Controller  - query string: " +
-                  EVENTINFOURL +
-                  "?" +
-                  queryString +
-                  "&skinName=empacreg");
+      if (queryString != null) {
+        logger.debug("Init Controller  - query string: " +
+            EVENTINFOURL +
+            "?" +
+            queryString +
+            "&skinName=empacreg");
 
-      String urltext;
+        String urltext;
 
-      try {
         urltext = sessMan.getURL(EVENTINFOURL +
                                  "?" +
                                  queryString +
-                                 "&skinName=empacreg");
-      } catch (Throwable t) {
-        logger.error(this, t);
-        throw new Exception(t);
+            "&skinName=empacreg");
+
+        logger.debug("Init Controller  -  got event xml ");
+
+        EventXMLParser ep = new EventXMLParser();
+        ep.Parse(urltext);
+        Event currEvent = ep.getEvent();
+        currEvent.setQuery(queryString);
+        sessMan.setCurrEvent(currEvent);
+        currEvent.setUid(request.getParameter("guid"));
+      } else {
+        logger.debug("Init Controller  - getting event from session");
+        if (sessMan.getCurrEvent() == null) {
+          logger.warn("Init Controller  - could not get event!");
+          return new ModelAndView("error");
+        }
       }
 
-      logger.debug("Init Controller  -  got event xml ");
+      /* Set registrationFull to true or false */
+      int maxRegistrants = sessMan.getCurrEvent().getTotalRegistrants();
+      long curRegistrants = sessMan.getTicketCount();
+      logger.debug("maxRegistrants: " + maxRegistrants);
+      logger.debug("curRegistrants: " + curRegistrants);
+      sessMan.setRegistrationFull(curRegistrants >= maxRegistrants);
 
-      EventXMLParser ep = new EventXMLParser();
-      ep.Parse(urltext);
-      Event currEvent = ep.getEvent();
-      currEvent.setQueryStr(queryString);
-      sessMan.setCurrEvent(currEvent);
-      String eventGUID = request.getParameter("guid");
-
-      sessMan.setEventGUID(eventGUID);
-    } else {
-      logger.debug("Init Controller  - getting event from session");
-      if (sessMan.getCurrEvent() == null) {
-        logger.warn("Init Controller  - could not get event!");
-        return new ModelAndView("error");
+      DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+      Date deadline = formatter.parse(sessMan.getCurrEvent().getRegDeadline());
+      Date now = new Date();
+      if (now.before(deadline)) {
+        sessMan.setDeadlinePassed(false);
+      } else {
+        sessMan.setDeadlinePassed(true);
       }
+
+      Map myModel = new HashMap();
+
+      myModel.put("sessMan", sessMan);
+      return new ModelAndView("init", myModel);
+    } catch (Exception e) {
+      logger.error(this, e);
+      throw e;
+    } catch (Throwable t) {
+      logger.info(t);
+      sessMan.setMessage(t.getMessage());
+      throw new Exception(t);
     }
-
-    /* Set registrationFull to true or false */
-    int maxRegistrants = sessMan.getCurrEvent().getTotalRegistrants();
-    int curRegistrants = sessMan.getTicketCount();
-    logger.debug("maxRegistrants: " + maxRegistrants);
-    logger.debug("curRegistrants: " + curRegistrants);
-    sessMan.setRegistrationFull(curRegistrants >= maxRegistrants);
-
-    DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-    Date deadline = formatter.parse(sessMan.getCurrEvent().getRegDeadlineStr());
-    Date now = new Date();
-    if (now.before(deadline)) {
-      sessMan.setDeadlinePassed(false);
-    } else {
-      sessMan.setDeadlinePassed(true);
-    }
-
-    Map myModel = new HashMap();
-
-    myModel.put("sessMan", sessMan);
-    return new ModelAndView("init", myModel);
   }
 
   /**

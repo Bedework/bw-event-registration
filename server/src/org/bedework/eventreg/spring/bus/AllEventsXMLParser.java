@@ -19,6 +19,8 @@ under the License.
 
 package org.bedework.eventreg.spring.bus;
 
+import org.bedework.eventreg.spring.db.Event;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.xml.sax.Attributes;
@@ -70,41 +72,36 @@ public class AllEventsXMLParser extends DefaultHandler {
 
     String content = "";
 
-    if (localName.equals("id")) {
-      content = contents.toString();
-      currEvent.setSubid(content.trim());
-    }
-
     if (localName.equals("guid")) {
       content = contents.toString();
-      currEvent.setEventGUID(content.trim());
+      currEvent.setUid(content.trim());
     }
 
     if (localName.equals("summary")) {
       content = contents.toString();
-      currEvent.setEventSummary(content.trim());
+      currEvent.setSummary(content.trim());
     }
 
     if (inStart) {
       if (localName.equals("longdate")) {
         content = contents.toString();
-        currEvent.setEventDateStr(content.trim());
+        currEvent.setDate(content.trim());
       }
 
       if (localName.equals("time")) {
         content = contents.toString();
-        currEvent.setEventTimeStr(content.trim());
+        currEvent.setTime(content.trim());
       }
 
       if (localName.equals("utcdate")) {
         content = contents.toString();
-        currEvent.setUtcStr(content.trim());
+        currEvent.setUtc(content.trim());
       }
     }
 
     if (localName.equals("address")) {
       content = contents.toString();
-      currEvent.setEventLocation(content.trim());
+      currEvent.setLocation(content.trim());
     }
 
     if (localName.equals("X-BEDEWORK-EVENT-TYPE")) {
@@ -117,14 +114,9 @@ public class AllEventsXMLParser extends DefaultHandler {
       currEvent.setTotalRegistrants(new Integer(content.trim()).intValue());
     }
 
-    if (localName.equals("X-BEDEWORK-EMPAC-KEY")) {
-      content = contents.toString();
-      currEvent.setEmpacKey(content.trim());
-    }
-
     if (localName.equals("X-BEDEWORK-REGISTRATION-DEADLINE")) {
       content = contents.toString();
-      currEvent.setRegDeadlineString(content.trim());
+      currEvent.setRegDeadline(content.trim());
     }
 
     if (localName.equals("X-BEDEWORK-TICKETS-ALLOWED")) {

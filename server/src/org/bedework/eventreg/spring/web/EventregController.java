@@ -19,8 +19,8 @@ under the License.
 
 package org.bedework.eventreg.spring.web;
 
-import org.bedework.eventreg.spring.bus.Event;
 import org.bedework.eventreg.spring.bus.SessionManager;
+import org.bedework.eventreg.spring.db.Event;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -36,53 +36,76 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+/**
+ * @author douglm
+ *
+ */
 public class EventregController implements Controller {
-
   protected final Log logger = LogFactory.getLog(getClass());
   private SessionManager sessMan;
-
-  public void setSessionManager(final SessionManager sm) {
-    sessMan = sm;
-  }
 
   @Override
   public ModelAndView handleRequest(final HttpServletRequest request,
                                     final HttpServletResponse response) throws Exception {
-    sessMan.setMessage("");
-    Event currEvent = sessMan.getCurrEvent();
+    try {
+      sessMan.setMessage("");
+      Event currEvent = sessMan.getCurrEvent();
 
-    int numTicketsRequested = sessMan.getTicketsRequested();
-    int totalTicketsAllowed = currEvent.getTotalRegistrants();
-    int currentTicketCount = sessMan.getTicketCount();
+      int numTicketsRequested = sessMan.getTicketsRequested();
+      int totalTicketsAllowed = currEvent.getTotalRegistrants();
+      long currentTicketCount = sessMan.getTicketCount();
 
-    logger.debug("event registration start");
+      logger.debug("event registration start");
 
-    if ((numTicketsRequested + currentTicketCount) > totalTicketsAllowed) {
-      sessMan.setRegistrationFull(true);
-    }
+      if ((numTicketsRequested + currentTicketCount) > totalTicketsAllowed) {
+        sessMan.setRegistrationFull(true);
+      }
 
-    DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-    Date deadline = formatter.parse(sessMan.getCurrEvent().getRegDeadlineStr());
-    Date now = new Date();
+      DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+      Date deadline = formatter.parse(sessMan.getCurrEvent().getRegDeadline());
+      Date now = new Date();
 
-    if (now.before(deadline)) {
-      sessMan.setDeadlinePassed(false);
-    } else {
-      sessMan.setDeadlinePassed(true);
-    }
+      if (now.before(deadline)) {
+        sessMan.setDeadlinePassed(false);
+      } else {
+        sessMan.setDeadlinePassed(true);
+      }
 
-    if (((numTicketsRequested <= currEvent.getTicketsAllowed()) &&
-        !sessMan.getRegistrationFull() &&
-        !sessMan.getDeadlinePassed()) ||
-        sessMan.getSuperUser()) {
+      if (sessMan.getRegistrationFull()) {
+        logger.debug("event registration stop - registration is full");
+        Map myModel = new HashMap();
+        myModel.put("sessMan", sessMan);
+
+        return new ModelAndView("init", myModel);
+      }
+
+      if (sessMan.getDeadlinePassed()) {
+        logger.debug("event registration stop - deadline has passed");
+        Map myModel = new HashMap();
+        myModel.put("sessMan", sessMan);
+
+        return new ModelAndView("init", myModel);
+      }
+
+      if ((numTicketsRequested > currEvent.getTicketsAllowed()) &&
+          !sessMan.getSuperUser()) {
+        sessMan.setMessage("Number of tickets requested exceeds number of tickets allowed.");
+        logger.debug("Number of tickets requested exceeds number of tickets allowed.");
+        Map myModel = new HashMap();
+        myModel.put("sessMan", sessMan);
+
+        return new ModelAndView("error", myModel);
+      }
 
       String comment = request.getParameter("comment");
+      String email = request.getParameter("email");
       String regType = request.getParameter("regType");
 
       logger.debug("event registration  - number of tickets requested: " + numTicketsRequested);
       logger.debug("event registration  - superuser: " + sessMan.getSuperUser());
 
       sessMan.registerUserInEvent(numTicketsRequested,
+                                  email,
                                   comment,
                                   regType,
                                   sessMan.getSuperUser());
@@ -91,29 +114,20 @@ public class EventregController implements Controller {
       myModel.put("sessMan", sessMan);
 
       return new ModelAndView("eventreg", myModel);
+    } catch (Exception e) {
+      logger.error(this, e);
+      throw e;
+    } catch (Throwable t) {
+      logger.info(t);
+      sessMan.setMessage(t.getMessage());
+      throw new Exception(t);
     }
+  }
 
-    if (sessMan.getRegistrationFull()) {
-      logger.debug("event registration stop - registration is full");
-      Map myModel = new HashMap();
-      myModel.put("sessMan", sessMan);
-
-      return new ModelAndView("init", myModel);
-    }
-
-    if (sessMan.getDeadlinePassed()) {
-      logger.debug("event registration stop - deadline has passed");
-      Map myModel = new HashMap();
-      myModel.put("sessMan", sessMan);
-
-      return new ModelAndView("init", myModel);
-    }
-
-    sessMan.setMessage("Number of tickets requested exceeds number of tickets allowed.");
-    logger.debug("Number of tickets requested exceeds number of tickets allowed.");
-    Map myModel = new HashMap();
-    myModel.put("sessMan", sessMan);
-
-    return new ModelAndView("error", myModel);
+  /**
+   * @param sm
+   */
+  public void setSessionManager(final SessionManager sm) {
+    sessMan = sm;
   }
 }

@@ -1,84 +1,87 @@
+/* ********************************************************************
+Licensed to Jasig under one or more contributor license
+agreements. See the NOTICE file distributed with this work
+for additional information regarding copyright ownership.
+Jasig licenses this file to you under the Apache License,
+Version 2.0 (the "License"); you may not use this file
+except in compliance with the License. You may obtain a
+copy of the License at:
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on
+an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied. See the License for the
+specific language governing permissions and limitations
+under the License.
+ */
 package org.bedework.eventreg.spring.web;
 
-import org.springframework.web.bind.ServletRequestUtils;
-import org.springframework.web.servlet.mvc.Controller;
-import org.springframework.web.servlet.mvc.SimpleFormController;
-import org.springframework.web.servlet.ModelAndView;
+import org.bedework.eventreg.spring.bus.SessionManager;
+import org.bedework.eventreg.spring.db.Event;
+import org.bedework.eventreg.spring.db.Registration;
 
-import javax.servlet.ServletException;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.Controller;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.TreeSet;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import java.io.IOException;
-import java.util.Map;
-import java.util.Vector;
-import java.util.HashMap;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.ListIterator;
-import java.util.HashMap;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import org.bedework.eventreg.spring.bus.Event;
-import org.bedework.eventreg.spring.bus.EventXMLParser;
-import org.bedework.eventreg.spring.bus.SessionManager;
-import org.bedework.eventreg.spring.db.SysInfo;
-
-
-
-import org.springframework.web.bind.ServletRequestUtils;
-
-
+/**
+ * @author douglm
+ *
+ */
 public class SuperUserAgendaController implements Controller {
 
   protected final Log logger = LogFactory.getLog(getClass());
 
   private SessionManager sessMan;
 
-  public ModelAndView handleRequest(HttpServletRequest request, HttpServletResponse response) throws Exception {
+  @Override
+  public ModelAndView handleRequest(final HttpServletRequest request, final HttpServletResponse response) throws Exception {
+    logger.debug("SuperUserAgendaController entry");
 
-    Event currEvent = sessMan.getCurrEvent();
-    String userType = sessMan.getUserInfo().getType();
+    if (!sessMan.getSuperUser()) {
+      logger.warn("Non superuser attempted to access SuperUserAgenda.");
+      return new ModelAndView("error");
+    }
 
-    logger.info("SuperUserAgendaController entry");
+    try {
+      Event ev = sessMan.getCurrEvent();
 
-    if (userType.equals("superuser")) {
-        List registrations = sessMan.getRegistrations(currEvent.getEventGUID());
-        ListIterator li = registrations.listIterator();
-        ArrayList registrationsFull = new ArrayList();
+      TreeSet<Registration> regs = new TreeSet<Registration>();
 
-        while (li.hasNext()) {
-          Map currReg = (Map)li.next();
-          HashMap regMap = new HashMap();
-          regMap.put("id",currReg.get("id"));
-          regMap.put("fname",currReg.get("fname"));
-          regMap.put("lname",currReg.get("lname"));
-          regMap.put("email",currReg.get("email"));
-          regMap.put("numtickets",currReg.get("numtickets"));
-          regMap.put("type",currReg.get("type"));
-          regMap.put("rpi",currReg.get("rpi"));
-          regMap.put("comment",currReg.get("comment"));
-          regMap.put("created_at",currReg.get("created_at"));
-          regMap.put("updated_at",currReg.get("updated_at"));
-          registrationsFull.add(regMap);
-        }
+      for (Registration reg: sessMan.getRegistrationsByHref(ev.getHref())) {
+        reg.setEvent(ev);
 
-        Map myModel = new HashMap();
-        myModel.put("suserAgenda", registrationsFull);
-        myModel.put("sessMan", sessMan);
+        regs.add(reg);
+      }
 
-        return new ModelAndView("suagenda", myModel);
-    } else {
-        logger.info("Non superuser attempted to access SuperUserAgenda.");
-        return new ModelAndView("error");
+      Map myModel = new HashMap();
+      myModel.put("suserAgenda", regs);
+      myModel.put("sessMan", sessMan);
+
+      return new ModelAndView("suagenda", myModel);
+    } catch (Exception e) {
+      logger.error(this, e);
+      throw e;
+    } catch (Throwable t) {
+      logger.error(this, t);
+      throw new Exception(t);
     }
   }
 
-
-  public void setSessionManager(SessionManager sm) {
+  /**
+   * @param sm
+   */
+  public void setSessionManager(final SessionManager sm) {
     sessMan = sm;
   }
-
-
 }

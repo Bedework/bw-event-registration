@@ -28,6 +28,7 @@ import org.apache.log4j.Logger;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.Collection;
 import java.util.List;
 
 /** This class manages the Exchange synch database.
@@ -58,9 +59,9 @@ public class EventregDb implements Serializable {
 
   /**
    * @return true if we had to open it. False if already open
-   * @throws Exception
+   * @throws Throwable
    */
-  public boolean open() throws Exception {
+  public boolean open() throws Throwable {
     if (isOpen()) {
       return false;
     }
@@ -78,9 +79,9 @@ public class EventregDb implements Serializable {
   }
 
   /**
-   * @throws Exception
+   * @throws Throwable
    */
-  public void close() throws Exception {
+  public void close() throws Throwable {
     try {
       endTransaction();
     } catch (Exception wde) {
@@ -101,11 +102,10 @@ public class EventregDb implements Serializable {
    * ==================================================================== */
 
   /**
-   * @param id
    * @return SysInfo
-   * @throws Exception
+   * @throws Throwable
    */
-  public SysInfo getSys() throws Exception {
+  public SysInfo getSys() throws Throwable {
     try {
       StringBuilder sb = new StringBuilder();
 
@@ -134,9 +134,9 @@ public class EventregDb implements Serializable {
   /** Add the system info.
    *
    * @param s
-   * @throws Exception
+   * @throws Throwable
    */
-  public void addSys(final SysInfo s) throws Exception {
+  public void addSys(final SysInfo s) throws Throwable {
     try {
       sess.save(s);
     } catch (HibException he) {
@@ -147,9 +147,9 @@ public class EventregDb implements Serializable {
   /** Update the persisted state of the system.
    *
    * @param s
-   * @throws Exception
+   * @throws Throwable
    */
-  public void updateSys(final SysInfo s) throws Exception {
+  public void updateSys(final SysInfo s) throws Throwable {
     try {
       sess.update(s);
     } catch (HibException he) {
@@ -163,10 +163,10 @@ public class EventregDb implements Serializable {
 
   /**
    * @return list of registrations
-   * @throws Exception
+   * @throws Throwable
    */
   @SuppressWarnings("unchecked")
-  public List<Registration> getAllRegistrations() throws Exception {
+  public List<Registration> getAllRegistrations() throws Throwable {
     StringBuilder sb = new StringBuilder();
 
     sb.append("from ");
@@ -183,20 +183,43 @@ public class EventregDb implements Serializable {
 
   /** Registrations for a user.
    *
-   * @param email
-   * @return a matching registrations
-   * @throws Exception
+   * @param id
+   * @return a matching registration
+   * @throws Throwable
    */
-  public List<Registration> getByEmail(final String email) throws Exception {
+  public Registration getByid(final String id) throws Throwable {
     try {
       StringBuilder sb = new StringBuilder();
 
       sb.append("from ");
       sb.append(Registration.class.getName());
-      sb.append(" reg where reg.email=:email");
+      sb.append(" reg where reg.ticketId=:id");
 
       sess.createQuery(sb.toString());
-      sess.setString("email", email);
+      sess.setString("id", id);
+
+      return (Registration)sess.getUnique();
+    } catch (HibException he) {
+      throw new Exception(he);
+    }
+  }
+
+  /** Registrations for a user.
+   *
+   * @param user
+   * @return a matching registrations
+   * @throws Throwable
+   */
+  public List<Registration> getByUser(final String user) throws Throwable {
+    try {
+      StringBuilder sb = new StringBuilder();
+
+      sb.append("from ");
+      sb.append(Registration.class.getName());
+      sb.append(" reg where reg.authid=:user");
+
+      sess.createQuery(sb.toString());
+      sess.setString("user", user);
 
       return sess.getList();
     } catch (HibException he) {
@@ -204,24 +227,141 @@ public class EventregDb implements Serializable {
     }
   }
 
-  /** Registrations for an event.
-   *
-   * @param email
-   * @return a matching registrations
-   * @throws Exception
+  /**
+   * @param eventHref
+   * @param user
+   * @return registration or null
+   * @throws Throwable
    */
-  public List<Registration> getByEvent(final String uid) throws Exception {
+  public Registration getUserRegistration(final String eventHref,
+                                          final String user) throws Throwable {
     try {
       StringBuilder sb = new StringBuilder();
 
       sb.append("from ");
       sb.append(Registration.class.getName());
-      sb.append(" reg where reg.uid=:uid");
+      sb.append(" reg where reg.href=:href");
+      sb.append(" and reg.authuser=:user");
 
       sess.createQuery(sb.toString());
-      sess.setString("uid", uid);
+      sess.setString("href", eventHref);
+      sess.setString("user", user);
+
+      return (Registration)sess.getUnique();
+    } catch (HibException he) {
+      throw new Exception(he);
+    }
+  }
+
+  /** Registrations for an event.
+   *
+   * @param href
+   * @return a matching registrations
+   * @throws Throwable
+   */
+  public List<Registration> getByEvent(final String href) throws Throwable {
+    try {
+      StringBuilder sb = new StringBuilder();
+
+      sb.append("from ");
+      sb.append(Registration.class.getName());
+      sb.append(" reg where reg.href=:href");
+
+      sess.createQuery(sb.toString());
+      sess.setString("href", href);
 
       return sess.getList();
+    } catch (HibException he) {
+      throw new Exception(he);
+    }
+  }
+
+  /**
+   * @param eventHref
+   * @return number of registration entries for that event
+   * @throws Throwable
+   */
+  public long getRegistrantCount(final String eventHref) throws Throwable {
+    try {
+      StringBuilder sb = new StringBuilder();
+
+      sb.append("select count(*) from ");
+      sb.append(Registration.class.getName());
+      sb.append(" reg where reg.href=:href");
+
+      sess.createQuery(sb.toString());
+      sess.setString("href", eventHref);
+      Collection<Long> counts = sess.getList();
+
+      long total = 0;
+
+      for (Long l: counts) {
+        total += l;
+      }
+
+      return total;
+    } catch (HibException he) {
+      throw new Exception(he);
+    }
+  }
+
+  /**
+   * @param eventHref
+   * @return number of registration entries for that event
+   * @throws Throwable
+   */
+  public long getTicketCount(final String eventHref) throws Throwable {
+    try {
+      StringBuilder sb = new StringBuilder();
+
+      sb.append("select sum(numtickets) from ");
+      sb.append(Registration.class.getName());
+      sb.append(" reg where reg.href=:href");
+
+      sess.createQuery(sb.toString());
+      sess.setString("href", eventHref);
+      Collection<Long> counts = sess.getList();
+
+      long total = 0;
+
+      for (Long l: counts) {
+        total += l;
+      }
+
+      return total;
+    } catch (HibException he) {
+      throw new Exception(he);
+    }
+  }
+
+  /**
+   * @param eventHref
+   * @param user
+   * @return number of registration entries for that event and user
+   * @throws Throwable
+   */
+  public long getUserTicketCount(final String eventHref,
+                                 final String user) throws Throwable {
+    try {
+      StringBuilder sb = new StringBuilder();
+
+      sb.append("select sum(numtickets) from ");
+      sb.append(Registration.class.getName());
+      sb.append(" reg where reg.href=:href");
+      sb.append(" and reg.authuser=:user");
+
+      sess.createQuery(sb.toString());
+      sess.setString("href", eventHref);
+      sess.setString("user", user);
+      Collection<Long> counts = sess.getList();
+
+      long total = 0;
+
+      for (Long l: counts) {
+        total += l;
+      }
+
+      return total;
     } catch (HibException he) {
       throw new Exception(he);
     }
@@ -294,10 +434,10 @@ public class EventregDb implements Serializable {
 
   /** Delete the registration.
    *
-   * @param sub
-   * @throws Exception
+   * @param reg
+   * @throws Throwable
    */
-  public void delete(final Registration reg) throws Exception {
+  public void delete(final Registration reg) throws Throwable {
     boolean opened = open();
 
     try {
@@ -315,13 +455,13 @@ public class EventregDb implements Serializable {
    *                   Session methods
    * ==================================================================== */
 
-  protected void checkOpen() throws Exception {
+  protected void checkOpen() throws Throwable {
     if (!isOpen()) {
       throw new Exception("Session call when closed");
     }
   }
 
-  protected synchronized void openSession() throws Exception {
+  protected synchronized void openSession() throws Throwable {
     if (isOpen()) {
       throw new Exception("Already open");
     }
@@ -388,7 +528,7 @@ public class EventregDb implements Serializable {
     }
   }
 
-  protected void beginTransaction() throws Exception {
+  protected void beginTransaction() throws Throwable {
     checkOpen();
 
     if (debug) {
@@ -401,7 +541,7 @@ public class EventregDb implements Serializable {
     }
   }
 
-  protected void endTransaction() throws Exception {
+  protected void endTransaction() throws Throwable {
     checkOpen();
 
     if (debug) {
@@ -417,7 +557,7 @@ public class EventregDb implements Serializable {
     }
   }
 
-  protected void rollbackTransaction() throws Exception {
+  protected void rollbackTransaction() throws Throwable {
     try {
       checkOpen();
       sess.rollback();
