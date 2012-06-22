@@ -2,12 +2,12 @@
 <server>
   <!--  guarantee separate classloader -->
   <loader-repository> 
-    org.bedework:archive=synch-service 
+    org.bedework:archive=eventreg-service 
   </loader-repository> 
   
-  <mbean code="org.bedework.synch.service.Synch"
-         name="org.bedework:service=Synch">
-    <attribute name="Appname">Synch</attribute>
+  <mbean code="org.bedework.eventreg.service.EventregSvc"
+         name="org.bedework:service=Eventreg">
+    <attribute name="Appname">Eventreg</attribute>
     
     <!-- Dump/restore attributes -->
         
@@ -30,7 +30,7 @@
     <attribute name="HaltOnError">true</attribute>
     
     <!-- Schema Output file name - full path, folders must exist -->
-    <attribute name="SchemaOutFile">${jboss.server.data.dir}/bedework/synch/schema.txt</attribute>
+    <attribute name="SchemaOutFile">${jboss.server.data.dir}/bedework/eventreg/schema.txt</attribute>
     
     <!-- SQL input file name - full path. Used instead of the configuration? -->
     <!--  There appears to be a bug in the hibernate code. Everybody initialises
@@ -39,46 +39,19 @@
     <attribute name="SqlIn">not-a-file.sql</attribute>
     
     <!-- XML data input file name - full path. Used for data restore -->
-    <attribute name="DataIn">${jboss.server.data.dir}/bedework/synch/initdata.xml</attribute>
+    <attribute name="DataIn">${jboss.server.data.dir}/bedework/eventreg/initdata.xml</attribute>
     
     <!-- XML data output directory - full path. Used for data dump -->
-    <attribute name="DataOut">${jboss.server.data.dir}/bedework/synch/</attribute>
+    <attribute name="DataOut">${jboss.server.data.dir}/bedework/eventreg/</attribute>
     
     <!-- XML data output file prefix - for data dump -->
-    <attribute name="DataOutPrefix">synchdata</attribute>
+    <attribute name="DataOutPrefix">eventregdata</attribute>
     
     <!-- We need activemq 
     <depends>jboss.jca:service=ConnectionFactoryBinding,name=activemq/QueueConnectionFactory</depends>
     -->    
     
     <!-- We also need the database -->
-    <depends>jboss.jca:service=DataSourceBinding,name=SynchDS</depends>
-  </mbean>
-  
-  <mbean code="org.bedework.synch.service.SynchConf"
-         name="org.bedework:service=SynchConf">
-    <attribute name="SynchlingPoolSize" />
-    <attribute name="SynchlingPoolTimeout" />
-    <attribute name="MissingTargetRetries" />
-    <attribute name="CallbackURI" />
-    <attribute name="TimezonesURI" />
-    <attribute name="Keystore" />
-    <attribute name="PrivKeys" />
-    <attribute name="PubKeys" />
-  </mbean>
-  
-  <mbean code="org.bedework.synch.service.SynchConnConf"
-         name="org.bedework:service=SynchConnConf">
-    <attribute name="Status" />
-    <attribute name="ConnectorId" />
-    <attribute name="ConnectorNames" />
-    <attribute name="ClassName" />
-    <attribute name="ReadOnly" />
-    <attribute name="TrustLastmod" />
-    <attribute name="Properties" />
-  </mbean>
-  
-  <mbean code="org.bedework.http.service.HttpOut"
-         name="org.bedework:service=HttpOut">
+    <depends>jboss.jca:service=DataSourceBinding,name=EventregDS</depends>
   </mbean>
 </server>

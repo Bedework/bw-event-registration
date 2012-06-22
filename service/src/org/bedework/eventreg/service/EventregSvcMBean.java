@@ -48,6 +48,21 @@ public interface EventregSvcMBean {
   public String getAppname();
 
   /* ========================================================================
+   * System properties
+   * ======================================================================== */
+
+  /** Location of wsdl
+   *
+   * @param val
+   */
+  public void setWsdlUri(String val);
+
+  /**
+   * @return Location of wsdl
+   */
+  public String getWsdlUri();
+
+  /* ========================================================================
    * Dump/restore
    * ======================================================================== */
 

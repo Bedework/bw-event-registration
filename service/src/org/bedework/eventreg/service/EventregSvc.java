@@ -18,6 +18,9 @@
 */
 package org.bedework.eventreg.service;
 
+import org.bedework.eventreg.db.EventregDb;
+import org.bedework.eventreg.db.SysInfo;
+
 import org.apache.log4j.Logger;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.tool.hbm2ddl.SchemaExport;
@@ -31,8 +34,6 @@ import java.util.List;
  */
 public class EventregSvc implements EventregSvcMBean {
   private transient Logger log;
-
-  private boolean running;
 
   private String appname;
 
@@ -77,7 +78,7 @@ public class EventregSvc implements EventregSvcMBean {
     /* This apparently must be the same as the name attribute in the
      * jboss service definition
      */
-    return "org.bedework:service=Synch";
+    return "org.bedework:service=Eventreg";
   }
 
   @Override
@@ -88,6 +89,49 @@ public class EventregSvc implements EventregSvcMBean {
   @Override
   public String getAppname() {
     return appname;
+  }
+
+  /* ========================================================================
+   * System properties
+   * ======================================================================== */
+
+  @Override
+  public void setWsdlUri(final String val) {
+    EventregDb db = openDb();
+
+    if (db != null) {
+      try {
+        SysInfo sysi = db.getSys();
+
+        sysi.setWsdlUri(val);
+
+        db.updateSys(sysi);
+      } catch (Throwable t) {
+        error(t);
+      } finally {
+        closeDb(db);
+      }
+    }
+  }
+
+  @Override
+  public String getWsdlUri() {
+    String res = null;
+
+    EventregDb db = openDb();
+
+    if (db != null) {
+      try {
+        SysInfo sysi = db.getSys();
+        res = sysi.getWsdlUri();
+      } catch (Throwable t) {
+        error(t);
+      } finally {
+        closeDb(db);
+      }
+    }
+
+    return res;
   }
 
   /* ========================================================================
@@ -445,6 +489,27 @@ public class EventregSvc implements EventregSvcMBean {
     }
 
     return cfg;
+  }
+
+  private EventregDb openDb() {
+    try {
+      EventregDb db = new EventregDb();
+
+      db.open();
+
+      return db;
+    } catch (Throwable t) {
+      error(t);
+      return null;
+    }
+  }
+
+  private void closeDb(final EventregDb db) {
+    try {
+      db.close();
+    } catch (Throwable t) {
+      error(t);
+    }
   }
 
   /* ====================================================================
