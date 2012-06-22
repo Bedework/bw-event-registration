@@ -113,7 +113,7 @@
       
       <getJar lib="${org.bedework.temp.extrajars.dir}"
               libcache="${org.bedework.libcache.dir}"
-              name="cglib" version="2.1.3" />
+              name="cglib-nodep" version="2.1_3" />
       
       <!--
       <getJar lib="${org.bedework.temp.extrajars.dir}"
@@ -161,6 +161,36 @@
       <getJar lib="${org.bedework.temp.extrajars.dir}"
               libcache="${org.bedework.libcache.dir}"
               name="geronimo-kernel" version="2.2.1" />
+
+      <!-- ========================= Spring jars ========================== -->
+
+      <getJar lib="${org.bedework.temp.extrajars.dir}"
+              libcache="${org.bedework.libcache.dir}"
+              name="spring-aop" version="3.0.5.RELEASE" />
+
+      <getJar lib="${org.bedework.temp.extrajars.dir}"
+              libcache="${org.bedework.libcache.dir}"
+              name="spring-beans" version="3.0.5.RELEASE" />
+
+      <getJar lib="${org.bedework.temp.extrajars.dir}"
+              libcache="${org.bedework.libcache.dir}"
+              name="spring-context" version="3.0.5.RELEASE" />
+
+      <getJar lib="${org.bedework.temp.extrajars.dir}"
+              libcache="${org.bedework.libcache.dir}"
+              name="spring-core" version="3.0.5.RELEASE" />
+
+      <getJar lib="${org.bedework.temp.extrajars.dir}"
+              libcache="${org.bedework.libcache.dir}"
+              name="spring-expression" version="3.0.5.RELEASE" />
+
+      <getJar lib="${org.bedework.temp.extrajars.dir}"
+              libcache="${org.bedework.libcache.dir}"
+              name="spring-web" version="3.0.5.RELEASE" />
+
+      <getJar lib="${org.bedework.temp.extrajars.dir}"
+              libcache="${org.bedework.libcache.dir}"
+              name="spring-webmvc" version="3.0.5.RELEASE" />
     </sequential>
  </macrodef>
 </project>

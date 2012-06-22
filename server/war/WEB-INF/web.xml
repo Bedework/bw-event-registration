@@ -43,7 +43,7 @@
 
     <taglib>
       <taglib-uri>/spring</taglib-uri>
-      <taglib-location>/WEB-INF/spring.tld</taglib-location>
+      <taglib-location>/WEB-INF/tlds/spring.tld</taglib-location>
     </taglib>
   </jsp-config>
 
