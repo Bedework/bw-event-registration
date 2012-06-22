@@ -20,7 +20,7 @@
 
     <version name="seq" column="bwevreg_seq" type="integer" />
 
-    <property name="ticketId" column="bwevreg_tktid" type="string" length="250"
+    <property name="ticketid" column="bwevreg_tktid" type="string" length="250"
               unique="true"
               not-null="true"
               index="bwevregidx_tktid" />

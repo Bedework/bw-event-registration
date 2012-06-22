@@ -102,10 +102,20 @@ public class EventregSvc implements EventregSvcMBean {
     if (db != null) {
       try {
         SysInfo sysi = db.getSys();
+        boolean create = false;
+
+        if (sysi == null) {
+          sysi = new SysInfo();
+          create = true;
+        }
 
         sysi.setWsdlUri(val);
 
-        db.updateSys(sysi);
+        if (create) {
+          db.addSys(sysi);
+        } else {
+          db.updateSys(sysi);
+        }
       } catch (Throwable t) {
         error(t);
       } finally {
@@ -123,6 +133,10 @@ public class EventregSvc implements EventregSvcMBean {
     if (db != null) {
       try {
         SysInfo sysi = db.getSys();
+
+        if (sysi == null) {
+          return "";
+        }
         res = sysi.getWsdlUri();
       } catch (Throwable t) {
         error(t);
