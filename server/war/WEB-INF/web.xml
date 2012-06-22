@@ -5,6 +5,18 @@
     xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee 
                         http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"
     version="2.4">
+  <display-name>@DISPLAY-NAME@</display-name>
+
+  <!-- Contecxt params here -->
+  
+  <!-- filter here -->
+  
+  <!-- filter mapping here -->
+  
+  <listener>
+    <listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>
+  </listener>
+  
   <servlet>
     <servlet-name>eventreg</servlet-name>
     <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
@@ -15,25 +27,33 @@
     <servlet-name>eventreg</servlet-name>
     <url-pattern>*.do</url-pattern>
   </servlet-mapping>
-
-  <welcome-file-list>
-    <welcome-file>
-      index.jsp
-    </welcome-file>
-  </welcome-file-list>
   
   <session-config>
     <session-timeout>20</session-timeout>
   </session-config>
-  
-  <listener>
-    <listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>
-  </listener>
 
-  <taglib>
-    <taglib-uri>/spring</taglib-uri>
-    <taglib-location>/WEB-INF/spring.tld</taglib-location>
-  </taglib>
+  <welcome-file-list>
+    <welcome-file>index.jsp</welcome-file>
+  </welcome-file-list>
+
+  <jsp-config>
+    <!--  Reference a taglib in the jsp like this:
+      <%@ taglib uri="struts-bean" prefix="bean" %>
+     -->
+
+    <taglib>
+      <taglib-uri>/spring</taglib-uri>
+      <taglib-location>/WEB-INF/spring.tld</taglib-location>
+    </taglib>
+  </jsp-config>
+
+  <!-- JDBC DataSources (java:comp/env/jdbc) -->
+  <resource-ref>
+    <description>The event reg DS</description>
+    <res-ref-name>jdbc/EventregDB</res-ref-name>
+    <res-type>javax.sql.DataSource</res-type>
+    <res-auth>Container</res-auth>
+  </resource-ref>
 
   <!-- The role name of * below means all roles defined in this web.xml -->
   <security-constraint>
