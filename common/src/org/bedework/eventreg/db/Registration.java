@@ -29,7 +29,6 @@ public class Registration extends DbItem<Registration> {
   private String ticketid;
   private String authid;
   private String email;
-  private String query;
   private String eventHref;
   private int numTickets;
   private int ticketsRequested;
@@ -88,20 +87,6 @@ public class Registration extends DbItem<Registration> {
    */
   public String getEmail() {
     return email;
-  }
-
-  /**
-   * @param val
-   */
-  public void setQuery(final String val) {
-    query = val;
-  }
-
-  /**
-   * @return query
-   */
-  public String getQuery() {
-    return query;
   }
 
   /**
