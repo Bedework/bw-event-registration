@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+  "-//Hibernate/Hibernate Mapping DTD//EN"
+  "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<!-- ===================================================================
+     Object to represent a synch subscription.
+     =================================================================== -->
+
+<hibernate-mapping>
+  <class name="org.bedework.eventreg.db.Registration"
+         table="bwevreg_regs" >
+    <cache usage="read-write"/>
+    
+    <id name="id" type="long" column="bwevreg_id">
+      <generator class="native"/>
+    </id>
+
+    <!-- db entity properties -->
+
+    <version name="seq" column="bwevreg_seq" type="integer" />
+
+    <property name="ticketId" column="bwevreg_tktid" type="string" length="250"
+              unique="true"
+              not-null="true"
+              index="bwevregidx_tktid" />
+
+    <property name="authid" column="bwevreg_authid" type="string" length="500"
+              not-null="true"
+              index="bwevregidx_authid" />
+
+    <property name="email" column="bwevreg_email" type="string" length="500"
+              not-null="true"
+              index="bwevregidx_email" />
+
+    <property name="eventHref" column="bwevreg_href" type="string" length="1000"
+              not-null="true"
+              index="bwevregidx_href" />
+
+    <property name="numTickets" column="bwevreg_numTickets" type="integer" />
+
+    <property name="ticketsRequested" column="bwevreg_tktreq" type="integer" />
+              
+    <property name="type" column="bwevreg_type" type="string" length="200" />
+              
+    <property name="created" column="bwevreg_created" type="string" length="20" />
+
+    <property name="comment" column="bwevreg_comment" type="string" length="250" />
+  </class>
+</hibernate-mapping>
+
