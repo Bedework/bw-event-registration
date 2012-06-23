@@ -18,7 +18,7 @@ http://www.springframework.org/schema/aop http://www.springframework.org/schema/
     </property>
   </bean>
 
-  <bean name="/init.do"  
+  <bean id="initController"  
         class="org.bedework.eventreg.web.InitController"  
         scope="session">
     <aop:scoped-proxy/>
@@ -27,19 +27,19 @@ http://www.springframework.org/schema/aop http://www.springframework.org/schema/
     </property>
   </bean>
 
- <bean id="eventregController"  
-       class="org.bedework.eventreg.web.EventregController"  
-       scope="session">
- <aop:scoped-proxy/>
+  <bean id="eventregController"  
+        class="org.bedework.eventreg.web.EventregController"  
+        scope="session">
+    <aop:scoped-proxy/>
     <property name="sessionManager">
       <ref bean="sessMan"/>
     </property>
   </bean>
 
-<bean id="outputCSVController"  
-      class="org.bedework.eventreg.web.OutputCSVController"  
-      scope="session">
- <aop:scoped-proxy/>
+  <bean id="outputCSVController"  
+        class="org.bedework.eventreg.web.OutputCSVController"  
+        scope="session">
+    <aop:scoped-proxy/>
     <property name="sessionManager">
       <ref bean="sessMan"/>
     </property>
@@ -54,10 +54,10 @@ http://www.springframework.org/schema/aop http://www.springframework.org/schema/
     </property>
   </bean>
 
- <bean id="userAgendaController"  
-       class="org.bedework.eventreg.web.UserAgendaController"  
-       scope="session">
- <aop:scoped-proxy/>
+  <bean id="userAgendaController"  
+        class="org.bedework.eventreg.web.UserAgendaController"  
+        scope="session">
+    <aop:scoped-proxy/>
     <property name="sessionManager">
       <ref bean="sessMan"/>
     </property>
@@ -66,7 +66,7 @@ http://www.springframework.org/schema/aop http://www.springframework.org/schema/
   <bean id="updateTicketController"  
         class="org.bedework.eventreg.web.UpdateTicketController"  
         scope="session">
-  <aop:scoped-proxy/>
+    <aop:scoped-proxy/>
     <property name="sessionManager">
       <ref bean="sessMan"/>
     </property>
@@ -75,7 +75,7 @@ http://www.springframework.org/schema/aop http://www.springframework.org/schema/
   <bean id="removeTicketController"  
         class="org.bedework.eventreg.web.RemoveTicketController"  
         scope="session">
-  <aop:scoped-proxy/>
+    <aop:scoped-proxy/>
     <property name="sessionManager">
       <ref bean="sessMan"/>
     </property>
@@ -90,6 +90,7 @@ http://www.springframework.org/schema/aop http://www.springframework.org/schema/
     </property>
     <property name="mappings">
       <props>
+        <prop key="/init.do">initController</prop>
         <prop key="/eventreg.do">eventregController</prop>
         <prop key="/agenda.do">userAgendaController</prop>
         <prop key="/suagenda.do">superUserAgendaController</prop>

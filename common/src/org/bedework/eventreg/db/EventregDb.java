@@ -79,22 +79,29 @@ public class EventregDb implements Serializable {
   }
 
   /**
-   * @throws Throwable
+   * @return false if error occurred
    */
-  public void close() throws Throwable {
+  public boolean close() {
+    boolean ok = true;
+
     try {
       endTransaction();
-    } catch (Exception wde) {
+    } catch (Throwable t) {
+      ok = false;
       try {
         rollbackTransaction();
-      } catch (Exception wde1) {}
-      throw wde;
+      } catch (Throwable t1) {}
+      error(t);
     } finally {
       try {
         closeSession();
-      } catch (Exception wde1) {}
+      } catch (Exception wde1) {
+        ok = false;
+      }
       open = false;
     }
+
+    return ok;
   }
 
   /* ====================================================================

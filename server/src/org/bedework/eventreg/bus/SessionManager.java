@@ -77,6 +77,8 @@ public class SessionManager  {
 
   private String message = "";
 
+  private boolean open;
+
   private BwConnector cnctr;
 
   /**
@@ -87,19 +89,47 @@ public class SessionManager  {
 
   /**
    * @param db - object to handle db transactions.
-   * @throws Exception
+   * @throws Throwable
    */
-  public void setEventregDb(final EventregDb db) throws Exception {
+  public void setEventregDb(final EventregDb db) throws Throwable {
     try {
       this.db = db;
 
+      db.open();
       setSysInfo(db.getSys());
 
       cnctr = new BwConnector(getSysInfo().getWsdlUri());
     } catch (Throwable t) {
       logger.error(this, t);
       throw new Exception(t);
+    } finally {
+      if (db != null) {
+        db.close();
+      }
     }
+  }
+
+  /**
+   * @throws Throwable
+   */
+  public synchronized void openDb() throws Throwable {
+    if (db == null) {
+      return;
+    }
+
+    db.open();
+    open = true;
+  }
+
+  /**
+   */
+  public synchronized void closeDb() {
+    if (db == null) {
+      return;
+    }
+
+    db.close();
+    open = false;
   }
 
   /**
@@ -236,6 +266,7 @@ public class SessionManager  {
 
     /* we  let superusers register over and over, but not regular users */
 
+    db.open();
     Registration reg;
     if (!superUser) {
       reg = db.getUserRegistration(eventHref, getCurrentUser());

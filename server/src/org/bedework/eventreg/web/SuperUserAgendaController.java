@@ -75,6 +75,8 @@ public class SuperUserAgendaController implements Controller {
     } catch (Throwable t) {
       logger.error(this, t);
       throw new Exception(t);
+    } finally {
+      sessMan.closeDb();
     }
   }
 

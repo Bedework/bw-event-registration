@@ -51,6 +51,12 @@ public class InitHandlers extends HandlerInterceptorAdapter {
     logger.debug("inti handler Intercepter");
 
     sessMan.setRequest(request);
+    try {
+      sessMan.openDb();
+    } catch (Throwable e) {
+      throw new Exception(e);
+    }
+
     return true;
   }
 }

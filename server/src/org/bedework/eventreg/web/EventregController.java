@@ -121,6 +121,8 @@ public class EventregController implements Controller {
       logger.info(t);
       sessMan.setMessage(t.getMessage());
       throw new Exception(t);
+    } finally {
+      sessMan.closeDb();
     }
   }
 
