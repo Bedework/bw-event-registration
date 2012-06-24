@@ -33,7 +33,7 @@
               not-null="true"
               index="bwevregidx_email" />
 
-    <property name="eventHref" column="bwevreg_href" type="string" length="1000"
+    <property name="href" column="bwevreg_href" type="string" length="1000"
               not-null="true"
               index="bwevregidx_href" />
 

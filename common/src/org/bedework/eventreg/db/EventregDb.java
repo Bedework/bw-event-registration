@@ -321,21 +321,28 @@ public class EventregDb implements Serializable {
     try {
       StringBuilder sb = new StringBuilder();
 
-      sb.append("select sum(numtickets) from ");
+      sb.append("select sum(numTickets) from ");
       sb.append(Registration.class.getName());
       sb.append(" reg where reg.href=:href");
 
       sess.createQuery(sb.toString());
       sess.setString("href", eventHref);
+
+      /*
       Collection<Long> counts = sess.getList();
 
       long total = 0;
 
       for (Long l: counts) {
         total += l;
+      }*/
+
+      Long ct = (Long)sess.getUnique();
+      if (ct == null) {
+        return 0;
       }
 
-      return total;
+      return ct;
     } catch (HibException he) {
       throw new Exception(he);
     }

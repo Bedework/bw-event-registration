@@ -29,7 +29,7 @@ public class Registration extends DbItem<Registration> {
   private String ticketid;
   private String authid;
   private String email;
-  private String eventHref;
+  private String href;
   private int numTickets;
   private int ticketsRequested;
   private String type;
@@ -92,15 +92,15 @@ public class Registration extends DbItem<Registration> {
   /**
    * @param val
    */
-  public void setEventHref(final String val) {
-    eventHref = val;
+  public void setHref(final String val) {
+    href = val;
   }
 
   /**
    * @return eventHref
    */
-  public String getEventHref() {
-    return eventHref;
+  public String getHref() {
+    return href;
   }
 
   /**

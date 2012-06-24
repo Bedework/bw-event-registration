@@ -157,6 +157,10 @@ public class BwConnector {
                                    "CalWsService"));
     CalWsServicePortType port = svc.getCalWsPort();
 
+//    Map requestContext = ((BindingProvider)port).getRequestContext();
+//    requestContext.put(BindingProvider.USERNAME_PROPERTY, userName);
+//    requestContext.put(BindingProvider.PASSWORD_PROPERTY, password);
+
     return port;
   }
 

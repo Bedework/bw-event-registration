@@ -288,7 +288,7 @@ public class SessionManager  {
 
     reg.setAuthid(getCurrentUser());
     reg.setComment(comment);
-    reg.setEventHref(eventHref);
+    reg.setHref(eventHref);
     reg.setNumTickets(numTickets);
     reg.setCreated(sqlDate.toString());
     reg.setTicketid(UUID.randomUUID().toString());
@@ -572,6 +572,6 @@ public class SessionManager  {
    * @throws Throwable
    */
   public Event retrieveEvent(final Registration reg) throws Throwable {
-    return cnctr.getEvent(reg.getEventHref());
+    return cnctr.getEvent(reg.getHref());
   }
 }
