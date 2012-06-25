@@ -19,13 +19,9 @@ under the License.
 
 package org.bedework.eventreg.web;
 
-import org.bedework.eventreg.bus.SessionManager;
 import org.bedework.eventreg.db.Registration;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.Controller;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -34,54 +30,31 @@ import javax.servlet.http.HttpServletResponse;
  * @author douglm
  *
  */
-public class RemoveTicketController implements Controller {
-  protected final Log logger = LogFactory.getLog(getClass());
-  private SessionManager sessMan;
-
+public class RemoveTicketController extends AbstractController {
   @Override
-  public ModelAndView handleRequest(final HttpServletRequest request,
-                                    final HttpServletResponse response) throws Exception {
+  public ModelAndView doRequest(final HttpServletRequest request,
+                                final HttpServletResponse response) throws Throwable {
+    String ticketId = sessMan.getTicketId();
 
-    try {
-      String ticketId = sessMan.getTicketId();
+    logger.debug("remove ticket id: " + ticketId +
+                 "- super user: " + sessMan.getSuperUser());
 
-      logger.debug("remove ticket id: " + ticketId +
-                   "- super user: " + sessMan.getSuperUser());
+    Registration reg = sessMan.getRegistrationById(ticketId);
 
-      Registration reg = sessMan.getRegistrationById(ticketId);
-
-      if (reg == null) {
-        // XXX message?
-      } else if (!sessMan.getSuperUser() &&
-          !reg.getAuthid().equals(sessMan.getCurrentUser())) {
-        // XXX message?
-      } else{
-        sessMan.removeRegistration(reg);
-      }
-      sessMan.setMessage(""); // don't need to say anything
-
-      if (sessMan.getSuperUser()) {
-        return new ModelAndView("forward:suagenda.do");
-      } else {
-        return new ModelAndView("forward:agenda.do");
-      }
-    } catch (Exception e) {
-      logger.error(this, e);
-      throw e;
-    } catch (Throwable t) {
-      logger.info(t);
-      sessMan.setMessage(t.getMessage());
-      throw new Exception(t);
-    } finally {
-      sessMan.closeDb();
+    if (reg == null) {
+      // XXX message?
+    } else if (!sessMan.getSuperUser() &&
+        !reg.getAuthid().equals(sessMan.getCurrentUser())) {
+      // XXX message?
+    } else{
+      sessMan.removeRegistration(reg);
     }
-  }
+    sessMan.setMessage(""); // don't need to say anything
 
-  /**
-   * @param sm
-   */
-  public void setSessionManager(final SessionManager sm) {
-    sessMan = sm;
-  }
+    if (sessMan.getSuperUser()) {
+      return sessModel("forward:suagenda.do");
+    }
 
+    return sessModel("forward:agenda.do");
+  }
 }

@@ -32,7 +32,7 @@
     <relativePath>../bedework</relativePath>
   </parent>
 
-  <groupId>org.bedework</groupId>
+  <groupId>org.bedework.eventreg</groupId>
   <artifactId>eventreg</artifactId>
   <version>3.8</version>
   <packaging>pom</packaging>

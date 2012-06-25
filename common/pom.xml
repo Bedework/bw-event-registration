@@ -26,7 +26,7 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>org.bedework</groupId>
+    <groupId>org.bedework.eventreg</groupId>
     <artifactId>eventreg</artifactId>
     <version>3.8</version>
     <relativePath>../</relativePath>

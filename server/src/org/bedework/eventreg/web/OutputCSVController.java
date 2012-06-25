@@ -18,16 +18,10 @@ under the License.
  */
 package org.bedework.eventreg.web;
 
-import org.bedework.eventreg.bus.SessionManager;
 import org.bedework.eventreg.db.Registration;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.Controller;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.TreeSet;
 
 import javax.servlet.http.HttpServletRequest;
@@ -37,49 +31,23 @@ import javax.servlet.http.HttpServletResponse;
  * @author douglm
  *
  */
-public class OutputCSVController implements Controller {
-  protected final Log logger = LogFactory.getLog(getClass());
-
-  private SessionManager sessMan;
-
+public class OutputCSVController extends AbstractController {
   @Override
-  public ModelAndView handleRequest(final HttpServletRequest request,
-                                    final HttpServletResponse response) throws Exception {
-    logger.debug("OutputCSVController entry");
-
+  public ModelAndView doRequest(final HttpServletRequest request,
+                                final HttpServletResponse response) throws Throwable {
     if (!sessMan.getSuperUser()) {
-      logger.info("Non superuser attempted to access OutputCSVController.");
-      return new ModelAndView("error");
+      logger.info("Non superuser attempted access " + getClass().getName());
+      return errorReturn("No access");
     }
 
-    try {
-      TreeSet<Registration> regs = new TreeSet<Registration>();
+    TreeSet<Registration> regs = new TreeSet<Registration>();
 
-      for (Registration reg: sessMan.getAllRegistrations()) {
-        reg.setEvent(sessMan.retrieveEvent(reg));
+    for (Registration reg: sessMan.getAllRegistrations()) {
+      reg.setEvent(sessMan.retrieveEvent(reg));
 
-        regs.add(reg);
-      }
-
-      Map myModel = new HashMap();
-      myModel.put("registrations", regs);
-
-      return new ModelAndView("csv", myModel);
-    } catch (Exception e) {
-      logger.error(this, e);
-      throw e;
-    } catch (Throwable t) {
-      logger.error(this, t);
-      throw new Exception(t);
-    } finally {
-      sessMan.closeDb();
+      regs.add(reg);
     }
-  }
 
-  /**
-   * @param sm
-   */
-  public void setSessionManager(final SessionManager sm) {
-    sessMan = sm;
+    return objModel("csv", regs);
   }
 }
