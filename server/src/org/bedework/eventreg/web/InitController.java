@@ -66,6 +66,14 @@ public class InitController implements Controller {
 
       /* Set registrationFull to true or false */
       int maxRegistrants = sessMan.getCurrEvent().getMaxTickets();
+      if (maxRegistrants < 0) {
+        sessMan.setMessage("Cannot register for this event.");
+        Map myModel = new HashMap();
+        myModel.put("sessMan", sessMan);
+
+        return new ModelAndView("error", myModel);
+      }
+
       long curRegistrants = sessMan.getTicketCount();
       logger.debug("maxRegistrants: " + maxRegistrants);
       logger.debug("curRegistrants: " + curRegistrants);

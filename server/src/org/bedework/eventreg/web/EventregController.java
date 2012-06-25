@@ -51,8 +51,16 @@ public class EventregController implements Controller {
       sessMan.setMessage("");
       Event currEvent = sessMan.getCurrEvent();
 
-      int numTicketsRequested = sessMan.getTicketsRequested();
       int maxTicketsAllowed = currEvent.getMaxTickets();
+      if (maxTicketsAllowed < 0) {
+        sessMan.setMessage("Cannot register for this event.");
+        Map myModel = new HashMap();
+        myModel.put("sessMan", sessMan);
+
+        return new ModelAndView("error", myModel);
+      }
+
+      int numTicketsRequested = sessMan.getTicketsRequested();
       long currentTicketCount = sessMan.getTicketCount();
 
       logger.debug("event registration start");

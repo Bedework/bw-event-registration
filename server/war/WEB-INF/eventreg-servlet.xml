@@ -107,7 +107,7 @@ http://www.springframework.org/schema/aop http://www.springframework.org/schema/
       <value>org.springframework.web.servlet.view.JstlView</value>
     </property>
     <property name="prefix">
-      <value>/WEB-INF/jsp/</value>
+      <value>/docs/</value>
     </property>
     <property name="suffix">
       <value>.jsp</value>
