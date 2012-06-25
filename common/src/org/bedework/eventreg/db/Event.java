@@ -22,6 +22,7 @@ package org.bedework.eventreg.db;
 import edu.rpi.cmt.calendar.XcalUtil;
 import edu.rpi.cmt.calendar.XcalUtil.TzGetter;
 import edu.rpi.cmt.timezones.Timezones;
+import edu.rpi.sss.util.DateTimeUtil;
 
 import net.fortuna.ical4j.model.TimeZone;
 
@@ -42,6 +43,7 @@ import ietf.params.xml.ns.icalendar_2.XBedeworkRegistrationEndPropType;
 import ietf.params.xml.ns.icalendar_2.XBedeworkRegistrationStartPropType;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.xml.bind.JAXBElement;
@@ -179,7 +181,8 @@ public class Event implements Comparable<Event> {
   private DateDatetimePinfo recurrenceId;
   private IntPinfo ticketsAllowed;
   private IntPinfo maxRegistrants;
-  private TextPinfo regDeadline;
+  private DateDatetimePinfo regEnd;
+  private DateDatetimePinfo regStart;
   private TextPinfo location;
   private TextPinfo summary;
   private DateDatetimePinfo dtStart;
@@ -266,25 +269,73 @@ public class Event implements Comparable<Event> {
   /**
    * @return the end of registration
    */
-  public String getRegistrationEnd() {
-    if (regDeadline == null) {
-      regDeadline = new TextPinfo();
-      regDeadline.addProperty((XBedeworkRegistrationEndPropType)findProperty(XBedeworkRegistrationEndPropType.class));
+  public String getRegistrationEnd() throws Throwable {
+    if (regEnd == null) {
+      regEnd = new DateDatetimePinfo();
+      regEnd.addProperty((XBedeworkRegistrationEndPropType)findProperty(XBedeworkRegistrationEndPropType.class));
     }
 
-    return regDeadline.getValue();
+    XcalUtil.DtTzid dt = regEnd.getDt();
+
+    if (dt == null) {
+      return null;
+    }
+
+    return dt.dt;
+  }
+
+  /**
+   * @return the tzid for the end of registration
+   */
+  public String getRegistrationEndTzid() throws Throwable {
+    if (regEnd == null) {
+      regEnd = new DateDatetimePinfo();
+      regEnd.addProperty((XBedeworkRegistrationEndPropType)findProperty(XBedeworkRegistrationEndPropType.class));
+    }
+
+    XcalUtil.DtTzid dt = regEnd.getDt();
+
+    if (dt == null) {
+      return null;
+    }
+
+    return dt.tzid;
   }
 
   /**
    * @return the start of registration
    */
-  public String getRegistrationStart() {
-    if (regDeadline == null) {
-      regDeadline = new TextPinfo();
-      regDeadline.addProperty((XBedeworkRegistrationStartPropType)findProperty(XBedeworkRegistrationStartPropType.class));
+  public String getRegistrationStart() throws Throwable {
+    if (regStart == null) {
+      regStart = new DateDatetimePinfo();
+      regStart.addProperty((XBedeworkRegistrationStartPropType)findProperty(XBedeworkRegistrationStartPropType.class));
     }
 
-    return regDeadline.getValue();
+    XcalUtil.DtTzid dt = regStart.getDt();
+
+    if (dt == null) {
+      return null;
+    }
+
+    return dt.dt;
+  }
+
+  /**
+   * @return the tzid for the start of registration
+   */
+  public String getRegistrationStartTzid() throws Throwable {
+    if (regStart == null) {
+      regStart = new DateDatetimePinfo();
+      regStart.addProperty((XBedeworkRegistrationStartPropType)findProperty(XBedeworkRegistrationStartPropType.class));
+    }
+
+    XcalUtil.DtTzid dt = regStart.getDt();
+
+    if (dt == null) {
+      return null;
+    }
+
+    return dt.tzid;
   }
 
   /**
@@ -380,6 +431,62 @@ public class Event implements Comparable<Event> {
     getDtStartProp();
 
     return dtStart.getValue();
+  }
+
+  /**
+   * @param dt - YYYY-MM-DD or YYYY-MM-DDThh:mm:ss[Z]
+   * @param tz - null for floating or UTC
+   * @return Date
+   * @throws Throwable
+   */
+  public Date getDate(final String dt, final String tz) throws Throwable {
+    if (dt == null) {
+      return null;
+    }
+
+    if (dt.length() == 8) {
+      return DateTimeUtil.fromRfcDate(dt);
+    }
+
+    if (dt.endsWith("Z")) {
+      return DateTimeUtil.fromRfcDateTimeUTC(dt);
+    }
+
+    if (tz == null) {
+      return DateTimeUtil.fromRfcDateTime(dt);
+    }
+
+    return DateTimeUtil.fromRfcDateTime(dt, Timezones.getTz(tz));
+  }
+
+  /**
+   * @return Date
+   * @throws Throwable
+   */
+  public Date getRegistrationEndDate() throws Throwable {
+    if (regEnd == null) {
+      regEnd = new DateDatetimePinfo();
+      regEnd.addProperty((XBedeworkRegistrationEndPropType)findProperty(XBedeworkRegistrationEndPropType.class));
+    }
+
+    XcalUtil.DtTzid dt = regEnd.getDt();
+
+    return getDate(dt.dt, dt.tzid);
+  }
+
+  /**
+   * @return Date
+   * @throws Throwable
+   */
+  public Date getRegistrationStartDate() throws Throwable {
+    if (regStart == null) {
+      regStart = new DateDatetimePinfo();
+      regStart.addProperty((XBedeworkRegistrationStartPropType)findProperty(XBedeworkRegistrationStartPropType.class));
+    }
+
+    XcalUtil.DtTzid dt = regStart.getDt();
+
+    return getDate(dt.dt, dt.tzid);
   }
 
   /* ====================================================================

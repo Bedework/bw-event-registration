@@ -26,8 +26,6 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.Controller;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -53,19 +51,22 @@ public class InitController implements Controller {
       String href = sessMan.getHref();
       sessMan.setMessage("");
 
+      Event currEvent;
+
       if (href != null) {
-        Event currEvent = sessMan.retrieveEvent(href);
+        currEvent = sessMan.retrieveEvent(href);
         sessMan.setCurrEvent(currEvent);
       } else {
         logger.debug("Init Controller  - getting event from session");
-        if (sessMan.getCurrEvent() == null) {
+        currEvent = sessMan.getCurrEvent();
+        if (currEvent == null) {
           logger.warn("Init Controller  - could not get event!");
           return new ModelAndView("error");
         }
       }
 
       /* Set registrationFull to true or false */
-      int maxRegistrants = sessMan.getCurrEvent().getMaxTickets();
+      int maxRegistrants = currEvent.getMaxTickets();
       if (maxRegistrants < 0) {
         sessMan.setMessage("Cannot register for this event.");
         Map myModel = new HashMap();
@@ -79,8 +80,7 @@ public class InitController implements Controller {
       logger.debug("curRegistrants: " + curRegistrants);
       sessMan.setRegistrationFull(curRegistrants >= maxRegistrants);
 
-      DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-      Date deadline = formatter.parse(sessMan.getCurrEvent().getRegistrationEnd());
+      Date deadline = currEvent.getRegistrationEndDate();
       Date now = new Date();
       if (now.before(deadline)) {
         sessMan.setDeadlinePassed(false);
