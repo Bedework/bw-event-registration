@@ -25,6 +25,7 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.Controller;
 
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -40,6 +41,8 @@ public abstract class AbstractController implements Controller {
 
   protected SessionManager sessMan;
 
+  protected boolean debug;
+
   /**
    * @param request
    * @param response
@@ -53,7 +56,12 @@ public abstract class AbstractController implements Controller {
   public ModelAndView handleRequest(final HttpServletRequest request,
                                     final HttpServletResponse response) throws Exception {
     try {
-      logger.debug("Entry: " + this.getClass().getSimpleName());
+      debug = logger.isDebugEnabled();
+
+      if (debug) {
+        logger.debug("Entry: " + this.getClass().getSimpleName());
+        dumpRequest(request);
+      }
 
       sessMan.setMessage("");
 
@@ -103,5 +111,38 @@ public abstract class AbstractController implements Controller {
    */
   public void setSessionManager(final SessionManager sm) {
     sessMan = sm;
+  }
+
+  /**
+   * @param req
+   */
+  public void dumpRequest(final HttpServletRequest req) {
+    try {
+      Enumeration names = req.getParameterNames();
+
+      String title = "Request parameters";
+
+      logger.debug(title + " - global info and uris");
+      logger.debug("getRequestURI = " + req.getRequestURI());
+      logger.debug("getRemoteUser = " + req.getRemoteUser());
+      logger.debug("getRequestedSessionId = " + req.getRequestedSessionId());
+      logger.debug("HttpUtils.getRequestURL(req) = " + req.getRequestURL());
+      logger.debug("query=" + req.getQueryString());
+      logger.debug("contentlen=" + req.getContentLength());
+      logger.debug("request=" + req);
+      logger.debug("parameters:");
+
+      logger.debug(title);
+
+      while (names.hasMoreElements()) {
+        String key = (String)names.nextElement();
+        String[] vals = req.getParameterValues(key);
+        for (String val: vals) {
+          logger.debug("  " + key + " = \"" + val + "\"");
+        }
+      }
+    } catch (Throwable t) {
+      logger.error(this, t);
+    }
   }
 }

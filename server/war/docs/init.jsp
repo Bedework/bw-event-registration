@@ -59,6 +59,7 @@
                  <option value="${i}">${i}</option>
               </c:forEach>
             </select>
+            <input type="hidden" name="href" value="${sessMan.href}"/>
             <input type="submit" value="Request Tickets"/>
           </form>
         </div>

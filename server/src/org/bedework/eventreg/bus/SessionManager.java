@@ -185,17 +185,27 @@ public class SessionManager  {
   }
 
   /**
-   * @param currEvent
+   * @param val
    */
-  public void setCurrEvent(final Event currEvent) {
-    this.currEvent = currEvent;
+  public void setCurrEvent(final Event val) {
+    currEvent = val;
   }
 
   /**
    * @return event
+   * @throws Throwable
    */
-  public Event getCurrEvent() {
-    return  this.currEvent;
+  public Event getCurrEvent() throws Throwable {
+    if (currEvent != null) {
+      return currEvent;
+    }
+
+    if (getHref() == null) {
+      return null;
+    }
+
+    currEvent = retrieveEvent(getHref());
+    return currEvent;
   }
 
   /**
@@ -243,14 +253,14 @@ public class SessionManager  {
    * @throws Throwable
    */
   public String registerUserInEvent(final int numTickets,
-                                    final String eventHref,
                                     final String comment,
                                     final String regType,
                                     final boolean superUser) throws Throwable {
     Timestamp  sqlDate = new Timestamp(new java.util.Date().getTime());
+    String href = getHref();
 
     logger.debug("Event details: " + getCurrentUser() + " " +
-        eventHref + " " +
+        href + " " +
         regType);
 
     /* we  let superusers register over and over, but not regular users */
@@ -258,7 +268,7 @@ public class SessionManager  {
     db.open();
     Registration reg;
     if (!superUser) {
-      reg = db.getUserRegistration(eventHref, getCurrentUser());
+      reg = db.getUserRegistration(href, getCurrentUser());
 
       if (reg != null) {
         reg.setNumTickets(numTickets);
@@ -277,7 +287,7 @@ public class SessionManager  {
 
     reg.setAuthid(getCurrentUser());
     reg.setComment(comment);
-    reg.setHref(eventHref);
+    reg.setHref(href);
     reg.setNumTickets(numTickets);
     reg.setCreated(sqlDate.toString());
     reg.setTicketid(UUID.randomUUID().toString());

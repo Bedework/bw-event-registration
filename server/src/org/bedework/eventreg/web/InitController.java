@@ -35,32 +35,22 @@ public class InitController extends AbstractController {
   @Override
   public ModelAndView doRequest(final HttpServletRequest request,
                                 final HttpServletResponse response) throws Throwable {
-    String href = sessMan.getHref();
-
-    Event ev;
-
-    if (href != null) {
-      ev = sessMan.retrieveEvent(href);
-      sessMan.setCurrEvent(ev);
-    } else {
-      logger.debug("Init Controller  - getting event from session");
-      ev = sessMan.getCurrEvent();
-    }
+    Event ev = sessMan.getCurrEvent();
 
     if (ev == null) {
       return errorReturn("Cannot retrieve the event.");
     }
 
     /* Set registrationFull to true or false */
-    int maxRegistrants = ev.getMaxTickets();
-    if (maxRegistrants < 0) {
+    int maxTickets = ev.getMaxTickets();
+    if (maxTickets < 0) {
       return errorReturn("Cannot register for this event.");
     }
 
-    long curRegistrants = sessMan.getTicketCount();
-    logger.debug("maxRegistrants: " + maxRegistrants);
-    logger.debug("curRegistrants: " + curRegistrants);
-    sessMan.setRegistrationFull(curRegistrants >= maxRegistrants);
+    long curTickets = sessMan.getTicketCount();
+    logger.debug("maxTickets: " + maxTickets);
+    logger.debug("curTickets: " + curTickets);
+    sessMan.setRegistrationFull(curTickets >= maxTickets);
 
     Date end = ev.getRegistrationEndDate();
 

@@ -29,9 +29,9 @@
               not-null="true"
               index="bwevregidx_authid" />
 
+    <!-- 
     <property name="email" column="bwevreg_email" type="string" length="500"
-              not-null="true"
-              index="bwevregidx_email" />
+              index="bwevregidx_email" /> -->
 
     <property name="href" column="bwevreg_href" type="string" length="1000"
               not-null="true"

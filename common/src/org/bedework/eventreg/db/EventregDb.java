@@ -248,7 +248,7 @@ public class EventregDb implements Serializable {
       sb.append("from ");
       sb.append(Registration.class.getName());
       sb.append(" reg where reg.href=:href");
-      sb.append(" and reg.authuser=:user");
+      sb.append(" and reg.authid=:user");
 
       sess.createQuery(sb.toString());
       sess.setString("href", eventHref);
@@ -362,7 +362,7 @@ public class EventregDb implements Serializable {
       sb.append("select sum(numtickets) from ");
       sb.append(Registration.class.getName());
       sb.append(" reg where reg.href=:href");
-      sb.append(" and reg.authuser=:user");
+      sb.append(" and reg.authid=:user");
 
       sess.createQuery(sb.toString());
       sess.setString("href", eventHref);

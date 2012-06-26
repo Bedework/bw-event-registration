@@ -48,7 +48,7 @@ public class InitHandlers extends HandlerInterceptorAdapter {
   public boolean preHandle(final HttpServletRequest request,
                            final HttpServletResponse response,
                            final Object handler) throws Exception {
-    logger.debug("inti handler Intercepter");
+    logger.debug("init handler Intercepter");
 
     sessMan.setRequest(request);
     try {

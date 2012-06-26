@@ -82,7 +82,6 @@ public class EventregController extends AbstractController {
     logger.debug("event registration  - superuser: " + sessMan.getSuperUser());
 
     sessMan.registerUserInEvent(numTicketsRequested,
-                                email,
                                 comment,
                                 regType,
                                 sessMan.getSuperUser());
