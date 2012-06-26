@@ -20,6 +20,8 @@ package org.bedework.eventreg.bus;
 
 import org.bedework.eventreg.db.Event;
 
+import edu.rpi.cmt.calendar.XcalUtil.TzGetter;
+
 import org.apache.log4j.Logger;
 import org.oasis_open.docs.ws_calendar.ns.soap.CalWsService;
 import org.oasis_open.docs.ws_calendar.ns.soap.CalWsServicePortType;
@@ -56,6 +58,8 @@ import javax.xml.soap.SOAPMessage;
 public class BwConnector {
   private transient Logger log;
 
+  private TzGetter tzs;
+
   private static ietf.params.xml.ns.icalendar_2.ObjectFactory icalOf =
       new ietf.params.xml.ns.icalendar_2.ObjectFactory();
 
@@ -69,9 +73,12 @@ public class BwConnector {
 
   /**
    * @param wsdlUri for SOAP
+   * @param tzs
    */
-  public BwConnector(final String wsdlUri) {
+  public BwConnector(final String wsdlUri,
+                     final TzGetter tzs) {
     this.wsdlUri = wsdlUri;
+    this.tzs = tzs;
   }
 
   /**
@@ -118,7 +125,7 @@ public class BwConnector {
       return null;
     }
 
-    ev = new Event(comps.get(0), href);
+    ev = new Event(comps.get(0), href, tzs);
 
     events.put(href, ev);
 

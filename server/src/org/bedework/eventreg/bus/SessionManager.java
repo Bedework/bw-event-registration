@@ -24,7 +24,11 @@ import org.bedework.eventreg.db.EventregDb;
 import org.bedework.eventreg.db.Registration;
 import org.bedework.eventreg.db.SysInfo;
 
+import edu.rpi.cmt.calendar.XcalUtil.TzGetter;
+import edu.rpi.cmt.timezones.Timezones;
 import edu.rpi.sss.util.Util;
+
+import net.fortuna.ical4j.model.TimeZone;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -81,6 +85,13 @@ public class SessionManager  {
 
   private BwConnector cnctr;
 
+  private static TzGetter tzs = new TzGetter() {
+    @Override
+    public TimeZone getTz(final String id) throws Throwable {
+      return Timezones.getTz(id);
+    }
+  };
+
   /**
    *
    */
@@ -98,7 +109,9 @@ public class SessionManager  {
       db.open();
       setSysInfo(db.getSys());
 
-      cnctr = new BwConnector(getSysInfo().getWsdlUri());
+      Timezones.initTimezones(getSysInfo().getTzsUri());
+
+      cnctr = new BwConnector(getSysInfo().getWsdlUri(), tzs);
     } catch (Throwable t) {
       logger.error(this, t);
       throw new Exception(t);
@@ -117,6 +130,10 @@ public class SessionManager  {
       return;
     }
 
+    if (open) {
+      //???
+      return;
+    }
     db.open();
     open = true;
   }
@@ -145,34 +162,6 @@ public class SessionManager  {
   public SysInfo getSysInfo() {
     return sys;
   }
-
-  /* *
-   * @param id
-   * @return user info
-   * @throws Exception
-   * /
-  public SysInfo findUser(final String id) throws Exception {
-    return db.getUser(id);
-  }
-
-  /* *
-   * @param email
-   * @return user info
-   * @throws Exception
-   * /
-  public SysInfo findUserByEmail(final String email) throws Exception {
-    return db.getUserByEmail(email);
-  }
-
-  /* *
-   * @param newUser
-   * @throws Throwable
-   * /
-  public void addNewUser(final SysInfo newUser) throws Throwable {
-    db.addUser(newUser);
-  }
-
-  */
 
   /**
    * @param val
@@ -470,6 +459,28 @@ public class SessionManager  {
   }
 
   /* ====================================================================
+   *                   Current event methods
+   * ==================================================================== */
+
+  /**
+   * @param href
+   * @return event
+   * @throws Throwable
+   */
+  public Event retrieveEvent(final String href) throws Throwable {
+    return cnctr.getEvent(href);
+  }
+
+  /**
+   * @param reg
+   * @return event referenced by registration
+   * @throws Throwable
+   */
+  public Event retrieveEvent(final Registration reg) throws Throwable {
+    return cnctr.getEvent(reg.getHref());
+  }
+
+  /* ====================================================================
    *                   Request methods
    * ==================================================================== */
 
@@ -555,23 +566,5 @@ public class SessionManager  {
    */
   public String getType() {
     return getReqPar(reqparType);
-  }
-
-  /**
-   * @param href
-   * @return event
-   * @throws Throwable
-   */
-  public Event retrieveEvent(final String href) throws Throwable {
-    return cnctr.getEvent(href);
-  }
-
-  /**
-   * @param reg
-   * @return event referenced by registration
-   * @throws Throwable
-   */
-  public Event retrieveEvent(final Registration reg) throws Throwable {
-    return cnctr.getEvent(reg.getHref());
   }
 }

@@ -51,6 +51,16 @@ public interface EventregSvcMBean {
    * System properties
    * ======================================================================== */
 
+  /**
+   * @param val
+   */
+  public void setTzsUri(String val);
+
+  /**
+   * @return tzs uri
+   */
+  public String getTzsUri();
+
   /** Location of wsdl
    *
    * @param val

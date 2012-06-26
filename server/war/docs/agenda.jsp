@@ -4,21 +4,11 @@
 
   <div class="box wide2">
     <div class="rightLinks">
-      Welcome <c:out value="${sessMan.userInfo.fname}"/> (<c:out value="${sessMan.userInfo.email}"/>)<br/>
+      Welcome <c:out value="${sessMan.currentUser}"/> <br/>
       <a href="javascript:print();">print</a> |
       <a href="javascript:self.close();">close this window</a>
     </div>
-    <h4>EMPAC Reservation List</h4>
-
-    <div id="userInfo">
-      <c:out value="${sessMan.userInfo.fname}"/> <c:out value="${sessMan.userInfo.lname}"/><br/>
-      <c:out value="${sessMan.userInfo.email}"/><c:if test="${sessMan.userInfo.phone != ''}">, <c:out value="${sessMan.userInfo.phone}"/></c:if><br/>
-      <c:if test="${sessMan.userInfo.street1 != ''}"><c:out value="${sessMan.userInfo.street1}"/>, </c:if>
-      <c:if test="${sessMan.userInfo.street2 != ''}"><c:out value="${sessMan.userInfo.street2}"/>, </c:if>
-      <c:if test="${sessMan.userInfo.city != ''}"><c:out value="${sessMan.userInfo.city}"/>, </c:if>
-      <c:out value="${sessMan.userInfo.state}"/>
-      <c:out value="${sessMan.userInfo.country}"/>
-    </div>
+    <h4>Reservation List</h4>
 
     <form name="agenda" action="">
       <c:if test="${sessMan.message != null and sessMan.message != ''}">

@@ -96,6 +96,59 @@ public class EventregSvc implements EventregSvcMBean {
    * ======================================================================== */
 
   @Override
+  public void setTzsUri(final String val) {
+    EventregDb db = openDb();
+
+    if (db != null) {
+      try {
+        SysInfo sysi = db.getSys();
+        boolean create = false;
+
+        if (sysi == null) {
+          sysi = new SysInfo();
+          create = true;
+        }
+
+        sysi.setTzsUri(val);
+
+        if (create) {
+          db.addSys(sysi);
+        } else {
+          db.updateSys(sysi);
+        }
+      } catch (Throwable t) {
+        error(t);
+      } finally {
+        closeDb(db);
+      }
+    }
+  }
+
+  @Override
+  public String getTzsUri() {
+    String res = null;
+
+    EventregDb db = openDb();
+
+    if (db != null) {
+      try {
+        SysInfo sysi = db.getSys();
+
+        if (sysi == null) {
+          return "";
+        }
+        res = sysi.getTzsUri();
+      } catch (Throwable t) {
+        error(t);
+      } finally {
+        closeDb(db);
+      }
+    }
+
+    return res;
+  }
+
+  @Override
   public void setWsdlUri(final String val) {
     EventregDb db = openDb();
 

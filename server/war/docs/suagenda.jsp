@@ -2,23 +2,23 @@
 
 <%@ include file="/docs/head.jsp" %>
 
-    <c:if test="${sessMan.userInfo.type == 'superuser'}">
+    <c:if test="${sessMan.superUser}">
       <div class="box wide2">
         <div class="rightLinks">
-          Welcome <c:out value="${sessMan.userInfo.fname}"/>, <c:out value="${sessMan.userInfo.email}"/> (superuser)<br/>
+          Welcome <c:out value="${sessMan.currentUser}"/> (superuser)<br/>
           <a href="javascript:print();">print</a> |
           <a href="javascript:self.close();">close this window</a> |
           <a href="download.do">download registrations</a>
         </div>
-        <h4><c:out value="${sessMan.currEvent.eventSummary}"/></h4>
+        <h4><c:out value="${sessMan.currEvent.summary}"/></h4>
         <p>
-          <c:out value="${sessMan.currEvent.eventDateStr}"/> - <c:out value="${sessMan.currEvent.eventTimeStr}"/>
+          <c:out value="${sessMan.currEvent.date}"/> - <c:out value="${sessMan.currEvent.time}"/>
         </p>
         <p>
           EMPAC Event Agenda<br/>
           <strong>
-            Registration deadline: <c:out value="${sessMan.currEvent.regDeadlineStr}"/><br/>
-            Max allowed: <c:out value="${sessMan.currEvent.totalRegistrants}"/><br/>
+            Registration deadline: <c:out value="${sessMan.currEvent.registrationEnd}"/><br/>
+            Max allowed: <c:out value="${sessMan.currEvent.maxTickets}"/><br/>
             Registrations: <c:out value="${sessMan.registrantCount}"/><br/>
             Tickets requested:  <c:out value="${sessMan.ticketCount}"/>
           </strong>

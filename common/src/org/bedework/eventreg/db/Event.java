@@ -24,8 +24,6 @@ import edu.rpi.cmt.calendar.XcalUtil.TzGetter;
 import edu.rpi.cmt.timezones.Timezones;
 import edu.rpi.sss.util.DateTimeUtil;
 
-import net.fortuna.ical4j.model.TimeZone;
-
 import ietf.params.xml.ns.icalendar_2.ArrayOfProperties;
 import ietf.params.xml.ns.icalendar_2.BaseComponentType;
 import ietf.params.xml.ns.icalendar_2.BasePropertyType;
@@ -56,16 +54,11 @@ public class Event implements Comparable<Event> {
   private BaseComponentType comp;
   private String href;
 
+  private TzGetter tzs;
+
   /* Everything else derived from comp. */
 
   private ArrayOfProperties properties;
-
-  private static TzGetter tzs = new TzGetter() {
-    @Override
-    public TimeZone getTz(final String id) throws Throwable {
-      return Timezones.getTz(id);
-    }
-  };
 
   /** An object of this class is present if the property has been searched for
    * in the icalendar data.
@@ -133,7 +126,7 @@ public class Event implements Comparable<Event> {
     }
   }
 
-  private static class DateDatetimePinfo extends Pinfo<DateDatetimePropertyType> {
+  private class DateDatetimePinfo extends Pinfo<DateDatetimePropertyType> {
     private String utc;
 
     private XcalUtil.DtTzid dt;
@@ -190,11 +183,14 @@ public class Event implements Comparable<Event> {
   /**
    * @param comp
    * @param href
+   * @param tzs
    */
   public Event(final BaseComponentType comp,
-               final String href) {
+               final String href,
+               final TzGetter tzs) {
     this.comp = comp;
     this.href = href;
+    this.tzs = tzs;
 
     properties = this.comp.getProperties();
   }
@@ -445,18 +441,18 @@ public class Event implements Comparable<Event> {
     }
 
     if (dt.length() == 8) {
-      return DateTimeUtil.fromRfcDate(dt);
+      return DateTimeUtil.fromISODate(dt);
     }
 
     if (dt.endsWith("Z")) {
-      return DateTimeUtil.fromRfcDateTimeUTC(dt);
+      return DateTimeUtil.fromISODateTimeUTC(dt);
     }
 
     if (tz == null) {
-      return DateTimeUtil.fromRfcDateTime(dt);
+      return DateTimeUtil.fromISODateTime(dt);
     }
 
-    return DateTimeUtil.fromRfcDateTime(dt, Timezones.getTz(tz));
+    return DateTimeUtil.fromISODateTime(dt, Timezones.getTz(tz));
   }
 
   /**
@@ -467,6 +463,10 @@ public class Event implements Comparable<Event> {
     if (regEnd == null) {
       regEnd = new DateDatetimePinfo();
       regEnd.addProperty((XBedeworkRegistrationEndPropType)findProperty(XBedeworkRegistrationEndPropType.class));
+    }
+
+    if (regEnd == null) {
+      return null;
     }
 
     XcalUtil.DtTzid dt = regEnd.getDt();
@@ -482,6 +482,10 @@ public class Event implements Comparable<Event> {
     if (regStart == null) {
       regStart = new DateDatetimePinfo();
       regStart.addProperty((XBedeworkRegistrationStartPropType)findProperty(XBedeworkRegistrationStartPropType.class));
+    }
+
+    if (regEnd == null) {
+      return null;
     }
 
     XcalUtil.DtTzid dt = regStart.getDt();

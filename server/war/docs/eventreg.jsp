@@ -3,9 +3,9 @@
 <%@ include file="/docs/head.jsp" %>
 
     <div class="box">
-      <%@ include file="/WEB-INF/jsp/userNav.jsp" %>
+      <%@ include file="/docs/userNav.jsp" %>
       <c:choose>
-        <c:when test="${sessMan.userInfo.type == 'superuser'}">
+        <c:when test="${sessMan.superUser}">
           <p>
             Your request for
             <strong><c:out value="${sessMan.ticketsRequested}"/></strong>

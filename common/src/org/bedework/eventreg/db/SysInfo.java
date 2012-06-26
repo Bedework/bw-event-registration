@@ -33,6 +33,10 @@ import java.util.TreeSet;
 public class SysInfo extends DbItem<SysInfo> implements PropertiesEntity {
   private String rootUsers;
 
+  /** Name for timezones server uri property
+   */
+  public static final String tzsUriProp = "Eventreg:tzsUri";
+
   /** Name for wsdl uri property
    */
   public static final String wsdlUriProp = "Eventreg:wsdlUri";
@@ -266,6 +270,20 @@ public class SysInfo extends DbItem<SysInfo> implements PropertiesEntity {
     }
 
     return prop.getValue();
+  }
+
+  /**
+   * @return tzs uri
+   */
+  public String getTzsUri() {
+    return getProperty(tzsUriProp);
+  }
+
+  /**
+   * @param val
+   */
+  public void setTzsUri(final String val) {
+    setProperty(tzsUriProp, val);
   }
 
   /**

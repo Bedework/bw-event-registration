@@ -62,7 +62,13 @@ public class InitController extends AbstractController {
     logger.debug("curRegistrants: " + curRegistrants);
     sessMan.setRegistrationFull(curRegistrants >= maxRegistrants);
 
-    sessMan.setDeadlinePassed(new Date().after(ev.getRegistrationEndDate()));
+    Date end = ev.getRegistrationEndDate();
+
+    if (end == null) {
+      return errorReturn("Application register: missing end date.");
+    }
+
+    sessMan.setDeadlinePassed(new Date().after(end));
 
     return sessModel("init");
   }
