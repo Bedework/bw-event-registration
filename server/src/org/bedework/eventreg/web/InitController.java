@@ -45,9 +45,10 @@ public class InitController extends AbstractController {
     } else {
       logger.debug("Init Controller  - getting event from session");
       ev = sessMan.getCurrEvent();
-      if (ev == null) {
-        return errorReturn("Cannot retrieve the event.");
-      }
+    }
+
+    if (ev == null) {
+      return errorReturn("Cannot retrieve the event.");
     }
 
     /* Set registrationFull to true or false */
