@@ -11,10 +11,7 @@
     <title>
      Error Page
     </title>
-    <!-- 
-    <link rel="stylesheet" href="resources/empacreg.css" type="text/css" media="all"/>
-    <link rel="stylesheet" href="http://www2.empac.rpi.edu:8080/opening/common/styles/empacreg.css" type="text/css" media="all"/>
-     -->
+    <link rel="stylesheet" href="resources/bweventreg.css" type="text/css" media="all"/>
   </head>
   <body>
     <div class="box">
