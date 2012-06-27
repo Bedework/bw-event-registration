@@ -75,7 +75,6 @@ public class EventregController extends AbstractController {
     }
 
     String comment = request.getParameter("comment");
-    String email = request.getParameter("email");
     String regType = request.getParameter("regType");
 
     logger.debug("event registration  - number of tickets requested: " + numTicketsRequested);

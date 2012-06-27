@@ -22,31 +22,34 @@ package org.bedework.eventreg.db;
 
 
 /**
- * @author douglm
+ * Change log entry
  *
  */
-public class Registration extends DbItem<Registration> {
+public class Change extends DbItem<Change> {
   private String ticketid;
   private String authid;
-  private String email;
-  private String href;
-  private int numTickets;
-  private int ticketsRequested;
-  private String type;
-  private String created;
   private String lastmod;
-  private String comment;
-  private String message;
+  private String type;
+  private String name;
+  private String value;
+
+  /** */
+  public static final String typeNewReg = "New_Reg";
+
+  /** */
+  public static final String typeUpdReg = "Upd_Reg";
+
+  /** */
+  public static final String lblUpdNumTickets = "numTickets";
 
   /* Non db fields */
 
-  private Event event;
+  private Registration registration;
 
   /**
    *
    */
-  public Registration() {
-
+  public Change() {
   }
 
   /**
@@ -80,90 +83,6 @@ public class Registration extends DbItem<Registration> {
   /**
    * @param val
    */
-  public void setEmail(final String val) {
-    email = val;
-  }
-
-  /**
-   * @return email
-   */
-  public String getEmail() {
-    return email;
-  }
-
-  /**
-   * @param val
-   */
-  public void setHref(final String val) {
-    href = val;
-  }
-
-  /**
-   * @return eventHref
-   */
-  public String getHref() {
-    return href;
-  }
-
-  /**
-   * @param val - tickets allocated
-   */
-  public void setNumTickets(final int val) {
-    numTickets = val;
-  }
-
-  /**
-   * @return numTickets
-   */
-  public int getNumTickets() {
-    return numTickets;
-  }
-
-  /**
-   * @param val - ticketsRequested
-   */
-  public void setTicketsRequested(final int val) {
-    ticketsRequested = val;
-  }
-
-  /**
-   * @return ticketsRequested
-   */
-  public int getTicketsRequested() {
-    return ticketsRequested;
-  }
-
-  /**
-   * @param val
-   */
-  public void setType(final String val) {
-    type = val;
-  }
-
-  /**
-   * @return type
-   */
-  public String getType() {
-    return type;
-  }
-
-  /**
-   * @param val
-   */
-  public void setCreated(final String val) {
-    created = val;
-  }
-
-  /**
-   * @return created
-   */
-  public String getCreated() {
-    return created;
-  }
-
-  /**
-   * @param val
-   */
   public void setLastmod(final String val) {
     lastmod = val;
   }
@@ -178,29 +97,43 @@ public class Registration extends DbItem<Registration> {
   /**
    * @param val
    */
-  public void setComment(final String val) {
-    comment = val;
+  public void setType(final String val) {
+    type = val;
   }
 
   /**
-   * @return comment
+   * @return type of change
    */
-  public String getComment() {
-    return comment;
+  public String getType() {
+    return type;
   }
 
   /**
    * @param val
    */
-  public void setMessage(final String val) {
-    message = val;
+  public void setName(final String val) {
+    name = val;
   }
 
   /**
-   * @return message
+   * @return name of changed value
    */
-  public String getMessage() {
-    return message;
+  public String getName() {
+    return name;
+  }
+
+  /**
+   * @param val
+   */
+  public void setValue(final String val) {
+    value = val;
+  }
+
+  /**
+   * @return name of changed value
+   */
+  public String getValue() {
+    return value;
   }
 
   /* ====================================================================
@@ -210,15 +143,15 @@ public class Registration extends DbItem<Registration> {
   /**
    * @param val
    */
-  public void setEvent(final Event val) {
-    event = val;
+  public void setRegistration(final Registration val) {
+    registration = val;
   }
 
   /**
    * @return event
    */
-  public Event getEvent() {
-    return event;
+  public Registration getRegistration() {
+    return registration;
   }
 
   /* ====================================================================
@@ -227,7 +160,7 @@ public class Registration extends DbItem<Registration> {
    * ==================================================================== */
 
   @Override
-  public int compareTo(final Registration that) {
+  public int compareTo(final Change that) {
     return getTicketid().compareTo(that.getTicketid());
   }
 

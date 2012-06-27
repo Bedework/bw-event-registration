@@ -19,6 +19,7 @@ under the License.
 
 package org.bedework.eventreg.bus;
 
+import org.bedework.eventreg.db.Change;
 import org.bedework.eventreg.db.Event;
 import org.bedework.eventreg.db.EventregDb;
 import org.bedework.eventreg.db.Registration;
@@ -139,14 +140,27 @@ public class SessionManager  {
   }
 
   /**
+   * @throws Throwable
    */
-  public synchronized void closeDb() {
+  public synchronized void rollbackDb() throws Throwable {
     if (db == null) {
       return;
     }
 
-    db.close();
+    db.rollback();
     open = false;
+  }
+
+  /**
+   * @return false if something failed on close - probbaly a commit eror
+   */
+  public synchronized boolean closeDb() {
+    if (db == null) {
+      return true;
+    }
+
+    open = false;
+    return db.close();
   }
 
   /**
@@ -209,6 +223,23 @@ public class SessionManager  {
   }
 
   /**
+   * @param c
+   * @throws Throwable
+   */
+  public void addChange(final Change c) throws Throwable {
+    db.addChange(c);
+  }
+
+  /**
+   * @param ts
+   * @return changes
+   * @throws Throwable
+   */
+  public List<Change> getChanges(final String ts) throws Throwable {
+    return db.getChanges(ts);
+  }
+
+  /**
    * @param reg
    * @throws Throwable
    */
@@ -234,18 +265,64 @@ public class SessionManager  {
       return false;
     }
 
+    Timestamp sqlDate = new Timestamp(new java.util.Date().getTime());
+
+    reg.setLastmod(sqlDate.toString());
     reg.setNumTickets(numTickets);
     reg.setComment(comment);
     reg.setType(regType);
 
     db.update(reg);
 
+    addChange(reg, Change.typeUpdReg,
+              Change.lblUpdNumTickets,
+              String.valueOf(numTickets));
+
     return true;
   }
 
   /**
+   * @param reg
+   * @param type
+   * @throws Throwable
+   */
+  public void addChange(final Registration reg,
+                        final String type) throws Throwable {
+    Change c = new Change();
+
+    c.setAuthid(getCurrentUser());
+    c.setTicketid(reg.getTicketid());
+    c.setLastmod(reg.getLastmod());
+    c.setType(type);
+
+    db.addChange(c);
+  }
+
+  /**
+   * @param reg
+   * @param type
+   * @param label
+   * @param val
+   * @throws Throwable
+   */
+  public void addChange(final Registration reg,
+                        final String type,
+                        final String label,
+                        final String val) throws Throwable {
+    Change c = new Change();
+
+    c.setAuthid(getCurrentUser());
+    c.setTicketid(reg.getTicketid());
+    c.setLastmod(reg.getLastmod());
+    c.setType(type);
+    c.setName(label);
+    c.setValue(val);
+
+    db.addChange(c);
+  }
+
+  /**
    * @param numTickets
-   * @param eventHref
    * @param comment
    * @param regType
    * @param superUser
@@ -256,7 +333,6 @@ public class SessionManager  {
                                     final String comment,
                                     final String regType,
                                     final boolean superUser) throws Throwable {
-    Timestamp  sqlDate = new Timestamp(new java.util.Date().getTime());
     String href = getHref();
 
     logger.debug("Event details: " + getCurrentUser() + " " +
@@ -265,17 +341,23 @@ public class SessionManager  {
 
     /* we  let superusers register over and over, but not regular users */
 
-    db.open();
+    Timestamp sqlDate = new Timestamp(new java.util.Date().getTime());
+
     Registration reg;
     if (!superUser) {
       reg = db.getUserRegistration(href, getCurrentUser());
 
       if (reg != null) {
+        reg.setLastmod(sqlDate.toString());
         reg.setNumTickets(numTickets);
         reg.setComment(comment);
         reg.setType(regType);
 
         db.update(reg);
+
+        addChange(reg, Change.typeUpdReg,
+                  Change.lblUpdNumTickets,
+                  String.valueOf(numTickets));
 
         return reg.getTicketid();
       }
@@ -289,10 +371,14 @@ public class SessionManager  {
     reg.setComment(comment);
     reg.setHref(href);
     reg.setNumTickets(numTickets);
-    reg.setCreated(sqlDate.toString());
     reg.setTicketid(UUID.randomUUID().toString());
 
+    reg.setCreated(sqlDate.toString());
+    reg.setLastmod(reg.getCreated());
+
     db.add(reg);
+
+    addChange(reg, Change.typeNewReg);
 
     return reg.getTicketid();
   }

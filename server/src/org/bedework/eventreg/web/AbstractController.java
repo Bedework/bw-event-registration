@@ -75,7 +75,9 @@ public abstract class AbstractController implements Controller {
 
       return errorReturn(t);
     } finally {
-      sessMan.closeDb();
+      if (!sessMan.closeDb()) {
+        errorReturn("Error during close");
+      }
     }
   }
 

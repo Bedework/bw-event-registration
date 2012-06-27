@@ -264,6 +264,7 @@ public class Event implements Comparable<Event> {
 
   /**
    * @return the end of registration
+   * @throws Throwable
    */
   public String getRegistrationEnd() throws Throwable {
     if (regEnd == null) {
@@ -282,6 +283,7 @@ public class Event implements Comparable<Event> {
 
   /**
    * @return the tzid for the end of registration
+   * @throws Throwable
    */
   public String getRegistrationEndTzid() throws Throwable {
     if (regEnd == null) {
@@ -300,6 +302,7 @@ public class Event implements Comparable<Event> {
 
   /**
    * @return the start of registration
+   * @throws Throwable
    */
   public String getRegistrationStart() throws Throwable {
     if (regStart == null) {
@@ -318,6 +321,7 @@ public class Event implements Comparable<Event> {
 
   /**
    * @return the tzid for the start of registration
+   * @throws Throwable
    */
   public String getRegistrationStartTzid() throws Throwable {
     if (regStart == null) {

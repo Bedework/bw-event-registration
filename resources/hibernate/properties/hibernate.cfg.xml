@@ -13,6 +13,7 @@
 
     <!-- Mapping files -->
     <mapping resource="SysInfo.hbm.xml"/>
+    <mapping resource="Change.hbm.xml"/>
     <mapping resource="Registration.hbm.xml"/>
   </session-factory>
 </hibernate-configuration>

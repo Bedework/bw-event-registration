@@ -79,6 +79,19 @@ public class EventregDb implements Serializable {
   }
 
   /**
+   * @return true if we had did rollback.
+   * @throws Throwable
+   */
+  public boolean rollback() throws Throwable {
+    if (!isOpen()) {
+      return false;
+    }
+
+    rollbackTransaction();
+    return true;
+  }
+
+  /**
    * @return false if error occurred
    */
   public boolean close() {
@@ -105,7 +118,7 @@ public class EventregDb implements Serializable {
   }
 
   /* ====================================================================
-   *                   User Object methods
+   *                   System info methods
    * ==================================================================== */
 
   /**
@@ -159,6 +172,44 @@ public class EventregDb implements Serializable {
   public void updateSys(final SysInfo s) throws Throwable {
     try {
       sess.update(s);
+    } catch (HibException he) {
+      throw new Exception(he);
+    }
+  }
+
+  /* ====================================================================
+   *                   Changes methods
+   * ==================================================================== */
+
+  /**
+   * @param c
+   * @throws Throwable
+   */
+  public void addChange(final Change c) throws Throwable {
+    try {
+      sess.save(c);
+    } catch (HibException he) {
+      throw new Exception(he);
+    }
+  }
+
+  /**
+   * @param ts - timestamp value - get changes after this
+   * @return - list of changes since ts
+   * @throws Throwable
+   */
+  public List<Change> getChanges(final String ts) throws Throwable {
+    try {
+      StringBuilder sb = new StringBuilder();
+
+      sb.append("from ");
+      sb.append(Change.class.getName());
+      sb.append(" chg where ch.lastmod>:lm");
+
+      sess.createQuery(sb.toString());
+      sess.setString("lm", ts);
+
+      return sess.getList();
     } catch (HibException he) {
       throw new Exception(he);
     }
@@ -381,45 +432,6 @@ public class EventregDb implements Serializable {
     }
   }
 
-  /* * Find for event and user
-   *
-   * @param sub
-   * @return matching subscriptions
-   * @throws Exception
-   * /
-  public Subscription find(final Subscription sub) throws Exception {
-    try {
-      StringBuilder sb = new StringBuilder();
-
-      sb.append("from ");
-      sb.append(Subscription.class.getName());
-      sb.append(" sub where sub.endAConnectorInfo.connectorId=:aconnid");
-      sb.append(" and sub.endAConnectorInfo.synchProperties=:aconnprops");
-      sb.append(" and sub.endBConnectorInfo.connectorId=:bconnid");
-      sb.append(" and sub.endBConnectorInfo.synchProperties=:bconnprops");
-      sb.append(" and sub.direction=:dir");
-      sb.append(" and sub.master=:mstr");
-
-      sess.createQuery(sb.toString());
-      sess.setString("aconnid",
-                     sub.getEndAConnectorInfo().getConnectorId());
-      sess.setString("aconnprops",
-                     sub.getEndAConnectorInfo().getSynchProperties());
-      sess.setString("bconnid",
-                     sub.getEndBConnectorInfo().getConnectorId());
-      sess.setString("bconnprops",
-                     sub.getEndBConnectorInfo().getSynchProperties());
-      sess.setString("dir",
-                     sub.getDirection().name());
-      sess.setString("mstr",
-                     sub.getMaster().name());
-
-      return (Subscription)sess.getUnique();
-    } catch (HibException he) {
-      throw new Exception(he);
-    }
-  }*/
-
   /** Add the registration.
    *
    * @param reg
@@ -567,6 +579,7 @@ public class EventregDb implements Serializable {
         sess.commit();
       }
     } catch (HibException he) {
+      sess.rollback();
       throw new Exception(he);
     }
   }

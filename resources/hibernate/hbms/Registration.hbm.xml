@@ -4,7 +4,7 @@
   "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 
 <!-- ===================================================================
-     Object to represent a synch subscription.
+     Object to represent an event registration.
      =================================================================== -->
 
 <hibernate-mapping>
@@ -43,9 +43,13 @@
               
     <property name="type" column="bwevreg_type" type="string" length="200" />
               
-    <property name="created" column="bwevreg_created" type="string" length="20" />
+    <property name="created" column="bwevreg_created" type="string" length="30" />
+              
+    <property name="lastmod" column="bwevreg_lastmod" type="string" length="30" />
 
     <property name="comment" column="bwevreg_comment" type="string" length="250" />
+
+    <property name="message" column="bwevreg_message" type="string" length="2000" />
   </class>
 </hibernate-mapping>
 
