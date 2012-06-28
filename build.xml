@@ -107,7 +107,16 @@
      Deploy if an application server is defined.
      =================================================================== -->
 
-  <target name="deploy" depends="deploy-init,build"
+  <target name="deploy-resources" depends="init"
+          description="Deploy event reg resources">
+  	<delete dir="${org.bedework.appserver.dir}/${org.bedework.server.resource.root.dir}/evreg" />
+  	
+  	<copy todir="${org.bedework.appserver.dir}/${org.bedework.server.resource.root.dir}/evreg" >
+      <fileset dir="${project.home}/resources/evreg"/>
+    </copy>
+  </target>
+
+  <target name="deploy" depends="deploy-init,build,deploy-resources"
                description="Deploy generated files">
     <getExtraJars/>
 

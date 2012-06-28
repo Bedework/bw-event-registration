@@ -96,9 +96,9 @@ http://www.springframework.org/schema/aop http://www.springframework.org/schema/
         <prop key="updateTicket.do">updateTicketController</prop>
         <prop key="removeTicket.do">removeTicketController</prop>
 
-        <prop key="/admin/suagenda.do">superUserAgendaController</prop>
+        <prop key="suagenda.do">superUserAgendaController</prop>
         <prop key="removeTicket.do">removeTicketController</prop>
-        <prop key="/admin/download.do">outputCSVController</prop>
+        <prop key="download.do">outputCSVController</prop>
       </props>
     </property>
   </bean>

@@ -3,7 +3,7 @@
   <head>
     <title>Bedework Event Registration System</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <script src="resources/includes.js" type="text/javascript"></script>
-    <link rel="stylesheet" href="resources/bweventreg.css" type="text/css" media="all"/>
+    <script src="/evreg/includes.js" type="text/javascript"></script>
+    <link rel="stylesheet" href="/evreg/bweventreg.css" type="text/css" media="all"/>
   </head>
   <body onload="javascript:focusFirstElement();">

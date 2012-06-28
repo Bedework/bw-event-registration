@@ -25,7 +25,12 @@
 
   <servlet-mapping>
     <servlet-name>eventreg</servlet-name>
-    <url-pattern>*.do</url-pattern>
+    <url-pattern>/ureg/*</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>eventreg</servlet-name>
+    <url-pattern>/admin/*</url-pattern>
   </servlet-mapping>
   
   <session-config>
