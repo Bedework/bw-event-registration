@@ -36,6 +36,15 @@ http://www.springframework.org/schema/aop http://www.springframework.org/schema/
     </property>
   </bean>
 
+  <bean id="outputCountsController"  
+        class="org.bedework.eventreg.web.OutputCountsController"  
+        scope="session">
+    <aop:scoped-proxy/>
+    <property name="sessionManager">
+      <ref bean="sessMan"/>
+    </property>
+  </bean>
+
   <bean id="outputCSVController"  
         class="org.bedework.eventreg.web.OutputCSVController"  
         scope="session">
@@ -99,6 +108,8 @@ http://www.springframework.org/schema/aop http://www.springframework.org/schema/
         <prop key="suagenda.do">superUserAgendaController</prop>
         <prop key="removeTicket.do">removeTicketController</prop>
         <prop key="download.do">outputCSVController</prop>
+        
+        <prop key="counts.do">outputCountsController</prop>
       </props>
     </property>
   </bean>

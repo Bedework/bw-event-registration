@@ -437,7 +437,18 @@ public class SessionManager  {
    * @throws Throwable
    */
   public long getRegistrantCount() throws Throwable {
-    return db.getRegistrantCount(getCurrEvent().getHref());
+    boolean wasOpen = open;
+
+    try {
+      if (!open) {
+        openDb();
+      }
+      return db.getRegistrantCount(getCurrEvent().getHref());
+    } finally {
+      if (!wasOpen) {
+        closeDb();
+      }
+    }
   }
 
   /**
@@ -445,7 +456,18 @@ public class SessionManager  {
    * @throws Throwable
    */
   public long getTicketCount() throws Throwable {
-    return db.getTicketCount(getCurrEvent().getHref());
+    boolean wasOpen = open;
+
+    try {
+      if (!open) {
+        openDb();
+      }
+      return db.getTicketCount(getCurrEvent().getHref());
+    } finally {
+      if (!wasOpen) {
+        closeDb();
+      }
+    }
   }
 
   /**
