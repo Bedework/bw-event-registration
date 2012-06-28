@@ -245,7 +245,7 @@ public class EventregDb implements Serializable {
    * @return a matching registration
    * @throws Throwable
    */
-  public Registration getByid(final String id) throws Throwable {
+  public Registration getByid(final Long id) throws Throwable {
     try {
       StringBuilder sb = new StringBuilder();
 
@@ -254,7 +254,7 @@ public class EventregDb implements Serializable {
       sb.append(" reg where reg.ticketId=:id");
 
       sess.createQuery(sb.toString());
-      sess.setString("id", id);
+      sess.setLong("id", id);
 
       return (Registration)sess.getUnique();
     } catch (HibException he) {
@@ -329,6 +329,26 @@ public class EventregDb implements Serializable {
       sess.setString("href", href);
 
       return sess.getList();
+    } catch (HibException he) {
+      throw new Exception(he);
+    }
+  }
+
+  /**
+   * @return max ticketid
+   * @throws Throwable
+   */
+  public Long getMaxTicketId() throws Throwable {
+    try {
+      StringBuilder sb = new StringBuilder();
+
+      sb.append("select max(ticketid) from ");
+      sb.append(Registration.class.getName());
+      sb.append(" reg");
+
+      sess.createQuery(sb.toString());
+
+      return (Long)sess.getUnique();
     } catch (HibException he) {
       throw new Exception(he);
     }

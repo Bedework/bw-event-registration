@@ -56,14 +56,11 @@ public abstract class AbstractController implements Controller {
   public ModelAndView handleRequest(final HttpServletRequest request,
                                     final HttpServletResponse response) throws Exception {
     try {
-      debug = logger.isDebugEnabled();
+      ModelAndView mv = setup(request);
 
-      if (debug) {
-        logger.debug("Entry: " + this.getClass().getSimpleName());
-        dumpRequest(request);
+      if (mv != null) {
+        return mv;
       }
-
-      sessMan.setMessage("");
 
       return doRequest(request, response);
     } catch (Exception e) {
@@ -76,9 +73,22 @@ public abstract class AbstractController implements Controller {
       return errorReturn(t);
     } finally {
       if (!sessMan.closeDb()) {
-        errorReturn("Error during close");
+        return errorReturn("Error during close");
       }
     }
+  }
+
+  protected ModelAndView setup(final HttpServletRequest request) throws Throwable {
+    debug = logger.isDebugEnabled();
+
+    if (debug) {
+      logger.debug("Entry: " + getClass().getSimpleName());
+      dumpRequest(request);
+    }
+
+    sessMan.setMessage("");
+
+    return null;
   }
 
   protected ModelAndView sessModel(final String view) {
@@ -88,10 +98,12 @@ public abstract class AbstractController implements Controller {
     return new ModelAndView(view, myModel);
   }
 
-  protected ModelAndView objModel(final String view, final Object m) {
+  protected ModelAndView objModel(final String view,
+                                  final String name,
+                                  final Object m) {
     Map myModel = new HashMap();
     myModel.put("sessMan", sessMan);
-    myModel.put("sessMan", m);
+    myModel.put(name, m);
 
     return new ModelAndView(view, myModel);
   }

@@ -26,7 +26,7 @@ package org.bedework.eventreg.db;
  *
  */
 public class Change extends DbItem<Change> {
-  private String ticketid;
+  private Long ticketid;
   private String authid;
   private String lastmod;
   private String type;
@@ -55,14 +55,14 @@ public class Change extends DbItem<Change> {
   /**
    * @param val
    */
-  public void setTicketid(final String val) {
+  public void setTicketid(final Long val) {
     ticketid = val;
   }
 
   /**
    * @return ticketid
    */
-  public String getTicketid() {
+  public Long getTicketid() {
     return ticketid;
   }
 

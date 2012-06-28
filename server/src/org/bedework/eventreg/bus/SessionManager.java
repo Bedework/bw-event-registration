@@ -36,7 +36,6 @@ import org.apache.commons.logging.LogFactory;
 
 import java.sql.Timestamp;
 import java.util.List;
-import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -255,7 +254,7 @@ public class SessionManager  {
    * @return true if found and updated
    * @throws Throwable
    */
-  public boolean updateTicketById(final String ticketId,
+  public boolean updateTicketById(final long ticketId,
                                   final int numTickets,
                                   final String comment,
                                   final String regType) throws Throwable {
@@ -329,10 +328,10 @@ public class SessionManager  {
    * @return ticketId for registration
    * @throws Throwable
    */
-  public String registerUserInEvent(final int numTickets,
-                                    final String comment,
-                                    final String regType,
-                                    final boolean superUser) throws Throwable {
+  public Long registerUserInEvent(final int numTickets,
+                                  final String comment,
+                                  final String regType,
+                                  final boolean superUser) throws Throwable {
     String href = getHref();
 
     logger.debug("Event details: " + getCurrentUser() + " " +
@@ -371,7 +370,7 @@ public class SessionManager  {
     reg.setComment(comment);
     reg.setHref(href);
     reg.setNumTickets(numTickets);
-    reg.setTicketid(UUID.randomUUID().toString());
+    reg.setTicketid(getNextTicketId());
 
     reg.setCreated(sqlDate.toString());
     reg.setLastmod(reg.getCreated());
@@ -397,7 +396,7 @@ public class SessionManager  {
    * @return referenced registration
    * @throws Throwable
    */
-  public Registration getRegistrationById(final String id) throws Throwable {
+  public Registration getRegistrationById(final long id) throws Throwable {
     return db.getByid(id);
   }
 
@@ -661,8 +660,18 @@ public class SessionManager  {
   /**
    * @return ticket id or null for no parameter
    */
-  public String getTicketId() {
-    return getReqPar(reqparTicketId);
+  public Long getTicketId() {
+    String reqpar = getReqPar(reqparTicketId);
+
+    if (reqpar == null) {
+      return (long)-1;
+    }
+
+    try {
+      return Long.parseLong(reqpar);
+    } catch (Throwable t) {
+      return (long)-1; // XXX exception?
+    }
   }
 
   /**
@@ -684,5 +693,26 @@ public class SessionManager  {
    */
   public String getType() {
     return getReqPar(reqparType);
+  }
+
+  private static transient volatile Long nextTicketId = (long)-1;
+
+  private Long getNextTicketId() throws Throwable {
+    synchronized (nextTicketId) {
+      if (nextTicketId < 0) {
+        Long nid = db.getMaxTicketId();
+        if (nid == null) {
+          // First time I guess
+          nextTicketId = (long)1;
+        } else {
+          nextTicketId = nid + 1;
+        }
+      }
+
+      Long tid = nextTicketId;
+      nextTicketId++;
+
+      return tid;
+    }
   }
 }

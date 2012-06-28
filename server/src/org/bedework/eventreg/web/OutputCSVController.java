@@ -31,7 +31,7 @@ import javax.servlet.http.HttpServletResponse;
  * @author douglm
  *
  */
-public class OutputCSVController extends AbstractController {
+public class OutputCSVController extends AuthAbstractController {
   @Override
   public ModelAndView doRequest(final HttpServletRequest request,
                                 final HttpServletResponse response) throws Throwable {
@@ -48,6 +48,6 @@ public class OutputCSVController extends AbstractController {
       regs.add(reg);
     }
 
-    return objModel("csv", regs);
+    return objModel("csv", "regs", regs);
   }
 }

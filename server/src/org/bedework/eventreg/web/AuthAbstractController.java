@@ -18,41 +18,27 @@ under the License.
  */
 package org.bedework.eventreg.web;
 
-import org.bedework.eventreg.db.Event;
-import org.bedework.eventreg.db.Registration;
-
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.TreeSet;
-
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 /**
- * @author douglm
+ * Ensure user is authenticated.
  *
  */
-public class UserAgendaController extends AuthAbstractController {
+public abstract class AuthAbstractController extends AbstractController {
   @Override
-  public ModelAndView doRequest(final HttpServletRequest request,
-                                final HttpServletResponse response) throws Throwable {
-    logger.debug("UserAgendaController - " + sessMan.getCurrentUser());
+  protected ModelAndView setup(final HttpServletRequest request) throws Throwable {
+    ModelAndView mv = super.setup(request);
 
-    TreeSet<Registration> regs = new TreeSet<Registration>();
-
-    for (Registration reg: sessMan.getRegistrationsByUser(sessMan.getCurrentUser())) {
-      Event ev = sessMan.retrieveEvent(reg);
-
-      if (ev.getMaxTickets() < 0) {
-        // XXX Warn? - not registrable any more
-        continue;
-      }
-
-      reg.setEvent(ev);
-
-      regs.add(reg);
+    if (mv != null) {
+      return mv;
     }
 
-    return objModel("agenda", "regs", regs);
+    if (sessMan.getCurrentUser() == null) {
+      return errorReturn("Not authenticated");
+    }
+
+    return null;
   }
 }

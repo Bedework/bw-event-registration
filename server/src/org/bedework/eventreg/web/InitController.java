@@ -31,7 +31,7 @@ import javax.servlet.http.HttpServletResponse;
  * @author douglm
  *
  */
-public class InitController extends AbstractController {
+public class InitController extends AuthAbstractController {
   @Override
   public ModelAndView doRequest(final HttpServletRequest request,
                                 final HttpServletResponse response) throws Throwable {

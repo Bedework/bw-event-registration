@@ -11,11 +11,15 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * @author douglm
  */
-public class UpdateTicketController extends AbstractController {
+public class UpdateTicketController extends AuthAbstractController {
   @Override
   public ModelAndView doRequest(final HttpServletRequest request,
                                 final HttpServletResponse response) throws Throwable {
-    String ticketId = sessMan.getTicketId();
+    Long ticketId = sessMan.getTicketId();
+    if (ticketId == null) {
+      return errorReturn("No ticketid supplied");
+    }
+
     int numTickets = sessMan.getTicketsRequested();
     String comment = sessMan.getComment();
     String type = sessMan.getType();

@@ -20,7 +20,7 @@
 
     <version name="seq" column="bwevchg_seq" type="integer" />
 
-    <property name="ticketid" column="bwevchg_tktid" type="string" length="250"
+    <property name="ticketid" column="bwevchg_tktid" type="long"
               unique="true"
               not-null="true"
               index="bwevchgidx_tktid" />

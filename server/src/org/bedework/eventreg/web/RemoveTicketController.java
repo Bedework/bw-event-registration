@@ -30,11 +30,14 @@ import javax.servlet.http.HttpServletResponse;
  * @author douglm
  *
  */
-public class RemoveTicketController extends AbstractController {
+public class RemoveTicketController extends AuthAbstractController {
   @Override
   public ModelAndView doRequest(final HttpServletRequest request,
                                 final HttpServletResponse response) throws Throwable {
-    String ticketId = sessMan.getTicketId();
+    Long ticketId = sessMan.getTicketId();
+    if (ticketId == null) {
+      return errorReturn("No ticketid supplied");
+    }
 
     logger.debug("remove ticket id: " + ticketId +
                  "- super user: " + sessMan.getSuperUser());

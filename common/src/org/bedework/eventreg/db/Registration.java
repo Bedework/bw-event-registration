@@ -26,7 +26,7 @@ package org.bedework.eventreg.db;
  *
  */
 public class Registration extends DbItem<Registration> {
-  private String ticketid;
+  private Long ticketid;
   private String authid;
   private String email;
   private String href;
@@ -52,14 +52,14 @@ public class Registration extends DbItem<Registration> {
   /**
    * @param val
    */
-  public void setTicketid(final String val) {
+  public void setTicketid(final Long val) {
     ticketid = val;
   }
 
   /**
    * @return ticketid
    */
-  public String getTicketid() {
+  public Long getTicketid() {
     return ticketid;
   }
 

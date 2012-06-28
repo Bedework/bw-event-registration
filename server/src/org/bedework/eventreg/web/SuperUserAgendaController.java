@@ -32,7 +32,7 @@ import javax.servlet.http.HttpServletResponse;
  * @author douglm
  *
  */
-public class SuperUserAgendaController extends AbstractController {
+public class SuperUserAgendaController extends AuthAbstractController {
   @Override
   public ModelAndView doRequest(final HttpServletRequest request,
                                 final HttpServletResponse response) throws Throwable {
@@ -51,6 +51,6 @@ public class SuperUserAgendaController extends AbstractController {
       regs.add(reg);
     }
 
-    return objModel("suagenda", regs);
+    return objModel("suagenda", "regs", regs);
   }
 }

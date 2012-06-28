@@ -37,7 +37,7 @@
           </th>
         </tr>
         <c:choose>
-          <c:when test="${empty userAgenda}">
+          <c:when test="${empty regs}">
             <tr class="b">
               <td colspan="6">
                 No tickets reserved
@@ -45,7 +45,7 @@
             </tr>
           </c:when>
           <c:otherwise>
-            <c:forEach var="reg" items="${userAgenda}" varStatus="loopStatus">
+            <c:forEach var="reg" items="${regs}" varStatus="loopStatus">
               <c:choose>
                 <c:when test='${(loopStatus.index)%2 eq 0}'>
                   <tr class="b">
@@ -58,33 +58,33 @@
                   <c:out value="${reg.event.summary}"/>
                 </td>
                 <td class="ticketDateTime">
-                  <c:out value="${reg.event.date}"/> - <c:out value="${reg.event.time}"/>
+                  <c:out value="${reg.event.dateTime}"/>
                 </td>
                 <td class="ticketLocation">
                   <c:out value="${reg.event.location}"/>
                 </td>
                 <td class="ticketId">
-                  <c:out value="${reg.ticketId}"/>
+                  <c:out value="${reg.ticketid}"/>
                 </td>
                 <td>
                   <c:out value="${reg.ticketsRequested}"/>
                 </td>
                 <td>
-                  <select name='tickets<c:out value="${reg.ticketId}"/>' id='tickets<c:out value="${reg.ticketId}"/>'>
-                    <c:forEach var="i" begin="1" end="${reg.event.ticketsAllowed}">
+                  <select name='tickets<c:out value="${reg.ticketid}"/>' id='tickets<c:out value="${reg.ticketid}"/>'>
+                    <c:forEach var="i" begin="1" end="${reg.event.maxTicketsPerUser}">
                        <c:choose>
                          <c:when test="${i == reg.ticketsRequested}">
-                           <option value="<c:out value='${i}'/>"  selected="selected"><c:out value="${i}" /></option>
+                           <option value="${i}" selected="selected">"${i}"</option>
                          </c:when>
                          <c:otherwise>
-                           <option value="<c:out value='${i}' />"><c:out value="${i}" /></option>
+                           <option value="${i}">${i}</option>
                          </c:otherwise>
                        </c:choose>
                     </c:forEach>
                   </select>
-                  <a href="javascript:doUpdateTicket('<c:out value="${reg.ticketId}"/>')" onclick="return confirmUpdateTicket('<c:out value="${reg.ticketId}"/>','<c:out value="${reg.event.summary}"/>')">update</a>
+                  <a href="javascript:doUpdateTicket('<c:out value="${reg.ticketid}"/>')" onclick="return confirmUpdateTicket('<c:out value="${reg.ticketid}"/>','<c:out value="${reg.event.summary}"/>')">update</a>
                    |
-                  <a href='removeTicket.do?id=<c:out value="${reg.ticketId}"/>' onclick="return confirmRemoveTicket('<c:out value="${reg.event.summary}"/>')">remove</a>
+                  <a href='removeTicket.do?id=<c:out value="${reg.ticketid}"/>' onclick="return confirmRemoveTicket('<c:out value="${reg.event.summary}"/>')">remove</a>
                 </td>
               </tr>
             </c:forEach>

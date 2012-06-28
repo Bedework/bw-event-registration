@@ -392,6 +392,34 @@ public class Event implements Comparable<Event> {
   }
 
   /**
+   * @return date or date - time with possible tzid
+   * @throws Throwable
+   */
+  public String getDateTime() throws Throwable {
+    getDtStartProp();
+
+    XcalUtil.DtTzid dt = dtStart.getDt();
+
+    if (dt == null) {
+      return null;
+    }
+
+    StringBuilder sb = new StringBuilder(dt.dt.substring(0, 8));
+
+    if (!dt.dateOnly) {
+      sb.append(" - ");
+      sb.append(dt.dt.substring(9));
+
+      if (dt.tzid != null) {
+        sb.append(" ");
+        sb.append(dt.tzid);
+      }
+    }
+
+    return sb.toString();
+  }
+
+  /**
    * @return time part
    * @throws Throwable
    */
