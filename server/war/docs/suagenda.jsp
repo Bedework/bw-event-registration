@@ -15,7 +15,7 @@
           <c:out value="${sessMan.currEvent.date}"/> - <c:out value="${sessMan.currEvent.time}"/>
         </p>
         <p>
-          EMPAC Event Agenda<br/>
+          Event Agenda<br/>
           <strong>
             Registration deadline: <c:out value="${sessMan.currEvent.registrationEnd}"/><br/>
             Max allowed: <c:out value="${sessMan.currEvent.maxTickets}"/><br/>

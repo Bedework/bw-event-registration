@@ -93,66 +93,7 @@
       </table>
     </form>
     <div id="eventInfo">
-      <c:choose>
-        <c:when test="${empty userAgenda}">
-          <h3>You have no tickets reserved for a Celebration Weekend event.</h3>
-          <!-- p id="agendaToReserveMsg">To reserve tickets, select "request tickets" from an <a href="http://empac.rpi.edu">EMPAC</a> event.</p-->
-        </c:when>
-        <c:otherwise>
-          <h3>Thank you for reserving tickets to a Celebration Weekend event!</h3>
-        </c:otherwise>
-      </c:choose>
-
-      <p class="ticketInfo">
-        Tickets reserved online will be available for pickup at the EMPAC Box Office on the following dates:
-      </p>
-
-      <p class="indent strong">
-        Friday, December 4th from 2:00 - 7:00 PM, EMPAC lobby.<br/>
-        Saturday, December 5th from 2:00 - 7:00 PM, EMPAC NIRVE center.
-      </p>
-
-      <p>
-        Please bring your <strong>Rensselaer ID card to pick up tickets</strong>.
-        Tickets not be picked up by 7:00 PM the night of the concert will be released.
-        If you have tickets for both concerts you may pick up both sets of tickets on Friday, December 4th.
-      </p>
-
-      <p>
-        For more information please see <a href="https://celebration.empac.rpi.edu/info/">https://celebration.empac.rpi.edu/info/</a>
-      </p>
-
-      <p>
-        Questions about your reservation?<br/>
-        Contact the EMPAC Ticket Office at
-        <a href="mailto:empacboxoffice@rpi.edu">empacboxoffice@rpi.edu</a> or 518-276-3921.
-      </p>
-
-      <p>
-        <strong>Ticket Policies:</strong><br/>
-        No refunds/exchanges<br/>
-        Use of cameras or recording devices in venues is not permitted.<br/>
-        Late arrivals will be seated at the discretion of venue management.<br/>
-        Not responsible for items lost, stolen or left behind.
-      </p>
-
-      <p>
-        <strong>Accessibility</strong><br/>
-        All venues are wheelchair accessible. Please contact the Box Office by December 2nd at
-        <a href="mailto:empacboxoffice@rpi.edu">empacboxoffice@rpi.edu</a> or 518-276-3921 to
-        reserve accessible seating or to request additional disability-related accommodation.
-      </p>
-
-      <p>
-        <strong>Box Office</strong><br/>
-        <a href="http://empac.rpi.edu">Experimental Media and Performing Arts Center</a><br/>
-        <a href="http://www.rpi.edu">Rensselaer Polytechnic Institute</a><br/>
-        110 8th street<br/>
-        Troy, NY 12180<br/>
-        518.276.3921<br/>
-        <a href="mailto:empacboxoffice@rpi.edu">empacboxoffice@rpi.edu</a><br/>
-        <a href="http://empac.rpi.edu">http://empac.rpi.edu</a>
-      </p>
+      <!-- This is a good place to put general information for users. -->
     </div>
   </div>
 

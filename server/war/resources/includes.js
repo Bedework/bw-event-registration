@@ -10,10 +10,13 @@ function focusFirstElement() {
 // print icon is clicked
 function launchWindow(URL,width) {
   paramString = "width=" + width + ",height=700,scrollbars=yes,resizable=yes,alwaysRaised=yes,menubar=yes,toolbar=yes";
-  empacregWindow = window.open("", "empacregWindow", paramString);
-  empacregWindow.focus();
-  empacregWindow.location.href=URL;
+  eventregWindow = window.open("", "eventregWindow", paramString);
+  eventregWindow.focus();
+  eventregWindow.location.href=URL;
 }
+
+// need to determine provenance and need for these functions from 
+// here ....
 function formelement(id) {
   var el = document.getElementById(id);
   el.onfocus = inputfocus;
@@ -41,6 +44,8 @@ function inputmout() {
     document.getElementById(this.id).className="normal";
   }
 }
+// .... to here
+
 function confirmRemoveTicket(eventTitle) {
   return confirm("You have chosen to remove \"" + eventTitle + "\" from your agenda.\n\nProceed?");
 }

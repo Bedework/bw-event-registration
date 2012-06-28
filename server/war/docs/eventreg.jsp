@@ -16,14 +16,9 @@
         <c:otherwise>
           <p>
             Thank you! Your request for <strong><c:out value="${sessMan.ticketsRequested}"/></strong>
-            tickets has been added. To review or change your order click on
+            tickets has been added. To review or change your registration click on
             "<a href="javascript:launchWindow('agenda.do','1000')">view my list</a>".
-            Please bring a print out of your list and your Rensselaer ID to the box
-            office to pick up your tickets.
             <input type="button" value="ok" id="okbutton" onclick="window.location = 'init.do'"/>
-          </p>
-          <p>
-            <a href="https://celebration.empac.rpi.edu/info/" target="_top">Ticket pickup, policies, and accessibility</a>
           </p>
         </c:otherwise>
       </c:choose>

@@ -19,11 +19,8 @@
     <div class="box" id="deadlinePassed">
       <h4>You've Been Invited!</h4>
       <p>
-        Because you were on the Celebration
-        Weekend special invitee list, if you RSVPed you already have
-        tickets reserved for you. Just follow the instructions you received with
-        the RSVP to claim your tickets. See the
-        <a href="https://celebration.empac.rpi.edu/info/" target="_top">Celebration website</a> for more information.
+        Because you were on the invitee list, if you RSVPed you already have
+        tickets reserved for you. 
       </p>
     </div>
   </body>

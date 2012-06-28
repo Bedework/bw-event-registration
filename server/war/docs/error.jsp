@@ -8,9 +8,7 @@
 <html>
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"></meta>
-    <title>
-     Error Page
-    </title>
+    <title>Error Page</title>
     <link rel="stylesheet" href="resources/bweventreg.css" type="text/css" media="all"/>
   </head>
   <body>
