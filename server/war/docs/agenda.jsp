@@ -67,7 +67,7 @@
                   <c:out value="${reg.ticketid}"/>
                 </td>
                 <td>
-                  <c:out value="${reg.ticketsRequested}"/>
+                  <c:out value="${reg.numTickets}"/>
                 </td>
                 <td>
                   <select name='tickets<c:out value="${reg.ticketid}"/>' id='tickets<c:out value="${reg.ticketid}"/>'>
