@@ -3,17 +3,23 @@
 <%@ include file="/docs/head.jsp" %>
 
   <c:choose>
-    <c:when test="${sessMan.deadlinePassed}">
-      <div class="box" id="deadlinePassed">
-        <%@ include file="/docs/userNav.jsp" %>
-        Registration is closed.
-      </div>
+    <c:when test="${!sessMan.deadlinePassed}">
+      <form action="eventreg.do" method="POST">
+        <div class="box" id="deadlinePassed">
+          <%@ include file="/docs/userNav.jsp" %>
+          Registration is closed.<br/>
+          <input type="submit" value="Register for waiting list"/>
+        </div>
+      </form>
     </c:when>
     <c:when test="${sessMan.registrationFull}">
-      <div class="box" id="registrationFull">
-        <%@ include file="/docs/userNav.jsp" %>
-        Registration is full.  
-      </div>
+      <form action="eventreg.do" method="POST">
+        <div class="box" id="registrationFull">
+          <%@ include file="/docs/userNav.jsp" %>
+          Registration is full.<br/>
+          <input type="submit" value="Register for waiting list"/>
+        </div>
+      </form>
     </c:when>
     <c:when test="${sessMan.superUser}">
       <%-- Form for superuser --%>
@@ -33,7 +39,7 @@
             <script type="text/javascript">
               formelement('comment');
             </script><br/>
-            <input type="submit" value="Request Tickets"/>
+            <input type="submit" value="Register"/>
           </p>
         </div>
       </form>
@@ -51,7 +57,7 @@
               </c:forEach>
             </select>
             <input type="hidden" name="href" value="${sessMan.href}"/>
-            <input type="submit" value="Request Tickets"/>
+            <input type="submit" value="Register"/>
           </form>
         </div>
       </form>

@@ -3,7 +3,7 @@
 <%@ include file="/docs/head.jsp" %>
 
     <c:if test="${sessMan.superUser}">
-      <div class="box wide2">
+      <div class="fullbox wide2">
         <div class="rightLinks">
           Welcome <c:out value="${sessMan.currentUser}"/> (superuser)<br/>
           <a href="javascript:print();">print</a> |

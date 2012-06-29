@@ -17,25 +17,30 @@
     <!--
       body {
         font-family: Arial, Helvetica, Verdana, sans-serif;
+        font-size: 12px;
         margin: 0;
-        padding: 2em;
+        padding: 0;
         background-color: white;
-        color: black;
-      }
-      #title {
-        white-space: nowrap;
-        font-size: 1.1em;
+        color: #555;
+        text-align: right;
       }
       #loginBox {
-        text-align: left;
-        margin-left: 0em;
+        float: right;
+        text-align: right;
+        margin: 0;
+        padding: 4px;
         white-space: nowrap;
+        background-color: #eee;
       }
       #loginBox td {
         padding-right: 0.5em;
       }
       #loginBox input {
         width: 10em;
+      }
+      #loginBox input:focus {
+        background-color: #ffe;
+        color: black;
       }
       #loginBox input.submit {
         width: 6em;
@@ -44,15 +49,24 @@
         margin: 1em 0;
         padding: 0;
       }
+      h3 {
+        white-space: nowrap;
+        font-size: 1.1em;
+        margin: 0;
+        padding: 0;
+      }
+      p {
+        margin: 0 0 0.5em 0;
+        padding: 0;
+      }
     -->
     </style>
   </head>
 
   <body bgcolor="white" onLoad="javascript:focusFirstElement()">
-    <div id="logo">
-      <img src="/bedework-common/images/bedeworkLogo.gif" alt="Bedework Logo"/>
-    </div>
     <form method="post" action="j_security_check" >
+      <h3>Register for this event</h3>
+      <p>Please sign in to register for events:</p>
       <table border="0" id="loginBox">
         <tr>
           <td>
@@ -68,7 +82,12 @@
           </td>
           <td>
             <input type="password" name="j_password" size="20"/>
-            <input type="submit" class="submit" name="j_security_check" value="login"/>
+          </td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>
+            <input type="submit" class="submit" name="j_security_check" value="login">
           </td>
         </tr>
       </table>

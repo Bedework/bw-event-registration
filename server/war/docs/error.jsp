@@ -13,10 +13,14 @@
   </head>
   <body>
     <div class="box">
-      <h4>Error</h4>
-      <p>An error has occurred.</p>
+      <h4>Event Registration Error:</h4>
       <p>${sessMan.message}</p>
-      <p><strong>Please reload the page.</strong></p>
+      <p>
+        <a class="quietLink" href="javascript:window.top.location = window.top.location;"> 
+        <!-- set the location explicitly back to itself, rather than .reload() which causes prompts, etc. -->
+          Please reload the page.
+        </a>
+      </p>
     </div>
   </body>
 </html>

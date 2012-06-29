@@ -17,25 +17,46 @@
     <!--
       body {
         font-family: Arial, Helvetica, Verdana, sans-serif;
+        font-size: 12px;
         margin: 0;
-        padding: 2em;
+        padding: 0;
         background-color: white;
-        color: black;
-      }
-      #title {
-        white-space: nowrap;
-        font-size: 1.1em;
+        color: #555;
+        text-align: right;
       }
       #loginBox {
-        text-align: left;
-        margin-left: 0em;
+        float: right;
+        text-align: right;
+        margin: 0;
+        padding: 4px;
         white-space: nowrap;
+        background-color: #eee;
       }
       #loginBox td {
         padding-right: 0.5em;
       }
+      #loginBox input {
+        width: 10em;
+      }
+      #loginBox input:focus {
+        background-color: #ffe;
+        color: black;
+      }
+      #loginBox input.submit {
+        width: 6em;
+      }
       form {
         margin: 1em 0;
+        padding: 0;
+      }
+      h3 {
+        white-space: nowrap;
+        font-size: 1.1em;
+        margin: 0;
+        padding: 0;
+      }
+      p {
+        margin: 0 0 0.5em 0;
         padding: 0;
       }
       a:link,
@@ -55,12 +76,7 @@
   </head>
 
   <body bgcolor="white" onLoad="javascript:focusFirstElement()">
-    <div id="logo">
-      <img src="/bedework-common/images/bedeworkLogo.gif" alt="Bedework Logo"/>
-    </div>
-    <h3 id="title">Login error</h3>
-    <div id="loginBox">
-      <p>Please try <a href="setup.do">again</a>.</p>
-    </div
+    <h3>Login error</h3>
+    <p>Please try <a href="setup.do">again</a>.</p>
   </body>
 </html>
