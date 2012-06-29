@@ -3,7 +3,7 @@
 <%@ include file="/docs/head.jsp" %>
 
   <c:choose>
-    <c:when test="${!sessMan.deadlinePassed}">
+    <c:when test="${sessMan.deadlinePassed}">
       <form action="eventreg.do" method="POST">
         <div class="box" id="deadlinePassed">
           <%@ include file="/docs/userNav.jsp" %>
