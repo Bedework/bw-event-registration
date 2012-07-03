@@ -49,13 +49,19 @@
       <form action="eventreg.do" method="POST">
         <div class="box">
           <%@ include file="/docs/userNav.jsp" %>
+          <p>
+            Total tickets: ${sessMan.currEvent.maxTickets}<br/>
+            Available tickets: ${sessMan.currEvent.maxTickets - sessMan.ticketCount}
+          </p>
           <form>
-            Tickets:
-            <select id="numtickets" name="numtickets">
-              <c:forEach var="i" begin="1" end="${sessMan.currEvent.maxTicketsPerUser}">
-                 <option value="${i}">${i}</option>
-              </c:forEach>
-            </select>
+            <c:if test="${sessMan.currEvent.maxTicketsPerUser > 1}">
+              Tickets:
+              <select id="numtickets" name="numtickets">
+                <c:forEach var="i" begin="1" end="${sessMan.currEvent.maxTicketsPerUser}">
+                   <option value="${i}">${i}</option>
+                </c:forEach>
+              </select>
+            </c:if>
             <input type="hidden" name="href" value="${sessMan.href}"/>
             <input type="submit" value="Register"/>
           </form>
