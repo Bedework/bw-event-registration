@@ -251,7 +251,7 @@ public class EventregDb implements Serializable {
 
       sb.append("from ");
       sb.append(Registration.class.getName());
-      sb.append(" reg where reg.ticketId=:id");
+      sb.append(" reg where reg.ticketid=:id");
 
       sess.createQuery(sb.toString());
       sess.setLong("id", id);
