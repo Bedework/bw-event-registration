@@ -3,14 +3,14 @@
 <%@ include file="/docs/head.jsp" %>
 
     <c:if test="${sessMan.superUser}">
-      <div class="fullbox wide2">
+      <div class="fullpage">
         <div class="rightLinks">
           Welcome <c:out value="${sessMan.currentUser}"/> (superuser)<br/>
           <a href="javascript:print();">print</a> |
           <a href="javascript:self.close();">close this window</a> |
           <a href="download.do">download registrations</a>
         </div>
-        <h4><c:out value="${sessMan.currEvent.summary}"/></h4>
+        <h1><c:out value="${sessMan.currEvent.summary}"/></h1>
         <p>
           <c:out value="${sessMan.currEvent.date}"/> - <c:out value="${sessMan.currEvent.time}"/>
         </p>
@@ -64,20 +64,20 @@
                   <tr class="a">
                 </c:otherwise>
               </c:choose>
-                <td>
+                <td class="regTicketId">
                   <c:out value="${reg.ticketId}"/>
                 </td>
                 <!-- <td>
                   <c:out value="${reg['fname']}"/>
                   <c:out value="${reg['lname']}"/>
                 </td> -->
-                <td>
+                <td class="regEmail">
                   <c:out value="${reg.email}"/>
                 </td>
-                <td>
+                <td class="regNumTickets">
                   <input name='numtickets<c:out value="${reg.ticketId}"/>' id='numtickets<c:out value="${reg.ticketId}"/>' type="text" value='<c:out value="${reg.numtickets}"/>' size="3"/>
                 </td>
-                <td>
+                <td class="regType">
                   <select name='type<c:out value="${reg.ticketId}"/>' id='type<c:out value="${reg.ticketId}"/>'>
                     <c:choose>
                       <c:when test="${reg.type == 'hold'}">
@@ -91,13 +91,13 @@
                     </c:choose>
                   </select>
                 </td>
-                <td>
+                <td class="regComment">
                   <input name='comment<c:out value="${reg.ticketId}"/>' id='comment<c:out value="${reg.ticketId}"/>' type="text" value='<c:out value="${reg.comment}"/>'/>
                 </td>
-                <td>
+                <td class="regCreated">
                   <c:out value="${reg.created}"/>
                 </td>
-                <td>
+                <td class="regControls">
                   <a href="javascript:doUpdateSuTicket('<c:out value="${reg.ticketId}"/>')" onclick="return confirmUpdateSuTicket()">update</a> |
                   <a href='removeTicket.do?id=<c:out value="${reg.ticketId}"/>' onclick="return confirmRemoveSuTicket('<c:out value="${reg.email}"/>')">remove</a>
                 </td>

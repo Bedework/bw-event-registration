@@ -2,13 +2,13 @@
 
 <%@ include file="/docs/head.jsp" %>
 
-  <div class="fullbox wide2">
+  <div class="fullpage">
     <div class="rightLinks">
       Welcome <c:out value="${sessMan.currentUser}"/> <br/>
       <a href="javascript:print();">print</a> |
       <a href="javascript:self.close();">close this window</a>
     </div>
-    <h4>Reservation List</h4>
+    <h1>Reservation List</h1>
 
     <form name="agenda" action="">
       <c:if test="${sessMan.message != null and sessMan.message != ''}">
@@ -28,7 +28,7 @@
             Venue
           </th>
           <th>
-            Ticket ID
+            ID
           </th>
           <th>
             Tickets
@@ -66,10 +66,10 @@
                 <td class="ticketId">
                   <c:out value="${reg.ticketid}"/>
                 </td>
-                <td>
+                <td class="tickets">
                   <c:out value="${reg.numTickets}"/>
                 </td>
-                <td>
+                <td class="controls">
                   <select name='tickets<c:out value="${reg.ticketid}"/>' id='tickets<c:out value="${reg.ticketid}"/>'>
                     <c:forEach var="i" begin="1" end="${reg.event.maxTicketsPerUser}">
                        <c:choose>
