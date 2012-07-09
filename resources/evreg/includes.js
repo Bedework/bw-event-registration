@@ -58,13 +58,13 @@ function confirmUpdateTicket(ticketId, eventTitle) {
   var qty = selectBox.options[selectBox.selectedIndex].value;
   return confirm("The number of tickets for \"" + eventTitle + "\"\nwill be set to " + qty + ".\n\nProceed?");
 }
-function doUpdateTicket(ticketId) {
+function doUpdateTicket(ticketId,eventHref) {
   var ticketCssId = "tickets" + ticketId;
   var selectBox = document.getElementById(ticketCssId);
   var qty = selectBox.options[selectBox.selectedIndex].value;
   // formObj.getElementById("comment" + ticketId).value;
   //alert("updateTicket.do?id=" + ticketId + "&qty=" + qty + "&comment=");
-  location.replace("updateTicket.do?id=" + ticketId + "&qty=" + qty + "&comment=");
+  location.replace("updateTicket.do?ticketid=" + ticketId + "&href=" + eventHref + "&numtickets=" + qty + "&comment=");
 }
 function confirmUpdateSuTicket() {
   return confirm("The ticket will be updated.\n\nProceed?");

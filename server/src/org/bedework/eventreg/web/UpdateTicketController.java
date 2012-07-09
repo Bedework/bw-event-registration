@@ -25,12 +25,12 @@ public class UpdateTicketController extends AuthAbstractController {
     String type = sessMan.getType();
 
     if (type == null) {
-      type = "normal";
+      type = "registered";
     }
 
     Event currEvent = sessMan.getCurrEvent();
 
-    logger.debug("update ticket - super user type: " + sessMan.getSuperUser());
+    logger.debug("updating ticket " + ticketId + ", super user: " + sessMan.getSuperUser());
 
     if (((numTickets + sessMan.getTicketCount()) <= currEvent.getMaxTickets()) ||
         (numTickets < sessMan.getUserTicketCount()) ||

@@ -19,6 +19,9 @@
       <table id="agenda" cellspacing="2">
         <tr>
           <th>
+            ID
+          </th>
+          <th>
             Event
           </th>
           <th>
@@ -26,9 +29,6 @@
           </th>
           <th>
             Venue
-          </th>
-          <th>
-            ID
           </th>
           <th>
             Tickets
@@ -54,6 +54,9 @@
                   <tr class="a">
                 </c:otherwise>
               </c:choose>
+                <td class="ticketId">
+                  <c:out value="${reg.ticketid}"/>
+                </td>
                 <td class="ticketEventSummary">
                   <c:out value="${reg.event.summary}"/>
                 </td>
@@ -63,27 +66,26 @@
                 <td class="ticketLocation">
                   <c:out value="${reg.event.location}"/>
                 </td>
-                <td class="ticketId">
-                  <c:out value="${reg.ticketid}"/>
-                </td>
                 <td class="tickets">
                   <c:out value="${reg.numTickets}"/>
                 </td>
                 <td class="controls">
-                  <select name='tickets<c:out value="${reg.ticketid}"/>' id='tickets<c:out value="${reg.ticketid}"/>'>
-                    <c:forEach var="i" begin="1" end="${reg.event.maxTicketsPerUser}">
-                       <c:choose>
-                         <c:when test="${i == reg.ticketsRequested}">
-                           <option value="${i}" selected="selected">"${i}"</option>
-                         </c:when>
-                         <c:otherwise>
-                           <option value="${i}">${i}</option>
-                         </c:otherwise>
-                       </c:choose>
-                    </c:forEach>
-                  </select>
-                  <a href="javascript:doUpdateTicket('<c:out value="${reg.ticketid}"/>')" onclick="return confirmUpdateTicket('<c:out value="${reg.ticketid}"/>','<c:out value="${reg.event.summary}"/>')">update</a>
-                   |
+                  <c:if test="${reg.event.maxTicketsPerUser > 1}">
+                    <select name='tickets<c:out value="${reg.ticketid}"/>' id='tickets<c:out value="${reg.ticketid}"/>'>
+                      <c:forEach var="i" begin="1" end="${reg.event.maxTicketsPerUser}">
+                         <c:choose>
+                           <c:when test="${i == reg.numTickets}">
+                             <option value="${i}" selected="selected">${i}</option>
+                           </c:when>
+                           <c:otherwise>
+                             <option value="${i}">${i}</option>
+                           </c:otherwise>
+                         </c:choose>
+                      </c:forEach>
+                    </select>
+                    <a href="javascript:doUpdateTicket('<c:out value="${reg.ticketid}"/>','<c:out value="${reg.event.href}"/>')" onclick="return confirmUpdateTicket('<c:out value="${reg.ticketid}"/>','<c:out value="${reg.event.summary}"/>')">update</a>
+                     |
+                   </c:if>
                   <a href='removeTicket.do?ticketid=<c:out value="${reg.ticketid}"/>' onclick="return confirmRemoveTicket('<c:out value="${reg.event.summary}"/>')">remove</a>
                 </td>
               </tr>

@@ -2,7 +2,21 @@
 
 <%@ include file="/docs/head.jsp" %>
 
+  <h3>Register for this event</h3>
   <c:choose>
+    <%--
+    <c:when test="${sessMan.isRegistered}">
+      <div class="box" id="registered">
+        <%@ include file="/docs/userNav.jsp" %>
+        <p class="registered">
+          <span class="checkmark">&#x2713;</span> You are registered for this event.
+        </p>
+        <p class="unregister">
+          <a href="eventreg.do">unregister</a>
+        </p>
+      </div>
+    </c:when>
+    --%>
     <c:when test="${sessMan.deadlinePassed}">
       <form action="eventreg.do" method="POST">
         <div class="box" id="deadlinePassed">
@@ -46,32 +60,31 @@
     </c:when>
     <c:otherwise>
       <%-- Normal authenticated user --%>
-      <form action="eventreg.do" method="POST">
-        <div class="box">
-          <%@ include file="/docs/userNav.jsp" %>
-          <p>
-            Total tickets: ${sessMan.currEvent.maxTickets}<br/>
-            Available tickets: ${sessMan.currEvent.maxTickets - sessMan.ticketCount}
-          </p>
-          <form>
-            <c:choose>
-              <c:when test="${sessMan.currEvent.maxTicketsPerUser > 1}">
-                Tickets:
-                <select id="numtickets" name="numtickets">
-                  <c:forEach var="i" begin="1" end="${sessMan.currEvent.maxTicketsPerUser}">
-                     <option value="${i}">${i}</option>
-                  </c:forEach>
-                </select>
-              </c:when>
-              <c:otherwise>
-                <input type="hidden" name="numtickets" value="1"/>
-              </c:otherwise>
-            </c:choose>
-            <input type="hidden" name="href" value="${sessMan.href}"/>
-            <input type="submit" value="Register"/>
-          </form>
+      <div class="box">
+        <%@ include file="/docs/userNav.jsp" %>
+        <div class="ticketVals">
+          <!-- em>Tickets</em><br/-->
+          Total: ${sessMan.currEvent.maxTickets}<br/>
+          Available: ${sessMan.currEvent.maxTickets - sessMan.ticketCount}
         </div>
-      </form>
+        <form action="eventreg.do" id="userRegForm" method="POST">
+          <c:choose>
+            <c:when test="${sessMan.currEvent.maxTicketsPerUser > 1}">
+              Tickets:
+              <select id="numtickets" name="numtickets">
+                <c:forEach var="i" begin="1" end="${sessMan.currEvent.maxTicketsPerUser}">
+                   <option value="${i}">${i}</option>
+                </c:forEach>
+              </select>
+            </c:when>
+            <c:otherwise>
+              <input type="hidden" name="numtickets" value="1"/>
+            </c:otherwise>
+          </c:choose>
+          <input type="hidden" name="href" value="${sessMan.href}"/>
+          <input type="submit" value="Register"/>
+        </form>
+      </div>
     </c:otherwise>
   </c:choose>
 
