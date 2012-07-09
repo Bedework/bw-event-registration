@@ -210,7 +210,10 @@ public class SessionManager  {
    */
   public Event getCurrEvent() throws Throwable {
     if (currEvent != null) {
+      // we already have an event; check to see if its href matches
+      // the event being requested and return it if so.
       if (currEvent.getHref() == getHref()) {
+        logger.debug("Returning cached event.");
         return currEvent;
       }
     }
@@ -219,6 +222,7 @@ public class SessionManager  {
       return null;
     }
 
+    logger.debug("Fetching event.");
     currEvent = retrieveEvent(getHref());
     return currEvent;
   }

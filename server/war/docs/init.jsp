@@ -54,14 +54,19 @@
             Available tickets: ${sessMan.currEvent.maxTickets - sessMan.ticketCount}
           </p>
           <form>
-            <c:if test="${sessMan.currEvent.maxTicketsPerUser > 1}">
-              Tickets:
-              <select id="numtickets" name="numtickets">
-                <c:forEach var="i" begin="1" end="${sessMan.currEvent.maxTicketsPerUser}">
-                   <option value="${i}">${i}</option>
-                </c:forEach>
-              </select>
-            </c:if>
+            <c:choose>
+              <c:when test="${sessMan.currEvent.maxTicketsPerUser > 1}">
+                Tickets:
+                <select id="numtickets" name="numtickets">
+                  <c:forEach var="i" begin="1" end="${sessMan.currEvent.maxTicketsPerUser}">
+                     <option value="${i}">${i}</option>
+                  </c:forEach>
+                </select>
+              </c:when>
+              <c:otherwise>
+                <input type="hidden" name="numtickets" value="1"/>
+              </c:otherwise>
+            </c:choose>
             <input type="hidden" name="href" value="${sessMan.href}"/>
             <input type="submit" value="Register"/>
           </form>
