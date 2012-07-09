@@ -212,7 +212,7 @@ public class SessionManager  {
     if (currEvent != null) {
       // we already have an event; check to see if its href matches
       // the event being requested and return it if so.
-      if (currEvent.getHref() == getHref()) {
+      if (currEvent.getHref().equals(getHref())) {
         logger.debug("Returning cached event.");
         return currEvent;
       }
