@@ -151,7 +151,7 @@ public class SessionManager  {
   }
 
   /**
-   * @return false if something failed on close - probbaly a commit eror
+   * @return false if something failed on close - probably a commit error
    */
   public synchronized boolean closeDb() {
     if (db == null) {
@@ -210,7 +210,9 @@ public class SessionManager  {
    */
   public Event getCurrEvent() throws Throwable {
     if (currEvent != null) {
-      return currEvent;
+      if (currEvent.getHref() == getHref()) {
+        return currEvent;
+      }
     }
 
     if (getHref() == null) {
