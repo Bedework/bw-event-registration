@@ -76,6 +76,11 @@ public class EventregController extends AuthAbstractController {
 
     String comment = request.getParameter("comment");
     String regType = request.getParameter("regType");
+    
+    if (regType == null) {
+      regType = "registered";
+    }
+
 
     logger.debug("event registration  - number of tickets requested: " + numTicketsRequested);
     logger.debug("event registration  - superuser: " + sessMan.getSuperUser());
