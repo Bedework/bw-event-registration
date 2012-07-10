@@ -28,10 +28,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * @author douglm
+ * @author johnsa
  *
  */
-public class EventregController extends AuthAbstractController {
+public class WaitingListController extends AuthAbstractController {
   @Override
   public ModelAndView doRequest(final HttpServletRequest request,
                                 final HttpServletResponse response) throws Throwable {
@@ -43,11 +43,6 @@ public class EventregController extends AuthAbstractController {
     }
     
     int numTicketsRequested = sessMan.getTicketsRequested();
-    long currentTicketCount = sessMan.getTicketCount();
-    
-    if ((numTicketsRequested + currentTicketCount) > maxTicketsAllowed) {
-      sessMan.setRegistrationFull(true);
-    }
 
     Date end = ev.getRegistrationEndDate();
 
@@ -56,11 +51,6 @@ public class EventregController extends AuthAbstractController {
     }
 
     sessMan.setDeadlinePassed(new Date().after(end));
-
-    if (sessMan.getRegistrationFull()) {
-      logger.debug("event registration stop - registration is full");
-      return errorReturn("Cannot register for this event. Registration is full.");
-    }
 
     if (sessMan.getDeadlinePassed()) {
       logger.debug("event registration stop - deadline has passed");
@@ -74,18 +64,17 @@ public class EventregController extends AuthAbstractController {
       		"number of tickets requested exceeds number of tickets allowed.");
     }
 
-    //String regType = sessMan.getType();
-    String regType = "registered";
+    String regType = "waiting";
     String comment = sessMan.getComment();
 
-    logger.debug("event registration  - number of tickets requested: " + numTicketsRequested);
-    logger.debug("event registration  - superuser: " + sessMan.getSuperUser());
+    logger.debug("waiting list registration  - number of tickets requested: " + numTicketsRequested);
+    logger.debug("waiting list registration  - superuser: " + sessMan.getSuperUser());
 
     sessMan.registerUserInEvent(numTicketsRequested,
                                 comment,
                                 regType,
                                 sessMan.getSuperUser());
 
-    return sessModel("eventreg");
+    return sessModel("waitlist");
   }
 }

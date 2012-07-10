@@ -395,6 +395,7 @@ public class EventregDb implements Serializable {
       sb.append("select sum(numTickets) from ");
       sb.append(Registration.class.getName());
       sb.append(" reg where reg.href=:href");
+      sb.append(" and (reg.type <> 'waiting' or reg.type is null)");
 
       sess.createQuery(sb.toString());
       sess.setString("href", eventHref);
@@ -409,6 +410,7 @@ public class EventregDb implements Serializable {
       }*/
 
       Long ct = (Long)sess.getUnique();
+      trace("Count returned " + ct);
       if (ct == null) {
         return 0;
       }

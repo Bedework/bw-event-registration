@@ -374,6 +374,7 @@ public class SessionManager  {
 
     reg.setAuthid(getCurrentUser());
     reg.setComment(comment);
+    reg.setType(regType);
     reg.setHref(href);
     reg.setNumTickets(numTickets);
     reg.setTicketid(getNextTicketId());
@@ -424,6 +425,17 @@ public class SessionManager  {
   }
 
   /**
+   * @return true if current user is registered for event
+   */
+  public boolean getIsRegistered() {
+    boolean isRegistered = false;
+    
+    // if ()
+    
+    return isRegistered;
+  }
+  
+  /**
    * @return true if current registration is full
    */
   public boolean getRegistrationFull() {
@@ -467,6 +479,7 @@ public class SessionManager  {
       if (!open) {
         openDb();
       }
+      logger.debug("Getting ticket count for " + getCurrEvent().getHref());
       return db.getTicketCount(getCurrEvent().getHref());
     } finally {
       if (!wasOpen) {
@@ -698,7 +711,13 @@ public class SessionManager  {
    * @return type or null for no parameter
    */
   public String getType() {
-    return getReqPar(reqparType);
+    String regType = getReqPar(reqparType);
+
+    if (regType == null) {
+      return("waiting"); 
+    }
+    
+    return regType;
   }
 
   private static transient volatile Long nextTicketId = (long)-1;

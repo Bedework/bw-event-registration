@@ -35,6 +35,15 @@ http://www.springframework.org/schema/aop http://www.springframework.org/schema/
       <ref bean="sessMan"/>
     </property>
   </bean>
+  
+  <bean id="waitingListController"  
+        class="org.bedework.eventreg.web.WaitingListController"  
+        scope="session">
+    <aop:scoped-proxy/>
+    <property name="sessionManager">
+      <ref bean="sessMan"/>
+    </property>
+  </bean>
 
   <bean id="outputCountsController"  
         class="org.bedework.eventreg.web.OutputCountsController"  
@@ -101,6 +110,7 @@ http://www.springframework.org/schema/aop http://www.springframework.org/schema/
       <props>
         <prop key="init.do">initController</prop>
         <prop key="eventreg.do">eventregController</prop>
+        <prop key="waitlist.do">waitingListController</prop>
         <prop key="agenda.do">userAgendaController</prop>
         <prop key="updateTicket.do">updateTicketController</prop>
         <prop key="removeTicket.do">removeTicketController</prop>

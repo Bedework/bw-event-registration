@@ -31,6 +31,9 @@
             Venue
           </th>
           <th>
+            Type
+          </th>
+          <th>
             Tickets
           </th>
           <th>
@@ -65,6 +68,9 @@
                 </td>
                 <td class="ticketLocation">
                   <c:out value="${reg.event.location}"/>
+                </td>
+                <td class="type">
+                  <c:out value="${reg.type}"/>
                 </td>
                 <td class="tickets">
                   <c:out value="${reg.numTickets}"/>
