@@ -396,6 +396,7 @@ public class EventregDb implements Serializable {
       sb.append(Registration.class.getName());
       sb.append(" reg where reg.href=:href");
       sb.append(" and (reg.type <> 'waiting' or reg.type is null)");
+      // is null a quick fix; reg.type should not be null
 
       sess.createQuery(sb.toString());
       sess.setString("href", eventHref);

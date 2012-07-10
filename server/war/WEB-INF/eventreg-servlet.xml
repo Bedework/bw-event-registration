@@ -98,6 +98,15 @@ http://www.springframework.org/schema/aop http://www.springframework.org/schema/
       <ref bean="sessMan"/>
     </property>
   </bean>
+  
+  <bean id="removeAgendaTicketController"  
+        class="org.bedework.eventreg.web.RemoveAgendaTicketController"  
+        scope="session">
+    <aop:scoped-proxy/>
+    <property name="sessionManager">
+      <ref bean="sessMan"/>
+    </property>
+  </bean>
 
   <bean id="authenticatedUrlMapping" 
         class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
@@ -114,6 +123,7 @@ http://www.springframework.org/schema/aop http://www.springframework.org/schema/
         <prop key="agenda.do">userAgendaController</prop>
         <prop key="updateTicket.do">updateTicketController</prop>
         <prop key="removeTicket.do">removeTicketController</prop>
+        <prop key="removeAgendaTicket.do">removeAgendaTicketController</prop>
 
         <prop key="suagenda.do">superUserAgendaController</prop>
         <prop key="removeTicket.do">removeTicketController</prop>

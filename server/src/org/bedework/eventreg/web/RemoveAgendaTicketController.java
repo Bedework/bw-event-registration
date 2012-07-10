@@ -30,7 +30,7 @@ import javax.servlet.http.HttpServletResponse;
  * @author douglm
  *
  */
-public class RemoveTicketController extends AuthAbstractController {
+public class RemoveAgendaTicketController extends AuthAbstractController {
   @Override
   public ModelAndView doRequest(final HttpServletRequest request,
                                 final HttpServletResponse response) throws Throwable {
@@ -53,7 +53,11 @@ public class RemoveTicketController extends AuthAbstractController {
       sessMan.removeRegistration(reg);
     }
     sessMan.setMessage(""); // don't need to say anything
-   
-    return sessModel("forward:init.do");
+
+    if (sessMan.getSuperUser()) {
+      return sessModel("forward:suagenda.do");
+    }
+    
+    return sessModel("forward:agenda.do");
   }
 }

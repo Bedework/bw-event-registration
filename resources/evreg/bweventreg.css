@@ -71,6 +71,9 @@ p {
 .waitList td {
 	border: 1px dotted #333;
 }
+.waitList td.type {
+  background-color: #fee;
+}
 table {
   width: 100%; 
   font-size: 0.9em; 
@@ -174,12 +177,40 @@ ul.errors li {
   font-size: 0.8em;
   margin-top: 1em;
 }
-.tentative { color: red; }
-.explanation { font-style: italic; margin-top: 0.5em; font-size: 0.9em; }
-.checkmark { font-size: 2em; foRnt-family: "Doulos SIL","Quivira","Arial Unicode MS";}
-.registered { clear: both; color: green; margin-bottom: 0;}
-.waiting { clear: both; color: #b00; margin-bottom: 0;}
-.unregister { text-align: right; font-size: 0.8em; }
+.tentative { 
+	color: red; 
+}
+.explanation { 
+	font-style: italic; 
+	margin-top: 0.5em; 
+	font-size: 0.9em; 
+}
+.checkmark { 
+	font-size: 2em;
+  font-family: "Doulos SIL","Quivira","Arial Unicode MS";
+	display: block;
+  float: left;
+  margin: 0 0.25em 0 0;
+}
+.registered { 
+	clear: both; 
+	color: green; 
+	margin-bottom: 0;
+}
+.waiting { 
+	clear: both; 
+	color: #b00; 
+	margin-bottom: 0;
+}
+.unregister { 
+	text-align: right; 
+	font-size: 0.8em; 
+}
+.details {
+	clear: both;
+  font-size: 0.8em;
+  margin: 1em 0 1em 2.25em;
+}
 .indent {
   margin-left: 2em;
 }

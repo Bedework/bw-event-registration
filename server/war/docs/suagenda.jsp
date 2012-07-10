@@ -99,7 +99,7 @@
                 </td>
                 <td class="regControls">
                   <a href="javascript:doUpdateSuTicket('<c:out value="${reg.ticketId}"/>')" onclick="return confirmUpdateSuTicket()">update</a> |
-                  <a href='removeTicket.do?id=<c:out value="${reg.ticketId}"/>' onclick="return confirmRemoveSuTicket('<c:out value="${reg.email}"/>')">remove</a>
+                  <a href='removeAgendaTicket.do?id=<c:out value="${reg.ticketId}"/>' onclick="return confirmRemoveSuTicket('<c:out value="${reg.email}"/>')">remove</a>
                 </td>
               </tr>
             </c:forEach>

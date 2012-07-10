@@ -79,6 +79,7 @@ public class SessionManager  {
   public static final String typeRegistered = "registered";
   public static final String typeWaiting = "waiting";
   public static final String typeHold = "hold";
+  public static final String typeUnregistered = "unregistered";
 
   private SysInfo sys;
   private Event currEvent;
@@ -431,14 +432,44 @@ public class SessionManager  {
   }
 
   /**
-   * @return true if current user is registered for event
+   * @return registration or null
    */
-  public boolean getIsRegistered() {
-    boolean isRegistered = false;
-    
-    // if ()
-    
-    return isRegistered;
+  public Registration getRegistration() throws Throwable {
+    boolean wasOpen = open;
+
+    try {
+      if (!open) {
+        openDb();
+      }
+      logger.debug("Getting registration for " + getCurrentUser() + " on " + getCurrEvent().getHref());
+      return db.getUserRegistration(getCurrEvent().getHref(), getCurrentUser());
+    } finally {
+      if (!wasOpen) {
+        closeDb();
+      }
+    }
+  }
+  
+  /**
+   * @return true if current user is registered for current event
+   */
+  public boolean getIsRegistered() throws Throwable {
+    Registration reg = getRegistration();
+    if (reg != null && reg.getType().equals(typeRegistered)) {
+      return true;
+    }
+    return false;
+  }
+  
+  /**
+   * @return true if current user is on waiting list for current event
+   */
+  public boolean getIsWaiting() throws Throwable {
+    Registration reg = getRegistration();
+    if (reg != null && reg.getType().equals(typeWaiting)) {
+      return true;
+    }
+    return false;
   }
   
   /**

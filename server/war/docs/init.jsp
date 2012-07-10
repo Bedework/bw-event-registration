@@ -11,7 +11,21 @@
           <span class="checkmark">&#x2713;</span> You are registered for this event.
         </p>
         <p class="unregister">
-          <a href="eventreg.do">unregister</a>
+          <a href="removeTicket.do?ticketid=<c:out value="${sessMan.registration.ticketid}"/>&amp;href=${sessMan.href}" onclick="return confirmRemoveTicket('<c:out value="${sessMan.currEvent.summary}')"/>">unregister</a>
+        </p>
+      </div>
+    </c:when>
+    <c:when test="${sessMan.isWaiting}">
+      <div class="box" id="registered">
+        <%@ include file="/docs/userNav.jsp" %>
+        <p class="waiting">
+          <span class="checkmark">&#x2713;</span> You are on the waiting list.
+        </p>
+        <p class="details">
+          You will be automatically registered if space becomes available.
+        </p>
+        <p class="unregister">
+          <a href="removeTicket.do?ticketid=<c:out value="${sessMan.registration.ticketid}"/>&amp;href=${sessMan.href}" onclick="return confirmRemoveTicket('<c:out value="${sessMan.currEvent.summary}"/>')">remove me</a>
         </p>
       </div>
     </c:when>
@@ -45,7 +59,7 @@
       </div>
     </c:when>
     <c:when test="${sessMan.superUser}">
-      <%-- Form for superuser --%>
+      <%-- Form for superuser - DEPRECATE? --%>
       <form action="eventreg.do" class="commonForm" method="POST">
         <div class="box">
           <%@ include file="/docs/userNav.jsp" %>
