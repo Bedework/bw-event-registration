@@ -64,7 +64,7 @@ public class WaitingListController extends AuthAbstractController {
       		"number of tickets requested exceeds number of tickets allowed.");
     }
 
-    String regType = "waiting";
+    String regType = sessMan.typeWaiting;
     String comment = sessMan.getComment();
 
     logger.debug("waiting list registration  - number of tickets requested: " + numTicketsRequested);

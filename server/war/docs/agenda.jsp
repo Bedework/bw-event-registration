@@ -50,6 +50,9 @@
           <c:otherwise>
             <c:forEach var="reg" items="${regs}" varStatus="loopStatus">
               <c:choose>
+                <c:when test="${reg.type eq 'waiting'}">
+                  <tr class="waitList">
+                </c:when>
                 <c:when test='${(loopStatus.index)%2 eq 0}'>
                   <tr class="b">
                 </c:when>
@@ -76,7 +79,7 @@
                   <c:out value="${reg.numTickets}"/>
                 </td>
                 <td class="controls">
-                  <c:if test="${reg.event.maxTicketsPerUser > 1}">
+                  <c:if test="${reg.event.maxTicketsPerUser > 1 and reg.type != 'waiting'}">
                     <select name='tickets<c:out value="${reg.ticketid}"/>' id='tickets<c:out value="${reg.ticketid}"/>'>
                       <c:forEach var="i" begin="1" end="${reg.event.maxTicketsPerUser}">
                          <c:choose>

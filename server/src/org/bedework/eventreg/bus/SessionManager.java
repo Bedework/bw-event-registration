@@ -73,6 +73,12 @@ public class SessionManager  {
   /** Request parameter - type
    */
   public static final String reqparType = "type";
+  
+  /** Type values
+   */
+  public static final String typeRegistered = "registered";
+  public static final String typeWaiting = "waiting";
+  public static final String typeHold = "hold";
 
   private SysInfo sys;
   private Event currEvent;
@@ -711,13 +717,7 @@ public class SessionManager  {
    * @return type or null for no parameter
    */
   public String getType() {
-    String regType = getReqPar(reqparType);
-
-    if (regType == null) {
-      return("waiting"); 
-    }
-    
-    return regType;
+    return getReqPar(reqparType);
   }
 
   private static transient volatile Long nextTicketId = (long)-1;
