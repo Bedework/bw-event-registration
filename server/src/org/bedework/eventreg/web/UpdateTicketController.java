@@ -30,7 +30,7 @@ public class UpdateTicketController extends AuthAbstractController {
 
     Event currEvent = sessMan.getCurrEvent();
 
-    logger.debug("updating ticket " + ticketId + ", super user: " + sessMan.getAdminUser());
+    logger.debug("updating ticket " + ticketId + ", administrator: " + sessMan.getAdminUser());
 
     if (((numTickets + sessMan.getTicketCount()) <= currEvent.getMaxTickets()) ||
         (numTickets < sessMan.getUserTicketCount()) ||

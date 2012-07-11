@@ -40,7 +40,7 @@ public class RemoveTicketController extends AuthAbstractController {
     }
 
     logger.debug("remove ticket id: " + ticketId +
-                 ", super user: " + sessMan.getAdminUser());
+                 ", administrator: " + sessMan.getAdminUser());
 
     Registration reg = sessMan.getRegistrationById(ticketId);
 

@@ -198,7 +198,7 @@ public class SessionManager  {
   }
 
   /**
-   * @return true if current user is a super user
+   * @return true if current user is an administrator
    */
   public boolean getAdminUser() {
     return adminUser;
