@@ -279,40 +279,6 @@ public class SessionManager  {
   }
 
   /**
-   * @param ticketId
-   * @param numTickets
-   * @param comment
-   * @param regType
-   * @return true if found and updated
-   * @throws Throwable
-   */
-  public boolean updateTicketById(final long ticketId,
-                                  final int numTickets,
-                                  final String comment,
-                                  final String regType) throws Throwable {
-    Registration reg = db.getByid(ticketId);
-
-    if (reg == null) {
-      return false;
-    }
-
-    Timestamp sqlDate = new Timestamp(new java.util.Date().getTime());
-
-    reg.setLastmod(sqlDate.toString());
-    reg.setNumTickets(numTickets);
-    reg.setComment(comment);
-    reg.setType(regType);
-
-    db.update(reg);
-
-    addChange(reg, Change.typeUpdReg,
-              Change.lblUpdNumTickets,
-              String.valueOf(numTickets));
-
-    return true;
-  }
-
-  /**
    * @param reg
    * @param type
    * @throws Throwable
