@@ -58,7 +58,7 @@
         </form>
       </div>
     </c:when>
-    <c:when test="${sessMan.superUser}">
+    <c:when test="${sessMan.adminUser}">
       <%-- Form for superuser - DEPRECATE? --%>
       <form action="eventreg.do" class="commonForm" method="POST">
         <div class="box">

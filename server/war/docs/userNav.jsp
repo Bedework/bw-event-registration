@@ -2,9 +2,9 @@
 
       <div class="rightLinks">
         <c:choose>
-          <c:when test="${sessMan.superUser}">
+          <c:when test="${sessMan.adminUser}">
             Welcome <c:out value="${sessMan.currentUser}"/><br/>
-            <a href="javascript:launchWindow('suagenda.do', '1000')">view event's agenda</a><br/>
+            <a href="javascript:launchWindow('adminagenda.do', '1000')">view event's agenda</a><br/>
             <a href="download.do">download registrations</a>
           </c:when>
           <c:otherwise>

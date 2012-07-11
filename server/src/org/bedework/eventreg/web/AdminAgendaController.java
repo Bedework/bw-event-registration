@@ -32,11 +32,11 @@ import javax.servlet.http.HttpServletResponse;
  * @author douglm
  *
  */
-public class SuperUserAgendaController extends AuthAbstractController {
+public class AdminAgendaController extends AuthAbstractController {
   @Override
   public ModelAndView doRequest(final HttpServletRequest request,
                                 final HttpServletResponse response) throws Throwable {
-    if (!sessMan.getSuperUser()) {
+    if (!sessMan.getAdminUser()) {
       logger.info("Non superuser attempted access " + getClass().getName());
       return errorReturn("No access");
     }
@@ -51,6 +51,6 @@ public class SuperUserAgendaController extends AuthAbstractController {
       regs.add(reg);
     }
 
-    return objModel("suagenda", "regs", regs);
+    return objModel("adminagenda", "regs", regs);
   }
 }

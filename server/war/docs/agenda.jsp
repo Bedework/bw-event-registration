@@ -92,7 +92,7 @@
                          </c:choose>
                       </c:forEach>
                     </select>
-                    <a href="javascript:doUpdateTicket('<c:out value="${reg.ticketid}"/>','<c:out value="${reg.event.href}"/>')" onclick="return confirmUpdateTicket('<c:out value="${reg.ticketid}"/>','<c:out value="${reg.event.summary}"/>')">update</a>
+                    <a href="javascript:doUpdateTicket('<c:out value="${reg.ticketid}"/>','<c:out value="${reg.event.href}"/>','<c:out value="${reg.type}"/>')" onclick="return confirmUpdateTicket('<c:out value="${reg.ticketid}"/>','<c:out value="${reg.event.summary}"/>')">update</a>
                      |
                    </c:if>
                   <a href='removeAgendaTicket.do?ticketid=<c:out value="${reg.ticketid}"/>' onclick="return confirmRemoveTicket('<c:out value="${reg.event.summary}"/>')">remove</a>

@@ -50,7 +50,7 @@ public class SessionManager  {
   private EventregDb db;
 
   private String currentUser;
-  private boolean superUser;
+  private boolean adminUser;
 
   private HttpServletRequest request;
 
@@ -200,8 +200,8 @@ public class SessionManager  {
   /**
    * @return true if current user is a super user
    */
-  public boolean getSuperUser() {
-    return superUser;
+  public boolean getAdminUser() {
+    return adminUser;
   }
 
   /**
@@ -337,26 +337,26 @@ public class SessionManager  {
    * @param numTickets
    * @param comment
    * @param regType
-   * @param superUser
+   * @param adminUser
    * @return ticketId for registration
    * @throws Throwable
    */
   public Long registerUserInEvent(final int numTickets,
                                   final String comment,
                                   final String regType,
-                                  final boolean superUser) throws Throwable {
+                                  final boolean adminUser) throws Throwable {
     String href = getHref();
 
     logger.debug("Event details: " + getCurrentUser() + " " +
         href + " " +
         regType);
 
-    /* we  let superusers register over and over, but not regular users */
+    /* we  let adminUsers register over and over, but not regular users */
 
     Timestamp sqlDate = new Timestamp(new java.util.Date().getTime());
 
     Registration reg;
-    if (!superUser) {
+    if (!adminUser) {
       reg = db.getUserRegistration(href, getCurrentUser());
 
       if (reg != null) {
@@ -530,8 +530,19 @@ public class SessionManager  {
    * @throws Throwable
    */
   public long getUserTicketCount() throws Throwable {
-    return db.getUserTicketCount(getCurrEvent().getHref(),
+    boolean wasOpen = open;
+
+    try {
+      if (!open) {
+        openDb();
+      }
+      return db.getUserTicketCount(getCurrEvent().getHref(),
                                  getCurrentUser());
+    } finally {
+      if (!wasOpen) {
+        closeDb();
+      }
+    }
   }
 
   /**
@@ -665,11 +676,11 @@ public class SessionManager  {
     request = val;
 
     setCurrentUser(request.getRemoteUser());
-    superUser = false;
+    adminUser = false;
 
     for (String s: getRootUsersArray()) {
       if (s.equals(getCurrentUser())) {
-        superUser = true;
+        adminUser = true;
         break;
       }
     }

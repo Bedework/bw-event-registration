@@ -5,12 +5,12 @@
     <div class="box">
       <%@ include file="/docs/userNav.jsp" %>
       <c:choose>
-        <c:when test="${sessMan.superUser}">
+        <c:when test="${sessMan.adminUser}">
           <p>
             Your request for
             <strong><c:out value="${sessMan.ticketsRequested}"/></strong>
             tickets has been added to the
-            <a href="javascript:launchWindow('suagenda.do','1000')">event's agenda</a>.
+            <a href="javascript:launchWindow('adminagenda.do','1000')">event's agenda</a>.
           </p>
         </c:when>
         <c:otherwise>

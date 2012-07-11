@@ -40,13 +40,13 @@ public class RemoveAgendaTicketController extends AuthAbstractController {
     }
 
     logger.debug("remove ticket id: " + ticketId +
-                 ", super user: " + sessMan.getSuperUser());
+                 ", super user: " + sessMan.getAdminUser());
 
     Registration reg = sessMan.getRegistrationById(ticketId);
 
     if (reg == null) {
       // XXX message?
-    } else if (!sessMan.getSuperUser() &&
+    } else if (!sessMan.getAdminUser() &&
         !reg.getAuthid().equals(sessMan.getCurrentUser())) {
       // XXX message?
     } else{
@@ -54,8 +54,8 @@ public class RemoveAgendaTicketController extends AuthAbstractController {
     }
     sessMan.setMessage(""); // don't need to say anything
 
-    if (sessMan.getSuperUser()) {
-      return sessModel("forward:suagenda.do");
+    if (sessMan.getAdminUser()) {
+      return sessModel("forward:adminagenda.do");
     }
     
     return sessModel("forward:agenda.do");

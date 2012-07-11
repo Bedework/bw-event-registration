@@ -68,7 +68,7 @@ public class EventregController extends AuthAbstractController {
     }
 
     if ((numTicketsRequested > ev.getMaxTicketsPerUser()) &&
-        !sessMan.getSuperUser()) {
+        !sessMan.getAdminUser()) {
       logger.debug("Number of tickets requested exceeds number of tickets allowed.");
       return errorReturn("Cannot register for this event - " +
       		"number of tickets requested exceeds number of tickets allowed.");
@@ -79,12 +79,12 @@ public class EventregController extends AuthAbstractController {
     String comment = sessMan.getComment();
 
     logger.debug("event registration  - number of tickets requested: " + numTicketsRequested);
-    logger.debug("event registration  - superuser: " + sessMan.getSuperUser());
+    logger.debug("event registration  - superuser: " + sessMan.getAdminUser());
 
     sessMan.registerUserInEvent(numTicketsRequested,
                                 comment,
                                 regType,
-                                sessMan.getSuperUser());
+                                sessMan.getAdminUser());
 
     return sessModel("eventreg");
   }

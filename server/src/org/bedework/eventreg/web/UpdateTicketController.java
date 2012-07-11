@@ -30,11 +30,11 @@ public class UpdateTicketController extends AuthAbstractController {
 
     Event currEvent = sessMan.getCurrEvent();
 
-    logger.debug("updating ticket " + ticketId + ", super user: " + sessMan.getSuperUser());
+    logger.debug("updating ticket " + ticketId + ", super user: " + sessMan.getAdminUser());
 
     if (((numTickets + sessMan.getTicketCount()) <= currEvent.getMaxTickets()) ||
         (numTickets < sessMan.getUserTicketCount()) ||
-        sessMan.getSuperUser()) {
+        sessMan.getAdminUser()) {
       sessMan.updateTicketById(ticketId,
                                numTickets,
                                comment,
@@ -45,8 +45,8 @@ public class UpdateTicketController extends AuthAbstractController {
       return errorReturn("Registration is full: you may only decrease or remove tickets.");
     }
 
-    if (sessMan.getSuperUser()) {
-      return sessModel("forward:suagenda.do");
+    if (sessMan.getAdminUser()) {
+      return sessModel("forward:adminagenda.do");
     }
 
     return sessModel("forward:agenda.do");

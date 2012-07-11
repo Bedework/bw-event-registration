@@ -35,7 +35,7 @@ public class OutputCSVController extends AuthAbstractController {
   @Override
   public ModelAndView doRequest(final HttpServletRequest request,
                                 final HttpServletResponse response) throws Throwable {
-    if (!sessMan.getSuperUser()) {
+    if (!sessMan.getAdminUser()) {
       logger.info("Non superuser attempted access " + getClass().getName());
       return errorReturn("No access");
     }

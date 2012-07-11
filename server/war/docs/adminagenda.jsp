@@ -2,7 +2,7 @@
 
 <%@ include file="/docs/head.jsp" %>
 
-    <c:if test="${sessMan.superUser}">
+    <c:if test="${sessMan.adminUser}">
       <div class="fullpage">
         <div class="rightLinks">
           Welcome <c:out value="${sessMan.currentUser}"/> (superuser)<br/>
@@ -23,7 +23,7 @@
             Tickets requested:  <c:out value="${sessMan.ticketCount}"/>
           </strong>
         </p>
-        <form name="suagenda" action="">
+        <form name="adminagenda" action="">
           <c:if test="${sessMan.message != null and sessMan.message != ''}">
             <div id="message">
               <c:out value="${sessMan.message}"/>

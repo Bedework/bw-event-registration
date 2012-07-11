@@ -58,7 +58,7 @@ public class WaitingListController extends AuthAbstractController {
     }
 
     if ((numTicketsRequested > ev.getMaxTicketsPerUser()) &&
-        !sessMan.getSuperUser()) {
+        !sessMan.getAdminUser()) {
       logger.debug("Number of tickets requested exceeds number of tickets allowed.");
       return errorReturn("Cannot register for this event - " +
       		"number of tickets requested exceeds number of tickets allowed.");
@@ -68,12 +68,12 @@ public class WaitingListController extends AuthAbstractController {
     String comment = sessMan.getComment();
 
     logger.debug("waiting list registration  - number of tickets requested: " + numTicketsRequested);
-    logger.debug("waiting list registration  - superuser: " + sessMan.getSuperUser());
+    logger.debug("waiting list registration  - superuser: " + sessMan.getAdminUser());
 
     sessMan.registerUserInEvent(numTicketsRequested,
                                 comment,
                                 regType,
-                                sessMan.getSuperUser());
+                                sessMan.getAdminUser());
 
     return sessModel("waitlist");
   }
