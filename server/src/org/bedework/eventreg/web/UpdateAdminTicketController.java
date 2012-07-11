@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * @author douglm
  */
-public class UpdateTicketController extends AuthAbstractController {
+public class UpdateAdminTicketController extends AuthAbstractController {
   @Override
   public ModelAndView doRequest(final HttpServletRequest request,
                                 final HttpServletResponse response) throws Throwable {
@@ -29,15 +29,17 @@ public class UpdateTicketController extends AuthAbstractController {
     
     if (reg == null) {
       sessMan.setMessage("No registration found.");
-    } else if (!sessMan.getAdminUser() &&
-      !reg.getAuthid().equals(sessMan.getCurrentUser())) {
+    } else if (!sessMan.getAdminUser()) {
       sessMan.setMessage("You are not authorized to update that registration.");
     } else {
     
       Event currEvent = sessMan.getCurrEvent();
       String comment = sessMan.getComment();
+      String type = sessMan.getType();
+      
+      /* THIS IS NOT DONE */
   
-      if ((numTickets + sessMan.getTicketCount() - reg.getNumTickets()) <= currEvent.getMaxTickets()) {
+      if (((numTickets + sessMan.getTicketCount()) <= currEvent.getMaxTickets())) {
         
         sessMan.updateRegistration(reg,numTickets);
         

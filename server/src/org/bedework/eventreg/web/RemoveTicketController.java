@@ -45,14 +45,14 @@ public class RemoveTicketController extends AuthAbstractController {
     Registration reg = sessMan.getRegistrationById(ticketId);
 
     if (reg == null) {
-      // XXX message?
+      sessMan.setMessage("No registration found.");
     } else if (!sessMan.getAdminUser() &&
-        !reg.getAuthid().equals(sessMan.getCurrentUser())) {
-      // XXX message?
+      !reg.getAuthid().equals(sessMan.getCurrentUser())) {
+      sessMan.setMessage("You are not authorized to remove that registration.");
     } else{
       sessMan.removeRegistration(reg);
+      sessMan.setMessage(""); // don't need to say anything
     }
-    sessMan.setMessage(""); // don't need to say anything
    
     return sessModel("forward:init.do");
   }

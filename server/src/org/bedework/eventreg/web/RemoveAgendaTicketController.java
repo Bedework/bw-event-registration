@@ -47,12 +47,12 @@ public class RemoveAgendaTicketController extends AuthAbstractController {
     if (reg == null) {
       // XXX message?
     } else if (!sessMan.getAdminUser() &&
-        !reg.getAuthid().equals(sessMan.getCurrentUser())) {
-      // XXX message?
+      !reg.getAuthid().equals(sessMan.getCurrentUser())) {
+      sessMan.setMessage("You are not authorized to remove that registration.");
     } else{
       sessMan.removeRegistration(reg);
+      sessMan.setMessage(""); // don't need to say anything
     }
-    sessMan.setMessage(""); // don't need to say anything
 
     if (sessMan.getAdminUser()) {
       return sessModel("forward:adminagenda.do");

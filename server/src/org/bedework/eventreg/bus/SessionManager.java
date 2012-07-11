@@ -258,6 +258,25 @@ public class SessionManager  {
   public void removeRegistration(final Registration reg) throws Throwable {
     db.delete(reg);
   }
+  
+  /**
+   * @param reg
+   * @throws Throwable
+   */
+  public void updateRegistration(final Registration reg,
+                                 final int numTickets) throws Throwable {
+
+    Timestamp sqlDate = new Timestamp(new java.util.Date().getTime());
+
+    reg.setLastmod(sqlDate.toString());
+    reg.setNumTickets(numTickets);
+
+    db.update(reg);
+
+    addChange(reg, Change.typeUpdReg,
+              Change.lblUpdNumTickets,
+              String.valueOf(numTickets));
+  }
 
   /**
    * @param ticketId

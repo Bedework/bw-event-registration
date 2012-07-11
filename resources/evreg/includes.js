@@ -76,7 +76,7 @@ function doUpdateSuTicket(ticketId) {
   var comment = escape(document.getElementById("comment" + ticketId).value);
   var qty = escape(document.getElementById("numtickets" + ticketId).value);
   //alert("updateTicket.do?id=" + ticketId + "&qty=" + qty + "&comment=" + comment);
-  location.replace("updateTicket.do?id=" + ticketId + "&qty=" + qty + "&comment=" + comment + "&type=" + type);
+  location.replace("updateAdminTicket.do?id=" + ticketId + "&qty=" + qty + "&comment=" + comment + "&type=" + type);
 }
 function validate(formObj) {
   if (!echeck(formObj.email.value)) {
