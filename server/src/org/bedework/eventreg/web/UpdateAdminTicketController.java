@@ -39,7 +39,7 @@ public class UpdateAdminTicketController extends AuthAbstractController {
       
       /* THIS IS NOT DONE */
   
-      if (((numTickets + sessMan.getTicketCount()) <= currEvent.getMaxTickets())) {
+      if (((numTickets + sessMan.getRegTicketCount()) <= currEvent.getMaxTickets())) {
         
         sessMan.updateRegistration(reg,numTickets);
         

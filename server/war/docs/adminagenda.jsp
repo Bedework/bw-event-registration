@@ -5,23 +5,28 @@
     <c:if test="${sessMan.adminUser}">
       <div class="fullpage">
         <div class="rightLinks">
-          Welcome <c:out value="${sessMan.currentUser}"/> (superuser)<br/>
+          Welcome <c:out value="${sessMan.currentUser}"/> (admin)<br/>
           <a href="javascript:print();">print</a> |
           <a href="javascript:self.close();">close this window</a> |
-          <a href="download.do">download registrations</a>
+          <a href="download.do?href=${sessMan.href}">download registrations</a>
         </div>
         <h1><c:out value="${sessMan.currEvent.summary}"/></h1>
-        <p>
-          <c:out value="${sessMan.currEvent.date}"/> - <c:out value="${sessMan.currEvent.time}"/>
+        <div class="eventDateTime">
+          <c:out value="${sessMan.currEvent.dateTime}"/>
+          <%--<fmt:formatDate value="${sessMan.currEvent.date}" type="both" timeStyle="long" dateStyle="long" />--%>
+        </div>
+        <p class="left">
+          Registrations: <c:out value="${sessMan.registrantCount}"/><br/>
+          Total active tickets:  <c:out value="${sessMan.regTicketCount}"/><br/>
+          Total waiting list tickets: <c:out value="${sessMan.waitingTicketCount}"/>
+        </p>
+        <p class="left">
+          Max tickets allowed for event: <c:out value="${sessMan.currEvent.maxTickets}"/><br/>
+          Max tickets allowed per user: <c:out value="${sessMan.currEvent.maxTicketsPerUser}"/>
         </p>
         <p>
-          Event Agenda<br/>
-          <strong>
-            Registration deadline: <c:out value="${sessMan.currEvent.registrationEnd}"/><br/>
-            Max allowed: <c:out value="${sessMan.currEvent.maxTickets}"/><br/>
-            Registrations: <c:out value="${sessMan.registrantCount}"/><br/>
-            Tickets requested:  <c:out value="${sessMan.ticketCount}"/>
-          </strong>
+          Registration starts: <c:out value="${sessMan.currEvent.registrationStart}"/><br/>
+          Registration ends: <c:out value="${sessMan.currEvent.registrationEnd}"/>
         </p>
         <form name="adminagenda" action="">
           <c:if test="${sessMan.message != null and sessMan.message != ''}">
@@ -33,10 +38,7 @@
             <tr>
               <th>
                 Ticket ID
-              </th><!-- 
-              <th>
-                Name
-              </th> -->
+              </th>
               <th>
                 UserID
               </th>
@@ -55,8 +57,11 @@
               <th>
               </th>
             </tr>
-            <c:forEach var="reg" items="${suserAgenda}" varStatus="loopStatus">
+            <c:forEach var="reg" items="${regs}" varStatus="loopStatus">
               <c:choose>
+                <c:when test="${reg.type eq 'waiting'}">
+                  <tr class="adminWaitList">
+                </c:when>
                 <c:when test='${(loopStatus.index)%2 eq 0}'>
                   <tr class="b">
                 </c:when>
@@ -65,41 +70,30 @@
                 </c:otherwise>
               </c:choose>
                 <td class="regTicketId">
-                  <c:out value="${reg.ticketId}"/>
+                  <c:out value="${reg.ticketid}"/>
                 </td>
-                <!-- <td>
-                  <c:out value="${reg['fname']}"/>
-                  <c:out value="${reg['lname']}"/>
-                </td> -->
                 <td class="regEmail">
-                  <c:out value="${reg.email}"/>
+                  <c:out value="${reg.authid}"/>
                 </td>
                 <td class="regNumTickets">
-                  <input name='numtickets<c:out value="${reg.ticketId}"/>' id='numtickets<c:out value="${reg.ticketId}"/>' type="text" value='<c:out value="${reg.numtickets}"/>' size="3"/>
+                  <input name='numtickets<c:out value="${reg.ticketid}"/>' id='numtickets<c:out value="${reg.ticketid}"/>' type="text" value='<c:out value="${reg.numTickets}"/>' size="3"/>
                 </td>
                 <td class="regType">
-                  <select name='type<c:out value="${reg.ticketId}"/>' id='type<c:out value="${reg.ticketId}"/>'>
-                    <c:choose>
-                      <c:when test="${reg.type == 'hold'}">
-                        <option value="normal">normal</option>
-                        <option value="hold" selected="selected">hold</option>
-                      </c:when>
-                      <c:otherwise>
-                        <option value="normal" selected="selected">normal</option>
-                        <option value="hold">hold</option>
-                      </c:otherwise>
-                    </c:choose>
+                  <select name='type<c:out value="${reg.ticketid}"/>' id='type<c:out value="${reg.ticketid}"/>'>
+                    <option value="registered" ${reg.type == 'registered' ? 'selected="selected"' : ''}>registered</option>
+                    <option value="hold" ${reg.type == 'hold' ? 'selected="selected"' : ''}>hold</option>
+                    <option value="waiting" ${reg.type == 'waiting' ? 'selected="selected"' : ''}>waiting</option>
                   </select>
                 </td>
                 <td class="regComment">
-                  <input name='comment<c:out value="${reg.ticketId}"/>' id='comment<c:out value="${reg.ticketId}"/>' type="text" value='<c:out value="${reg.comment}"/>'/>
+                  <input name='comment<c:out value="${reg.ticketid}"/>' id='comment<c:out value="${reg.ticketid}"/>' type="text" value='<c:out value="${reg.comment}"/>'/>
                 </td>
                 <td class="regCreated">
                   <c:out value="${reg.created}"/>
                 </td>
                 <td class="regControls">
-                  <a href="javascript:doUpdateSuTicket('<c:out value="${reg.ticketId}"/>')" onclick="return confirmUpdateSuTicket()">update</a> |
-                  <a href='removeAgendaTicket.do?id=<c:out value="${reg.ticketId}"/>' onclick="return confirmRemoveSuTicket('<c:out value="${reg.email}"/>')">remove</a>
+                  <a href="javascript:doUpdateSuTicket('<c:out value="${reg.ticketid}"/>')" onclick="return confirmUpdateAdminTicket()">update</a> |
+                  <a href='removeAgendaTicket.do?id=<c:out value="${reg.ticketid}"/>' onclick="return confirmRemoveAdminTicket('<c:out value="${reg.authid}"/>')">remove</a>
                 </td>
               </tr>
             </c:forEach>

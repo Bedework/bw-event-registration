@@ -43,7 +43,7 @@ public class EventregController extends AuthAbstractController {
     }
     
     int numTicketsRequested = sessMan.getTicketsRequested();
-    long currentTicketCount = sessMan.getTicketCount();
+    long currentTicketCount = sessMan.getRegTicketCount();
     
     if ((numTicketsRequested + currentTicketCount) > maxTicketsAllowed) {
       sessMan.setRegistrationFull(true);

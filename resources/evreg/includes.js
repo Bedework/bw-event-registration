@@ -49,7 +49,7 @@ function inputmout() {
 function confirmRemoveTicket(eventTitle) {
   return confirm("You have chosen to remove \"" + eventTitle + "\" from your agenda.\n\nProceed?");
 }
-function confirmRemoveSuTicket(email) {
+function confirmRemoveAdminTicket(email) {
   return confirm("You have chosen to remove \"" + email + "\" from this event.\n\nProceed?");
 }
 function confirmUpdateTicket(ticketId, eventTitle) {
@@ -66,10 +66,10 @@ function doUpdateTicket(ticketId,eventHref) {
   //alert("updateTicket.do?id=" + ticketId + "&qty=" + qty + "&comment=");
   location.replace("updateTicket.do?ticketid=" + ticketId + "&href=" + eventHref + "&numtickets=" + qty + "&comment=");
 }
-function confirmUpdateSuTicket() {
+function confirmUpdateAdminTicket() {
   return confirm("The ticket will be updated.\n\nProceed?");
 }
-function doUpdateSuTicket(ticketId) {
+function doUpdateAdminTicket(ticketId) {
   var typeCssId = "type" + ticketId;
   var typeSelectBox = document.getElementById(typeCssId);
   var type = typeSelectBox.options[typeSelectBox.selectedIndex].value;

@@ -89,7 +89,7 @@
         <div class="ticketVals">
           <!-- em>Tickets</em><br/-->
           Total: ${sessMan.currEvent.maxTickets}<br/>
-          Available: ${sessMan.currEvent.maxTickets - sessMan.ticketCount}
+          Available: ${sessMan.currEvent.maxTickets - sessMan.regTicketCount}
         </div>
         <form action="eventreg.do" class="commonForm" method="POST">
           <c:choose>

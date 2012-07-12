@@ -47,7 +47,7 @@ public class InitController extends AuthAbstractController {
       return errorReturn("Cannot register for this event.");
     }
 
-    long curTickets = sessMan.getTicketCount();
+    long curTickets = sessMan.getRegTicketCount();
     logger.debug("maxTickets: " + maxTickets);
     logger.debug("curTickets: " + curTickets);
     sessMan.setRegistrationFull(curTickets >= maxTickets);

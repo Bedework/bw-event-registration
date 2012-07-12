@@ -7,7 +7,11 @@ body {
   background-color: white;
 }
 h1 {
-  font-size: 1.5em; margin: 0 0 1em 0;
+  font-size: 1.5em; 
+  margin: 0 0 1em 0;
+}
+.eventDateTime {
+	margin: -1em 0 1em 0;
 }
 h3 {
 	text-align: right;
@@ -72,6 +76,9 @@ p {
 	border: 1px dotted #333;
 }
 .waitList td.type {
+  background-color: #fee;
+}
+.adminWaitList {
   background-color: #fee;
 }
 table {
@@ -210,6 +217,10 @@ ul.errors li {
 	clear: both;
   font-size: 0.8em;
   margin: 1em 0 1em 2.25em;
+}
+.left {
+	float: left;
+	margin: 0 2em 2em 0;
 }
 .indent {
   margin-left: 2em;

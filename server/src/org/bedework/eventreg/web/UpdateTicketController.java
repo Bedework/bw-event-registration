@@ -37,7 +37,7 @@ public class UpdateTicketController extends AuthAbstractController {
       Event currEvent = sessMan.getCurrEvent();
       String comment = sessMan.getComment();
   
-      if ((numTickets + sessMan.getTicketCount() - reg.getNumTickets()) <= currEvent.getMaxTickets()) {
+      if ((numTickets + sessMan.getRegTicketCount() - reg.getNumTickets()) <= currEvent.getMaxTickets()) {
         
         sessMan.updateRegistration(reg,numTickets);
         

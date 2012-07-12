@@ -385,7 +385,84 @@ public class EventregDb implements Serializable {
 
   /**
    * @param eventHref
-   * @return number of registration entries for that event
+   * @return number of registrations not on the waiting list for the event
+   * @throws Throwable
+   */
+  public long getRegTicketCount(final String eventHref) throws Throwable {
+    try {
+      StringBuilder sb = new StringBuilder();
+
+      sb.append("select sum(numTickets) from ");
+      sb.append(Registration.class.getName());
+      sb.append(" reg where reg.href=:href");
+      sb.append(" and (reg.type <> 'waiting' or reg.type is null)");
+      // is null a quick fix; reg.type should not be null
+
+      sess.createQuery(sb.toString());
+      sess.setString("href", eventHref);
+
+      /*
+      Collection<Long> counts = sess.getList();
+
+      long total = 0;
+
+      for (Long l: counts) {
+        total += l;
+      }*/
+
+      Long ct = (Long)sess.getUnique();
+      trace("Count returned " + ct);
+      if (ct == null) {
+        return 0;
+      }
+
+      return ct;
+    } catch (HibException he) {
+      throw new Exception(he);
+    }
+  }
+
+  /**
+   * @param eventHref
+   * @return number of registrations on the waiting list for the event
+   * @throws Throwable
+   */
+  public long getWaitingTicketCount(final String eventHref) throws Throwable {
+    try {
+      StringBuilder sb = new StringBuilder();
+
+      sb.append("select sum(numTickets) from ");
+      sb.append(Registration.class.getName());
+      sb.append(" reg where reg.href=:href");
+      sb.append(" and (reg.type = 'waiting')");
+
+      sess.createQuery(sb.toString());
+      sess.setString("href", eventHref);
+
+      /*
+      Collection<Long> counts = sess.getList();
+
+      long total = 0;
+
+      for (Long l: counts) {
+        total += l;
+      }*/
+
+      Long ct = (Long)sess.getUnique();
+      trace("Count returned " + ct);
+      if (ct == null) {
+        return 0;
+      }
+
+      return ct;
+    } catch (HibException he) {
+      throw new Exception(he);
+    }
+  }
+  
+  /**
+   * @param eventHref
+   * @return total number of registration entries for that event, including waiting list
    * @throws Throwable
    */
   public long getTicketCount(final String eventHref) throws Throwable {
@@ -395,8 +472,6 @@ public class EventregDb implements Serializable {
       sb.append("select sum(numTickets) from ");
       sb.append(Registration.class.getName());
       sb.append(" reg where reg.href=:href");
-      sb.append(" and (reg.type <> 'waiting' or reg.type is null)");
-      // is null a quick fix; reg.type should not be null
 
       sess.createQuery(sb.toString());
       sess.setString("href", eventHref);

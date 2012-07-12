@@ -491,7 +491,47 @@ public class SessionManager  {
   }
 
   /**
-   * @return count of tickets allocated
+   * @return count of tickets allocated as "registered" or "hold"
+   * @throws Throwable
+   */
+  public long getRegTicketCount() throws Throwable {
+    boolean wasOpen = open;
+
+    try {
+      if (!open) {
+        openDb();
+      }
+      logger.debug("Getting registered/held ticket count for " + getCurrEvent().getHref());
+      return db.getRegTicketCount(getCurrEvent().getHref());
+    } finally {
+      if (!wasOpen) {
+        closeDb();
+      }
+    }
+  }
+  
+  /**
+   * @return count of tickets allocated as "waiting"
+   * @throws Throwable
+   */
+  public long getWaitingTicketCount() throws Throwable {
+    boolean wasOpen = open;
+
+    try {
+      if (!open) {
+        openDb();
+      }
+      logger.debug("Getting waiting list ticket count for " + getCurrEvent().getHref());
+      return db.getWaitingTicketCount(getCurrEvent().getHref());
+    } finally {
+      if (!wasOpen) {
+        closeDb();
+      }
+    }
+  }
+  
+  /**
+   * @return count of all tickets (registered, waiting, etc)
    * @throws Throwable
    */
   public long getTicketCount() throws Throwable {
@@ -509,7 +549,7 @@ public class SessionManager  {
       }
     }
   }
-
+  
   /**
    * @return count of tickets allocated to user for event
    * @throws Throwable
