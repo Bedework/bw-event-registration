@@ -4,8 +4,8 @@
         <c:choose>
           <c:when test="${sessMan.adminUser}">
             Welcome <c:out value="${sessMan.currentUser}"/><br/>
-            <a href="javascript:launchWindow('adminagenda.do', '1000')">view event's agenda</a><br/>
-            <a href="download.do">download registrations</a>
+            <a href="javascript:launchWindow('adminagenda.do?href=${sessMan.href}', '1000')">view event's agenda</a><br/>
+            <a href="download.do?href=${sessMan.href}">download registrations</a>
           </c:when>
           <c:otherwise>
             Welcome <c:out value="${sessMan.currentUser}"/> <br/>

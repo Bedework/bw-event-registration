@@ -42,7 +42,7 @@ public class OutputCSVController extends AuthAbstractController {
 
     TreeSet<Registration> regs = new TreeSet<Registration>();
 
-    for (Registration reg: sessMan.getAllRegistrations()) {
+    for (Registration reg: sessMan.getRegistrationsByHref(sessMan.getHref())) {
       reg.setEvent(sessMan.retrieveEvent(reg));
 
       regs.add(reg);
