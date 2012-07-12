@@ -10,9 +10,6 @@ h1 {
   font-size: 1.5em; 
   margin: 0 0 1em 0;
 }
-.eventDateTime {
-	margin: -1em 0 1em 0;
-}
 h3 {
 	text-align: right;
   white-space: nowrap;
@@ -59,27 +56,23 @@ p {
 	margin: 0;
 	white-space: nowrap;
 }
-.a {
- color: #555; 
- background-color: #ffe;
-}
-.b {
- color: #555; 
- background-color: #eee;
-}
-.waitList {
+#agenda tr.waitList td {
  font-style: italic;
  color: #555; 
  background-color: #fff;
-}
-.waitList td {
-	border: 1px dotted #333;
+ border: 1px dotted #333;
 }
 .waitList td.type {
   background-color: #fee;
 }
-.adminWaitList {
-  background-color: #fee;
+#agenda tr.adminWaitList td {
+  font-style: italic;
+}
+.eventDateTime {
+  margin: -1em 0 1em 0;
+}
+#regInfo p {
+	white-space: nowrap;
 }
 table {
   width: 100%; 
