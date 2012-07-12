@@ -58,11 +58,8 @@ p {
 }
 #agenda tr.waitList td {
  font-style: italic;
- color: #555; 
- background-color: #fff;
- border: 1px dotted #333;
 }
-.waitList td.type {
+#agenda tr.waitList td.type {
   background-color: #fee;
 }
 #agenda tr.adminWaitList td {
