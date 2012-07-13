@@ -121,7 +121,7 @@
                         <c:out value="${reg.created}"/>
                       </td>
                       <td class="regControls">
-                        <a href="javascript:doUpdateAdminTicket('<c:out value="${reg.ticketid}"/>','<c:out value="${reg.event.href}"/>','<c:out value="${reg.type}"/>')" onclick="return confirmUpdateAdminTicket()">update</a> |
+                        <a href="javascript:doUpdateAdminTicket('<c:out value="${reg.ticketid}"/>','<c:out value="${reg.event.href}"/>')" onclick="return confirmUpdateAdminTicket()">update</a> |
                         <a href='removeAgendaTicket.do?ticketid=<c:out value="${reg.ticketid}"/>&amp;href=<c:out value="${reg.event.href}"/>' onclick="return confirmRemoveAdminTicket('<c:out value="${reg.authid}"/>')">remove</a>
                       </td>
                     </tr>

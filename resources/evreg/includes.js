@@ -61,22 +61,23 @@ function confirmUpdateTicket(ticketId, eventTitle) {
 function doUpdateTicket(ticketId,eventHref) {
   var ticketCssId = "tickets" + ticketId;
   var selectBox = document.getElementById(ticketCssId);
-  var qty = selectBox.options[selectBox.selectedIndex].value;
+  var numtickets = selectBox.options[selectBox.selectedIndex].value;
   // formObj.getElementById("comment" + ticketId).value;
   //alert("updateTicket.do?id=" + ticketId + "&qty=" + qty + "&comment=");
-  location.replace("updateTicket.do?ticketid=" + ticketId + "&href=" + eventHref + "&numtickets=" + qty + "&comment=");
+  location.replace("updateTicket.do?ticketid=" + ticketId + "&href=" + eventHref + "&numtickets=" + numtickets + "&comment=");
 }
 function confirmUpdateAdminTicket() {
   return confirm("The ticket will be updated.\n\nProceed?");
 }
-function doUpdateAdminTicket(ticketId) {
+function doUpdateAdminTicket(ticketId,eventHref) {
   var typeCssId = "type" + ticketId;
   var typeSelectBox = document.getElementById(typeCssId);
-  var type = typeSelectBox.options[typeSelectBox.selectedIndex].value;
-  var comment = escape(document.getElementById("comment" + ticketId).value);
-  var qty = escape(document.getElementById("numtickets" + ticketId).value);
-  //alert("updateTicket.do?id=" + ticketId + "&qty=" + qty + "&comment=" + comment);
-  location.replace("updateAdminTicket.do?id=" + ticketId + "&qty=" + qty + "&comment=" + comment + "&type=" + type);
+  //var type = typeSelectBox.options[typeSelectBox.selectedIndex].value;
+  var type = $("#type" + ticketId + " option:selected").val();
+  //var comment = escape(document.getElementById("comment" + ticketId).value);
+  var comment = $("#comment" + ticketId).val();
+  var numtickets = escape(document.getElementById("numtickets" + ticketId).value);
+  location.replace("updateAdminTicket.do?ticketid=" + ticketId + "&href=" + eventHref + "&numtickets=" + numtickets + "&comment=" + comment + "&type=" + type);
 }
 function validate(formObj) {
   if (!echeck(formObj.email.value)) {

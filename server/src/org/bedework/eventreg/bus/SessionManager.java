@@ -263,19 +263,19 @@ public class SessionManager  {
    * @param reg
    * @throws Throwable
    */
-  public void updateRegistration(final Registration reg,
-                                 final int numTickets) throws Throwable {
+  public void updateRegistration(final Registration reg) throws Throwable {
 
     Timestamp sqlDate = new Timestamp(new java.util.Date().getTime());
 
     reg.setLastmod(sqlDate.toString());
-    reg.setNumTickets(numTickets);
 
     db.update(reg);
 
+    // will need more here for admin updates; change could also 
+    // include reg type and comments
     addChange(reg, Change.typeUpdReg,
               Change.lblUpdNumTickets,
-              String.valueOf(numTickets));
+              String.valueOf(reg.getNumTickets()));
   }
 
   /**

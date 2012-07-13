@@ -34,26 +34,21 @@ public class UpdateAdminTicketController extends AuthAbstractController {
     } else {
     
       Event currEvent = sessMan.getCurrEvent();
-      String comment = sessMan.getComment();
-      String type = sessMan.getType();
       
-      /* THIS IS NOT DONE */
-  
-      if (((numTickets + sessMan.getRegTicketCount()) <= currEvent.getMaxTickets())) {
+      if ((numTickets + sessMan.getRegTicketCount() - reg.getNumTickets()) <= currEvent.getMaxTickets()) {
+
+        reg.setNumTickets(numTickets);
+        reg.setType(sessMan.getType());
+        reg.setComment(sessMan.getComment());
+        sessMan.updateRegistration(reg);
         
-        sessMan.updateRegistration(reg,numTickets);
-        
-        sessMan.setMessage("Ticket number " + ticketId + " updated.");
+        sessMan.setMessage("Ticket number " + ticketId + " updated by admin.");
       } else {
         logger.info("Registration is full");
         return errorReturn("Registration is full: you may only decrease or remove tickets.");
       }
     }
 
-    if (sessMan.getAdminUser()) {
-      return sessModel("forward:adminagenda.do");
-    }
-
-    return sessModel("forward:agenda.do");
+    return sessModel("forward:adminagenda.do");
   }
 }
