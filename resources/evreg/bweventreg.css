@@ -56,14 +56,11 @@ p {
 	margin: 0;
 	white-space: nowrap;
 }
-#agenda tr.waitList td {
+tr.waitList td {
  font-style: italic;
 }
-#agenda tr.waitList td.type {
+tr.waitList td.type {
   background-color: #fee;
-}
-#agenda tr.adminWaitList td {
-  font-style: italic;
 }
 .eventDateTime {
   margin: -1em 0 1em 0;
@@ -78,10 +75,14 @@ table {
 }
 th {
   text-align: left;
+  white-space: nowrap;
 }
 td {
   vertical-align: top;
   padding: 8px;
+}
+.thText {
+	margin-right: 14px;
 }
 td.controls,
 td.regControls {

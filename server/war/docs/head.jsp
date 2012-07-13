@@ -8,19 +8,35 @@
       <script src="/evreg/tablesorter-2.0.5/jquery.tablesorter.min.js" type="text/javascript"></script>
       <link rel="stylesheet" href="/evreg/tablesorter-2.0.5/style.css" type="text/css" media="all"/>
       <script type="text/javascript">
-        $(document).ready(function() { 
-          $("#agenda").tablesorter({
-            widgets: ['zebra'],
-            sortMultiSortKey: 'ctrlKey',
-            textExtraction: function(node) {
-              if ($(node).find('option:selected').text() != "") {
-                return $(node).find('option:selected').text();
-              } else if ($(node).find('input[type=text]').val() != undefined && $(node).find('input[type=text]').val() != "") {
-                return $(node).find('input[type=text]').val();
+        $(document).ready(function() {
+          <c:if test="${pageContext.request.servletPath == '/docs/adminagenda.jsp'}">
+            $("#adminAgenda").tablesorter({
+              widgets: ['zebra'],
+              sortMultiSortKey: 'ctrlKey',
+              headers: { 
+                5: { sorter: 'text'},
+                6: { sorter: false }
+              }, 
+              textExtraction: function(node) {
+                if ($(node).find('option:selected').text() != "") {
+                  return $(node).find('option:selected').text();
+                } else if ($(node).find('input[type=text]').val() != undefined && $(node).find('input[type=text]').val() != "") {
+                  return $(node).find('input[type=text]').val();
+                }
+                return $(node).text();
               }
-              return $(node).text();
-            }
-          }); 
+            });
+          </c:if>        
+          <c:if test="${pageContext.request.servletPath == '/docs/agenda.jsp'}">
+            $("#userAgenda").tablesorter({
+              widgets: ['zebra'],
+              sortMultiSortKey: 'ctrlKey',
+              headers: { 
+                2: { sorter: 'text'},
+                6: { sorter: false }
+              }
+            });
+          </c:if> 
         });
       </script>
     </c:if>

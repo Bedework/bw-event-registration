@@ -36,29 +36,45 @@
               <c:out value="${sessMan.message}"/>
             </div>
           </c:if>
-          <table id="agenda" cellspacing="2" class="tablesorter">
+          <table id="adminAgenda" cellspacing="2" class="tablesorter">
           <thead>
             <tr>
               <th>
-                Ticket ID
+              <%-- thText classes are needed to keep the table sorter 
+                   background image from overlapping the text. --%>
+                <span class="thText">
+                  Ticket ID
+                </span>
               </th>
               <th>
-                UserID
+                <span class="thText">
+                  UserID
+                </span>
               </th>
               <th>
-                Tickets
+                <span class="thText">
+                  Tickets
+                </span>
               </th>
               <th>
-                Type
+                <span class="thText">
+                  Type
+                </span>
               </th>
               <th>
-                Comment
+                <span class="thText">
+                  Comment
+                </span>
               </th>
               <th>
-                Created
+                <span class="thText">
+                  Created
+                </span>
               </th>
               <th>
-                Options
+                <span class="thText">
+                  Options
+                </span>
               </th>
             </tr>
             </thead>
@@ -76,7 +92,7 @@
                   <c:forEach var="reg" items="${regs}" varStatus="loopStatus">
                     <c:choose>
                       <c:when test="${reg.type eq 'waiting'}">
-                        <tr class="adminWaitList">
+                        <tr class="waitList">
                       </c:when>
                       <c:otherwise>
                         <tr>
@@ -105,7 +121,7 @@
                         <c:out value="${reg.created}"/>
                       </td>
                       <td class="regControls">
-                        <a href="javascript:doUpdateSuTicket('<c:out value="${reg.ticketid}"/>')" onclick="return confirmUpdateAdminTicket()">update</a> |
+                        <a href="javascript:doUpdateAdminTicket('<c:out value="${reg.ticketid}"/>','<c:out value="${reg.event.href}"/>','<c:out value="${reg.type}"/>')" onclick="return confirmUpdateAdminTicket()">update</a> |
                         <a href='removeAgendaTicket.do?id=<c:out value="${reg.ticketid}"/>' onclick="return confirmRemoveAdminTicket('<c:out value="${reg.authid}"/>')">remove</a>
                       </td>
                     </tr>
