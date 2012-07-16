@@ -66,6 +66,7 @@ tr.odd.waitList td {
 tr.waitList td.type,
 tr.odd.waitList td.type {
   background-color: #fee;
+  background-image: url('tentativeLinesB.gif');
 }
 .eventDateTime {
   margin: -1em 0 1em 0;
