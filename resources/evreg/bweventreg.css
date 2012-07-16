@@ -58,8 +58,13 @@ p {
 }
 tr.waitList td {
  font-style: italic;
+ background-image: url('tentativeLinesA.gif');
 }
-tr.waitList td.type {
+tr.odd.waitList td {
+ background-image: url('tentativeLinesB.gif');
+}
+tr.waitList td.type,
+tr.odd.waitList td.type {
   background-color: #fee;
 }
 .eventDateTime {
@@ -67,6 +72,15 @@ tr.waitList td.type {
 }
 #regInfo p {
 	white-space: nowrap;
+}
+#agenda select,
+#agenda option,
+#adminAgenda select,
+#adminAgenda option {
+  font-size: 1em;
+}
+#adminAgenda input {
+	font-size: 0.9em;
 }
 table {
   width: 100%; 
@@ -133,10 +147,6 @@ form#signin input.submit {
 }
 #userReg #submit {
   width: 120px;
-}
-#rpiTable td {
-  white-space: normal;
-  padding-right: 1em;
 }
 ul.errors {
   width: 260px;

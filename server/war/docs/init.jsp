@@ -54,7 +54,7 @@
             </c:otherwise>
           </c:choose>
           <input type="hidden" name="href" value="${sessMan.href}"/>
-          <input type="submit" value="Register for waiting list"/>
+          <input type="submit" value="Join waiting list"/>
         </form>
       </div>
     </c:when>
