@@ -198,6 +198,7 @@ public class EventregDb implements Serializable {
    * @return - list of changes since ts
    * @throws Throwable
    */
+  @SuppressWarnings("unchecked")
   public List<Change> getChanges(final String ts) throws Throwable {
     try {
       StringBuilder sb = new StringBuilder();
@@ -268,6 +269,7 @@ public class EventregDb implements Serializable {
    * @return a matching registrations
    * @throws Throwable
    */
+  @SuppressWarnings("unchecked")
   public List<Registration> getByUser(final String user) throws Throwable {
     try {
       StringBuilder sb = new StringBuilder();
@@ -317,6 +319,7 @@ public class EventregDb implements Serializable {
    * @return a matching registrations
    * @throws Throwable
    */
+  @SuppressWarnings("unchecked")
   public List<Registration> getByEvent(final String href) throws Throwable {
     try {
       StringBuilder sb = new StringBuilder();
@@ -369,6 +372,7 @@ public class EventregDb implements Serializable {
 
       sess.createQuery(sb.toString());
       sess.setString("href", eventHref);
+      @SuppressWarnings("unchecked")
       Collection<Long> counts = sess.getList();
 
       long total = 0;
@@ -516,6 +520,7 @@ public class EventregDb implements Serializable {
       sess.createQuery(sb.toString());
       sess.setString("href", eventHref);
       sess.setString("user", user);
+      @SuppressWarnings("unchecked")
       Collection<Long> counts = sess.getList();
 
       long total = 0;

@@ -54,6 +54,10 @@ public class SessionManager  {
 
   private HttpServletRequest request;
 
+  /** Request parameter - admin token
+   */
+  public static final String reqparAdminToken = "atkn";
+
   /** Request parameter - comment
    */
   public static final String reqparComment = "comment";
@@ -747,6 +751,13 @@ public class SessionManager  {
     } catch (Throwable t) {
       return -1; // XXX exception?
     }
+  }
+
+  /**
+   * @return admin token or null for no parameter
+   */
+  public String getAdminToken() {
+    return getReqPar(reqparAdminToken);
   }
 
   /**

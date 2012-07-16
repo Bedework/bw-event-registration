@@ -171,6 +171,7 @@ public class BwConnector {
     return port;
   }
 
+  @SuppressWarnings("rawtypes")
   protected Object unmarshalBody(final HttpServletRequest req) throws Throwable {
     SOAPMessage msg = getSoapMsgFactory().createMessage(null, // headers
                                                         req.getInputStream());

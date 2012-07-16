@@ -18,6 +18,7 @@ under the License.
  */
 package org.bedework.eventreg.web;
 
+import org.bedework.eventreg.bus.SessionManager;
 import org.bedework.eventreg.db.Event;
 
 import org.springframework.web.servlet.ModelAndView;
@@ -64,7 +65,7 @@ public class WaitingListController extends AuthAbstractController {
       		"number of tickets requested exceeds number of tickets allowed.");
     }
 
-    String regType = sessMan.typeWaiting;
+    String regType = SessionManager.typeWaiting;
     String comment = sessMan.getComment();
 
     logger.debug("waiting list registration  - number of tickets requested: " + numTicketsRequested);

@@ -51,6 +51,18 @@ public interface EventregSvcMBean {
    * System properties
    * ======================================================================== */
 
+  /** Set the token for event reg admins
+   *
+   * @param val
+   */
+  public void setEventregAdminToken(final String val);
+
+  /** Get the token for event reg admins
+   *
+   * @return token
+   */
+  public String getEventregAdminToken();
+
   /**
    * @param val
    */

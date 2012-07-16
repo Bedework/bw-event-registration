@@ -26,20 +26,21 @@ import java.util.Collection;
 import java.util.Set;
 import java.util.TreeSet;
 
-
 /** Information used by the event registration service -
  * mostly a set of properties
  */
 public class SysInfo extends DbItem<SysInfo> implements PropertiesEntity {
   private String rootUsers;
 
+  private static final String eventregAdminTokenPname = "Eventreg:admin-token";
+
   /** Name for timezones server uri property
    */
-  public static final String tzsUriProp = "Eventreg:tzsUri";
+  public static final String tzsUriPname = "Eventreg:tzsUri";
 
   /** Name for wsdl uri property
    */
-  public static final String wsdlUriProp = "Eventreg:wsdlUri";
+  public static final String wsdlUriPname = "Eventreg:wsdlUri";
 
   private Set<BwProperty> properties;
 
@@ -272,32 +273,48 @@ public class SysInfo extends DbItem<SysInfo> implements PropertiesEntity {
     return prop.getValue();
   }
 
-  /**
-   * @return tzs uri
+  /** Set the token for event reg admins
+   *
+   * @param val
    */
-  public String getTzsUri() {
-    return getProperty(tzsUriProp);
+  public void setEventregAdminToken(final String val) {
+    setProperty(eventregAdminTokenPname, val);
+  }
+
+  /** Get the token for event reg admins
+   *
+   * @return token
+   */
+  public String getEventregAdminToken() {
+    return getProperty(eventregAdminTokenPname);
   }
 
   /**
    * @param val
    */
   public void setTzsUri(final String val) {
-    setProperty(tzsUriProp, val);
+    setProperty(tzsUriPname, val);
   }
 
   /**
-   * @return wsdl uri
+   * @return tzs uri
    */
-  public String getWsdlUri() {
-    return getProperty(wsdlUriProp);
+  public String getTzsUri() {
+    return getProperty(tzsUriPname);
   }
 
   /**
    * @param val
    */
   public void setWsdlUri(final String val) {
-    setProperty(wsdlUriProp, val);
+    setProperty(wsdlUriPname, val);
+  }
+
+  /**
+   * @return wsdl uri
+   */
+  public String getWsdlUri() {
+    return getProperty(wsdlUriPname);
   }
 
   /* ====================================================================

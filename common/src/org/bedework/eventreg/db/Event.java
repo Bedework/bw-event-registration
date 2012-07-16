@@ -529,7 +529,7 @@ public class Event implements Comparable<Event> {
    *                   private methods
    * ==================================================================== */
 
-  private BasePropertyType findProperty(final Class cl) {
+  private BasePropertyType findProperty(final Class<? extends BasePropertyType> cl) {
     for (JAXBElement<? extends BasePropertyType> p: properties.getBasePropertyOrTzid()) {
       if (p.getValue().getClass().equals(cl)) {
         return p.getValue();

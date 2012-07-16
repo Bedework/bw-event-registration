@@ -92,7 +92,7 @@ public abstract class AbstractController implements Controller {
   }
 
   protected ModelAndView sessModel(final String view) {
-    Map myModel = new HashMap();
+    Map<String, Object> myModel = new HashMap<String, Object>();
     myModel.put("sessMan", sessMan);
 
     return new ModelAndView(view, myModel);
@@ -101,7 +101,7 @@ public abstract class AbstractController implements Controller {
   protected ModelAndView objModel(final String view,
                                   final String name,
                                   final Object m) {
-    Map myModel = new HashMap();
+    Map<String, Object> myModel = new HashMap<String, Object>();
     myModel.put("sessMan", sessMan);
     myModel.put(name, m);
 
@@ -114,7 +114,7 @@ public abstract class AbstractController implements Controller {
 
   protected ModelAndView errorReturn(final String msg) {
     sessMan.setMessage(msg);
-    Map myModel = new HashMap();
+    Map<String, Object> myModel = new HashMap<String, Object>();
     myModel.put("sessMan", sessMan);
 
     return new ModelAndView("error", myModel);
@@ -132,7 +132,8 @@ public abstract class AbstractController implements Controller {
    */
   public void dumpRequest(final HttpServletRequest req) {
     try {
-      Enumeration names = req.getParameterNames();
+      @SuppressWarnings("unchecked")
+      Enumeration<String> names = req.getParameterNames();
 
       String title = "Request parameters";
 

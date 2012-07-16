@@ -18,31 +18,41 @@ under the License.
  */
 package org.bedework.eventreg.web;
 
-import org.bedework.eventreg.db.Registration;
+import org.bedework.eventreg.db.SysInfo;
 
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.TreeSet;
-
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 /**
- * @author douglm
+ * Ensure we get a valid admin token.
  *
  */
-public class OutputCSVController extends AdminAuthAbstractController {
+public abstract class AdminAuthAbstractController extends AuthAbstractController {
   @Override
-  public ModelAndView doRequest(final HttpServletRequest request,
-                                final HttpServletResponse response) throws Throwable {
-    TreeSet<Registration> regs = new TreeSet<Registration>();
+  protected ModelAndView setup(final HttpServletRequest request) throws Throwable {
+    ModelAndView mv = super.setup(request);
 
-    for (Registration reg: sessMan.getRegistrationsByHref(sessMan.getHref())) {
-      reg.setEvent(sessMan.retrieveEvent(reg));
-
-      regs.add(reg);
+    if (mv != null) {
+      return mv;
     }
 
-    return objModel("csv", "regs", regs);
+    SysInfo sysi = sessMan.getSysInfo();
+    
+    if (sysi == null) {
+      return errorReturn("No system properties");
+    }
+    
+    String adminToken = sysi.getEventregAdminToken();
+    
+    if (adminToken == null) {
+      return errorReturn("No admin token set in system properties");
+    }
+    
+    if (!adminToken.equals(sessMan.getAdminToken())) {
+      return errorReturn("Invalid admin token");
+    }
+
+    return null;
   }
 }

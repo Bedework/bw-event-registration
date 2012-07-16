@@ -95,110 +95,139 @@ public class EventregSvc implements EventregSvcMBean {
    * System properties
    * ======================================================================== */
 
+  /** Set the token for event reg admins
+   *
+   * @param val
+   */
+  public void setEventregAdminToken(final String val) {
+    PropSetter<String> ps = new PropSetter<String>() {
+      void setValue(String val) {
+        sysi.setEventregAdminToken(val);
+      }
+    };
+    
+    ps.doSet(val);
+  }
+
+  /** Get the token for event reg admins
+   *
+   * @return token
+   */
+  public String getEventregAdminToken() {
+    PropGetter<String> pg = new PropGetter<String>() {
+      String getValue() {
+        return sysi.getEventregAdminToken();
+      }
+    };
+    
+    return pg.doGet();
+  }
+
   @Override
   public void setTzsUri(final String val) {
-    EventregDb db = openDb();
-
-    if (db != null) {
-      try {
-        SysInfo sysi = db.getSys();
-        boolean create = false;
-
-        if (sysi == null) {
-          sysi = new SysInfo();
-          create = true;
-        }
-
+    PropSetter<String> ps = new PropSetter<String>() {
+      void setValue(String val) {
         sysi.setTzsUri(val);
-
-        if (create) {
-          db.addSys(sysi);
-        } else {
-          db.updateSys(sysi);
-        }
-      } catch (Throwable t) {
-        error(t);
-      } finally {
-        closeDb(db);
       }
-    }
+    };
+    
+    ps.doSet(val);
   }
 
   @Override
   public String getTzsUri() {
-    String res = null;
-
-    EventregDb db = openDb();
-
-    if (db != null) {
-      try {
-        SysInfo sysi = db.getSys();
-
-        if (sysi == null) {
-          return "";
-        }
-        res = sysi.getTzsUri();
-      } catch (Throwable t) {
-        error(t);
-      } finally {
-        closeDb(db);
+    PropGetter<String> pg = new PropGetter<String>() {
+      String getValue() {
+        return sysi.getTzsUri();
       }
-    }
-
-    return res;
+    };
+    
+    return pg.doGet();
   }
 
   @Override
   public void setWsdlUri(final String val) {
-    EventregDb db = openDb();
-
-    if (db != null) {
-      try {
-        SysInfo sysi = db.getSys();
-        boolean create = false;
-
-        if (sysi == null) {
-          sysi = new SysInfo();
-          create = true;
-        }
-
+    PropSetter<String> ps = new PropSetter<String>() {
+      void setValue(String val) {
         sysi.setWsdlUri(val);
-
-        if (create) {
-          db.addSys(sysi);
-        } else {
-          db.updateSys(sysi);
-        }
-      } catch (Throwable t) {
-        error(t);
-      } finally {
-        closeDb(db);
       }
-    }
+    };
+    
+    ps.doSet(val);
   }
 
   @Override
   public String getWsdlUri() {
-    String res = null;
+    PropGetter<String> pg = new PropGetter<String>() {
+      String getValue() {
+        return sysi.getWsdlUri();
+      }
+    };
+    
+    return pg.doGet();
+  }
+  
+  private abstract class PropGetter <T>  {
+    protected SysInfo sysi;
+    
+    abstract T getValue();
+    
+    T doGet() {
+      T res = null;
 
-    EventregDb db = openDb();
+      EventregDb db = openDb();
 
-    if (db != null) {
-      try {
-        SysInfo sysi = db.getSys();
+      if (db != null) {
+        try {
+          sysi = db.getSys();
 
-        if (sysi == null) {
-          return "";
+          if (sysi == null) {
+            return null;
+          }
+          res = getValue();
+        } catch (Throwable t) {
+          error(t);
+        } finally {
+          closeDb(db);
         }
-        res = sysi.getWsdlUri();
-      } catch (Throwable t) {
-        error(t);
-      } finally {
-        closeDb(db);
+      }
+
+      return res;
+    }
+  }
+  
+  private abstract class PropSetter <T>  {
+    protected SysInfo sysi;
+    
+    abstract void setValue(T val);
+    
+    void doSet(T val) {
+      EventregDb db = openDb();
+
+      if (db != null) {
+        try {
+          sysi = db.getSys();
+          boolean create = false;
+
+          if (sysi == null) {
+            sysi = new SysInfo();
+            create = true;
+          }
+
+          doSet(val);
+
+          if (create) {
+            db.addSys(sysi);
+          } else {
+            db.updateSys(sysi);
+          }
+        } catch (Throwable t) {
+          error(t);
+        } finally {
+          closeDb(db);
+        }
       }
     }
-
-    return res;
   }
 
   /* ========================================================================
