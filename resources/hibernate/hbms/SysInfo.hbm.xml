@@ -20,9 +20,6 @@
 
     <version name="seq" column="bwevreg_seq" type="integer" />
 
-    <property name="rootUsers" column="bwevreg_root" 
-              type="string" length="2000" />
-
     <set name="properties" table="bwevreg_properties"
          cascade="all,delete-orphan"
          lazy="false">

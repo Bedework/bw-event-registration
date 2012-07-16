@@ -32,15 +32,10 @@ import javax.servlet.http.HttpServletResponse;
  * @author douglm
  *
  */
-public class AdminAgendaController extends AuthAbstractController {
+public class AdminAgendaController extends AdminAuthAbstractController {
   @Override
   public ModelAndView doRequest(final HttpServletRequest request,
                                 final HttpServletResponse response) throws Throwable {
-    if (!sessMan.getAdminUser()) {
-      logger.info("Non superuser attempted access " + getClass().getName());
-      return errorReturn("No access");
-    }
-
     Event ev = sessMan.getCurrEvent();
 
     TreeSet<Registration> regs = new TreeSet<Registration>();

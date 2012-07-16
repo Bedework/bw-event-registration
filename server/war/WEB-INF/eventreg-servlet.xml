@@ -18,6 +18,8 @@ http://www.springframework.org/schema/aop http://www.springframework.org/schema/
     </property>
   </bean>
 
+  <!-- =================== User actions ========================== -->
+  
   <bean id="initController"  
         class="org.bedework.eventreg.web.InitController"  
         scope="session">
@@ -53,9 +55,9 @@ http://www.springframework.org/schema/aop http://www.springframework.org/schema/
       <ref bean="sessMan"/>
     </property>
   </bean>
-
-  <bean id="outputCSVController"  
-        class="org.bedework.eventreg.web.OutputCSVController"  
+  
+  <bean id="removeAgendaTicketController"  
+        class="org.bedework.eventreg.web.RemoveAgendaTicketController"  
         scope="session">
     <aop:scoped-proxy/>
     <property name="sessionManager">
@@ -63,8 +65,17 @@ http://www.springframework.org/schema/aop http://www.springframework.org/schema/
     </property>
   </bean>
 
-  <bean id="AdminAgendaController"  
-        class="org.bedework.eventreg.web.AdminAgendaController"  
+  <bean id="removeTicketController"  
+        class="org.bedework.eventreg.web.RemoveTicketController"  
+        scope="session">
+    <aop:scoped-proxy/>
+    <property name="sessionManager">
+      <ref bean="sessMan"/>
+    </property>
+  </bean>
+
+  <bean id="updateTicketController"  
+        class="org.bedework.eventreg.web.UpdateTicketController"  
         scope="session">
     <aop:scoped-proxy/>
     <property name="sessionManager">
@@ -81,8 +92,28 @@ http://www.springframework.org/schema/aop http://www.springframework.org/schema/
     </property>
   </bean>
 
-  <bean id="updateTicketController"  
-        class="org.bedework.eventreg.web.UpdateTicketController"  
+  <!-- =================== Admin actions ========================== -->
+
+  <bean id="adminAgendaController"  
+        class="org.bedework.eventreg.web.AdminAgendaController"  
+        scope="session">
+    <aop:scoped-proxy/>
+    <property name="sessionManager">
+      <ref bean="sessMan"/>
+    </property>
+  </bean>
+
+  <bean id="adminRemoveTicketController"  
+        class="org.bedework.eventreg.web.AdminRemoveTicketController"  
+        scope="session">
+    <aop:scoped-proxy/>
+    <property name="sessionManager">
+      <ref bean="sessMan"/>
+    </property>
+  </bean>
+  
+  <bean id="outputCSVController"  
+        class="org.bedework.eventreg.web.OutputCSVController"  
         scope="session">
     <aop:scoped-proxy/>
     <property name="sessionManager">
@@ -98,18 +129,9 @@ http://www.springframework.org/schema/aop http://www.springframework.org/schema/
       <ref bean="sessMan"/>
     </property>
   </bean>
-
-  <bean id="removeTicketController"  
-        class="org.bedework.eventreg.web.RemoveTicketController"  
-        scope="session">
-    <aop:scoped-proxy/>
-    <property name="sessionManager">
-      <ref bean="sessMan"/>
-    </property>
-  </bean>
   
-  <bean id="removeAgendaTicketController"  
-        class="org.bedework.eventreg.web.RemoveAgendaTicketController"  
+  <bean id="adminRemoveAgendaTicketController"  
+        class="org.bedework.eventreg.web.AdminRemoveAgendaTicketController"  
         scope="session">
     <aop:scoped-proxy/>
     <property name="sessionManager">
@@ -134,9 +156,10 @@ http://www.springframework.org/schema/aop http://www.springframework.org/schema/
         <prop key="removeTicket.do">removeTicketController</prop>
         <prop key="removeAgendaTicket.do">removeAgendaTicketController</prop>
 
-        <prop key="adminagenda.do">AdminAgendaController</prop>
+        <prop key="adminAgenda.do">adminAgendaController</prop>
         <prop key="updateAdminTicket.do">updateAdminTicketController</prop>
-        <prop key="removeTicket.do">removeTicketController</prop>
+        <prop key="adminRemoveAgendaTicket.do">adminRemoveAgendaTicketController</prop>
+        <prop key="adminRemoveTicket.do">adminRemoveTicketController</prop>
         <prop key="download.do">outputCSVController</prop>
         
         <prop key="counts.do">outputCountsController</prop>

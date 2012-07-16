@@ -51,7 +51,6 @@ import javax.xml.soap.MessageFactory;
 import javax.xml.soap.SOAPBody;
 import javax.xml.soap.SOAPMessage;
 
-
 /** Implements the client end of a SOAP connection for a single eventreg session.
  *
  */
@@ -105,10 +104,10 @@ public class BwConnector {
 
     FetchItemResponseType fir = fetchItem(href);
 
-    if ((fir == null) ||
-        (fir.getIcalendar() == null) ||
-        (fir.getIcalendar().getVcalendar().size() != 1) ||
-        (fir.getIcalendar().getVcalendar().get(0).getComponents() == null)) {
+    if (fir == null ||
+        fir.getIcalendar() == null ||
+        fir.getIcalendar().getVcalendar().size() != 1 ||
+        fir.getIcalendar().getVcalendar().get(0).getComponents() == null) {
       return null;
     }
 

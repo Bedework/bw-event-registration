@@ -50,7 +50,6 @@ public class SessionManager  {
   private EventregDb db;
 
   private String currentUser;
-  private boolean adminUser;
 
   private HttpServletRequest request;
 
@@ -77,7 +76,7 @@ public class SessionManager  {
   /** Request parameter - type
    */
   public static final String reqparType = "type";
-  
+
   /** Type values
    */
   public static final String typeRegistered = "registered";
@@ -204,8 +203,20 @@ public class SessionManager  {
   /**
    * @return true if current user is an administrator
    */
-  public boolean getAdminUser() {
-    return adminUser;
+  public boolean getAdminUser() throws Throwable {
+    SysInfo sysi = getSysInfo();
+
+    if (sysi == null) {
+      return false;
+    }
+
+    String adminToken = sysi.getEventregAdminToken();
+
+    if (adminToken == null) {
+      return false;
+    }
+
+    return adminToken.equals(getAdminToken());
   }
 
   /**
@@ -262,7 +273,7 @@ public class SessionManager  {
   public void removeRegistration(final Registration reg) throws Throwable {
     db.delete(reg);
   }
-  
+
   /**
    * @param reg
    * @throws Throwable
@@ -275,7 +286,7 @@ public class SessionManager  {
 
     db.update(reg);
 
-    // will need more here for admin updates; change could also 
+    // will need more here for admin updates; change could also
     // include reg type and comments
     addChange(reg, Change.typeUpdReg,
               Change.lblUpdNumTickets,
@@ -438,7 +449,7 @@ public class SessionManager  {
       }
     }
   }
-  
+
   /**
    * @return true if current user is registered for current event
    */
@@ -449,7 +460,7 @@ public class SessionManager  {
     }
     return false;
   }
-  
+
   /**
    * @return true if current user is on waiting list for current event
    */
@@ -460,7 +471,7 @@ public class SessionManager  {
     }
     return false;
   }
-  
+
   /**
    * @return true if current registration is full
    */
@@ -513,7 +524,7 @@ public class SessionManager  {
       }
     }
   }
-  
+
   /**
    * @return count of tickets allocated as "waiting"
    * @throws Throwable
@@ -533,7 +544,7 @@ public class SessionManager  {
       }
     }
   }
-  
+
   /**
    * @return count of all tickets (registered, waiting, etc)
    * @throws Throwable
@@ -553,7 +564,7 @@ public class SessionManager  {
       }
     }
   }
-  
+
   /**
    * @return count of tickets allocated to user for event
    * @throws Throwable
@@ -655,23 +666,6 @@ public class SessionManager  {
   }*/
 
   /* ====================================================================
-   *                   Convenience methods
-   * ==================================================================== */
-
-  /** Get the root users list
-   *
-   * @return String[]   root users
-   * @throws Exception
-   */
-  public String[] getRootUsersArray() throws Exception {
-    if (getSysInfo() == null) {
-      return new String[0];
-    }
-
-    return getSysInfo().getRootUsersArray();
-  }
-
-  /* ====================================================================
    *                   Current event methods
    * ==================================================================== */
 
@@ -705,14 +699,6 @@ public class SessionManager  {
     request = val;
 
     setCurrentUser(request.getRemoteUser());
-    adminUser = false;
-
-    for (String s: getRootUsersArray()) {
-      if (s.equals(getCurrentUser())) {
-        adminUser = true;
-        break;
-      }
-    }
   }
 
   /**

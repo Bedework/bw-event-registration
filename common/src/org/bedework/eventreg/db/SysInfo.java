@@ -51,39 +51,6 @@ public class SysInfo extends DbItem<SysInfo> implements PropertiesEntity {
 
   }
 
-  /** Set the root users list. This is a comma separated list of accounts that
-   * have superuser status.
-   *
-   * @param val    String list of accounts
-   */
-  public void setRootUsers(final String val) {
-    rootUsers = val;
-  }
-
-  /** Get the root users
-   *
-   * @return String   root users
-   */
-  public String getRootUsers() {
-    return rootUsers;
-  }
-
-  /* ====================================================================
-   *                   Convenience methods
-   * ==================================================================== */
-
-  /** Get the root users list
-   *
-   * @return String[]   root users
-   */
-  public String[] getRootUsersArray() {
-    if (getRootUsers() == null) {
-      return new String[0];
-    }
-
-    return getRootUsers().split(",");
-  }
-
   /* ====================================================================
    *                   Property methods
    * ==================================================================== */
