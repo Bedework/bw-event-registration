@@ -250,6 +250,12 @@ public interface EventregSvcMBean {
    */
   public String dropTables();
 
+  /** Generate an admin token.
+   *
+   * @return Completion message
+   */
+  public String generateAdminToken();
+
   /* ========================================================================
    * Lifecycle
    * ======================================================================== */

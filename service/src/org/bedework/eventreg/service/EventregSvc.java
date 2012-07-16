@@ -27,6 +27,7 @@ import org.hibernate.tool.hbm2ddl.SchemaExport;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * @author douglm
@@ -95,83 +96,83 @@ public class EventregSvc implements EventregSvcMBean {
    * System properties
    * ======================================================================== */
 
-  /** Set the token for event reg admins
-   *
-   * @param val
-   */
+  @Override
   public void setEventregAdminToken(final String val) {
     PropSetter<String> ps = new PropSetter<String>() {
-      void setValue(String val) {
+      @Override
+      void setValue(final String val) {
         sysi.setEventregAdminToken(val);
       }
     };
-    
+
     ps.doSet(val);
   }
 
-  /** Get the token for event reg admins
-   *
-   * @return token
-   */
+  @Override
   public String getEventregAdminToken() {
     PropGetter<String> pg = new PropGetter<String>() {
+      @Override
       String getValue() {
         return sysi.getEventregAdminToken();
       }
     };
-    
+
     return pg.doGet();
   }
 
   @Override
   public void setTzsUri(final String val) {
     PropSetter<String> ps = new PropSetter<String>() {
-      void setValue(String val) {
+      @Override
+      void setValue(final String val) {
         sysi.setTzsUri(val);
       }
     };
-    
+
     ps.doSet(val);
   }
 
   @Override
   public String getTzsUri() {
     PropGetter<String> pg = new PropGetter<String>() {
+      @Override
       String getValue() {
         return sysi.getTzsUri();
       }
     };
-    
+
     return pg.doGet();
   }
 
   @Override
   public void setWsdlUri(final String val) {
     PropSetter<String> ps = new PropSetter<String>() {
-      void setValue(String val) {
+      @Override
+      void setValue(final String val) {
         sysi.setWsdlUri(val);
       }
     };
-    
+
     ps.doSet(val);
   }
 
   @Override
   public String getWsdlUri() {
     PropGetter<String> pg = new PropGetter<String>() {
+      @Override
       String getValue() {
         return sysi.getWsdlUri();
       }
     };
-    
+
     return pg.doGet();
   }
-  
+
   private abstract class PropGetter <T>  {
     protected SysInfo sysi;
-    
+
     abstract T getValue();
-    
+
     T doGet() {
       T res = null;
 
@@ -195,13 +196,13 @@ public class EventregSvc implements EventregSvcMBean {
       return res;
     }
   }
-  
+
   private abstract class PropSetter <T>  {
     protected SysInfo sysi;
-    
+
     abstract void setValue(T val);
-    
-    void doSet(T val) {
+
+    void doSet(final T val) {
       EventregDb db = openDb();
 
       if (db != null) {
@@ -214,7 +215,7 @@ public class EventregSvc implements EventregSvcMBean {
             create = true;
           }
 
-          doSet(val);
+          setValue(val);
 
           if (create) {
             db.addSys(sysi);
@@ -346,6 +347,13 @@ public class EventregSvc implements EventregSvcMBean {
   @Override
   public String getDataOutPrefix() {
     return dataOutPrefix;
+  }
+
+  @Override
+  public String generateAdminToken() {
+    setEventregAdminToken(UUID.randomUUID().toString());
+
+    return "OK";
   }
 
   /* ========================================================================
