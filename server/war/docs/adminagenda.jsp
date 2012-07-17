@@ -8,7 +8,7 @@
           Welcome <c:out value="${sessMan.currentUser}"/> (admin)<br/>
           <a href="javascript:print();">print</a> |
           <a href="javascript:self.close();">close this window</a> |
-          <a href="download.do?href=${sessMan.href}">download registrations</a>
+          <a href="download.do?href=${sessMan.href}&amp;atkn=${sessMan.adminToken}">download registrations</a>
         </div>
         <h1><c:out value="${sessMan.currEvent.summary}"/></h1>
         <div class="eventDateTime">
