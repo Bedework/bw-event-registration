@@ -30,8 +30,6 @@ import java.util.TreeSet;
  * mostly a set of properties
  */
 public class SysInfo extends DbItem<SysInfo> implements PropertiesEntity {
-  private String rootUsers;
-
   private static final String eventregAdminTokenPname = "Eventreg:admin-token";
 
   /** Name for timezones server uri property

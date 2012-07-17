@@ -95,6 +95,50 @@ public class SessionManager  {
 
   private BwConnector cnctr;
 
+  public static class ChangeItem {
+    private String name;
+    private String value;
+
+    /**
+     * @param val
+     */
+    public void setName(final String val) {
+      name = val;
+    }
+
+    /**
+     * @return name of changed value
+     */
+    public String getName() {
+      return name;
+    }
+
+    /**
+     * @param val
+     */
+    public void setValue(final String val) {
+      value = val;
+    }
+
+    /**
+     * @return name of changed value
+     */
+    public String getValue() {
+      return value;
+    }
+
+    public ChangeItem(final String name,
+                      final String value) {
+      this.name = name;
+      this.value = value;
+    }
+
+    public static ChangeItem makeUpdNumTickets(final int value) {
+      return new ChangeItem(Change.lblUpdNumTickets,
+                            String.valueOf(value));
+    }
+  }
+
   private static TzGetter tzs = new TzGetter() {
     @Override
     public TimeZone getTz(final String id) throws Throwable {
@@ -289,8 +333,7 @@ public class SessionManager  {
     // will need more here for admin updates; change could also
     // include reg type and comments
     addChange(reg, Change.typeUpdReg,
-              Change.lblUpdNumTickets,
-              String.valueOf(reg.getNumTickets()));
+              ChangeItem.makeUpdNumTickets(reg.getNumTickets()));
   }
 
   /**
@@ -319,16 +362,15 @@ public class SessionManager  {
    */
   public void addChange(final Registration reg,
                         final String type,
-                        final String label,
-                        final String val) throws Throwable {
+                        final ChangeItem ci) throws Throwable {
     Change c = new Change();
 
     c.setAuthid(getCurrentUser());
     c.setTicketid(reg.getTicketid());
     c.setLastmod(reg.getLastmod());
     c.setType(type);
-    c.setName(label);
-    c.setValue(val);
+    c.setName(ci.name);
+    c.setValue(ci.value);
 
     db.addChange(c);
   }
@@ -368,8 +410,7 @@ public class SessionManager  {
         db.update(reg);
 
         addChange(reg, Change.typeUpdReg,
-                  Change.lblUpdNumTickets,
-                  String.valueOf(numTickets));
+                  ChangeItem.makeUpdNumTickets(numTickets));
 
         return reg.getTicketid();
       }

@@ -41,13 +41,6 @@ public class EventregController extends AuthAbstractController {
     if (maxTicketsAllowed < 0) {
       return errorReturn("Cannot register for this event.");
     }
-    
-    int numTicketsRequested = sessMan.getTicketsRequested();
-    long currentTicketCount = sessMan.getRegTicketCount();
-    
-    if ((numTicketsRequested + currentTicketCount) > maxTicketsAllowed) {
-      sessMan.setRegistrationFull(true);
-    }
 
     Date end = ev.getRegistrationEndDate();
 
@@ -57,17 +50,24 @@ public class EventregController extends AuthAbstractController {
 
     sessMan.setDeadlinePassed(new Date().after(end));
 
-    if (sessMan.getRegistrationFull()) {
-      logger.debug("event registration stop - registration is full");
-      return errorReturn("Cannot register for this event. Registration is full.");
-    }
-
     if (sessMan.getDeadlinePassed()) {
       logger.debug("event registration stop - deadline has passed");
       return errorReturn("Cannot register for this event - deadline has passed");
     }
 
-    if ((numTicketsRequested > ev.getMaxTicketsPerUser()) &&
+    if (sessMan.getRegistrationFull()) {
+      logger.debug("event registration stop - registration is full");
+      return errorReturn("Cannot register for this event. Registration is full.");
+    }
+
+    int numTicketsRequested = sessMan.getTicketsRequested();
+    long currentTicketCount = sessMan.getRegTicketCount();
+
+    if (numTicketsRequested + currentTicketCount > maxTicketsAllowed) {
+      sessMan.setRegistrationFull(true);
+    }
+
+    if (numTicketsRequested > ev.getMaxTicketsPerUser() &&
         !sessMan.getAdminUser()) {
       logger.debug("Number of tickets requested exceeds number of tickets allowed.");
       return errorReturn("Cannot register for this event - " +

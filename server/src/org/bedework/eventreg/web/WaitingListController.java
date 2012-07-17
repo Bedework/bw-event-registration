@@ -42,8 +42,6 @@ public class WaitingListController extends AuthAbstractController {
     if (maxTicketsAllowed < 0) {
       return errorReturn("Cannot register for this event.");
     }
-    
-    int numTicketsRequested = sessMan.getTicketsRequested();
 
     Date end = ev.getRegistrationEndDate();
 
@@ -58,7 +56,9 @@ public class WaitingListController extends AuthAbstractController {
       return errorReturn("Cannot register for this event - deadline has passed");
     }
 
-    if ((numTicketsRequested > ev.getMaxTicketsPerUser()) &&
+    int numTicketsRequested = sessMan.getTicketsRequested();
+
+    if (numTicketsRequested > ev.getMaxTicketsPerUser() &&
         !sessMan.getAdminUser()) {
       logger.debug("Number of tickets requested exceeds number of tickets allowed.");
       return errorReturn("Cannot register for this event - " +

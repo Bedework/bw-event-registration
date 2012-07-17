@@ -48,8 +48,11 @@ public class InitController extends AuthAbstractController {
     }
 
     long curTickets = sessMan.getRegTicketCount();
-    logger.debug("maxTickets: " + maxTickets);
-    logger.debug("curTickets: " + curTickets);
+    if (debug) {
+      logger.debug("maxTickets: " + maxTickets);
+      logger.debug("curTickets: " + curTickets);
+    }
+
     sessMan.setRegistrationFull(curTickets >= maxTickets);
 
     Date end = ev.getRegistrationEndDate();
