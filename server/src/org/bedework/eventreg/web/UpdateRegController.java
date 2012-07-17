@@ -18,7 +18,6 @@ under the License.
  */
 package org.bedework.eventreg.web;
 
-import org.bedework.eventreg.db.Event;
 import org.bedework.eventreg.db.Registration;
 
 import org.springframework.web.servlet.ModelAndView;
@@ -29,20 +28,20 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * @author douglm
  */
-public class UpdateTicketController extends AuthAbstractController {
+public class UpdateRegController extends AuthAbstractController {
   @Override
   public ModelAndView doRequest(final HttpServletRequest request,
                                 final HttpServletResponse response) throws Throwable {
-    Long ticketId = sessMan.getTicketId();
-    if (ticketId == null) {
-      return errorReturn("No ticketid supplied");
+    Long regId = sessMan.getRegistrationId();
+    if (regId == null) {
+      return errorReturn("No registration id supplied");
     }
 
-    int numTickets = sessMan.getTicketsRequested();
+    if (debug) {
+      logger.debug("updating registration " + regId);
+    }
 
-    logger.debug("updating ticket " + ticketId);
-
-    Registration reg = sessMan.getRegistrationById(ticketId);
+    Registration reg = sessMan.getRegistrationById(regId);
 
     if (reg == null) {
       return errorReturn("No registration found.");
@@ -52,19 +51,12 @@ public class UpdateTicketController extends AuthAbstractController {
       return errorReturn("You are not authorized to update that registration.");
     }
 
-    Event currEvent = sessMan.getCurrEvent();
+    adjustTickets(reg);
+    reg.setType(Registration.typeRegistered);
 
-    long newTotal = numTickets + sessMan.getRegTicketCount() - reg.getNumTickets();
-
-    if (newTotal > currEvent.getMaxTickets()) {
-      logger.info("Registration is full");
-      return errorReturn("Registration is full: you may only decrease or remove tickets.");
-    }
-
-    reg.setNumTickets(numTickets);
     sessMan.updateRegistration(reg);
 
-    sessMan.setMessage("Ticket number " + ticketId + " updated.");
+    sessMan.setMessage("Registration number " + regId + " updated.");
 
     return sessModel("forward:agenda.do");
   }

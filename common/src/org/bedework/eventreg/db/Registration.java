@@ -16,27 +16,37 @@ KIND, either express or implied. See the License for the
 specific language governing permissions and limitations
 under the License.
  */
-
 package org.bedework.eventreg.db;
 
+import edu.rpi.sss.util.ToString;
 
+import java.sql.Timestamp;
+import java.util.Set;
+import java.util.TreeSet;
+import java.util.UUID;
 
 /**
  * @author douglm
  *
  */
 public class Registration extends DbItem<Registration> {
-  private Long ticketid;
+  private Long registrationId;
   private String authid;
   private String email;
   private String href;
-  private int numTickets;
   private int ticketsRequested;
   private String type;
   private String created;
   private String lastmod;
+  private String waitqDate;
   private String comment;
   private String message;
+  private Set<Ticket> tickets;
+
+  /** Type values
+   */
+  public static final String typeRegistered = "reg";
+  public static final String typeHold = "hold";
 
   /* Non db fields */
 
@@ -52,15 +62,15 @@ public class Registration extends DbItem<Registration> {
   /**
    * @param val
    */
-  public void setTicketid(final Long val) {
-    ticketid = val;
+  public void setRegistrationId(final Long val) {
+    registrationId = val;
   }
 
   /**
-   * @return ticketid
+   * @return registrationId
    */
-  public Long getTicketid() {
-    return ticketid;
+  public Long getRegistrationId() {
+    return registrationId;
   }
 
   /**
@@ -103,20 +113,6 @@ public class Registration extends DbItem<Registration> {
    */
   public String getHref() {
     return href;
-  }
-
-  /**
-   * @param val - tickets allocated
-   */
-  public void setNumTickets(final int val) {
-    numTickets = val;
-  }
-
-  /**
-   * @return numTickets
-   */
-  public int getNumTickets() {
-    return numTickets;
   }
 
   /**
@@ -178,6 +174,20 @@ public class Registration extends DbItem<Registration> {
   /**
    * @param val
    */
+  public void setWaitqDate(final String val) {
+    waitqDate = val;
+  }
+
+  /**
+   * @return waitqDate
+   */
+  public String getWaitqDate() {
+    return waitqDate;
+  }
+
+  /**
+   * @param val
+   */
   public void setComment(final String val) {
     comment = val;
   }
@@ -203,6 +213,14 @@ public class Registration extends DbItem<Registration> {
     return message;
   }
 
+  public void setTickets(final Set<Ticket> val) {
+    tickets = val;
+  }
+
+  public Set<Ticket> getTickets() {
+    return tickets;
+  }
+
   /* ====================================================================
    *                   Non db fields
    * ==================================================================== */
@@ -222,19 +240,113 @@ public class Registration extends DbItem<Registration> {
   }
 
   /* ====================================================================
+   *                   Convenience methods
+   * ==================================================================== */
+
+  /** Add our stuff to the StringBuilder
+   *
+   * @param sb    StringBuilder for result
+   */
+  @Override
+  protected void toStringSegment(final ToString ts) {
+    super.toStringSegment(ts);
+    ts.append("registrationId", getRegistrationId());
+    ts.append("authid", getAuthid());
+    ts.append("email", getEmail());
+    ts.append("href", getHref());
+    ts.append("ticketsRequested", getTicketsRequested());
+    ts.append("type", getType());
+    ts.append("created", getCreated());
+    ts.append("lastmod", getLastmod());
+    ts.append("waitqDate", getWaitqDate());
+    ts.append("comment", getComment());
+    ts.append("message", getMessage());
+    ts.append("numTickets", getNumTickets());
+  }
+
+  public void addTicket(final Ticket val) {
+    Set<Ticket> ts = getTickets();
+
+    if (ts == null) {
+      ts = new TreeSet<Ticket>();
+      setTickets(ts);
+    }
+
+    ts.add(val);
+  }
+
+  public void addTicket() {
+    Ticket t = new Ticket();
+
+    t.setRegistrationId(getRegistrationId());
+    t.setUuid(UUID.randomUUID().toString());
+    t.setHref(getHref());
+    t.setCreated(new Timestamp(new java.util.Date().getTime()).toString());
+
+    addTicket(t);
+  }
+
+  public void addTickets(final int numTickets) {
+    for (int i = 0; i < numTickets; i++) {
+      addTicket();
+    }
+  }
+
+  public void removeTicket(final Ticket val) {
+    Set<Ticket> ts = getTickets();
+
+    if (ts == null) {
+      return;
+    }
+
+    ts.remove(val);
+  }
+
+  public void removeTickets(final int numTickets) {
+    if (getTickets() == null) {
+      return;
+    }
+
+    for (int i = 0; i < numTickets; i++) {
+      getTickets().remove(0);
+    }
+  }
+
+  /**
+   * @return numTickets
+   */
+  public int getNumTickets() {
+    Set<Ticket> ts = getTickets();
+
+    if (ts == null) {
+      return 0;
+    }
+
+    return ts.size();
+  }
+
+  /* ====================================================================
    *                   Object methods
    * The following are required for a db object.
    * ==================================================================== */
 
   @Override
   public int compareTo(final Registration that) {
-    return getTicketid().compareTo(that.getTicketid());
+    return getRegistrationId().compareTo(that.getRegistrationId());
   }
 
   @Override
   public int hashCode() {
-    return getTicketid().hashCode();
+    return getRegistrationId().hashCode();
+  }
+
+  @Override
+  public String toString() {
+    ToString ts = new ToString(this);
+
+    toStringSegment(ts);
+
+    return ts.toString();
   }
 }
-
 

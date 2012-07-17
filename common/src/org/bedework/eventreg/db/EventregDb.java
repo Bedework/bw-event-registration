@@ -117,6 +117,35 @@ public class EventregDb implements Serializable {
     return ok;
   }
 
+  /**
+   * @return false if error occurred
+   */
+  public boolean close(final boolean ignoreErrors) {
+    boolean ok = true;
+
+    try {
+      endTransaction();
+    } catch (Throwable t) {
+      ok = false;
+      try {
+        rollbackTransaction();
+      } catch (Throwable t1) {}
+
+      if (!ignoreErrors) {
+        error(t);
+      }
+    } finally {
+      try {
+        closeSession();
+      } catch (Exception wde1) {
+        ok = false;
+      }
+      open = false;
+    }
+
+    return ok;
+  }
+
   /* ====================================================================
    *                   System info methods
    * ==================================================================== */
@@ -252,7 +281,7 @@ public class EventregDb implements Serializable {
 
       sb.append("from ");
       sb.append(Registration.class.getName());
-      sb.append(" reg where reg.ticketid=:id");
+      sb.append(" reg where reg.registrationId=:id");
 
       sess.createQuery(sb.toString());
       sess.setLong("id", id);
@@ -338,14 +367,14 @@ public class EventregDb implements Serializable {
   }
 
   /**
-   * @return max ticketid
+   * @return max registrationid
    * @throws Throwable
    */
-  public Long getMaxTicketId() throws Throwable {
+  public Long getMaxRegistrationId() throws Throwable {
     try {
       StringBuilder sb = new StringBuilder();
 
-      sb.append("select max(ticketid) from ");
+      sb.append("select max(registrationId) from ");
       sb.append(Registration.class.getName());
       sb.append(" reg");
 
@@ -463,7 +492,7 @@ public class EventregDb implements Serializable {
       throw new Exception(he);
     }
   }
-  
+
   /**
    * @param eventHref
    * @return total number of registration entries for that event, including waiting list

@@ -23,9 +23,6 @@
     <!-- Export to database? - false for safety - set true in console -->
     <attribute name="Export">false</attribute>
     
-    <!-- Format the output? -->
-    <attribute name="Format">true</attribute>
-    
     <!-- Do we halt on error? -->
     <attribute name="HaltOnError">true</attribute>
     

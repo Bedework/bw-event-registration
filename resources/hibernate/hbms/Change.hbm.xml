@@ -20,9 +20,9 @@
 
     <version name="seq" column="bwevchg_seq" type="integer" />
 
-    <property name="ticketid" column="bwevchg_tktid" type="long"
+    <property name="registrationId" column="bwevchg_regid" type="long"
               not-null="true"
-              index="bwevchgidx_tktid" />
+              index="bwevchgidx_regid" />
 
     <property name="authid" column="bwevchg_authid" type="string" length="500"
               not-null="true"

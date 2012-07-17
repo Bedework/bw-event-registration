@@ -30,26 +30,32 @@ import javax.servlet.http.HttpServletResponse;
  * @author douglm
  *
  */
-public class AdminRemoveAgendaTicketController extends AdminAuthAbstractController {
+public class RemoveRegController extends AuthAbstractController {
   @Override
   public ModelAndView doRequest(final HttpServletRequest request,
                                 final HttpServletResponse response) throws Throwable {
-    Long ticketId = sessMan.getTicketId();
-    if (ticketId == null) {
-      return errorReturn("No ticketid supplied");
+    Long regId = sessMan.getRegistrationId();
+    if (regId == null) {
+      return errorReturn("No registration id supplied");
     }
 
-    logger.debug("remove ticket id: " + ticketId +
-                 ", user: " + sessMan.getCurrentUser());
+    if (debug) {
+      logger.debug("remove reg id: " + regId +
+                   ", user: " + sessMan.getCurrentUser());
+    }
 
-    Registration reg = sessMan.getRegistrationById(ticketId);
+    Registration reg = sessMan.getRegistrationById(regId);
 
     if (reg == null) {
       return errorReturn("No registration found.");
     }
 
+    if (!reg.getAuthid().equals(sessMan.getCurrentUser())) {
+      return errorReturn("You are not authorized to remove that registration.");
+    }
+
     sessMan.removeRegistration(reg);
 
-    return sessModel("forward:adminagenda.do");
+    return sessModel(getForwardTo());
   }
 }

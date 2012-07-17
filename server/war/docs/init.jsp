@@ -11,7 +11,7 @@
           <span class="checkmark">&#x2713;</span> You are registered for this event.
         </p>
         <p class="unregister">
-          <a href="removeTicket.do?ticketid=<c:out value="${sessMan.registration.ticketid}"/>&amp;href=${sessMan.href}" onclick="return confirmRemoveTicket('<c:out value="${sessMan.currEvent.summary}')"/>">unregister</a>
+          <a href="removeReg.do?regid=<c:out value="${sessMan.registration.registrationId}"/>&amp;href=${sessMan.href}" onclick="return confirmRemoveTicket('<c:out value="${sessMan.currEvent.summary}')"/>">unregister</a>
         </p>
       </div>
     </c:when>
@@ -25,7 +25,7 @@
           You will be automatically registered if space becomes available.
         </p>
         <p class="unregister">
-          <a href="removeTicket.do?ticketid=<c:out value="${sessMan.registration.ticketid}"/>&amp;href=${sessMan.href}" onclick="return confirmRemoveTicket('<c:out value="${sessMan.currEvent.summary}"/>')">remove me</a>
+          <a href="removeReg.do?regid=<c:out value="${sessMan.registration.registrationId}"/>&amp;href=${sessMan.href}" onclick="return confirmRemoveTicket('<c:out value="${sessMan.currEvent.summary}"/>')">remove me</a>
         </p>
       </div>
     </c:when>

@@ -65,7 +65,7 @@
                 </c:otherwise>
               </c:choose>
                 <td class="ticketId">
-                  <c:out value="${reg.ticketid}"/>
+                  <c:out value="${reg.registrationId}"/>
                 </td>
                 <td class="ticketEventSummary">
                   <c:out value="${reg.event.summary}"/>
@@ -84,7 +84,7 @@
                 </td>
                 <td class="controls">
                   <c:if test="${reg.event.maxTicketsPerUser > 1 and reg.type != 'waiting'}">
-                    <select name='tickets<c:out value="${reg.ticketid}"/>' id='tickets<c:out value="${reg.ticketid}"/>'>
+                    <select name='tickets<c:out value="${reg.registrationId}"/>' id='tickets<c:out value="${reg.registrationId}"/>'>
                       <c:forEach var="i" begin="1" end="${reg.event.maxTicketsPerUser}">
                          <c:choose>
                            <c:when test="${i == reg.numTickets}">
@@ -96,10 +96,10 @@
                          </c:choose>
                       </c:forEach>
                     </select>
-                    <a href="javascript:doUpdateTicket('<c:out value="${reg.ticketid}"/>','<c:out value="${reg.event.href}"/>','<c:out value="${reg.type}"/>')" onclick="return confirmUpdateTicket('<c:out value="${reg.ticketid}"/>','<c:out value="${reg.event.summary}"/>')">update</a>
+                    <a href="javascript:doUpdateTicket('<c:out value="${reg.registrationId}"/>','<c:out value="${reg.event.href}"/>','<c:out value="${reg.type}"/>')" onclick="return confirmUpdateTicket('<c:out value="${reg.registrationId}"/>','<c:out value="${reg.event.summary}"/>')">update</a>
                      |
                    </c:if>
-                  <a href='removeAgendaTicket.do?ticketid=<c:out value="${reg.ticketid}"/>' onclick="return confirmRemoveTicket('<c:out value="${reg.event.summary}"/>')">remove</a>
+                  <a href='removeAgendaReg.do?regid=<c:out value="${reg.registrationId}"/>' onclick="return confirmRemoveTicket('<c:out value="${reg.event.summary}"/>')">remove</a>
                 </td>
               </tr>
             </c:forEach>

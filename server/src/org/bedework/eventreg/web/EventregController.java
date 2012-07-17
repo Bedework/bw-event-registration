@@ -18,10 +18,14 @@ under the License.
  */
 package org.bedework.eventreg.web;
 
+import org.bedework.eventreg.bus.SessionManager.ChangeItem;
+import org.bedework.eventreg.db.Change;
 import org.bedework.eventreg.db.Event;
+import org.bedework.eventreg.db.Registration;
 
 import org.springframework.web.servlet.ModelAndView;
 
+import java.sql.Timestamp;
 import java.util.Date;
 
 import javax.servlet.http.HttpServletRequest;
@@ -60,32 +64,66 @@ public class EventregController extends AuthAbstractController {
       return errorReturn("Cannot register for this event. Registration is full.");
     }
 
-    int numTicketsRequested = sessMan.getTicketsRequested();
-    long currentTicketCount = sessMan.getRegTicketCount();
-
-    if (numTicketsRequested + currentTicketCount > maxTicketsAllowed) {
-      sessMan.setRegistrationFull(true);
-    }
-
-    if (numTicketsRequested > ev.getMaxTicketsPerUser() &&
-        !sessMan.getAdminUser()) {
-      logger.debug("Number of tickets requested exceeds number of tickets allowed.");
-      return errorReturn("Cannot register for this event - " +
-      		"number of tickets requested exceeds number of tickets allowed.");
-    }
-
-    //String regType = sessMan.getType();
-    String regType = "registered";
     String comment = sessMan.getComment();
 
-    logger.debug("event registration  - number of tickets requested: " + numTicketsRequested);
-    logger.debug("event registration  - superuser: " + sessMan.getAdminUser());
-
-    sessMan.registerUserInEvent(numTicketsRequested,
-                                comment,
-                                regType,
-                                sessMan.getAdminUser());
+    registerUserInEvent(comment);
 
     return sessModel("eventreg");
+  }
+
+  /**
+   * @param numTickets
+   * @param comment
+   * @param regType
+   * @return ticketId for registration
+   * @throws Throwable
+   */
+  public Long registerUserInEvent(final String comment) throws Throwable {
+    String href = sessMan.getHref();
+
+    if (debug) {
+      logger.debug("Event details: " + sessMan.getCurrentUser() + " " +
+          href);
+    }
+
+    /* we  let adminUsers register over and over, but not regular users */
+
+    Timestamp sqlDate = new Timestamp(new java.util.Date().getTime());
+
+    Registration reg = sessMan.getRegistration();
+
+    if (reg != null) {
+      reg.setLastmod(sqlDate.toString());
+      adjustTickets(reg);
+      reg.setComment(comment);
+
+      sessMan.updateRegistration(reg);
+
+      sessMan.addChange(reg, Change.typeUpdReg,
+                        ChangeItem.makeUpdNumTickets(reg.getTicketsRequested()));
+
+      return reg.getRegistrationId();
+    }
+
+    /* Create new entry */
+
+    reg = new Registration();
+
+    reg.setAuthid(sessMan.getCurrentUser());
+    reg.setComment(comment);
+    reg.setType(Registration.typeRegistered);
+    reg.setHref(href);
+    reg.setRegistrationId(sessMan.getNextRegistrationId());
+
+    reg.setCreated(sqlDate.toString());
+    reg.setLastmod(reg.getCreated());
+
+    adjustTickets(reg);
+
+    sessMan.addRegistration(reg);
+
+    sessMan.addChange(reg, Change.typeNewReg);
+
+    return reg.getRegistrationId();
   }
 }

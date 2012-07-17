@@ -71,18 +71,7 @@ public class SessionManager  {
 
   /** Request parameter - ticket id
    */
-  public static final String reqparTicketId = "ticketid";
-
-  /** Request parameter - type
-   */
-  public static final String reqparType = "type";
-
-  /** Type values
-   */
-  public static final String typeRegistered = "registered";
-  public static final String typeWaiting = "waiting";
-  public static final String typeHold = "hold";
-  public static final String typeUnregistered = "unregistered";
+  public static final String reqparRegId = "regid";
 
   private SysInfo sys;
   private Event currEvent;
@@ -311,6 +300,14 @@ public class SessionManager  {
   }
 
   /**
+   * @param r
+   * @throws Throwable
+   */
+  public void addRegistration(final Registration r) throws Throwable {
+    db.add(r);
+  }
+
+  /**
    * @param reg
    * @throws Throwable
    */
@@ -346,7 +343,7 @@ public class SessionManager  {
     Change c = new Change();
 
     c.setAuthid(getCurrentUser());
-    c.setTicketid(reg.getTicketid());
+    c.setRegistrationId(reg.getRegistrationId());
     c.setLastmod(reg.getLastmod());
     c.setType(type);
 
@@ -366,75 +363,13 @@ public class SessionManager  {
     Change c = new Change();
 
     c.setAuthid(getCurrentUser());
-    c.setTicketid(reg.getTicketid());
+    c.setRegistrationId(reg.getRegistrationId());
     c.setLastmod(reg.getLastmod());
     c.setType(type);
     c.setName(ci.name);
     c.setValue(ci.value);
 
     db.addChange(c);
-  }
-
-  /**
-   * @param numTickets
-   * @param comment
-   * @param regType
-   * @param adminUser
-   * @return ticketId for registration
-   * @throws Throwable
-   */
-  public Long registerUserInEvent(final int numTickets,
-                                  final String comment,
-                                  final String regType,
-                                  final boolean adminUser) throws Throwable {
-    String href = getHref();
-
-    logger.debug("Event details: " + getCurrentUser() + " " +
-        href + " " +
-        regType);
-
-    /* we  let adminUsers register over and over, but not regular users */
-
-    Timestamp sqlDate = new Timestamp(new java.util.Date().getTime());
-
-    Registration reg;
-    if (!adminUser) {
-      reg = db.getUserRegistration(href, getCurrentUser());
-
-      if (reg != null) {
-        reg.setLastmod(sqlDate.toString());
-        reg.setNumTickets(numTickets);
-        reg.setComment(comment);
-        reg.setType(regType);
-
-        db.update(reg);
-
-        addChange(reg, Change.typeUpdReg,
-                  ChangeItem.makeUpdNumTickets(numTickets));
-
-        return reg.getTicketid();
-      }
-    }
-
-    /* Create new entry */
-
-    reg = new Registration();
-
-    reg.setAuthid(getCurrentUser());
-    reg.setComment(comment);
-    reg.setType(regType);
-    reg.setHref(href);
-    reg.setNumTickets(numTickets);
-    reg.setTicketid(getNextTicketId());
-
-    reg.setCreated(sqlDate.toString());
-    reg.setLastmod(reg.getCreated());
-
-    db.add(reg);
-
-    addChange(reg, Change.typeNewReg);
-
-    return reg.getTicketid();
   }
 
   /**
@@ -489,28 +424,6 @@ public class SessionManager  {
         closeDb();
       }
     }
-  }
-
-  /**
-   * @return true if current user is registered for current event
-   */
-  public boolean getIsRegistered() throws Throwable {
-    Registration reg = getRegistration();
-    if (reg != null && reg.getType().equals(typeRegistered)) {
-      return true;
-    }
-    return false;
-  }
-
-  /**
-   * @return true if current user is on waiting list for current event
-   */
-  public boolean getIsWaiting() throws Throwable {
-    Registration reg = getRegistration();
-    if (reg != null && reg.getType().equals(typeWaiting)) {
-      return true;
-    }
-    return false;
   }
 
   /**
@@ -790,8 +703,8 @@ public class SessionManager  {
   /**
    * @return ticket id or null for no parameter
    */
-  public Long getTicketId() {
-    String reqpar = getReqPar(reqparTicketId);
+  public Long getRegistrationId() {
+    String reqpar = getReqPar(reqparRegId);
 
     if (reqpar == null) {
       return (long)-1;
@@ -818,31 +731,24 @@ public class SessionManager  {
     return getReqPar(reqparHref);
   }
 
-  /**
-   * @return type or null for no parameter
-   */
-  public String getType() {
-    return getReqPar(reqparType);
-  }
+  private static transient volatile Long nextRegId = (long)-1;
 
-  private static transient volatile Long nextTicketId = (long)-1;
-
-  private Long getNextTicketId() throws Throwable {
-    synchronized (nextTicketId) {
-      if (nextTicketId < 0) {
-        Long nid = db.getMaxTicketId();
+  public Long getNextRegistrationId() throws Throwable {
+    synchronized (nextRegId) {
+      if (nextRegId < 0) {
+        Long nid = db.getMaxRegistrationId();
         if (nid == null) {
           // First time I guess
-          nextTicketId = (long)1;
+          nextRegId = (long)1;
         } else {
-          nextTicketId = nid + 1;
+          nextRegId = nid + 1;
         }
       }
 
-      Long tid = nextTicketId;
-      nextTicketId++;
+      Long rid = nextRegId;
+      nextRegId++;
 
-      return tid;
+      return rid;
     }
   }
 }

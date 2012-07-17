@@ -37,15 +37,6 @@ http://www.springframework.org/schema/aop http://www.springframework.org/schema/
       <ref bean="sessMan"/>
     </property>
   </bean>
-  
-  <bean id="waitingListController"  
-        class="org.bedework.eventreg.web.WaitingListController"  
-        scope="session">
-    <aop:scoped-proxy/>
-    <property name="sessionManager">
-      <ref bean="sessMan"/>
-    </property>
-  </bean>
 
   <bean id="outputCountsController"  
         class="org.bedework.eventreg.web.OutputCountsController"  
@@ -56,26 +47,28 @@ http://www.springframework.org/schema/aop http://www.springframework.org/schema/
     </property>
   </bean>
   
-  <bean id="removeAgendaTicketController"  
-        class="org.bedework.eventreg.web.RemoveAgendaTicketController"  
+  <bean id="removeAgendaRegController"  
+        class="org.bedework.eventreg.web.RemoveRegController"  
         scope="session">
     <aop:scoped-proxy/>
     <property name="sessionManager">
       <ref bean="sessMan"/>
     </property>
+    <property name="forwardTo" value="forward:agenda.do" />
   </bean>
 
-  <bean id="removeTicketController"  
-        class="org.bedework.eventreg.web.RemoveTicketController"  
+  <bean id="removeRegController"  
+        class="org.bedework.eventreg.web.RemoveRegController"  
         scope="session">
     <aop:scoped-proxy/>
     <property name="sessionManager">
       <ref bean="sessMan"/>
     </property>
+    <property name="forwardTo" value="forward:init.do" />
   </bean>
 
-  <bean id="updateTicketController"  
-        class="org.bedework.eventreg.web.UpdateTicketController"  
+  <bean id="updateRegController"  
+        class="org.bedework.eventreg.web.UpdateRegController"  
         scope="session">
     <aop:scoped-proxy/>
     <property name="sessionManager">
@@ -103,13 +96,24 @@ http://www.springframework.org/schema/aop http://www.springframework.org/schema/
     </property>
   </bean>
 
-  <bean id="adminRemoveTicketController"  
-        class="org.bedework.eventreg.web.AdminRemoveTicketController"  
+  <bean id="adminRemoveRegController"  
+        class="org.bedework.eventreg.web.AdminRemoveRegController"  
         scope="session">
     <aop:scoped-proxy/>
     <property name="sessionManager">
       <ref bean="sessMan"/>
     </property>
+    <property name="forwardTo" value="forward:init.do" />
+  </bean>
+  
+  <bean id="adminRemoveAgendaRegController"  
+        class="org.bedework.eventreg.web.AdminRemoveRegController"  
+        scope="session">
+    <aop:scoped-proxy/>
+    <property name="sessionManager">
+      <ref bean="sessMan"/>
+    </property>
+    <property name="forwardTo" value="forward:adminagenda.do" />
   </bean>
   
   <bean id="outputCSVController"  
@@ -121,17 +125,8 @@ http://www.springframework.org/schema/aop http://www.springframework.org/schema/
     </property>
   </bean>
   
-  <bean id="updateAdminTicketController"  
-        class="org.bedework.eventreg.web.UpdateAdminTicketController"  
-        scope="session">
-    <aop:scoped-proxy/>
-    <property name="sessionManager">
-      <ref bean="sessMan"/>
-    </property>
-  </bean>
-  
-  <bean id="adminRemoveAgendaTicketController"  
-        class="org.bedework.eventreg.web.AdminRemoveAgendaTicketController"  
+  <bean id="updateAdminRegController"  
+        class="org.bedework.eventreg.web.UpdateAdminRegController"  
         scope="session">
     <aop:scoped-proxy/>
     <property name="sessionManager">
@@ -150,16 +145,15 @@ http://www.springframework.org/schema/aop http://www.springframework.org/schema/
       <props>
         <prop key="init.do">initController</prop>
         <prop key="eventreg.do">eventregController</prop>
-        <prop key="waitlist.do">waitingListController</prop>
         <prop key="agenda.do">userAgendaController</prop>
-        <prop key="updateTicket.do">updateTicketController</prop>
-        <prop key="removeTicket.do">removeTicketController</prop>
-        <prop key="removeAgendaTicket.do">removeAgendaTicketController</prop>
+        <prop key="updateReg.do">updateRegController</prop>
+        <prop key="removeReg.do">removeRegController</prop>
+        <prop key="removeAgendaReg.do">removeAgendaRegController</prop>
 
         <prop key="adminAgenda.do">adminAgendaController</prop>
-        <prop key="updateAdminTicket.do">updateAdminTicketController</prop>
-        <prop key="adminRemoveAgendaTicket.do">adminRemoveAgendaTicketController</prop>
-        <prop key="adminRemoveTicket.do">adminRemoveTicketController</prop>
+        <prop key="updateAdminReg.do">updateAdminRegController</prop>
+        <prop key="adminRemoveAgendaReg.do">adminRemoveAgendaRegController</prop>
+        <prop key="adminRemoveReg.do">adminRemoveRegController</prop>
         <prop key="download.do">outputCSVController</prop>
         
         <prop key="counts.do">outputCountsController</prop>

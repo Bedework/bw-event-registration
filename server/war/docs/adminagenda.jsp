@@ -99,30 +99,30 @@
                       </c:otherwise>
                     </c:choose>
                       <td class="regTicketId">
-                        <c:out value="${reg.ticketid}"/>
+                        <c:out value="${reg.registrationId}"/>
                       </td>
                       <td class="regEmail">
                         <c:out value="${reg.authid}"/>
                       </td>
                       <td class="regNumTickets">
-                        <input name='numtickets<c:out value="${reg.ticketid}"/>' id='numtickets<c:out value="${reg.ticketid}"/>' type="text" value='<c:out value="${reg.numTickets}"/>' size="3"/>
+                        <input name='numtickets<c:out value="${reg.registrationId}"/>' id='numtickets<c:out value="${reg.registrationId}"/>' type="text" value='<c:out value="${reg.numTickets}"/>' size="3"/>
                       </td>
                       <td class="regType">
-                        <select name='type<c:out value="${reg.ticketid}"/>' id='type<c:out value="${reg.ticketid}"/>'>
+                        <select name='type<c:out value="${reg.registrationId}"/>' id='type<c:out value="${reg.registrationId}"/>'>
                           <option value="registered" ${reg.type == 'registered' ? 'selected="selected"' : ''}>registered</option>
                           <option value="hold" ${reg.type == 'hold' ? 'selected="selected"' : ''}>hold</option>
                           <option value="waiting" ${reg.type == 'waiting' ? 'selected="selected"' : ''}>waiting</option>
                         </select>
                       </td>
                       <td class="regComment">
-                        <input name='comment<c:out value="${reg.ticketid}"/>' id='comment<c:out value="${reg.ticketid}"/>' type="text" value='<c:out value="${reg.comment}"/>'/>
+                        <input name='comment<c:out value="${reg.registrationId}"/>' id='comment<c:out value="${reg.registrationId}"/>' type="text" value='<c:out value="${reg.comment}"/>'/>
                       </td>
                       <td class="regCreated">
                         <c:out value="${reg.created}"/>
                       </td>
                       <td class="regControls">
-                        <a href="javascript:doUpdateAdminTicket('<c:out value="${reg.ticketid}"/>','<c:out value="${reg.event.href}"/>')" onclick="return confirmUpdateAdminTicket()">update</a> |
-                        <a href='removeAgendaTicket.do?ticketid=<c:out value="${reg.ticketid}"/>&amp;href=<c:out value="${reg.event.href}"/>' onclick="return confirmRemoveAdminTicket('<c:out value="${reg.authid}"/>')">remove</a>
+                        <a href="javascript:doUpdateAdminTicket('<c:out value="${reg.registrationId}"/>','<c:out value="${reg.event.href}"/>')" onclick="return confirmUpdateAdminTicket()">update</a> |
+                        <a href='removeAgendaReg.do?regid=<c:out value="${reg.registrationId}"/>&amp;href=<c:out value="${reg.event.href}"/>' onclick="return confirmRemoveAdminTicket('<c:out value="${reg.authid}"/>')">remove</a>
                       </td>
                     </tr>
                   </c:forEach>

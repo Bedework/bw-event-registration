@@ -4,12 +4,12 @@
   "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 
 <!-- ===================================================================
-     Object to represent an event registration.
+     Object to represent an event ticket.
      =================================================================== -->
 
 <hibernate-mapping>
-  <class name="org.bedework.eventreg.db.Registration"
-         table="bwevreg_regs" >
+  <class name="org.bedework.eventreg.db.Ticket"
+         table="bwevreg_tkts" >
     <cache usage="read-write"/>
     
     <id name="id" type="long" column="bwevreg_id">
@@ -20,36 +20,21 @@
 
     <version name="seq" column="bwevreg_seq" type="integer" />
 
-    <property name="ticketid" column="bwevreg_tktid" type="long"
+    <property name="registrationId" column="bwevreg_regid" type="long"
               unique="true"
               not-null="true"
-              index="bwevregidx_tktid" />
+              index="bwevregidx_regid" />
 
-    <property name="authid" column="bwevreg_authid" type="string" length="500"
+    <property name="uuid" column="bwevreg_uuid" type="string" length="40"
               not-null="true"
-              index="bwevregidx_authid" />
-
-    <!-- 
-    <property name="email" column="bwevreg_email" type="string" length="500"
-              index="bwevregidx_email" /> -->
+              unique="true"
+              index="bwevregidx_uuid" />
 
     <property name="href" column="bwevreg_href" type="string" length="1000"
               not-null="true"
               index="bwevregidx_href" />
-
-    <property name="numTickets" column="bwevreg_numTickets" type="integer" />
-
-    <property name="ticketsRequested" column="bwevreg_tktreq" type="integer" />
-              
-    <property name="type" column="bwevreg_type" type="string" length="200" />
               
     <property name="created" column="bwevreg_created" type="string" length="30" />
-              
-    <property name="lastmod" column="bwevreg_lastmod" type="string" length="30" />
-
-    <property name="comment" column="bwevreg_comment" type="string" length="250" />
-
-    <property name="message" column="bwevreg_message" type="string" length="2000" />
   </class>
 </hibernate-mapping>
 

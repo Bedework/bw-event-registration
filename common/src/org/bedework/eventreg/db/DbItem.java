@@ -18,6 +18,8 @@
 */
 package org.bedework.eventreg.db;
 
+import edu.rpi.sss.util.ToString;
+
 import java.io.Serializable;
 
 /** Simple base class for database entities
@@ -84,11 +86,9 @@ public class DbItem<T> implements Comparable<T>, Serializable {
    *
    * @param sb    StringBuilder for result
    */
-  protected void toStringSegment(final StringBuilder sb) {
-    sb.append("id = ");
-    sb.append(getId());
-    sb.append(", seq = ");
-    sb.append(getSeq());
+  protected void toStringSegment(final ToString ts) {
+    ts.append("id", getId());
+    ts.append("seq", getSeq());
   }
 
   /* ====================================================================

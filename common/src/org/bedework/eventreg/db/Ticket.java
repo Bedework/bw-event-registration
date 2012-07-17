@@ -16,40 +16,29 @@ KIND, either express or implied. See the License for the
 specific language governing permissions and limitations
 under the License.
  */
-
 package org.bedework.eventreg.db;
 
+import edu.rpi.sss.util.ToString;
 
-
-/**
- * Change log entry
+/** Concrete representation of a ticket. Will allow validation of tickets
+ * presented by attendees.
  *
+ * @author douglm
  */
-public class Change extends DbItem<Change> {
+public class Ticket extends DbItem<Ticket> {
   private Long registrationId;
-  private String authid;
-  private String lastmod;
-  private String type;
-  private String name;
-  private String value;
-
-  /** */
-  public static final String typeNewReg = "New_Reg";
-
-  /** */
-  public static final String typeUpdReg = "Upd_Reg";
-
-  /** */
-  public static final String lblUpdNumTickets = "numTickets";
+  private String uuid;
+  private String href;
+  private String created;
 
   /* Non db fields */
 
-  private Registration registration;
+  private Event event;
 
   /**
    *
    */
-  public Change() {
+  public Ticket() {
   }
 
   /**
@@ -66,74 +55,47 @@ public class Change extends DbItem<Change> {
     return registrationId;
   }
 
-  /**
+  /** Unique id for ticket verification
+   *
    * @param val
    */
-  public void setAuthid(final String val) {
-    authid = val;
+  public void setUuid(final String val) {
+    uuid = val;
   }
 
   /**
-   * @return authid
+   * @return uuid
    */
-  public String getAuthid() {
-    return authid;
-  }
-
-  /**
-   * @param val
-   */
-  public void setLastmod(final String val) {
-    lastmod = val;
-  }
-
-  /**
-   * @return lastmod
-   */
-  public String getLastmod() {
-    return lastmod;
+  public String getUuid() {
+    return uuid;
   }
 
   /**
    * @param val
    */
-  public void setType(final String val) {
-    type = val;
+  public void setHref(final String val) {
+    href = val;
   }
 
   /**
-   * @return type of change
+   * @return eventHref
    */
-  public String getType() {
-    return type;
-  }
-
-  /**
-   * @param val
-   */
-  public void setName(final String val) {
-    name = val;
-  }
-
-  /**
-   * @return name of changed value
-   */
-  public String getName() {
-    return name;
+  public String getHref() {
+    return href;
   }
 
   /**
    * @param val
    */
-  public void setValue(final String val) {
-    value = val;
+  public void setCreated(final String val) {
+    created = val;
   }
 
   /**
-   * @return name of changed value
+   * @return created
    */
-  public String getValue() {
-    return value;
+  public String getCreated() {
+    return created;
   }
 
   /* ====================================================================
@@ -143,15 +105,32 @@ public class Change extends DbItem<Change> {
   /**
    * @param val
    */
-  public void setRegistration(final Registration val) {
-    registration = val;
+  public void setEvent(final Event val) {
+    event = val;
   }
 
   /**
    * @return event
    */
-  public Registration getRegistration() {
-    return registration;
+  public Event getEvent() {
+    return event;
+  }
+
+  /* ====================================================================
+   *                   Convenience methods
+   * ==================================================================== */
+
+  /** Add our stuff to the StringBuilder
+   *
+   * @param sb    StringBuilder for result
+   */
+  @Override
+  protected void toStringSegment(final ToString ts) {
+    super.toStringSegment(ts);
+    ts.append("registrationId", getRegistrationId());
+    ts.append("uuid", getUuid());
+    ts.append("href", getHref());
+    ts.append("created", getCreated());
   }
 
   /* ====================================================================
@@ -160,14 +139,22 @@ public class Change extends DbItem<Change> {
    * ==================================================================== */
 
   @Override
-  public int compareTo(final Change that) {
-    // This is wrong
-    return getRegistrationId().compareTo(that.getRegistrationId());
+  public int compareTo(final Ticket that) {
+    return getUuid().compareTo(that.getUuid());
   }
 
   @Override
   public int hashCode() {
-    return getRegistrationId().hashCode();
+    return getUuid().hashCode();
+  }
+
+  @Override
+  public String toString() {
+    ToString ts = new ToString(this);
+
+    toStringSegment(ts);
+
+    return ts.toString();
   }
 }
 

@@ -18,6 +18,7 @@
 */
 package org.bedework.eventreg.db;
 
+import edu.rpi.sss.util.ToString;
 import edu.rpi.sss.util.Util;
 
 import java.util.Collection;
@@ -195,22 +196,19 @@ public class BwProperty extends DbItem<BwProperty> {
   }
 
   @Override
-  protected void toStringSegment(final StringBuilder sb) {
-    super.toStringSegment(sb);
-    sb.append(", name=");
-    sb.append(getName());
-    sb.append(", value=");
-    sb.append(getValue());
+  protected void toStringSegment(final ToString ts) {
+    super.toStringSegment(ts);
+    ts.append("name", getName());
+    ts.append("value", getValue());
   }
 
   @Override
   public String toString() {
-    StringBuilder sb = new StringBuilder("BwProperty{");
+    ToString ts = new ToString(this);
 
-    toStringSegment(sb);
-    sb.append("}");
+    toStringSegment(ts);
 
-    return sb.toString();
+    return ts.toString();
   }
 
   @Override

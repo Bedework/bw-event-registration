@@ -21,6 +21,8 @@ package org.bedework.eventreg.service;
 import org.bedework.eventreg.db.EventregDb;
 import org.bedework.eventreg.db.SysInfo;
 
+import edu.rpi.cmt.db.hibernate.HibException;
+
 import org.apache.log4j.Logger;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.tool.hbm2ddl.SchemaExport;
@@ -50,8 +52,6 @@ public class EventregSvc implements EventregSvcMBean {
 
   /* Be safe - default to false */
   private boolean export;
-
-  private boolean format;
 
   private boolean haltOnError;
 
@@ -179,6 +179,8 @@ public class EventregSvc implements EventregSvcMBean {
       EventregDb db = openDb();
 
       if (db != null) {
+        boolean ignoreErrors = false;
+
         try {
           sysi = db.getSys();
 
@@ -187,9 +189,16 @@ public class EventregSvc implements EventregSvcMBean {
           }
           res = getValue();
         } catch (Throwable t) {
+          if (t.getCause() instanceof HibException) {
+            // Assume db not initialised?
+            warn("Error retrieving values: db not initialised?");
+            ignoreErrors = true;
+            return null;
+          }
+
           error(t);
         } finally {
-          closeDb(db);
+          closeDb(db, ignoreErrors);
         }
       }
 
@@ -206,6 +215,8 @@ public class EventregSvc implements EventregSvcMBean {
       EventregDb db = openDb();
 
       if (db != null) {
+        boolean ignoreErrors = false;
+
         try {
           sysi = db.getSys();
           boolean create = false;
@@ -223,9 +234,16 @@ public class EventregSvc implements EventregSvcMBean {
             db.updateSys(sysi);
           }
         } catch (Throwable t) {
+          if (t.getCause() instanceof HibException) {
+            // Assume db not initialised?
+            warn("Error retrieving values: db not initialised?");
+            ignoreErrors = true;
+            return;
+          }
+
           error(t);
         } finally {
-          closeDb(db);
+          closeDb(db, ignoreErrors);
         }
       }
     }
@@ -273,20 +291,6 @@ public class EventregSvc implements EventregSvcMBean {
   @Override
   public boolean getExport() {
     return export;
-  }
-
-  /** Format the output?
-   *
-   * @param val
-   */
-  @Override
-  public void setFormat(final boolean val) {
-    format = val;
-  }
-
-  @Override
-  public boolean getFormat() {
-    return format;
   }
 
   @Override
@@ -380,7 +384,7 @@ public class EventregSvc implements EventregSvcMBean {
         se.setDelimiter(getDelimiter());
       }
 
-      se.setFormat(getFormat());
+      se.setFormat(true);
       se.setHaltOnError(getHaltOnError());
       se.setOutputFile(getSchemaOutFile());
       se.setImportFile(getSqlIn());
@@ -608,12 +612,9 @@ public class EventregSvc implements EventregSvcMBean {
     }
   }
 
-  private void closeDb(final EventregDb db) {
-    try {
-      db.close();
-    } catch (Throwable t) {
-      error(t);
-    }
+  private void closeDb(final EventregDb db,
+                       final boolean ignoreErrors) {
+    db.close(ignoreErrors);
   }
 
   /* ====================================================================
@@ -622,6 +623,10 @@ public class EventregSvc implements EventregSvcMBean {
 
   protected void info(final String msg) {
     getLogger().info(msg);
+  }
+
+  protected void warn(final String msg) {
+    getLogger().warn(msg);
   }
 
   protected void trace(final String msg) {

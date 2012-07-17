@@ -29,20 +29,20 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * @author douglm
  */
-public class UpdateAdminTicketController extends AdminAuthAbstractController {
+public class UpdateAdminRegController extends AdminAuthAbstractController {
   @Override
   public ModelAndView doRequest(final HttpServletRequest request,
                                 final HttpServletResponse response) throws Throwable {
-    Long ticketId = sessMan.getTicketId();
-    if (ticketId == null) {
-      return errorReturn("No ticketid supplied");
+    Long regId = sessMan.getRegistrationId();
+    if (regId == null) {
+      return errorReturn("No registration id supplied");
     }
 
-    int numTickets = sessMan.getTicketsRequested();
+    if (debug) {
+      logger.debug("updating registration " + regId);
+    }
 
-    logger.debug("updating ticket " + ticketId);
-
-    Registration reg = sessMan.getRegistrationById(ticketId);
+    Registration reg = sessMan.getRegistrationById(regId);
 
     if (reg == null) {
       return errorReturn("No registration found.");
@@ -50,19 +50,38 @@ public class UpdateAdminTicketController extends AdminAuthAbstractController {
 
     Event currEvent = sessMan.getCurrEvent();
 
-    long newTotal = numTickets + sessMan.getRegTicketCount() - reg.getNumTickets();
+    int numTickets = sessMan.getTicketsRequested();
+    long allocated = sessMan.getRegTicketCount();
+    int total = currEvent.getMaxTickets();
+    long available = total - allocated;
 
-    if (newTotal > currEvent.getMaxTickets()) {
+    int toAllocate = (int)Math.min(numTickets, available);
+
+    /*
+    long newTotal = numTickets + allocated - reg.getNumTickets();
+
+    if (newTotal > total) {
       logger.info("Registration is full");
       return errorReturn("Registration is full: you may only decrease or remove tickets.");
     }
+    */
 
-    reg.setNumTickets(numTickets);
-    reg.setType(sessMan.getType());
+    reg.setTicketsRequested(numTickets);
+
+    int released = reg.getNumTickets() - numTickets;
+
+    if (released > 0) {
+      reg.removeTickets(released);
+      reallocate(released);
+    } else if (toAllocate > 0) {
+      reg.addTickets(toAllocate);
+    }
+
+    reg.setType(Registration.typeRegistered);
     reg.setComment(sessMan.getComment());
     sessMan.updateRegistration(reg);
 
-    sessMan.setMessage("Ticket number " + ticketId + " updated by admin.");
+    sessMan.setMessage("Registration number " + regId + " updated by admin.");
 
     return sessModel("forward:adminagenda.do");
   }

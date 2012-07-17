@@ -19,6 +19,8 @@ under the License.
 package org.bedework.eventreg.web;
 
 import org.bedework.eventreg.bus.SessionManager;
+import org.bedework.eventreg.db.Event;
+import org.bedework.eventreg.db.Registration;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -40,6 +42,8 @@ public abstract class AbstractController implements Controller {
   protected final Log logger = LogFactory.getLog(getClass());
 
   protected SessionManager sessMan;
+
+  private String forwardTo;
 
   protected boolean debug;
 
@@ -127,6 +131,14 @@ public abstract class AbstractController implements Controller {
     sessMan = sm;
   }
 
+  public void setForwardTo(final String val) {
+    forwardTo = val;
+  }
+
+  public String getForwardTo() {
+    return forwardTo;
+  }
+
   /**
    * @param req
    */
@@ -150,7 +162,7 @@ public abstract class AbstractController implements Controller {
       logger.debug(title);
 
       while (names.hasMoreElements()) {
-        String key = (String)names.nextElement();
+        String key = names.nextElement();
         String[] vals = req.getParameterValues(key);
         for (String val: vals) {
           logger.debug("  " + key + " = \"" + val + "\"");
@@ -158,6 +170,50 @@ public abstract class AbstractController implements Controller {
       }
     } catch (Throwable t) {
       logger.error(this, t);
+    }
+  }
+
+  protected void reallocate(final int numTickets) {
+
+  }
+
+  protected void adjustTickets(final Registration reg) throws Throwable {
+    Event currEvent = sessMan.getCurrEvent();
+
+    int numTickets = sessMan.getTicketsRequested();
+    long allocated = sessMan.getRegTicketCount();
+    int total = currEvent.getMaxTickets();
+    long available = total - allocated;
+
+    int toAllocate = (int)Math.min(numTickets, available);
+
+    if (toAllocate != numTickets) {
+      /* We should check the request par expectedAvailable to see if it changed
+       * during this interaction. If it did we may have given the user stale
+       * information.
+       *
+       * If so abandon this and represent the information to the user.
+       */
+    }
+
+    /*
+    long newTotal = numTickets + allocated - reg.getNumTickets();
+
+    if (newTotal > total) {
+      logger.info("Registration is full");
+      return errorReturn("Registration is full: you may only decrease or remove tickets.");
+    }
+    */
+
+    reg.setTicketsRequested(numTickets);
+
+    int released = reg.getNumTickets() - numTickets;
+
+    if (released > 0) {
+      reg.removeTickets(released);
+      reallocate(released);
+    } else if (toAllocate > 0) {
+      reg.addTickets(toAllocate);
     }
   }
 }

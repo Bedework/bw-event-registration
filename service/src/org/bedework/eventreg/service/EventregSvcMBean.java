@@ -132,17 +132,6 @@ public interface EventregSvcMBean {
    */
   public boolean getExport();
 
-  /** Format the output?
-   *
-   * @param val
-   */
-  public void setFormat(boolean val);
-
-  /**
-   * @return true for Format the output
-   */
-  public boolean getFormat();
-
   /** Do we halt on error?
    *
    * @param val
