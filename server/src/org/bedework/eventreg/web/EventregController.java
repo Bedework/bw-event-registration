@@ -58,11 +58,6 @@ public class EventregController extends AuthAbstractController {
       return errorReturn("Cannot register for this event - deadline has passed");
     }
 
-    if (sessMan.getRegistrationFull()) {
-      logger.debug("event registration stop - registration is full");
-      return errorReturn("Cannot register for this event. Registration is full.");
-    }
-
     String comment = sessMan.getComment();
 
     registerUserInEvent(comment);
