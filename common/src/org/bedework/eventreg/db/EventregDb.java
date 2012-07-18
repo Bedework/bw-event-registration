@@ -118,6 +118,7 @@ public class EventregDb implements Serializable {
   }
 
   /**
+   * @param ignoreErrors
    * @return false if error occurred
    */
   public boolean close(final boolean ignoreErrors) {
@@ -425,28 +426,22 @@ public class EventregDb implements Serializable {
     try {
       StringBuilder sb = new StringBuilder();
 
-      sb.append("select sum(numTickets) from ");
+      sb.append("select size(tickets) from ");
       sb.append(Registration.class.getName());
       sb.append(" reg where reg.href=:href");
-      sb.append(" and (reg.type <> 'waiting' or reg.type is null)");
-      // is null a quick fix; reg.type should not be null
 
       sess.createQuery(sb.toString());
       sess.setString("href", eventHref);
 
-      /*
-      Collection<Long> counts = sess.getList();
+      List<Integer> cts = sess.getList();
 
-      long total = 0;
-
-      for (Long l: counts) {
-        total += l;
-      }*/
-
-      Long ct = (Long)sess.getUnique();
-      trace("Count returned " + ct);
-      if (ct == null) {
+      if (cts == null) {
         return 0;
+      }
+
+      Long ct = (long)0;
+      for (Integer i: cts) {
+        ct += i;
       }
 
       return ct;
@@ -464,22 +459,12 @@ public class EventregDb implements Serializable {
     try {
       StringBuilder sb = new StringBuilder();
 
-      sb.append("select sum(numTickets) from ");
+      sb.append("select sum(ticketsRequested) from ");
       sb.append(Registration.class.getName());
       sb.append(" reg where reg.href=:href");
-      sb.append(" and (reg.type = 'waiting')");
 
       sess.createQuery(sb.toString());
       sess.setString("href", eventHref);
-
-      /*
-      Collection<Long> counts = sess.getList();
-
-      long total = 0;
-
-      for (Long l: counts) {
-        total += l;
-      }*/
 
       Long ct = (Long)sess.getUnique();
       trace("Count returned " + ct);
@@ -487,7 +472,7 @@ public class EventregDb implements Serializable {
         return 0;
       }
 
-      return ct;
+      return ct - getTicketCount(eventHref);
     } catch (HibException he) {
       throw new Exception(he);
     }
@@ -502,21 +487,12 @@ public class EventregDb implements Serializable {
     try {
       StringBuilder sb = new StringBuilder();
 
-      sb.append("select sum(numTickets) from ");
-      sb.append(Registration.class.getName());
-      sb.append(" reg where reg.href=:href");
+      sb.append("select count(*) from ");
+      sb.append(Ticket.class.getName());
+      sb.append(" tkt where tkt.href=:href");
 
       sess.createQuery(sb.toString());
       sess.setString("href", eventHref);
-
-      /*
-      Collection<Long> counts = sess.getList();
-
-      long total = 0;
-
-      for (Long l: counts) {
-        total += l;
-      }*/
 
       Long ct = (Long)sess.getUnique();
       trace("Count returned " + ct);
@@ -541,10 +517,10 @@ public class EventregDb implements Serializable {
     try {
       StringBuilder sb = new StringBuilder();
 
-      sb.append("select sum(numtickets) from ");
-      sb.append(Registration.class.getName());
-      sb.append(" reg where reg.href=:href");
-      sb.append(" and reg.authid=:user");
+      sb.append("select count(*) from ");
+      sb.append(Ticket.class.getName());
+      sb.append(" tkt where tkt.href=:href");
+      sb.append(" and tkt.authid=:user");
 
       sess.createQuery(sb.toString());
       sess.setString("href", eventHref);

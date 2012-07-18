@@ -84,6 +84,8 @@ public class SessionManager  {
 
   private BwConnector cnctr;
 
+  /** Specify the change by label and value
+   */
   public static class ChangeItem {
     private String name;
     private String value;
@@ -116,12 +118,20 @@ public class SessionManager  {
       return value;
     }
 
+    /**
+     * @param name
+     * @param value
+     */
     public ChangeItem(final String name,
                       final String value) {
       this.name = name;
       this.value = value;
     }
 
+    /**
+     * @param value
+     * @return new change item
+     */
     public static ChangeItem makeUpdNumTickets(final int value) {
       return new ChangeItem(Change.lblUpdNumTickets,
                             String.valueOf(value));
@@ -235,6 +245,7 @@ public class SessionManager  {
 
   /**
    * @return true if current user is an administrator
+   * @throws Throwable
    */
   public boolean getAdminUser() throws Throwable {
     SysInfo sysi = getSysInfo();
@@ -353,8 +364,7 @@ public class SessionManager  {
   /**
    * @param reg
    * @param type
-   * @param label
-   * @param val
+   * @param ci
    * @throws Throwable
    */
   public void addChange(final Registration reg,
@@ -409,6 +419,7 @@ public class SessionManager  {
 
   /**
    * @return registration or null
+   * @throws Throwable
    */
   public Registration getRegistration() throws Throwable {
     boolean wasOpen = open;
@@ -424,6 +435,29 @@ public class SessionManager  {
         closeDb();
       }
     }
+  }
+
+  /**
+   * @return true if current user is registered for current event
+   * @throws Throwable
+   */
+  public boolean getIsRegistered() throws Throwable {
+    Registration reg = getRegistration();
+    return reg != null;
+  }
+
+  /**
+   * @return true if current user is on waiting list for current event
+   * @throws Throwable
+   */
+  public boolean getIsWaiting() throws Throwable {
+    Registration reg = getRegistration();
+
+    if (reg == null) {
+      return false;
+    }
+
+    return reg.getNumTickets() < reg.getTicketsRequested();
   }
 
   /**
@@ -733,6 +767,10 @@ public class SessionManager  {
 
   private static transient volatile Long nextRegId = (long)-1;
 
+  /**
+   * @return next id
+   * @throws Throwable
+   */
   public Long getNextRegistrationId() throws Throwable {
     synchronized (nextRegId) {
       if (nextRegId < 0) {

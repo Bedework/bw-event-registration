@@ -27,8 +27,9 @@ import edu.rpi.sss.util.ToString;
  */
 public class Ticket extends DbItem<Ticket> {
   private Long registrationId;
-  private String uuid;
+  private String authid;
   private String href;
+  private String uuid;
   private String created;
 
   /* Non db fields */
@@ -55,19 +56,18 @@ public class Ticket extends DbItem<Ticket> {
     return registrationId;
   }
 
-  /** Unique id for ticket verification
-   *
+  /**
    * @param val
    */
-  public void setUuid(final String val) {
-    uuid = val;
+  public void setAuthid(final String val) {
+    authid = val;
   }
 
   /**
-   * @return uuid
+   * @return authid
    */
-  public String getUuid() {
-    return uuid;
+  public String getAuthid() {
+    return authid;
   }
 
   /**
@@ -82,6 +82,21 @@ public class Ticket extends DbItem<Ticket> {
    */
   public String getHref() {
     return href;
+  }
+
+  /** Unique id for ticket verification
+   *
+   * @param val
+   */
+  public void setUuid(final String val) {
+    uuid = val;
+  }
+
+  /**
+   * @return uuid
+   */
+  public String getUuid() {
+    return uuid;
   }
 
   /**
@@ -128,8 +143,9 @@ public class Ticket extends DbItem<Ticket> {
   protected void toStringSegment(final ToString ts) {
     super.toStringSegment(ts);
     ts.append("registrationId", getRegistrationId());
-    ts.append("uuid", getUuid());
+    ts.append("authid", getAuthid());
     ts.append("href", getHref());
+    ts.append("uuid", getUuid());
     ts.append("created", getCreated());
   }
 

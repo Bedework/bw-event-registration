@@ -46,6 +46,8 @@ public class Registration extends DbItem<Registration> {
   /** Type values
    */
   public static final String typeRegistered = "reg";
+
+  /** */
   public static final String typeHold = "hold";
 
   /* Non db fields */
@@ -213,10 +215,16 @@ public class Registration extends DbItem<Registration> {
     return message;
   }
 
+  /**
+   * @param val
+   */
   public void setTickets(final Set<Ticket> val) {
     tickets = val;
   }
 
+  /**
+   * @return tickets
+   */
   public Set<Ticket> getTickets() {
     return tickets;
   }
@@ -264,6 +272,9 @@ public class Registration extends DbItem<Registration> {
     ts.append("numTickets", getNumTickets());
   }
 
+  /**
+   * @param val
+   */
   public void addTicket(final Ticket val) {
     Set<Ticket> ts = getTickets();
 
@@ -275,23 +286,33 @@ public class Registration extends DbItem<Registration> {
     ts.add(val);
   }
 
+  /** Add a new ticket
+   *
+   */
   public void addTicket() {
     Ticket t = new Ticket();
 
     t.setRegistrationId(getRegistrationId());
-    t.setUuid(UUID.randomUUID().toString());
+    t.setAuthid(getAuthid());
     t.setHref(getHref());
+    t.setUuid(UUID.randomUUID().toString());
     t.setCreated(new Timestamp(new java.util.Date().getTime()).toString());
 
     addTicket(t);
   }
 
+  /**
+   * @param numTickets
+   */
   public void addTickets(final int numTickets) {
     for (int i = 0; i < numTickets; i++) {
       addTicket();
     }
   }
 
+  /**
+   * @param val
+   */
   public void removeTicket(final Ticket val) {
     Set<Ticket> ts = getTickets();
 
@@ -302,6 +323,9 @@ public class Registration extends DbItem<Registration> {
     ts.remove(val);
   }
 
+  /**
+   * @param numTickets
+   */
   public void removeTickets(final int numTickets) {
     if (getTickets() == null) {
       return;

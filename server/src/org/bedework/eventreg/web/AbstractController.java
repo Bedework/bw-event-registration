@@ -131,10 +131,16 @@ public abstract class AbstractController implements Controller {
     sessMan = sm;
   }
 
+  /** Set by Spring
+   * @param val
+   */
   public void setForwardTo(final String val) {
     forwardTo = val;
   }
 
+  /**
+   * @return forward
+   */
   public String getForwardTo() {
     return forwardTo;
   }

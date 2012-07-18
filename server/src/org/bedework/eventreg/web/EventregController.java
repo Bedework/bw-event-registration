@@ -72,9 +72,7 @@ public class EventregController extends AuthAbstractController {
   }
 
   /**
-   * @param numTickets
    * @param comment
-   * @param regType
    * @return ticketId for registration
    * @throws Throwable
    */
