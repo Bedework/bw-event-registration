@@ -33,10 +33,10 @@
             <span class="thText">Venue</span>
           </th>
           <th>
-            <span class="thText">State</span>
+            <span class="thText">Tickets</span>
           </th>
           <th>
-            <span class="thText">Tickets</span>
+            <span class="thText">State</span>
           </th>
           <th>
           </th>
@@ -76,6 +76,16 @@
                 <td class="ticketLocation">
                   <c:out value="${reg.event.location}"/>
                 </td>
+                <td class="tickets">
+                  <c:choose>
+                    <c:when test="${(reg.numTickets < reg.ticketsRequested) and (reg.numTickets ne 0)}">
+                      <c:out value="${reg.numTickets}"/> of <c:out value="${reg.ticketsRequested}"/> fulfilled
+                    </c:when>
+                    <c:otherwise>
+                      <c:out value="${reg.ticketsRequested}"/>
+                    </c:otherwise>
+                  </c:choose>
+                </td>
                 <td class="state">
                   <c:choose>
                     <c:when test="${reg.numTickets < reg.ticketsRequested}">
@@ -86,18 +96,8 @@
                     </c:otherwise>
                   </c:choose>
                 </td>
-                <td class="tickets">
-                  <c:choose>
-                    <c:when test="${(reg.numTickets < reg.ticketsRequested) and (reg.numTickets ne 0)}">
-                      <c:out value="${reg.numTickets}"/> of <c:out value="${reg.ticketsRequested}"/>
-                    </c:when>
-                    <c:otherwise>
-                      <c:out value="${reg.ticketsRequested}"/>
-                    </c:otherwise>
-                  </c:choose>
-                </td>
                 <td class="controls">
-                  <c:if test="${(reg.event.maxTicketsPerUser > 1) and (reg.numTickets == reg.ticketsRequested)}">
+                  <c:if test="${(reg.event.maxTicketsPerUser > 1)}">
                     <select name='tickets<c:out value="${reg.registrationId}"/>' id='tickets<c:out value="${reg.registrationId}"/>'>
                       <c:forEach var="i" begin="1" end="${reg.event.maxTicketsPerUser}">
                          <c:choose>
