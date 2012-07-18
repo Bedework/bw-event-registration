@@ -4,6 +4,20 @@
 
   <h3>Register for this event</h3>
   <c:choose>
+    <c:when test="${sessMan.isWaiting}">
+      <div class="box" id="registered">
+        <%@ include file="/docs/userNav.jsp" %>
+        <p class="waiting">
+          <span class="checkmark">&#x2713;</span> You are on the waiting list.
+        </p>
+        <p class="details">
+          Your tickets will be allocated if space becomes available.
+        </p>
+        <p class="unregister">
+          <a href="removeReg.do?regid=<c:out value="${sessMan.registration.registrationId}"/>&amp;href=${sessMan.href}" onclick="return confirmRemoveTicket('<c:out value="${sessMan.currEvent.summary}"/>')">remove me</a>
+        </p>
+      </div>
+    </c:when>
     <c:when test="${sessMan.isRegistered}">
       <div class="box" id="registered">
         <%@ include file="/docs/userNav.jsp" %>
@@ -12,20 +26,6 @@
         </p>
         <p class="unregister">
           <a href="removeReg.do?regid=<c:out value="${sessMan.registration.registrationId}"/>&amp;href=${sessMan.href}" onclick="return confirmRemoveTicket('<c:out value="${sessMan.currEvent.summary}')"/>">unregister</a>
-        </p>
-      </div>
-    </c:when>
-    <c:when test="${sessMan.isWaiting}">
-      <div class="box" id="registered">
-        <%@ include file="/docs/userNav.jsp" %>
-        <p class="waiting">
-          <span class="checkmark">&#x2713;</span> You are on the waiting list.
-        </p>
-        <p class="details">
-          You will be automatically registered if space becomes available.
-        </p>
-        <p class="unregister">
-          <a href="removeReg.do?regid=<c:out value="${sessMan.registration.registrationId}"/>&amp;href=${sessMan.href}" onclick="return confirmRemoveTicket('<c:out value="${sessMan.currEvent.summary}"/>')">remove me</a>
         </p>
       </div>
     </c:when>
