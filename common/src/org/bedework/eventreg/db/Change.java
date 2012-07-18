@@ -39,6 +39,9 @@ public class Change extends DbItem<Change> {
   /** Registration updated by user */
   public static final String typeUpdReg = "Upd_Reg";
 
+  /** Registration deleted */
+  public static final String typeDelReg = "Del_Reg";
+
   /** Added 1 or more tickets to a waiting registration */
   public static final String typeTktAdded = "Tkt_Add";
 

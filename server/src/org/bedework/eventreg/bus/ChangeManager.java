@@ -171,4 +171,12 @@ public class ChangeManager  {
   public void addRegFulfilled(final Registration reg) throws Throwable {
     addChange(reg, Change.typeRegFulfilled);
   }
+
+  /**
+   * @param reg
+   * @throws Throwable
+   */
+  public void deleteReg(final Registration reg) throws Throwable {
+    addChange(reg, Change.typeDelReg);
+  }
 }

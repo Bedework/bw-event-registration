@@ -55,6 +55,7 @@ public class RemoveRegController extends AuthAbstractController {
     }
 
     sessMan.removeRegistration(reg);
+    sessMan.getChangeManager().deleteReg(reg);
 
     return sessModel(getForwardTo());
   }
