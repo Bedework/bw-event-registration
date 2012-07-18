@@ -39,7 +39,7 @@
       <div class="box" id="registrationFull">
         <%@ include file="/docs/userNav.jsp" %>
         Registration is full.<br/>
-        <form action="waitlist.do" class="commonForm" method="POST">
+        <form action="eventreg.do" class="commonForm" method="POST">
           <c:choose>
             <c:when test="${sessMan.currEvent.maxTicketsPerUser > 1}">
               Tickets:
