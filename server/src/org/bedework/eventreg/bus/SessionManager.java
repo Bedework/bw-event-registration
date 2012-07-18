@@ -45,7 +45,8 @@ import javax.servlet.http.HttpServletRequest;
  */
 public class SessionManager  {
   protected final Log logger = LogFactory.getLog(getClass());
-//  public final static String EVENTINFOURL = "http://events.rpi.edu/event/eventView.do";
+
+  private ChangeManager chgMan;
 
   private EventregDb db;
 
@@ -84,60 +85,6 @@ public class SessionManager  {
 
   private BwConnector cnctr;
 
-  /** Specify the change by label and value
-   */
-  public static class ChangeItem {
-    private String name;
-    private String value;
-
-    /**
-     * @param val
-     */
-    public void setName(final String val) {
-      name = val;
-    }
-
-    /**
-     * @return name of changed value
-     */
-    public String getName() {
-      return name;
-    }
-
-    /**
-     * @param val
-     */
-    public void setValue(final String val) {
-      value = val;
-    }
-
-    /**
-     * @return name of changed value
-     */
-    public String getValue() {
-      return value;
-    }
-
-    /**
-     * @param name
-     * @param value
-     */
-    public ChangeItem(final String name,
-                      final String value) {
-      this.name = name;
-      this.value = value;
-    }
-
-    /**
-     * @param value
-     * @return new change item
-     */
-    public static ChangeItem makeUpdNumTickets(final int value) {
-      return new ChangeItem(Change.lblUpdNumTickets,
-                            String.valueOf(value));
-    }
-  }
-
   private static TzGetter tzs = new TzGetter() {
     @Override
     public TimeZone getTz(final String id) throws Throwable {
@@ -149,6 +96,14 @@ public class SessionManager  {
    *
    */
   public SessionManager() {
+    chgMan = new ChangeManager(this);
+  }
+
+  /**
+   * @return the change log manager
+   */
+  public ChangeManager getChangeManager() {
+    return chgMan;
   }
 
   /**
@@ -331,55 +286,11 @@ public class SessionManager  {
    * @throws Throwable
    */
   public void updateRegistration(final Registration reg) throws Throwable {
-
     Timestamp sqlDate = new Timestamp(new java.util.Date().getTime());
 
     reg.setLastmod(sqlDate.toString());
 
     db.update(reg);
-
-    // will need more here for admin updates; change could also
-    // include reg type and comments
-    addChange(reg, Change.typeUpdReg,
-              ChangeItem.makeUpdNumTickets(reg.getNumTickets()));
-  }
-
-  /**
-   * @param reg
-   * @param type
-   * @throws Throwable
-   */
-  public void addChange(final Registration reg,
-                        final String type) throws Throwable {
-    Change c = new Change();
-
-    c.setAuthid(getCurrentUser());
-    c.setRegistrationId(reg.getRegistrationId());
-    c.setLastmod(reg.getLastmod());
-    c.setType(type);
-
-    db.addChange(c);
-  }
-
-  /**
-   * @param reg
-   * @param type
-   * @param ci
-   * @throws Throwable
-   */
-  public void addChange(final Registration reg,
-                        final String type,
-                        final ChangeItem ci) throws Throwable {
-    Change c = new Change();
-
-    c.setAuthid(getCurrentUser());
-    c.setRegistrationId(reg.getRegistrationId());
-    c.setLastmod(reg.getLastmod());
-    c.setType(type);
-    c.setName(ci.name);
-    c.setValue(ci.value);
-
-    db.addChange(c);
   }
 
   /**
@@ -406,6 +317,15 @@ public class SessionManager  {
    */
   public List<Registration> getAllRegistrations() throws Throwable {
     return db.getAllRegistrations();
+  }
+
+  /**
+   * @param href
+   * @return all the current waiting registrations for the event
+   * @throws Throwable
+   */
+  public List<Registration> getWaiting(final String href) throws Throwable {
+    return db.getWaiting(href);
   }
 
   /**

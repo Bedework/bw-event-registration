@@ -87,6 +87,16 @@ http://www.springframework.org/schema/aop http://www.springframework.org/schema/
 
   <!-- =================== Admin actions ========================== -->
 
+  <bean id="adminAdjustTicketsController"  
+        class="org.bedework.eventreg.web.AdminAdjustTktsController"  
+        scope="session">
+    <aop:scoped-proxy/>
+    <property name="sessionManager">
+      <ref bean="sessMan"/>
+    </property>
+    <property name="forwardTo" value="forward:init.do" />
+  </bean>
+
   <bean id="adminAgendaController"  
         class="org.bedework.eventreg.web.AdminAgendaController"  
         scope="session">

@@ -18,7 +18,10 @@ under the License.
  */
 package org.bedework.eventreg.web;
 
+import org.bedework.eventreg.bus.ChangeManager;
+import org.bedework.eventreg.bus.ChangeManager.ChangeItem;
 import org.bedework.eventreg.bus.SessionManager;
+import org.bedework.eventreg.db.Change;
 import org.bedework.eventreg.db.Event;
 import org.bedework.eventreg.db.Registration;
 
@@ -29,6 +32,7 @@ import org.springframework.web.servlet.mvc.Controller;
 
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -179,8 +183,59 @@ public abstract class AbstractController implements Controller {
     }
   }
 
-  protected void reallocate(final int numTickets) {
+  /** Allocate given number of tickets for the event to any waiters
+   *
+   * @param numTickets
+   * @param href
+   * @throws Throwable
+   */
+  protected void reallocate(final int numTickets,
+                            final String href) throws Throwable {
+    List<Registration> regs = sessMan.getWaiting(href);
 
+    int remaining = numTickets;
+
+    for (Registration reg: regs) {
+      int required = reg.getTicketsRequested() - reg.getNumTickets();
+
+      if (required <= 0) {
+        continue;
+      }
+
+      required = Math.min(required, remaining);
+
+      reg.addTickets(required);
+      sessMan.updateRegistration(reg);
+      sessMan.getChangeManager().addTicketsAdded(reg, required);
+
+      if (reg.getTicketsRequested() == reg.getNumTickets()) {
+        sessMan.getChangeManager().addRegFulfilled(reg);
+      }
+
+      remaining -= required;
+
+      if (remaining <= 0) {
+        break;
+      }
+    }
+  }
+
+  /** Adjust tickets for the current event - perhaps as a result of increasing
+   * seats.
+   * @throws Throwable
+   */
+  protected void adjustTickets() throws Throwable {
+    Event currEvent = sessMan.getCurrEvent();
+
+    long allocated = sessMan.getRegTicketCount();
+    int total = currEvent.getMaxTickets();
+    int available = (int)(total - allocated);
+
+    if (available > 0) {
+      return;
+    }
+
+    reallocate(available, sessMan.getHref());
   }
 
   protected void adjustTickets(final Registration reg) throws Throwable {
@@ -215,11 +270,18 @@ public abstract class AbstractController implements Controller {
 
     int released = reg.getNumTickets() - numTickets;
 
+    ChangeManager chgMan = sessMan.getChangeManager();
+
     if (released > 0) {
       reg.removeTickets(released);
-      reallocate(released);
+      chgMan.addChange(reg, Change.typeUpdReg,
+                       ChangeItem.makeUpdNumTickets(-released));
+      reallocate(released, reg.getHref());
     } else if (toAllocate > 0) {
       reg.addTickets(toAllocate);
+
+      chgMan.addChange(reg, Change.typeUpdReg,
+                       ChangeItem.makeUpdNumTickets(toAllocate));
     }
   }
 }

@@ -480,6 +480,30 @@ public class EventregDb implements Serializable {
 
   /**
    * @param eventHref
+   * @return registrations on the waiting list for the event
+   * @throws Throwable
+   */
+  public List<Registration> getWaiting(final String eventHref) throws Throwable {
+    try {
+      StringBuilder sb = new StringBuilder();
+
+      sb.append("from ");
+      sb.append(Registration.class.getName());
+      sb.append(" reg where reg.href=:href");
+      sb.append(" and size(reg.tickets) < reg.ticketsRequested");
+      sb.append(" order by reg.waitqDate");
+
+      sess.createQuery(sb.toString());
+      sess.setString("href", eventHref);
+
+      return sess.getList();
+    } catch (HibException he) {
+      throw new Exception(he);
+    }
+  }
+
+  /**
+   * @param eventHref
    * @return total number of registration entries for that event, including waiting list
    * @throws Throwable
    */

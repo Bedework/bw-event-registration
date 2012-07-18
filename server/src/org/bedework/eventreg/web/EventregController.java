@@ -18,7 +18,6 @@ under the License.
  */
 package org.bedework.eventreg.web;
 
-import org.bedework.eventreg.bus.SessionManager.ChangeItem;
 import org.bedework.eventreg.db.Change;
 import org.bedework.eventreg.db.Event;
 import org.bedework.eventreg.db.Registration;
@@ -97,9 +96,6 @@ public class EventregController extends AuthAbstractController {
 
       sessMan.updateRegistration(reg);
 
-      sessMan.addChange(reg, Change.typeUpdReg,
-                        ChangeItem.makeUpdNumTickets(reg.getTicketsRequested()));
-
       return reg.getRegistrationId();
     }
 
@@ -120,7 +116,7 @@ public class EventregController extends AuthAbstractController {
 
     sessMan.addRegistration(reg);
 
-    sessMan.addChange(reg, Change.typeNewReg);
+    sessMan.getChangeManager().addChange(reg, Change.typeNewReg);
 
     return reg.getRegistrationId();
   }

@@ -33,11 +33,17 @@ public class Change extends DbItem<Change> {
   private String name;
   private String value;
 
-  /** */
+  /** new registration for user */
   public static final String typeNewReg = "New_Reg";
 
-  /** */
+  /** Registration updated by user */
   public static final String typeUpdReg = "Upd_Reg";
+
+  /** Added 1 or more tickets to a waiting registration */
+  public static final String typeTktAdded = "Tkt_Add";
+
+  /** All desired tickets supplied to a waiting registration */
+  public static final String typeRegFulfilled = "Reg_Fullfilled";
 
   /** */
   public static final String lblUpdNumTickets = "numTickets";
