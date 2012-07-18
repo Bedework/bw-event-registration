@@ -21,7 +21,6 @@
     <version name="seq" column="bwevreg_seq" type="integer" />
 
     <property name="registrationId" column="bwevreg_regid" type="long"
-              unique="true"
               not-null="true"
               index="bwevregidx_tktregid" />
 
