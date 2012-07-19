@@ -8,7 +8,8 @@
           Welcome <c:out value="${sessMan.currentUser}"/> (admin)<br/>
           <a href="javascript:print();">print</a> |
           <a href="javascript:self.close();">close this window</a> |
-          <a href="download.do?href=${sessMan.href}&amp;atkn=${sessMan.adminToken}">download registrations</a>
+          <c:set var="fileName" scope="page">EventReg-<c:out value="${fn:substring(fn:replace(sessMan.currEvent.summary, ' ',''),0,9)}"/>-<c:out value="${fn:substring(sessMan.currEvent.dateTime,0,7)}"/>.csv</c:set>
+          <a href="download.do?href=${sessMan.href}&amp;atkn=${sessMan.adminToken}&amp;fn=${fileName}">download registrations</a>
         </div>
         <h1><c:out value="${sessMan.currEvent.summary}"/></h1>
         <div class="eventDateTime">
