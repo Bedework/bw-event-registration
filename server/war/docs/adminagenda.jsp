@@ -18,8 +18,8 @@
         <div id="regInfo">
           <p class="left">
             Registrations: <c:out value="${sessMan.registrantCount}"/><br/>
-            Total active tickets:  <c:out value="${sessMan.regTicketCount}"/><br/>
-            Total waiting list tickets: <c:out value="${sessMan.waitingTicketCount}"/>
+            Fulfilled tickets:  <c:out value="${sessMan.regTicketCount}"/><br/>
+            Waiting tickets: <c:out value="${sessMan.waitingTicketCount}"/>
           </p>
           <p class="left">
             Max tickets allowed for event: <c:out value="${sessMan.currEvent.maxTickets}"/><br/>
@@ -53,12 +53,17 @@
               </th>
               <th>
                 <span class="thText">
-                  Tickets
+                  Tickets<br/>Allocated
                 </span>
               </th>
               <th>
                 <span class="thText">
-                  Type
+                  Tickets<br/>Requested
+                </span>
+              </th>
+              <th>
+                <span class="thText">
+                  State
                 </span>
               </th>
               <th>
@@ -91,7 +96,7 @@
                 <c:otherwise>
                   <c:forEach var="reg" items="${regs}" varStatus="loopStatus">
                     <c:choose>
-                      <c:when test="${reg.type eq 'waiting'}">
+                      <c:when test="${reg.numTickets < reg.ticketsRequested}">
                         <tr class="waitList">
                       </c:when>
                       <c:otherwise>
@@ -107,12 +112,28 @@
                       <td class="regNumTickets">
                         <input name='numtickets<c:out value="${reg.registrationId}"/>' id='numtickets<c:out value="${reg.registrationId}"/>' type="text" value='<c:out value="${reg.numTickets}"/>' size="3"/>
                       </td>
-                      <td class="regType">
+                      <td class="regRequestedTickets">
+                        <c:out value="${reg.ticketsRequested}"/>
+                      </td>
+                      <td class="regState">
+                        <c:choose>
+                          <c:when test="${reg.type == 'hold'}">
+                            hold
+                          </c:when>
+                          <c:when test="${reg.numTickets < reg.ticketsRequested}">
+                            waiting
+                          </c:when>
+                          <c:otherwise>
+                            fulfilled
+                          </c:otherwise>
+                        </c:choose>
+                        <%-- 
                         <select name='type<c:out value="${reg.registrationId}"/>' id='type<c:out value="${reg.registrationId}"/>'>
                           <option value="registered" ${reg.type == 'registered' ? 'selected="selected"' : ''}>registered</option>
                           <option value="hold" ${reg.type == 'hold' ? 'selected="selected"' : ''}>hold</option>
                           <option value="waiting" ${reg.type == 'waiting' ? 'selected="selected"' : ''}>waiting</option>
                         </select>
+                        --%>
                       </td>
                       <td class="regComment">
                         <input name='comment<c:out value="${reg.registrationId}"/>' id='comment<c:out value="${reg.registrationId}"/>' type="text" value='<c:out value="${reg.comment}"/>'/>
@@ -121,8 +142,8 @@
                         <c:out value="${reg.created}"/>
                       </td>
                       <td class="regControls">
-                        <a href="javascript:doUpdateAdminTicket('<c:out value="${reg.registrationId}"/>&amp;atkn=${sessMan.adminToken}','<c:out value="${reg.event.href}"/>')" onclick="return confirmUpdateAdminTicket()">update</a> |
-                        <a href='removeAgendaReg.do?regid=<c:out value="${reg.registrationId}"/>&amp;href=<c:out value="${reg.event.href}&amp;atkn=${sessMan.adminToken}"/>' onclick="return confirmRemoveAdminTicket('<c:out value="${reg.authid}"/>')">remove</a>
+                        <a href="javascript:doUpdateAdminTicket('<c:out value="${reg.registrationId}"/>','<c:out value="${reg.event.href}"/>','${sessMan.adminToken}')" onclick="return confirmUpdateAdminTicket()">update</a> |
+                        <a href='adminRemoveAgendaReg.do?regid=<c:out value="${reg.registrationId}"/>&amp;href=<c:out value="${reg.event.href}"/>&amp;atkn=<c:out value="${sessMan.adminToken}"/>' onclick="return confirmRemoveAdminTicket('<c:out value="${reg.authid}"/>')">remove</a>
                       </td>
                     </tr>
                   </c:forEach>

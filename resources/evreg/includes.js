@@ -69,15 +69,15 @@ function doUpdateTicket(regId,eventHref) {
 function confirmUpdateAdminTicket() {
   return confirm("The ticket will be updated.\n\nProceed?");
 }
-function doUpdateAdminTicket(regId,eventHref) {
+function doUpdateAdminTicket(regId,eventHref,token) {
   var typeCssId = "type" + regId;
   var typeSelectBox = document.getElementById(typeCssId);
   //var type = typeSelectBox.options[typeSelectBox.selectedIndex].value;
-  var type = $("#type" + regId + " option:selected").val();
+  //var type = $("#type" + regId + " option:selected").val();
   //var comment = escape(document.getElementById("comment" + regId).value);
   var comment = $("#comment" + regId).val();
   var numtickets = escape(document.getElementById("numtickets" + regId).value);
-  location.replace("updateAdminReg.do?regid=" + regId + "&href=" + eventHref + "&numtickets=" + numtickets + "&comment=" + comment + "&type=" + type);
+  location.replace("updateAdminReg.do?regid=" + regId + "&href=" + eventHref + "&numtickets=" + numtickets + "&comment=" + comment + "&atkn=" + token );
 }
 function validate(formObj) {
   if (!echeck(formObj.email.value)) {
