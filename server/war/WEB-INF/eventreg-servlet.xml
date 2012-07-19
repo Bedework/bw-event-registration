@@ -151,6 +151,7 @@ http://www.springframework.org/schema/aop http://www.springframework.org/schema/
     <property name="sessionManager">
       <ref bean="sessMan"/>
     </property>
+    <property name="forwardTo" value="forward:adminAgenda.do" />
   </bean>
 
   <bean id="authenticatedUrlMapping" 
