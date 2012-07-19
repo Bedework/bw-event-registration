@@ -36,6 +36,6 @@ public class UpdateAdminRegController extends AdminAuthAbstractController {
       return mv;
     }
 
-    return sessModel("forward:adminagenda.do");
+    return sessModel(getForwardTo());
   }
 }

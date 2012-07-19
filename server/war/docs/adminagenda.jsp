@@ -16,6 +16,9 @@
           <c:out value="${sessMan.currEvent.dateTime}"/>
           <%--<fmt:formatDate value="${sessMan.currEvent.date}" type="both" timeStyle="long" dateStyle="long" />--%>
         </div>
+        <div id="adminAgendaButtons">
+          <button onclick="window.location.reload()">refresh</button>
+        </div>
         <div id="regInfo">
           <p class="left">
             Registrations: <c:out value="${sessMan.registrantCount}"/><br/>
