@@ -235,11 +235,16 @@ public class EventregDb implements Serializable {
 
       sb.append("from ");
       sb.append(Change.class.getName());
-      sb.append(" chg where ch.lastmod>:lm");
-      sb.append(" order by ch.lastmod");
+      sb.append(" chg");
+      if (ts != null) {
+        sb.append(" where chg.lastmod>:lm");
+      }
+      sb.append(" order by chg.lastmod");
 
       sess.createQuery(sb.toString());
-      sess.setString("lm", ts);
+      if (ts != null) {
+        sess.setString("lm", ts);
+      }
 
       return sess.getList();
     } catch (HibException he) {

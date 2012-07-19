@@ -18,11 +18,11 @@ under the License.
  */
 package org.bedework.eventreg.web;
 
-import org.bedework.eventreg.db.Registration;
+import org.bedework.eventreg.db.Change;
 
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.TreeSet;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -31,23 +31,17 @@ import javax.servlet.http.HttpServletResponse;
  * @author douglm
  *
  */
-public class OutputCSVController extends AdminAuthAbstractController {
+public class OutputChangesController extends AdminAuthAbstractController {
   @Override
   public ModelAndView doRequest(final HttpServletRequest request,
                                 final HttpServletResponse response) throws Throwable {
-    TreeSet<Registration> regs = new TreeSet<Registration>();
-
-    for (Registration reg: sessMan.getRegistrationsByHref(sessMan.getHref())) {
-      reg.setEvent(sessMan.retrieveEvent(reg));
-
-      regs.add(reg);
-    }
+    List<Change> cs = sessMan.getChanges(sessMan.getLastmod());
 
     response.setHeader("Content-Disposition",
                        "Attachment; Filename=\"" +
-                           sessMan.getFilename("eventreg.csv") + "\"");
+                           sessMan.getFilename("eventregChanges.csv") + "\"");
     response.setContentType("application/vnd.ms-excel; charset=UTF-8");
 
-    return objModel("csv", "regs", regs);
+    return objModel("changes", "changes", cs);
   }
 }

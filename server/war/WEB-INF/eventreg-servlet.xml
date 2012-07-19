@@ -126,6 +126,15 @@ http://www.springframework.org/schema/aop http://www.springframework.org/schema/
     <property name="forwardTo" value="forward:adminagenda.do" />
   </bean>
   
+  <bean id="outputChangesController"  
+        class="org.bedework.eventreg.web.OutputChangesController"  
+        scope="session">
+    <aop:scoped-proxy/>
+    <property name="sessionManager">
+      <ref bean="sessMan"/>
+    </property>
+  </bean>
+  
   <bean id="outputCSVController"  
         class="org.bedework.eventreg.web.OutputCSVController"  
         scope="session">
@@ -165,6 +174,7 @@ http://www.springframework.org/schema/aop http://www.springframework.org/schema/
         <prop key="adminRemoveAgendaReg.do">adminRemoveAgendaRegController</prop>
         <prop key="adminRemoveReg.do">adminRemoveRegController</prop>
         <prop key="download.do">outputCSVController</prop>
+        <prop key="changes.do">outputChangesController</prop>
         
         <prop key="counts.do">outputCountsController</prop>
       </props>

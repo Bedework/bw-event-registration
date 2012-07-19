@@ -74,6 +74,18 @@ public class SessionManager  {
    */
   public static final String reqparRegId = "regid";
 
+  /** Request parameter - add header to csv - default true
+   */
+  public static final String reqparCSVHeader = "csvheader";
+
+  /** Request parameter - filename
+   */
+  public static final String reqparFilename = "fn";
+
+  /** Request parameter - lastmod
+   */
+  public static final String reqparLastmod = "lastmod";
+
   private SysInfo sys;
   private Event currEvent;
   private boolean deadlinePassed;
@@ -630,6 +642,27 @@ public class SessionManager  {
     return Util.checkNull(request.getParameter(name));
   }
 
+  /** Get a request parameter stripped of white space. Return default for null
+   * or zero length.
+   *
+   * @param name    name of parameter
+   * @param def default value
+   * @return  String   value
+   */
+  public String getReqPar(final String name, final String def) {
+    if (request == null) {
+      return null;
+    }
+
+    String s = Util.checkNull(request.getParameter(name));
+
+    if (s != null) {
+      return s;
+    }
+
+    return def;
+  }
+
   /**
    * @return number of tickets or -1 for no parameter
    */
@@ -655,6 +688,14 @@ public class SessionManager  {
   }
 
   /**
+   * @param def
+   * @return filename or null for no parameter
+   */
+  public String getFilename(final String def) {
+    return getReqPar(reqparFilename, def);
+  }
+
+  /**
    * @return ticket id or null for no parameter
    */
   public Long getRegistrationId() {
@@ -672,10 +713,44 @@ public class SessionManager  {
   }
 
   /**
+   * @param name
+   * @param def
+   * @return boolean true/false or default
+   */
+  public boolean getBooleanReqPar(final String name,
+                                  final boolean def) {
+    String reqpar = getReqPar(name);
+
+    if (reqpar == null) {
+      return def;
+    }
+
+    try {
+      return Boolean.parseBoolean(reqpar);
+    } catch (Throwable t) {
+      return def; // XXX exception?
+    }
+  }
+
+  /**
+   * @return true if header required
+   */
+  public boolean getCsvHeader() {
+    return getBooleanReqPar(reqparCSVHeader, true);
+  }
+
+  /**
    * @return comment or null for no parameter
    */
   public String getComment() {
     return getReqPar(reqparComment);
+  }
+
+  /**
+   * @return lastmod or null for no parameter
+   */
+  public String getLastmod() {
+    return getReqPar(reqparLastmod);
   }
 
   /**

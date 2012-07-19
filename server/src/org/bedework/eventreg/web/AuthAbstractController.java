@@ -18,6 +18,8 @@ under the License.
  */
 package org.bedework.eventreg.web;
 
+import org.bedework.eventreg.db.Registration;
+
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
@@ -38,6 +40,43 @@ public abstract class AuthAbstractController extends AbstractController {
     if (sessMan.getCurrentUser() == null) {
       return errorReturn("Not authenticated");
     }
+
+    return null;
+  }
+
+  protected ModelAndView updateRegistration(final boolean admin) throws Throwable {
+    Long regId = sessMan.getRegistrationId();
+    if (regId == null) {
+      return errorReturn("No registration id supplied");
+    }
+
+    if (debug) {
+      logger.debug("updating registration " + regId);
+    }
+
+    Registration reg = sessMan.getRegistrationById(regId);
+
+    if (reg == null) {
+      return errorReturn("No registration found.");
+    }
+
+    if (!admin &&
+        !reg.getAuthid().equals(sessMan.getCurrentUser())) {
+      return errorReturn("You are not authorized to update that registration.");
+    }
+
+    adjustTickets(reg);
+    reg.setType(Registration.typeRegistered);
+
+    if (admin) {
+      reg.setComment(sessMan.getComment());
+    }
+
+    sessMan.updateRegistration(reg);
+
+    sessMan.setMessage("Registration number " + regId +
+                       " updated: " + "admin: " + admin +
+                       " user: " + sessMan.getCurrentUser());
 
     return null;
   }

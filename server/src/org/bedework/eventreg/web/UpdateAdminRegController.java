@@ -18,8 +18,6 @@ under the License.
  */
 package org.bedework.eventreg.web;
 
-import org.bedework.eventreg.db.Registration;
-
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
@@ -32,28 +30,11 @@ public class UpdateAdminRegController extends AdminAuthAbstractController {
   @Override
   public ModelAndView doRequest(final HttpServletRequest request,
                                 final HttpServletResponse response) throws Throwable {
-    Long regId = sessMan.getRegistrationId();
-    if (regId == null) {
-      return errorReturn("No registration id supplied");
+    ModelAndView mv = updateRegistration(false);
+
+    if (mv != null) {
+      return mv;
     }
-
-    if (debug) {
-      logger.debug("updating registration " + regId);
-    }
-
-    Registration reg = sessMan.getRegistrationById(regId);
-
-    if (reg == null) {
-      return errorReturn("No registration found.");
-    }
-
-    adjustTickets(reg);
-
-    reg.setType(Registration.typeRegistered);
-    reg.setComment(sessMan.getComment());
-    sessMan.updateRegistration(reg);
-
-    sessMan.setMessage("Registration number " + regId + " updated by admin.");
 
     return sessModel("forward:adminagenda.do");
   }

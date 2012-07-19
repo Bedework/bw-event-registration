@@ -173,7 +173,14 @@ public class Registration extends DbItem<Registration> {
     return lastmod;
   }
 
-  /**
+  /** The waitqDate is almost the lastmod and orders the waitq. We need a separate
+   * date to avoid somebody going to the back of the queue because of a trivial
+   * modifcation. For example changing the number of tickets required should
+   * preserve your place if you're already on the q.
+   *
+   * <p>On the other hand we need to ensure that somebody goes to the back of the
+   * queue if they are already fulfilled but decide they want more.
+   *
    * @param val
    */
   public void setWaitqDate(final String val) {
