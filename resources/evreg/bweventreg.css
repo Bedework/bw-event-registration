@@ -83,8 +83,9 @@ tr.odd.waitList td.state {
 #adminAgenda input {
 	font-size: 0.9em;
 }
-#adminAgendaButtons {
+#adminHoldTickets {
 	float: right;
+	text-align: right;
 }
 table {
   width: 100%; 

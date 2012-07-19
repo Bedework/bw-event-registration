@@ -7,7 +7,7 @@
         <div class="rightLinks">
           Welcome <c:out value="${sessMan.currentUser}"/> (admin)<br/>
           <a href="javascript:print();">print</a> |
-          <a href="javascript:self.close();">close this window</a> |
+          <a href="javascript:window.location.reload();">refresh</a> |
           <c:set var="fileName" scope="page">EventReg-<c:out value="${fn:substring(fn:replace(sessMan.currEvent.summary, ' ',''),0,9)}"/>-<c:out value="${fn:substring(sessMan.currEvent.dateTime,0,7)}"/>.csv</c:set>
           <a href="download.do?href=${sessMan.href}&amp;atkn=${sessMan.adminToken}&amp;fn=${fileName}">download registrations</a>
         </div>
@@ -16,9 +16,11 @@
           <c:out value="${sessMan.currEvent.dateTime}"/>
           <%--<fmt:formatDate value="${sessMan.currEvent.date}" type="both" timeStyle="long" dateStyle="long" />--%>
         </div>
-        <div id="adminAgendaButtons">
-          <button onclick="window.location.reload()">refresh</button>
-        </div>
+        <form id="adminHoldTickets" onsubmit="return false;">
+          Hold tickets: <input name="numtickets" value="" size="2"/>
+          <button onclick="alert('unimplemented')">hold</button><br/>
+          Comment: <input name="comment" placeholder='e.g. "reserved for VIP"' size="22"/>
+        </form>
         <div id="regInfo">
           <p class="left">
             Registrations: <c:out value="${sessMan.registrantCount}"/><br/>

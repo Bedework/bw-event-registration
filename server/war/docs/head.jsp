@@ -43,4 +43,4 @@
     <script src="/evreg/includes.js" type="text/javascript"></script>
     <link rel="stylesheet" href="/evreg/bweventreg.css" type="text/css" media="all"/>
   </head>
-  <body onload="javascript:focusFirstElement();">
+  <body>
