@@ -16,10 +16,7 @@ KIND, either express or implied. See the License for the
 specific language governing permissions and limitations
 under the License.
  */
-
 package org.bedework.eventreg.web;
-
-import org.bedework.eventreg.db.Registration;
 
 import org.springframework.web.servlet.ModelAndView;
 
@@ -34,24 +31,11 @@ public class AdminRemoveRegController extends AdminAuthAbstractController {
   @Override
   public ModelAndView doRequest(final HttpServletRequest request,
                                 final HttpServletResponse response) throws Throwable {
-    Long regId = sessMan.getRegistrationId();
-    if (regId == null) {
-      return errorReturn("No registration id supplied");
+    ModelAndView mv = removeRegistration(true);
+
+    if (mv != null) {
+      return mv;
     }
-
-    if (debug) {
-      logger.debug("remove reg id: " + regId +
-                   ", user: " + sessMan.getCurrentUser());
-    }
-
-    Registration reg = sessMan.getRegistrationById(regId);
-
-    if (reg == null) {
-      return errorReturn("No registration found.");
-    }
-
-    sessMan.removeRegistration(reg);
-    sessMan.getChangeManager().deleteReg(reg);
 
     return sessModel(getForwardTo());
   }

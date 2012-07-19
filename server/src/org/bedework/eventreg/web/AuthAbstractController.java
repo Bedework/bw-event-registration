@@ -80,4 +80,33 @@ public abstract class AuthAbstractController extends AbstractController {
 
     return null;
   }
+
+  protected ModelAndView removeRegistration(final boolean admin) throws Throwable {
+    Long regId = sessMan.getRegistrationId();
+    if (regId == null) {
+      return errorReturn("No registration id supplied");
+    }
+
+    if (debug) {
+      logger.debug("remove reg id: " + regId +
+                   ", user: " + sessMan.getCurrentUser());
+    }
+
+    Registration reg = sessMan.getRegistrationById(regId);
+
+    if (reg == null) {
+      return errorReturn("No registration found.");
+    }
+
+    if (!admin &&
+        !reg.getAuthid().equals(sessMan.getCurrentUser())) {
+      return errorReturn("You are not authorized to remove that registration.");
+    }
+
+    reallocate(reg.getNumTickets(), reg.getHref());
+    sessMan.removeRegistration(reg);
+    sessMan.getChangeManager().deleteReg(reg);
+
+    return null;
+  }
 }
