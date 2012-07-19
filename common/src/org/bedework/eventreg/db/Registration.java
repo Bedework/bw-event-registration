@@ -258,6 +258,24 @@ public class Registration extends DbItem<Registration> {
    *                   Convenience methods
    * ==================================================================== */
 
+  /** Set the lastmod to now.
+   *
+   */
+  public void setLastmod() {
+    Timestamp sqlDate = new Timestamp(new java.util.Date().getTime());
+
+    setLastmod(sqlDate.toString());
+  }
+
+  /** Set the waitq date to now.
+   *
+   */
+  public void setWaitqDate() {
+    Timestamp sqlDate = new Timestamp(new java.util.Date().getTime());
+
+    setLastmod(sqlDate.toString());
+  }
+
   /** Add our stuff to the StringBuilder
    *
    * @param sb    StringBuilder for result

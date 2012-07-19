@@ -34,7 +34,6 @@ import net.fortuna.ical4j.model.TimeZone;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import java.sql.Timestamp;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -298,9 +297,7 @@ public class SessionManager  {
    * @throws Throwable
    */
   public void updateRegistration(final Registration reg) throws Throwable {
-    Timestamp sqlDate = new Timestamp(new java.util.Date().getTime());
-
-    reg.setLastmod(sqlDate.toString());
+    reg.setLastmod();
 
     db.update(reg);
   }

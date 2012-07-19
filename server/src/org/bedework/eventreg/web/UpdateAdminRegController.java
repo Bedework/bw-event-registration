@@ -30,7 +30,7 @@ public class UpdateAdminRegController extends AdminAuthAbstractController {
   @Override
   public ModelAndView doRequest(final HttpServletRequest request,
                                 final HttpServletResponse response) throws Throwable {
-    ModelAndView mv = updateRegistration(false);
+    ModelAndView mv = updateRegistration(true);
 
     if (mv != null) {
       return mv;

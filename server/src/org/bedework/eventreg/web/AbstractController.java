@@ -242,6 +242,11 @@ public abstract class AbstractController implements Controller {
     Event currEvent = sessMan.getCurrEvent();
 
     int numTickets = sessMan.getTicketsRequested();
+    if (numTickets < 0) {
+      // Not setting tickets
+      return;
+    }
+
     long allocated = sessMan.getRegTicketCount();
     int total = currEvent.getMaxTickets();
     long available = total - allocated;
@@ -265,6 +270,14 @@ public abstract class AbstractController implements Controller {
       return errorReturn("Registration is full: you may only decrease or remove tickets.");
     }
     */
+
+//    boolean alreadyFulfilled = (reg.getNumTickets() > 0) &&
+//        (reg.getNumTickets() >= reg.getTicketsRequested());
+
+    if ((reg.getWaitqDate() == null) ||
+        (reg.getTicketsRequested() < numTickets)) {
+      reg.setWaitqDate();
+    }
 
     reg.setTicketsRequested(numTickets);
 
