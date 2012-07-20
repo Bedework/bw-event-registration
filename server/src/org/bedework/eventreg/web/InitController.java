@@ -35,6 +35,7 @@ public class InitController extends AuthAbstractController {
   @Override
   public ModelAndView doRequest(final HttpServletRequest request,
                                 final HttpServletResponse response) throws Throwable {
+    sessMan.flushCurrEvent();
     Event ev = sessMan.getCurrEvent();
 
     if (ev == null) {
