@@ -258,6 +258,17 @@ public class Registration extends DbItem<Registration> {
    *                   Convenience methods
    * ==================================================================== */
 
+  /** Set the various timestamps to now for a new registration.
+   *
+   */
+  public void setTimestamps() {
+    Timestamp sqlDate = new Timestamp(new java.util.Date().getTime());
+
+    setCreated(sqlDate.toString());
+    setLastmod(getCreated());
+    setWaitqDate(getCreated());
+  }
+
   /** Set the lastmod to now.
    *
    */

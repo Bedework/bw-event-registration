@@ -106,6 +106,15 @@ http://www.springframework.org/schema/aop http://www.springframework.org/schema/
     </property>
   </bean>
 
+  <bean id="adminHoldController"  
+        class="org.bedework.eventreg.web.AdminHoldController"  
+        scope="session">
+    <aop:scoped-proxy/>
+    <property name="sessionManager">
+      <ref bean="sessMan"/>
+    </property>
+  </bean>
+
   <bean id="adminRemoveRegController"  
         class="org.bedework.eventreg.web.AdminRemoveRegController"  
         scope="session">
@@ -171,6 +180,7 @@ http://www.springframework.org/schema/aop http://www.springframework.org/schema/
         <prop key="removeAgendaReg.do">removeAgendaRegController</prop>
 
         <prop key="adminAgenda.do">adminAgendaController</prop>
+        <prop key="adminHold.do">adminHoldController</prop>
         <prop key="updateAdminReg.do">updateAdminRegController</prop>
         <prop key="adminRemoveAgendaReg.do">adminRemoveAgendaRegController</prop>
         <prop key="adminRemoveReg.do">adminRemoveRegController</prop>

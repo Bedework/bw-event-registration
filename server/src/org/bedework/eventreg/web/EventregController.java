@@ -24,7 +24,6 @@ import org.bedework.eventreg.db.Registration;
 
 import org.springframework.web.servlet.ModelAndView;
 
-import java.sql.Timestamp;
 import java.util.Date;
 
 import javax.servlet.http.HttpServletRequest;
@@ -58,19 +57,16 @@ public class EventregController extends AuthAbstractController {
       return errorReturn("Cannot register for this event - deadline has passed");
     }
 
-    String comment = sessMan.getComment();
-
-    registerUserInEvent(comment);
+    registerUserInEvent();
 
     return sessModel("eventreg");
   }
 
   /**
-   * @param comment
    * @return ticketId for registration
    * @throws Throwable
    */
-  public Long registerUserInEvent(final String comment) throws Throwable {
+  public Long registerUserInEvent() throws Throwable {
     String href = sessMan.getHref();
 
     if (debug) {
@@ -80,14 +76,12 @@ public class EventregController extends AuthAbstractController {
 
     /* we  let adminUsers register over and over, but not regular users */
 
-    Timestamp sqlDate = new Timestamp(new java.util.Date().getTime());
-
     Registration reg = sessMan.getRegistration();
 
     if (reg != null) {
-      reg.setLastmod(sqlDate.toString());
+      reg.setLastmod();
       adjustTickets(reg);
-      reg.setComment(comment);
+      reg.setComment(sessMan.getComment());
 
       sessMan.updateRegistration(reg);
 
@@ -99,13 +93,12 @@ public class EventregController extends AuthAbstractController {
     reg = new Registration();
 
     reg.setAuthid(sessMan.getCurrentUser());
-    reg.setComment(comment);
+    reg.setComment(sessMan.getComment());
     reg.setType(Registration.typeRegistered);
     reg.setHref(href);
     reg.setRegistrationId(sessMan.getNextRegistrationId());
 
-    reg.setCreated(sqlDate.toString());
-    reg.setLastmod(reg.getCreated());
+    reg.setTimestamps();
 
     adjustTickets(reg);
 
