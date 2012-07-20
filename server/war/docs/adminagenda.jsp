@@ -18,10 +18,12 @@
           ${fn:substring(eventDate,11,13)}:${fn:substring(eventDate,14,16)}
           (${fn:substring(eventDate,18,-1)})
         </div>
-        <form id="adminHoldTickets" onsubmit="return false;">
+        <form id="adminHoldTickets" action="adminHold.do">
           Hold tickets: <input name="numtickets" value="" size="2"/>
-          <button onclick="alert('unimplemented')">hold</button><br/>
+          <input type="submit" value="hold"/><br/>
           Comment: <input name="comment" placeholder='e.g. "reserved for VIP"' size="22"/>
+          <input type="hidden" name="href" value="${sessMan.href}"/>
+          <input type="hidden" name="atkn" value="${sessMan.adminToken}"/>
         </form>
         <div id="regInfo">
           <p class="left">

@@ -47,6 +47,6 @@ public class AdminHoldController extends AdminAuthAbstractController {
 
     sessMan.addRegistration(reg);
 
-    return sessModel("adminagenda");
+    return sessModel(getForwardTo());
   }
 }

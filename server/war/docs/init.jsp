@@ -58,32 +58,7 @@
         </form>
       </div>
     </c:when>
-    <c:when test="${sessMan.adminUser}">
-      <%-- Form for superuser - DEPRECATE? --%>
-      <form action="eventreg.do" class="commonForm" method="POST">
-        <div class="box">
-          <%@ include file="/docs/userNav.jsp" %>
-          <p class="superuserForm">
-            Tickets: <input type="text" name="numtickets" id="numtickets" size="3" value=""/>
-            <script type="text/javascript">
-              formelement('numtickets');
-            </script>
-            <select name="type">
-              <option>registered</option>
-              <option>hold</option>
-              <option>waiting</option>
-            </select><br/>
-            Comment: <input type="text" value="" size="10" name="comment" id="comment"/>
-            <script type="text/javascript">
-              formelement('comment');
-            </script><br/>
-            <input type="submit" value="Register"/>
-          </p>
-        </div>
-      </form>
-    </c:when>
     <c:otherwise>
-      <%-- Normal authenticated user --%>
       <div class="box">
         <%@ include file="/docs/userNav.jsp" %>
         <div class="ticketVals">
