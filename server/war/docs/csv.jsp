@@ -3,6 +3,7 @@
 --%><%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %><%--
 --%><%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %><%--
 --%><%@ taglib prefix="spring" uri="/spring" %><%--
+--%><%@ page contentType="application/vnd.ms-excel" %><%--
 --%><c:if test="${sessMan.csvHeader}">event,date,time,location,registrationId,userid,email,ticketsRequested,ticketsAllocated,type,comment,created,lastmod
 </c:if
 ><c:forEach var="reg" items="${regs}" varStatus="loopStatus"><%--
