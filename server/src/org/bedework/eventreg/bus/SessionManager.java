@@ -230,10 +230,9 @@ public class SessionManager  {
   }
 
   /**
-   * @param val
    */
-  public void setCurrEvent(final Event val) {
-    currEvent = val;
+  public void flushCurrEvent() {
+    currEvent = null;
   }
 
   /**
