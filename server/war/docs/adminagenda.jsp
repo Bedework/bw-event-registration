@@ -13,7 +13,8 @@
         </div>
         <h1><c:out value="${sessMan.currEvent.summary}"/></h1>
         <div class="eventDateTime">
-          <c:out value="${sessMan.currEvent.dateTime}"/>
+          <c:set var="eventDate" scope="page" value="${sessMan.currEvent.dateTime}"/>
+          <c:out value="${eventDate}"/>
           <%--<fmt:formatDate value="${sessMan.currEvent.date}" type="both" timeStyle="long" dateStyle="long" />--%>
         </div>
         <form id="adminHoldTickets" onsubmit="return false;">
@@ -59,12 +60,12 @@
               </th>
               <th>
                 <span class="thText">
-                  Tickets<br/>Allocated
+                  Tickets<br/>Requested
                 </span>
               </th>
               <th>
                 <span class="thText">
-                  Tickets<br/>Requested
+                  Tickets<br/>Allocated
                 </span>
               </th>
               <th>
