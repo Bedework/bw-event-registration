@@ -36,6 +36,7 @@ public class AdminAgendaController extends AdminAuthAbstractController {
   @Override
   public ModelAndView doRequest(final HttpServletRequest request,
                                 final HttpServletResponse response) throws Throwable {
+    sessMan.flushCurrEvent();
     Event ev = sessMan.getCurrEvent();
 
     TreeSet<Registration> regs = new TreeSet<Registration>();
