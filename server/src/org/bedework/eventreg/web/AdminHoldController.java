@@ -39,6 +39,7 @@ public class AdminHoldController extends AdminAuthAbstractController {
     Registration reg = new Registration();
 
     reg.setRegistrationId(sessMan.getNextRegistrationId());
+    reg.setAuthid(sessMan.getCurrentUser());
     reg.setHref(ev.getHref());
     reg.setTicketsRequested(numTickets);
     reg.addTickets(numTickets);
