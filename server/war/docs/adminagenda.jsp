@@ -116,11 +116,11 @@
                       <td class="regEmail">
                         <c:out value="${reg.authid}"/>
                       </td>
-                      <td class="regNumTickets">
-                        <input name='numtickets<c:out value="${reg.registrationId}"/>' id='numtickets<c:out value="${reg.registrationId}"/>' type="text" value='<c:out value="${reg.numTickets}"/>' size="3"/>
-                      </td>
                       <td class="regRequestedTickets">
-                        <c:out value="${reg.ticketsRequested}"/>
+                        <input name='numtickets<c:out value="${reg.registrationId}"/>' id='numtickets<c:out value="${reg.registrationId}"/>' type="text" value='<c:out value="${reg.ticketsRequested}"/>' size="3"/>
+                      </td>
+                      <td class="regNumTickets">
+                        <c:out value="${reg.numTickets}"/>
                       </td>
                       <td class="regState">
                         <c:choose>
