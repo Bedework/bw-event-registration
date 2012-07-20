@@ -71,7 +71,10 @@
                   <c:out value="${reg.event.summary}"/>
                 </td>
                 <td class="ticketDateTime">
-                  <c:out value="${reg.event.dateTime}"/>
+                  <c:set var="eventDate" scope="page" value="${reg.event.dateTime}"/>
+                  ${fn:substring(eventDate,-1,4)}-${fn:substring(eventDate,4,6)}-${fn:substring(eventDate,6,8)}
+                  ${fn:substring(eventDate,11,13)}:${fn:substring(eventDate,14,16)}
+                  (${fn:substring(eventDate,18,-1)})
                 </td>
                 <td class="ticketLocation">
                   <c:out value="${reg.event.location}"/>

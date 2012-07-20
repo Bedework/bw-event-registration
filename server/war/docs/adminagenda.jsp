@@ -14,8 +14,9 @@
         <h1><c:out value="${sessMan.currEvent.summary}"/></h1>
         <div class="eventDateTime">
           <c:set var="eventDate" scope="page" value="${sessMan.currEvent.dateTime}"/>
-          <c:out value="${eventDate}"/>
-          <%--<fmt:formatDate value="${sessMan.currEvent.date}" type="both" timeStyle="long" dateStyle="long" />--%>
+          ${fn:substring(eventDate,-1,4)}-${fn:substring(eventDate,4,6)}-${fn:substring(eventDate,6,8)}
+          ${fn:substring(eventDate,11,13)}:${fn:substring(eventDate,14,16)}
+          (${fn:substring(eventDate,18,-1)})
         </div>
         <form id="adminHoldTickets" onsubmit="return false;">
           Hold tickets: <input name="numtickets" value="" size="2"/>
@@ -24,17 +25,24 @@
         </form>
         <div id="regInfo">
           <p class="left">
-            Registrations: <c:out value="${sessMan.registrantCount}"/><br/>
             Fulfilled tickets:  <c:out value="${sessMan.regTicketCount}"/><br/>
-            Waiting tickets: <c:out value="${sessMan.waitingTicketCount}"/>
+            Waiting tickets: <c:out value="${sessMan.waitingTicketCount}"/><br/>
+            Registrations: <c:out value="${sessMan.registrantCount}"/>
           </p>
           <p class="left">
             Max tickets allowed for event: <c:out value="${sessMan.currEvent.maxTickets}"/><br/>
             Max tickets allowed per user: <c:out value="${sessMan.currEvent.maxTicketsPerUser}"/>
           </p>
           <p>
-            Registration starts: <c:out value="${sessMan.currEvent.registrationStart}"/><br/>
-            Registration ends: <c:out value="${sessMan.currEvent.registrationEnd}"/>
+            Registration starts: 
+            <c:set var="regStarts" scope="page" value="${sessMan.currEvent.registrationStart}"/>
+            ${fn:substring(regStarts,-1,4)}-${fn:substring(regStarts,4,6)}-${fn:substring(regStarts,6,8)}
+            ${fn:substring(regStarts,9,11)}:${fn:substring(regStarts,12,14)}
+            <br/>
+            Registration ends:
+            <c:set var="regEnds" scope="page" value="${sessMan.currEvent.registrationEnd}"/>
+            ${fn:substring(regEnds,-1,4)}-${fn:substring(regEnds,4,6)}-${fn:substring(regEnds,6,8)}
+            ${fn:substring(regEnds,9,11)}:${fn:substring(regEnds,12,14)}
           </p>
         </div>
         <form name="adminagenda" action="">
@@ -146,7 +154,7 @@
                         <input name='comment<c:out value="${reg.registrationId}"/>' id='comment<c:out value="${reg.registrationId}"/>' type="text" value='<c:out value="${reg.comment}"/>'/>
                       </td>
                       <td class="regCreated">
-                        <c:out value="${reg.created}"/>
+                        <c:out value="${fn:substring(reg.created,-1,16)}"/>
                       </td>
                       <td class="regControls">
                         <a href="javascript:doUpdateAdminTicket('<c:out value="${reg.registrationId}"/>','<c:out value="${reg.event.href}"/>','${sessMan.adminToken}')" onclick="return confirmUpdateAdminTicket()">update</a> |
