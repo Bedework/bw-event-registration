@@ -7,7 +7,7 @@
         <div class="rightLinks">
           Welcome <c:out value="${sessMan.currentUser}"/> (admin)<br/>
           <a href="javascript:print();">print</a> |
-          <a href="javascript:window.location.reload();">refresh</a> |
+          <a href="adminAgenda.do?href=${sessMan.href}&amp;atkn=${sessMan.adminToken}">refresh</a> |
           <c:set var="fileName" scope="page">EventReg-<c:out value="${fn:substring(fn:replace(sessMan.currEvent.summary, ' ',''),0,9)}"/>-<c:out value="${fn:substring(sessMan.currEvent.dateTime,0,7)}"/>.csv</c:set>
           <a href="download.do?href=${sessMan.href}&amp;atkn=${sessMan.adminToken}&amp;fn=${fileName}">download registrations</a>
         </div>
@@ -60,7 +60,7 @@
               <br/>
               <span class="overallocationNotice">
                 You are overallocated by <c:out value="${overallocation}"/> 
-                ticket<c:if test="overallocation > 1">s</c:if>
+                ticket<c:if test="${overallocation > 1}">s</c:if>
               </span>
             </c:if>
           </p>
