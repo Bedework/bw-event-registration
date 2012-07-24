@@ -256,52 +256,53 @@ public abstract class AbstractController implements Controller {
 
     long allocated = sessMan.getRegTicketCount();
     int total = currEvent.getMaxTickets();
+
+    /* Total number of available tickets - may be negatve for over-allocated */
     long available = total - allocated;
 
-    int toAllocate = (int)Math.min(numTickets, available);
+    /* change > 0 to add tickets, < 0 to release tickets */
+    int change = numTickets - reg.getTicketsRequested();
 
-    if (toAllocate != numTickets) {
-      /* We should check the request par expectedAvailable to see if it changed
-       * during this interaction. If it did we may have given the user stale
-       * information.
-       *
-       * If so abandon this and represent the information to the user.
-       */
+    if (change == 0) {
+      // Not changing anything
+      return;
     }
 
-    /*
-    long newTotal = numTickets + allocated - reg.getNumTickets();
+    if (change > 0) {
+      /* The number to add to this registration */
+      int toAllocate = (int)Math.min(change, available);
 
-    if (newTotal > total) {
-      logger.info("Registration is full");
-      return errorReturn("Registration is full: you may only decrease or remove tickets.");
+      if (toAllocate != change) {
+        /* We should check the request par expectedAvailable to see if it changed
+         * during this interaction. If it did we may have given the user stale
+         * information.
+         *
+         * If so abandon this and represent the information to the user.
+         */
+      }
+
+      change = toAllocate;
     }
-    */
-
-//    boolean alreadyFulfilled = (reg.getNumTickets() > 0) &&
-//        (reg.getNumTickets() >= reg.getTicketsRequested());
 
     if ((reg.getWaitqDate() == null) ||
-        (reg.getTicketsRequested() < numTickets)) {
+        (change > 0)) {
       reg.setWaitqDate();
     }
 
     reg.setTicketsRequested(numTickets);
 
-    int released = reg.getNumTickets() - numTickets;
-
     ChangeManager chgMan = sessMan.getChangeManager();
 
-    if (released > 0) {
-      reg.removeTickets(released);
+    if (change < 0) {
+      reg.removeTickets(-change);
       chgMan.addChange(reg, Change.typeUpdReg,
-                       ChangeItem.makeUpdNumTickets(-released));
-      reallocate(released, reg.getHref());
-    } else if (toAllocate > 0) {
-      reg.addTickets(toAllocate);
+                       ChangeItem.makeUpdNumTickets(change));
+      reallocate(-change, reg.getHref());
+    } else {
+      reg.addTickets(change);
 
       chgMan.addChange(reg, Change.typeUpdReg,
-                       ChangeItem.makeUpdNumTickets(toAllocate));
+                       ChangeItem.makeUpdNumTickets(change));
     }
   }
 }
