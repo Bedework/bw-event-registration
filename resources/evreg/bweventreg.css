@@ -225,6 +225,10 @@ ul.errors li {
   font-size: 0.8em;
   margin: 1em 0 1em 2.25em;
 }
+.overallocationNotice {
+	font-style: italic;
+	color: red;
+}
 .left {
 	float: left;
 	margin: 0 2em 2em 0;

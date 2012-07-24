@@ -33,7 +33,17 @@
           </p>
           <p class="left">
             Max tickets allowed for event: <c:out value="${sessMan.currEvent.maxTickets}"/><br/>
-            Max tickets allowed per user: <c:out value="${sessMan.currEvent.maxTicketsPerUser}"/>
+            Max tickets allowed per user: <c:out value="${sessMan.currEvent.maxTicketsPerUser}"/><br/>
+            Available tickets:
+            <c:set var="availableTickets" scope="page" value="${sessMan.currEvent.maxTickets - sessMan.regTicketCount}"/>
+            <c:choose>
+              <c:when test="${availableTickets < 0}">
+                0 
+              </c:when>
+              <c:otherwise>
+                <c:out value="${availableTickets}"/>
+              </c:otherwise>
+            </c:choose>
           </p>
           <p>
             Registration starts: 
@@ -45,6 +55,14 @@
             <c:set var="regEnds" scope="page" value="${sessMan.currEvent.registrationEnd}"/>
             ${fn:substring(regEnds,-1,4)}-${fn:substring(regEnds,4,6)}-${fn:substring(regEnds,6,8)}
             ${fn:substring(regEnds,9,11)}:${fn:substring(regEnds,12,14)}
+            <c:if test="${availableTickets < 0}">
+              <c:set var="overallocation" scope="page" value="${sessMan.regTicketCount - sessMan.currEvent.maxTickets}"/>
+              <br/>
+              <span class="overallocationNotice">
+                You are overallocated by <c:out value="${overallocation}"/> 
+                ticket<c:if test="overallocation > 1">s</c:if>
+              </span>
+            </c:if>
           </p>
         </div>
         <form name="adminagenda" action="">
