@@ -66,7 +66,6 @@ public abstract class AuthAbstractController extends AbstractController {
     }
 
     adjustTickets(reg);
-    reg.setType(Registration.typeRegistered);
 
     if (admin) {
       reg.setComment(req.getComment());
