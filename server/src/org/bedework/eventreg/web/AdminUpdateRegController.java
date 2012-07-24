@@ -26,7 +26,7 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * @author douglm
  */
-public class UpdateAdminRegController extends AdminAuthAbstractController {
+public class AdminUpdateRegController extends AdminAuthAbstractController {
   @Override
   public ModelAndView doRequest(final HttpServletRequest request,
                                 final HttpServletResponse response) throws Throwable {

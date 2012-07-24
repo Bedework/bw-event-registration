@@ -254,12 +254,6 @@ public abstract class AbstractController implements Controller {
       return;
     }
 
-    long allocated = sessMan.getRegTicketCount();
-    int total = currEvent.getMaxTickets();
-
-    /* Total number of available tickets - may be negatve for over-allocated */
-    long available = total - allocated;
-
     /* change > 0 to add tickets, < 0 to release tickets */
     int change = numTickets - reg.getTicketsRequested();
 
@@ -269,6 +263,12 @@ public abstract class AbstractController implements Controller {
     }
 
     if (change > 0) {
+      long allocated = sessMan.getRegTicketCount();
+      int total = currEvent.getMaxTickets();
+
+      /* Total number of available tickets - may be negative for over-allocated */
+      long available = Math.max(0, total - allocated);
+
       /* The number to add to this registration */
       int toAllocate = (int)Math.min(change, available);
 

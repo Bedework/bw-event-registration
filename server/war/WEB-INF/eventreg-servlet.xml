@@ -136,6 +136,16 @@ http://www.springframework.org/schema/aop http://www.springframework.org/schema/
     <property name="forwardTo" value="forward:adminAgenda.do" />
   </bean>
   
+  <bean id="adminUpdateRegController"  
+        class="org.bedework.eventreg.web.AdminUpdateRegController"  
+        scope="session">
+    <aop:scoped-proxy/>
+    <property name="sessionManager">
+      <ref bean="sessMan"/>
+    </property>
+    <property name="forwardTo" value="forward:adminAgenda.do" />
+  </bean>
+  
   <bean id="outputChangesController"  
         class="org.bedework.eventreg.web.OutputChangesController"  
         scope="session">
@@ -152,16 +162,6 @@ http://www.springframework.org/schema/aop http://www.springframework.org/schema/
     <property name="sessionManager">
       <ref bean="sessMan"/>
     </property>
-  </bean>
-  
-  <bean id="updateAdminRegController"  
-        class="org.bedework.eventreg.web.UpdateAdminRegController"  
-        scope="session">
-    <aop:scoped-proxy/>
-    <property name="sessionManager">
-      <ref bean="sessMan"/>
-    </property>
-    <property name="forwardTo" value="forward:adminAgenda.do" />
   </bean>
 
   <bean id="authenticatedUrlMapping" 
@@ -182,7 +182,7 @@ http://www.springframework.org/schema/aop http://www.springframework.org/schema/
 
         <prop key="adminAgenda.do">adminAgendaController</prop>
         <prop key="adminHold.do">adminHoldController</prop>
-        <prop key="updateAdminReg.do">updateAdminRegController</prop>
+        <prop key="updateAdminReg.do">adminUpdateRegController</prop>
         <prop key="adminRemoveAgendaReg.do">adminRemoveAgendaRegController</prop>
         <prop key="adminRemoveReg.do">adminRemoveRegController</prop>
         <prop key="download.do">outputCSVController</prop>
