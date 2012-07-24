@@ -313,9 +313,11 @@ public class EventregDb implements Serializable {
       sb.append("from ");
       sb.append(Registration.class.getName());
       sb.append(" reg where reg.authid=:user");
+      sb.append(" and reg.type=:type");
 
       sess.createQuery(sb.toString());
       sess.setString("user", user);
+      sess.setString("type", Registration.typeRegistered);
 
       return sess.getList();
     } catch (HibException he) {
@@ -338,10 +340,12 @@ public class EventregDb implements Serializable {
       sb.append(Registration.class.getName());
       sb.append(" reg where reg.href=:href");
       sb.append(" and reg.authid=:user");
+      sb.append(" and reg.type=:type");
 
       sess.createQuery(sb.toString());
       sess.setString("href", eventHref);
       sess.setString("user", user);
+      sess.setString("type", Registration.typeRegistered);
 
       return (Registration)sess.getUnique();
     } catch (HibException he) {
@@ -405,9 +409,12 @@ public class EventregDb implements Serializable {
       sb.append("select count(*) from ");
       sb.append(Registration.class.getName());
       sb.append(" reg where reg.href=:href");
+      sb.append(" and reg.type=:type");
 
       sess.createQuery(sb.toString());
       sess.setString("href", eventHref);
+      sess.setString("type", Registration.typeRegistered);
+
       @SuppressWarnings("unchecked")
       Collection<Long> counts = sess.getList();
 
