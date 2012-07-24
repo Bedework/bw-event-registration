@@ -368,7 +368,9 @@ public class Registration extends DbItem<Registration> {
     }
 
     for (int i = 0; i < numTickets; i++) {
-      getTickets().remove(0);
+      Ticket t = getTickets().iterator().next();
+
+      getTickets().remove(t);
     }
   }
 
