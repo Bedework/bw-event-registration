@@ -478,7 +478,7 @@ public class EventregDb implements Serializable {
         return 0;
       }
 
-      return ct - getTicketCount(eventHref);
+      return Math.max(0, ct - getTicketCount(eventHref));
     } catch (HibException he) {
       throw new Exception(he);
     }
