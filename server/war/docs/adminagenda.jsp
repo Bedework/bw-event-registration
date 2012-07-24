@@ -7,9 +7,9 @@
         <div class="rightLinks">
           Welcome <c:out value="${sessMan.currentUser}"/> (admin)<br/>
           <a href="javascript:print();">print</a> |
-          <a href="adminAgenda.do?href=${sessMan.href}&amp;atkn=${sessMan.adminToken}">refresh</a> |
+          <a href="adminAgenda.do?href=${req.href}&amp;atkn=${req.adminToken}">refresh</a> |
           <c:set var="fileName" scope="page">EventReg-<c:out value="${fn:substring(fn:replace(sessMan.currEvent.summary, ' ',''),0,9)}"/>-<c:out value="${fn:substring(sessMan.currEvent.dateTime,0,7)}"/>.csv</c:set>
-          <a href="download.do?href=${sessMan.href}&amp;atkn=${sessMan.adminToken}&amp;fn=${fileName}">download registrations</a>
+          <a href="download.do?href=${req.href}&amp;atkn=${req.adminToken}&amp;fn=${fileName}">download registrations</a>
         </div>
         <h1><c:out value="${sessMan.currEvent.summary}"/></h1>
         <div class="eventDateTime">
@@ -22,8 +22,8 @@
           Hold tickets: <input name="numtickets" value="" size="2"/>
           <input type="submit" value="hold"/><br/>
           Comment: <input name="comment" placeholder='e.g. "reserved for VIP"' size="22"/>
-          <input type="hidden" name="href" value="${sessMan.href}"/>
-          <input type="hidden" name="atkn" value="${sessMan.adminToken}"/>
+          <input type="hidden" name="href" value="${req.href}"/>
+          <input type="hidden" name="atkn" value="${req.adminToken}"/>
         </form>
         <div id="regInfo">
           <p class="left">
@@ -177,8 +177,8 @@
                         <c:out value="${fn:substring(reg.created,-1,16)}"/>
                       </td>
                       <td class="regControls">
-                        <a href="javascript:doUpdateAdminTicket('<c:out value="${reg.registrationId}"/>','<c:out value="${reg.event.href}"/>','${sessMan.adminToken}')" onclick="return confirmUpdateAdminTicket()">update</a> |
-                        <a href='adminRemoveAgendaReg.do?regid=<c:out value="${reg.registrationId}"/>&amp;href=<c:out value="${reg.event.href}"/>&amp;atkn=<c:out value="${sessMan.adminToken}"/>' onclick="return confirmRemoveAdminTicket('<c:out value="${reg.authid}"/>')">remove</a>
+                        <a href="javascript:doUpdateAdminTicket('<c:out value="${reg.registrationId}"/>','<c:out value="${reg.event.href}"/>','${req.adminToken}')" onclick="return confirmUpdateAdminTicket()">update</a> |
+                        <a href='adminRemoveAgendaReg.do?regid=<c:out value="${reg.registrationId}"/>&amp;href=<c:out value="${reg.event.href}"/>&amp;atkn=<c:out value="${req.adminToken}"/>' onclick="return confirmRemoveAdminTicket('<c:out value="${reg.authid}"/>')">remove</a>
                       </td>
                     </tr>
                   </c:forEach>

@@ -45,7 +45,7 @@ public abstract class AuthAbstractController extends AbstractController {
   }
 
   protected ModelAndView updateRegistration(final boolean admin) throws Throwable {
-    Long regId = sessMan.getRegistrationId();
+    Long regId = req.getRegistrationId();
     if (regId == null) {
       return errorReturn("No registration id supplied");
     }
@@ -69,7 +69,7 @@ public abstract class AuthAbstractController extends AbstractController {
     reg.setType(Registration.typeRegistered);
 
     if (admin) {
-      reg.setComment(sessMan.getComment());
+      reg.setComment(req.getComment());
     }
 
     sessMan.updateRegistration(reg);
@@ -82,7 +82,7 @@ public abstract class AuthAbstractController extends AbstractController {
   }
 
   protected ModelAndView removeRegistration(final boolean admin) throws Throwable {
-    Long regId = sessMan.getRegistrationId();
+    Long regId = req.getRegistrationId();
     if (regId == null) {
       return errorReturn("No registration id supplied");
     }

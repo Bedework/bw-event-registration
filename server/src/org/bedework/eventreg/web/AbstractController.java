@@ -20,6 +20,7 @@ package org.bedework.eventreg.web;
 
 import org.bedework.eventreg.bus.ChangeManager;
 import org.bedework.eventreg.bus.ChangeManager.ChangeItem;
+import org.bedework.eventreg.bus.Request;
 import org.bedework.eventreg.bus.SessionManager;
 import org.bedework.eventreg.db.Change;
 import org.bedework.eventreg.db.Event;
@@ -46,6 +47,8 @@ public abstract class AbstractController implements Controller {
   protected final Log logger = LogFactory.getLog(getClass());
 
   protected SessionManager sessMan;
+
+  protected Request req;
 
   private String forwardTo;
 
@@ -94,6 +97,7 @@ public abstract class AbstractController implements Controller {
       dumpRequest(request);
     }
 
+    req = sessMan.getReq();
     sessMan.setMessage("");
 
     return null;
@@ -102,6 +106,7 @@ public abstract class AbstractController implements Controller {
   protected ModelAndView sessModel(final String view) {
     Map<String, Object> myModel = new HashMap<String, Object>();
     myModel.put("sessMan", sessMan);
+    myModel.put("req", req);
 
     return new ModelAndView(view, myModel);
   }
@@ -111,6 +116,7 @@ public abstract class AbstractController implements Controller {
                                   final Object m) {
     Map<String, Object> myModel = new HashMap<String, Object>();
     myModel.put("sessMan", sessMan);
+    myModel.put("req", req);
     myModel.put(name, m);
 
     return new ModelAndView(view, myModel);
@@ -124,6 +130,7 @@ public abstract class AbstractController implements Controller {
     sessMan.setMessage(msg);
     Map<String, Object> myModel = new HashMap<String, Object>();
     myModel.put("sessMan", sessMan);
+    myModel.put("req", req);
 
     return new ModelAndView("error", myModel);
   }
@@ -235,13 +242,13 @@ public abstract class AbstractController implements Controller {
       return;
     }
 
-    reallocate(available, sessMan.getHref());
+    reallocate(available, req.getHref());
   }
 
   protected void adjustTickets(final Registration reg) throws Throwable {
     Event currEvent = sessMan.getCurrEvent();
 
-    int numTickets = sessMan.getTicketsRequested();
+    int numTickets = req.getTicketsRequested();
     if (numTickets < 0) {
       // Not setting tickets
       return;

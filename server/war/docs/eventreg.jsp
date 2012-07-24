@@ -18,7 +18,7 @@
             Thank you! Your request for <strong><c:out value="${sessMan.ticketsRequested}"/></strong>
             tickets has been added. To review or change your registration click on
             "<a href="javascript:launchWindow('agenda.do','1000')">view my list</a>".
-            <input type="button" value="ok" id="okbutton" onclick="window.location = 'init.do?href=${sessMan.href}'"/>
+            <input type="button" value="ok" id="okbutton" onclick="window.location = 'init.do?href=${req.href}'"/>
           </p>
         </c:otherwise>
       </c:choose>

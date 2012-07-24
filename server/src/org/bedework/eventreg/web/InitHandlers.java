@@ -19,6 +19,7 @@ under the License.
 
 package org.bedework.eventreg.web;
 
+import org.bedework.eventreg.bus.Request;
 import org.bedework.eventreg.bus.SessionManager;
 
 import org.apache.commons.logging.Log;
@@ -50,7 +51,7 @@ public class InitHandlers extends HandlerInterceptorAdapter {
                            final Object handler) throws Exception {
     logger.debug("init handler Intercepter");
 
-    sessMan.setRequest(request);
+    sessMan.setReq(new Request(request, response));
     try {
       sessMan.openDb();
     } catch (Throwable e) {

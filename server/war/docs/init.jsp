@@ -14,7 +14,7 @@
           Your tickets will be allocated if space becomes available.
         </p>
         <p class="unregister">
-          <a href="removeReg.do?regid=<c:out value="${sessMan.registration.registrationId}"/>&amp;href=${sessMan.href}" onclick="return confirmRemoveTicket('<c:out value="${sessMan.currEvent.summary}"/>')">remove me</a>
+          <a href="removeReg.do?regid=<c:out value="${sessMan.registration.registrationId}"/>&amp;href=${req.href}" onclick="return confirmRemoveTicket('<c:out value="${sessMan.currEvent.summary}"/>')">remove me</a>
         </p>
       </div>
     </c:when>
@@ -25,7 +25,7 @@
           <span class="checkmark">&#x2713;</span> You are registered for this event.
         </p>
         <p class="unregister">
-          <a href="removeReg.do?regid=<c:out value="${sessMan.registration.registrationId}"/>&amp;href=${sessMan.href}" onclick="return confirmRemoveTicket('<c:out value="${sessMan.currEvent.summary}')"/>">unregister</a>
+          <a href="removeReg.do?regid=<c:out value="${sessMan.registration.registrationId}"/>&amp;href=${req.href}" onclick="return confirmRemoveTicket('<c:out value="${sessMan.currEvent.summary}')"/>">unregister</a>
         </p>
       </div>
     </c:when>
@@ -53,7 +53,7 @@
               <input type="hidden" name="numtickets" value="1"/>
             </c:otherwise>
           </c:choose>
-          <input type="hidden" name="href" value="${sessMan.href}"/>
+          <input type="hidden" name="href" value="${req.href}"/>
           <input type="submit" value="Join waiting list"/>
         </form>
       </div>
@@ -80,7 +80,7 @@
               <input type="hidden" name="numtickets" value="1"/>
             </c:otherwise>
           </c:choose>
-          <input type="hidden" name="href" value="${sessMan.href}"/>
+          <input type="hidden" name="href" value="${req.href}"/>
           <!-- input type="hidden" name="type" value="registered"/-->
           <input type="submit" value="Register"/>
         </form>

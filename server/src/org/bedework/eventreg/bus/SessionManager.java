@@ -27,7 +27,6 @@ import org.bedework.eventreg.db.SysInfo;
 
 import edu.rpi.cmt.calendar.XcalUtil.TzGetter;
 import edu.rpi.cmt.timezones.Timezones;
-import edu.rpi.sss.util.Util;
 
 import net.fortuna.ical4j.model.TimeZone;
 
@@ -36,13 +35,11 @@ import org.apache.commons.logging.LogFactory;
 
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
-
 /**
  * @author douglm
  *
  */
-public class SessionManager  {
+public class SessionManager {
   protected final Log logger = LogFactory.getLog(getClass());
 
   private ChangeManager chgMan;
@@ -51,39 +48,7 @@ public class SessionManager  {
 
   private String currentUser;
 
-  private HttpServletRequest request;
-
-  /** Request parameter - admin token
-   */
-  public static final String reqparAdminToken = "atkn";
-
-  /** Request parameter - comment
-   */
-  public static final String reqparComment = "comment";
-
-  /** Request parameter - href
-   */
-  public static final String reqparHref = "href";
-
-  /** Request parameter - number of tickets
-   */
-  public static final String reqparNumtickets = "numtickets";
-
-  /** Request parameter - ticket id
-   */
-  public static final String reqparRegId = "regid";
-
-  /** Request parameter - add header to csv - default true
-   */
-  public static final String reqparCSVHeader = "csvheader";
-
-  /** Request parameter - filename
-   */
-  public static final String reqparFilename = "fn";
-
-  /** Request parameter - lastmod
-   */
-  public static final String reqparLastmod = "lastmod";
+  private Request req;
 
   private SysInfo sys;
   private Event currEvent;
@@ -226,7 +191,7 @@ public class SessionManager  {
       return false;
     }
 
-    return adminToken.equals(getAdminToken());
+    return adminToken.equals(req.getAdminToken());
   }
 
   /**
@@ -240,21 +205,23 @@ public class SessionManager  {
    * @throws Throwable
    */
   public Event getCurrEvent() throws Throwable {
+    String href = req.getHref();
+
     if (currEvent != null) {
       // we already have an event; check to see if its href matches
       // the event being requested and return it if so.
-      if (currEvent.getHref().equals(getHref())) {
+      if (currEvent.getHref().equals(href)) {
         logger.debug("Returning cached event.");
         return currEvent;
       }
     }
 
-    if (getHref() == null) {
+    if (href == null) {
       return null;
     }
 
     logger.debug("Fetching event.");
-    currEvent = retrieveEvent(getHref());
+    currEvent = retrieveEvent(href);
     return currEvent;
   }
 
@@ -611,149 +578,17 @@ public class SessionManager  {
    * @param val
    * @throws Exception
    */
-  public void setRequest(final HttpServletRequest val) throws Exception {
-    request = val;
+  public void setReq(final Request val) throws Exception {
+    req = val;
 
-    setCurrentUser(request.getRemoteUser());
+    setCurrentUser(req.getRequest().getRemoteUser());
   }
 
   /**
-   * @return incoming request
+   * @return incoming request util object
    */
-  public HttpServletRequest getRequest() {
-    return request;
-  }
-
-  /** Get a request parameter stripped of white space. Return null for zero
-   * length.
-   *
-   * @param name    name of parameter
-   * @return  String   value
-   */
-  public String getReqPar(final String name) {
-    if (request == null) {
-      return null;
-    }
-
-    return Util.checkNull(request.getParameter(name));
-  }
-
-  /** Get a request parameter stripped of white space. Return default for null
-   * or zero length.
-   *
-   * @param name    name of parameter
-   * @param def default value
-   * @return  String   value
-   */
-  public String getReqPar(final String name, final String def) {
-    if (request == null) {
-      return null;
-    }
-
-    String s = Util.checkNull(request.getParameter(name));
-
-    if (s != null) {
-      return s;
-    }
-
-    return def;
-  }
-
-  /**
-   * @return number of tickets or -1 for no parameter
-   */
-  public int getTicketsRequested() {
-    String reqpar = getReqPar(reqparNumtickets);
-
-    if (reqpar == null) {
-      return -1;
-    }
-
-    try {
-      return Integer.parseInt(reqpar);
-    } catch (Throwable t) {
-      return -1; // XXX exception?
-    }
-  }
-
-  /**
-   * @return admin token or null for no parameter
-   */
-  public String getAdminToken() {
-    return getReqPar(reqparAdminToken);
-  }
-
-  /**
-   * @param def
-   * @return filename or null for no parameter
-   */
-  public String getFilename(final String def) {
-    return getReqPar(reqparFilename, def);
-  }
-
-  /**
-   * @return ticket id or null for no parameter
-   */
-  public Long getRegistrationId() {
-    String reqpar = getReqPar(reqparRegId);
-
-    if (reqpar == null) {
-      return (long)-1;
-    }
-
-    try {
-      return Long.parseLong(reqpar);
-    } catch (Throwable t) {
-      return (long)-1; // XXX exception?
-    }
-  }
-
-  /**
-   * @param name
-   * @param def
-   * @return boolean true/false or default
-   */
-  public boolean getBooleanReqPar(final String name,
-                                  final boolean def) {
-    String reqpar = getReqPar(name);
-
-    if (reqpar == null) {
-      return def;
-    }
-
-    try {
-      return Boolean.parseBoolean(reqpar);
-    } catch (Throwable t) {
-      return def; // XXX exception?
-    }
-  }
-
-  /**
-   * @return true if header required
-   */
-  public boolean getCsvHeader() {
-    return getBooleanReqPar(reqparCSVHeader, true);
-  }
-
-  /**
-   * @return comment or null for no parameter
-   */
-  public String getComment() {
-    return getReqPar(reqparComment);
-  }
-
-  /**
-   * @return lastmod or null for no parameter
-   */
-  public String getLastmod() {
-    return getReqPar(reqparLastmod);
-  }
-
-  /**
-   * @return href or null for no parameter
-   */
-  public String getHref() {
-    return getReqPar(reqparHref);
+  public Request getReq() {
+    return req;
   }
 
   private static transient volatile Long nextRegId = (long)-1;

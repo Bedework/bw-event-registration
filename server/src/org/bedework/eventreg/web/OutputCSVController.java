@@ -37,7 +37,7 @@ public class OutputCSVController extends AdminAuthAbstractController {
                                 final HttpServletResponse response) throws Throwable {
     TreeSet<Registration> regs = new TreeSet<Registration>();
 
-    for (Registration reg: sessMan.getRegistrationsByHref(sessMan.getHref())) {
+    for (Registration reg: sessMan.getRegistrationsByHref(req.getHref())) {
       reg.setEvent(sessMan.retrieveEvent(reg));
 
       regs.add(reg);
@@ -45,7 +45,7 @@ public class OutputCSVController extends AdminAuthAbstractController {
 
     response.setHeader("Content-Disposition",
                        "Attachment; Filename=\"" +
-                           sessMan.getFilename("eventreg.csv") + "\"");
+                           req.getFilename("eventreg.csv") + "\"");
     response.setContentType("application/vnd.ms-excel; charset=UTF-8");
 
     return objModel("csv", "regs", regs);

@@ -7,7 +7,7 @@
       <p>
         Thank you! Your request has been added to the waiting list. To review or change your registration click on
         "<a href="javascript:launchWindow('agenda.do','1000')">view my list</a>".
-        <input type="button" value="ok" id="okbutton" onclick="window.location = 'init.do?href=${sessMan.href}'"/>
+        <input type="button" value="ok" id="okbutton" onclick="window.location = 'init.do?href=${req.href}'"/>
       </p>
     </div>
 

@@ -35,11 +35,11 @@ public class OutputChangesController extends AdminAuthAbstractController {
   @Override
   public ModelAndView doRequest(final HttpServletRequest request,
                                 final HttpServletResponse response) throws Throwable {
-    List<Change> cs = sessMan.getChanges(sessMan.getLastmod());
+    List<Change> cs = sessMan.getChanges(req.getLastmod());
 
     response.setHeader("Content-Disposition",
                        "Attachment; Filename=\"" +
-                           sessMan.getFilename("eventregChanges.csv") + "\"");
+                           req.getFilename("eventregChanges.csv") + "\"");
     response.setContentType("application/vnd.ms-excel; charset=UTF-8");
 
     return objModel("changes", "changes", cs);

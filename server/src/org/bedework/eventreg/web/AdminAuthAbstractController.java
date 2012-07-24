@@ -38,18 +38,18 @@ public abstract class AdminAuthAbstractController extends AuthAbstractController
     }
 
     SysInfo sysi = sessMan.getSysInfo();
-    
+
     if (sysi == null) {
       return errorReturn("No system properties");
     }
-    
+
     String adminToken = sysi.getEventregAdminToken();
-    
+
     if (adminToken == null) {
       return errorReturn("No admin token set in system properties");
     }
-    
-    if (!adminToken.equals(sessMan.getAdminToken())) {
+
+    if (!adminToken.equals(req.getAdminToken())) {
       return errorReturn("Invalid admin token");
     }
 

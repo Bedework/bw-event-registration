@@ -18,37 +18,20 @@ under the License.
  */
 package org.bedework.eventreg.web;
 
-import org.bedework.eventreg.db.Event;
-import org.bedework.eventreg.db.Registration;
-
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-/** Hold tickets
+/**
+ * @author douglm
  *
  */
-public class AdminHoldController extends AdminAuthAbstractController {
+public class AddChangeController extends AdminAuthAbstractController {
   @Override
   public ModelAndView doRequest(final HttpServletRequest request,
                                 final HttpServletResponse response) throws Throwable {
-    Event ev = sessMan.getCurrEvent();
-    int numTickets = req.getTicketsRequested();
 
-    Registration reg = new Registration();
-
-    reg.setRegistrationId(sessMan.getNextRegistrationId());
-    reg.setAuthid(sessMan.getCurrentUser());
-    reg.setHref(ev.getHref());
-    reg.setTicketsRequested(numTickets);
-    reg.addTickets(numTickets);
-    reg.setType(Registration.typeHold);
-    reg.setComment(req.getComment());
-    reg.setTimestamps();
-
-    sessMan.addRegistration(reg);
-
-    return sessModel(getForwardTo());
+    return sessModel("ok");
   }
 }

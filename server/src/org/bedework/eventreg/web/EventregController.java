@@ -67,7 +67,7 @@ public class EventregController extends AuthAbstractController {
    * @throws Throwable
    */
   public Long registerUserInEvent() throws Throwable {
-    String href = sessMan.getHref();
+    String href = req.getHref();
 
     if (debug) {
       logger.debug("Event details: " + sessMan.getCurrentUser() + " " +
@@ -81,7 +81,7 @@ public class EventregController extends AuthAbstractController {
     if (reg != null) {
       reg.setLastmod();
       adjustTickets(reg);
-      reg.setComment(sessMan.getComment());
+      reg.setComment(req.getComment());
 
       sessMan.updateRegistration(reg);
 
@@ -93,7 +93,7 @@ public class EventregController extends AuthAbstractController {
     reg = new Registration();
 
     reg.setAuthid(sessMan.getCurrentUser());
-    reg.setComment(sessMan.getComment());
+    reg.setComment(req.getComment());
     reg.setType(Registration.typeRegistered);
     reg.setHref(href);
     reg.setRegistrationId(sessMan.getNextRegistrationId());
