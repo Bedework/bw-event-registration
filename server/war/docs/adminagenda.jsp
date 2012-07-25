@@ -162,7 +162,14 @@
                         </c:choose>
                       </td>
                       <td class="regAuthId">
-                        <c:out value="${reg.authid}"/>
+                        <c:choose>
+                          <c:when test="${reg.type == 'hold'}">
+                            <em>(administrator)</em>
+                          </c:when>
+                          <c:otherwise>
+                            <c:out value="${reg.authid}"/>
+                          </c:otherwise>
+                        </c:choose>
                       </td>
                       <td class="regRequestedTickets">
                         <input name="numtickets<c:out value="${reg.registrationId}"/>" id="numtickets<c:out value="${reg.registrationId}"/>" type="text" value="<c:out value="${reg.ticketsRequested}"/>" size="3"/>
