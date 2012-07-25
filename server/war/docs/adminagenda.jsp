@@ -76,13 +76,11 @@
             <tr>
               <%-- thText classes are needed to keep the table sorter 
                    background image from overlapping the text. --%>
-              <%--                   
               <th>
                 <span class="thText">
-                  Registration ID
+                  ID
                 </span>
               </th>
-               --%>
               <th>
                 <span class="thText">
                   State
@@ -143,11 +141,9 @@
                         <tr>
                       </c:otherwise>
                     </c:choose>
-                      <%--
                       <td class="regTicketId">
                         <c:out value="${reg.registrationId}"/>
                       </td>
-                       --%>
                       <td class="regState">
                         <c:choose>
                           <c:when test="${reg.type == 'hold'}">

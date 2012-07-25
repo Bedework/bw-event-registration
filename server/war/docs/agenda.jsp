@@ -64,7 +64,7 @@
                   <tr class="a">
                 </c:otherwise>
               </c:choose>
-                <td class="ticketId">
+                <td class="registrationId">
                   <c:out value="${reg.registrationId}"/>
                 </td>
                 <td class="ticketEventSummary">
@@ -79,7 +79,7 @@
                 <td class="ticketLocation">
                   <c:out value="${reg.event.location}"/>
                 </td>
-                <td class="tickets">
+                <td class="regRequestedTickets">
                   <c:choose>
                     <c:when test="${(reg.numTickets < reg.ticketsRequested) and (reg.numTickets ne 0)}">
                       <c:out value="${reg.numTickets}"/> of <c:out value="${reg.ticketsRequested}"/> fulfilled
