@@ -10,12 +10,13 @@
       <script type="text/javascript">
         $(document).ready(function() {
           <c:if test="${pageContext.request.servletPath == '/docs/adminagenda.jsp'}">
+            // column 5 = dates: sort as text
             $("#adminAgenda").tablesorter({
               widgets: ['zebra'],
               sortMultiSortKey: 'ctrlKey',
               headers: { 
                 5: { sorter: 'text'},
-                6: { sorter: false }
+                7: { sorter: false }
               }, 
               textExtraction: function(node) {
                 if ($(node).find('option:selected').text() != "") {
@@ -28,6 +29,7 @@
             });
           </c:if>        
           <c:if test="${pageContext.request.servletPath == '/docs/agenda.jsp'}">
+            // column 2 = dates: sort as text
             $("#userAgenda").tablesorter({
               widgets: ['zebra'],
               sortMultiSortKey: 'ctrlKey',

@@ -122,7 +122,7 @@
               <c:choose>
                 <c:when test="${empty regs}">
                   <tr class="b">
-                    <td colspan="7">
+                    <td colspan="8">
                       No tickets reserved
                     </td>
                   </tr>
