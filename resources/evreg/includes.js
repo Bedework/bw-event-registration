@@ -49,8 +49,12 @@ function inputmout() {
 function confirmRemoveTicket(eventTitle) {
   return confirm("You have chosen to remove \"" + eventTitle + "\" from your agenda.\n\nProceed?");
 }
-function confirmRemoveAdminTicket(email) {
-  return confirm("You have chosen to remove \"" + email + "\" from this event.\n\nProceed?");
+function confirmRemoveAdminTicket(authid,type) {
+  if (type == "hold") {
+    return confirm("You have chosen to remove this hold.\n\nProceed?");
+  } else {
+    return confirm("You have chosen to remove \"" + authid + "\" from this event.\n\nProceed?");
+  }
 }
 function confirmUpdateTicket(ticketId, eventTitle) {
   var ticketCssId = "tickets" + ticketId;
