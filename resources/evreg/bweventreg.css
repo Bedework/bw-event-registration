@@ -36,6 +36,7 @@ p {
   padding: 14px;
   color: #333;
   background-color: white;
+  min-width: 830px;
 }
 .wide1 {
  width: 400px;
@@ -56,6 +57,9 @@ p {
 	margin: 0;
 	white-space: nowrap;
 }
+tr.hold td {
+	background-color: #fee !important; /* override other settings */
+}
 tr.waitList td {
  font-style: italic;
  background-image: url('tentativeLinesA.gif');
@@ -67,6 +71,18 @@ tr.waitList td.state,
 tr.odd.waitList td.state {
   background-color: #fee;
   background-image: url('tentativeLinesB.gif');
+}
+td.regComment {
+	width: 200px;
+}
+td.regRequestedTickets,
+td.regRequestedTickets input,
+td.regNumTickets,
+td.regCreated {
+	text-align: right;
+}
+td.regControls {
+	text-align: center;
 }
 .eventDateTime {
   margin: -1em 0 1em 0;

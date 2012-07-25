@@ -74,11 +74,18 @@
           <table id="adminAgenda" cellspacing="2" class="tablesorter">
           <thead>
             <tr>
-              <th>
               <%-- thText classes are needed to keep the table sorter 
                    background image from overlapping the text. --%>
+              <%--                   
+              <th>
                 <span class="thText">
-                  Ticket ID
+                  Registration ID
+                </span>
+              </th>
+               --%>
+              <th>
+                <span class="thText">
+                  State
                 </span>
               </th>
               <th>
@@ -98,17 +105,12 @@
               </th>
               <th>
                 <span class="thText">
-                  State
+                  Created
                 </span>
               </th>
               <th>
                 <span class="thText">
                   Comment
-                </span>
-              </th>
-              <th>
-                <span class="thText">
-                  Created
                 </span>
               </th>
               <th>
@@ -122,7 +124,7 @@
               <c:choose>
                 <c:when test="${empty regs}">
                   <tr class="b">
-                    <td colspan="8">
+                    <td colspan="7">
                       No tickets reserved
                     </td>
                   </tr>
@@ -131,6 +133,9 @@
                 <c:otherwise>
                   <c:forEach var="reg" items="${regs}" varStatus="loopStatus">
                     <c:choose>
+                      <c:when test="${reg.type == 'hold'}">
+                        <tr class="hold">
+                      </c:when>
                       <c:when test="${reg.numTickets < reg.ticketsRequested}">
                         <tr class="waitList">
                       </c:when>
@@ -138,18 +143,11 @@
                         <tr>
                       </c:otherwise>
                     </c:choose>
+                      <%--
                       <td class="regTicketId">
                         <c:out value="${reg.registrationId}"/>
                       </td>
-                      <td class="regEmail">
-                        <c:out value="${reg.authid}"/>
-                      </td>
-                      <td class="regRequestedTickets">
-                        <input name='numtickets<c:out value="${reg.registrationId}"/>' id='numtickets<c:out value="${reg.registrationId}"/>' type="text" value='<c:out value="${reg.ticketsRequested}"/>' size="3"/>
-                      </td>
-                      <td class="regNumTickets">
-                        <c:out value="${reg.numTickets}"/>
-                      </td>
+                       --%>
                       <td class="regState">
                         <c:choose>
                           <c:when test="${reg.type == 'hold'}">
@@ -162,19 +160,21 @@
                             fulfilled
                           </c:otherwise>
                         </c:choose>
-                        <%-- 
-                        <select name='type<c:out value="${reg.registrationId}"/>' id='type<c:out value="${reg.registrationId}"/>'>
-                          <option value="registered" ${reg.type == 'registered' ? 'selected="selected"' : ''}>registered</option>
-                          <option value="hold" ${reg.type == 'hold' ? 'selected="selected"' : ''}>hold</option>
-                          <option value="waiting" ${reg.type == 'waiting' ? 'selected="selected"' : ''}>waiting</option>
-                        </select>
-                        --%>
                       </td>
-                      <td class="regComment">
-                        <input name='comment<c:out value="${reg.registrationId}"/>' id='comment<c:out value="${reg.registrationId}"/>' type="text" value='<c:out value="${reg.comment}"/>'/>
+                      <td class="regAuthId">
+                        <c:out value="${reg.authid}"/>
+                      </td>
+                      <td class="regRequestedTickets">
+                        <input name="numtickets<c:out value="${reg.registrationId}"/>" id="numtickets<c:out value="${reg.registrationId}"/>" type="text" value="<c:out value="${reg.ticketsRequested}"/>" size="3"/>
+                      </td>
+                      <td class="regNumTickets">
+                        <c:out value="${reg.numTickets}"/>
                       </td>
                       <td class="regCreated">
                         <c:out value="${fn:substring(reg.created,-1,16)}"/>
+                      </td>
+                      <td class="regComment">
+                        <input name="comment<c:out value="${reg.registrationId}"/>" id="comment<c:out value="${reg.registrationId}"/>" type="text" value="<c:out value="${reg.comment}"/>" size="45"/>
                       </td>
                       <td class="regControls">
                         <a href="javascript:doUpdateAdminTicket('<c:out value="${reg.registrationId}"/>','<c:out value="${reg.event.href}"/>','${req.adminToken}')" onclick="return confirmUpdateAdminTicket()">update</a> |
