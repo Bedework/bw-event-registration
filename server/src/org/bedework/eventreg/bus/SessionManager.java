@@ -198,6 +198,7 @@ public class SessionManager {
    */
   public void flushCurrEvent() {
     currEvent = null;
+    cnctr.flush();
   }
 
   /**

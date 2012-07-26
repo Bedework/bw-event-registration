@@ -80,6 +80,13 @@ public class BwConnector {
     this.tzs = tzs;
   }
 
+  /** Flush any trace of events.
+   *
+   */
+  public void flush() {
+    events.clear();
+  }
+
   /**
    * @param href
    * @return cached event or event retrieved from service
@@ -104,10 +111,10 @@ public class BwConnector {
 
     FetchItemResponseType fir = fetchItem(href);
 
-    if (fir == null ||
-        fir.getIcalendar() == null ||
-        fir.getIcalendar().getVcalendar().size() != 1 ||
-        fir.getIcalendar().getVcalendar().get(0).getComponents() == null) {
+    if ((fir == null) ||
+        (fir.getIcalendar() == null) ||
+        (fir.getIcalendar().getVcalendar().size() != 1) ||
+        (fir.getIcalendar().getVcalendar().get(0).getComponents() == null)) {
       return null;
     }
 
