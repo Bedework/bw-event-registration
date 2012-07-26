@@ -24,23 +24,19 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 /**
  * @author douglm
  *
  */
 public class OutputChangesController extends AdminAuthAbstractController {
   @Override
-  public ModelAndView doRequest(final HttpServletRequest request,
-                                final HttpServletResponse response) throws Throwable {
+  public ModelAndView doRequest() throws Throwable {
     List<Change> cs = sessMan.getChanges(req.getLastmod());
 
-    response.setHeader("Content-Disposition",
+    req.getResponse().setHeader("Content-Disposition",
                        "Attachment; Filename=\"" +
                            req.getFilename("eventregChanges.csv") + "\"");
-    response.setContentType("application/vnd.ms-excel; charset=UTF-8");
+    //response.setContentType("application/vnd.ms-excel; charset=UTF-8");
 
     return objModel("changes", "changes", cs);
   }

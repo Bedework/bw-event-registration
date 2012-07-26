@@ -25,17 +25,13 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.util.TreeSet;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 /**
  * @author douglm
  *
  */
 public class AdminAgendaController extends AdminAuthAbstractController {
   @Override
-  public ModelAndView doRequest(final HttpServletRequest request,
-                                final HttpServletResponse response) throws Throwable {
+  public ModelAndView doRequest() throws Throwable {
     sessMan.flushCurrEvent();
     Event ev = sessMan.getCurrEvent();
 

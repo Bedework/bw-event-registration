@@ -18,12 +18,8 @@ under the License.
  */
 package org.bedework.eventreg.web;
 
-import org.bedework.eventreg.bus.ChangeManager;
-import org.bedework.eventreg.bus.ChangeManager.ChangeItem;
 import org.bedework.eventreg.bus.Request;
 import org.bedework.eventreg.bus.SessionManager;
-import org.bedework.eventreg.db.Change;
-import org.bedework.eventreg.db.Event;
 import org.bedework.eventreg.db.Registration;
 
 import org.apache.commons.logging.Log;
@@ -55,25 +51,22 @@ public abstract class AbstractController implements Controller {
   protected boolean debug;
 
   /**
-   * @param request
-   * @param response
    * @return ModelAndView
    * @throws Throwable
    */
-  public abstract ModelAndView doRequest(final HttpServletRequest request,
-                                         final HttpServletResponse response) throws Throwable;
+  public abstract ModelAndView doRequest() throws Throwable;
 
   @Override
   public ModelAndView handleRequest(final HttpServletRequest request,
                                     final HttpServletResponse response) throws Exception {
     try {
-      ModelAndView mv = setup(request);
+      ModelAndView mv = setup();
 
       if (mv != null) {
         return mv;
       }
 
-      return doRequest(request, response);
+      return doRequest();
     } catch (Exception e) {
       logger.error(this, e);
 
@@ -89,16 +82,16 @@ public abstract class AbstractController implements Controller {
     }
   }
 
-  protected ModelAndView setup(final HttpServletRequest request) throws Throwable {
+  protected ModelAndView setup() throws Throwable {
     debug = logger.isDebugEnabled();
-
-    if (debug) {
-      logger.debug("Entry: " + getClass().getSimpleName());
-      dumpRequest(request);
-    }
 
     req = sessMan.getReq();
     sessMan.setMessage("");
+
+    if (debug) {
+      logger.debug("Entry: " + getClass().getSimpleName());
+      dumpRequest(req.getRequest());
+    }
 
     return null;
   }
@@ -224,85 +217,6 @@ public abstract class AbstractController implements Controller {
       if (remaining <= 0) {
         break;
       }
-    }
-  }
-
-  /** Adjust tickets for the current event - perhaps as a result of increasing
-   * seats.
-   * @throws Throwable
-   */
-  protected void adjustTickets() throws Throwable {
-    Event currEvent = sessMan.getCurrEvent();
-
-    long allocated = sessMan.getRegTicketCount();
-    int total = currEvent.getMaxTickets();
-    int available = (int)(total - allocated);
-
-    if (available > 0) {
-      return;
-    }
-
-    reallocate(available, req.getHref());
-  }
-
-  protected void adjustTickets(final Registration reg) throws Throwable {
-    Event currEvent = sessMan.getCurrEvent();
-
-    int numTickets = req.getTicketsRequested();
-    if (numTickets < 0) {
-      // Not setting tickets
-      return;
-    }
-
-    /* change > 0 to add tickets, < 0 to release tickets */
-    int change = numTickets - reg.getTicketsRequested();
-
-    if (change == 0) {
-      // Not changing anything
-      return;
-    }
-
-    if (change > 0) {
-      long allocated = sessMan.getRegTicketCount();
-      int total = currEvent.getMaxTickets();
-
-      /* Total number of available tickets - may be negative for over-allocated */
-      long available = Math.max(0, total - allocated);
-
-      /* The number to add to this registration */
-      int toAllocate = (int)Math.min(change, available);
-
-      if (toAllocate != change) {
-        /* We should check the request par expectedAvailable to see if it changed
-         * during this interaction. If it did we may have given the user stale
-         * information.
-         *
-         * If so abandon this and represent the information to the user.
-         */
-      }
-
-      change = toAllocate;
-    }
-
-    if ((reg.getWaitqDate() == null) ||
-        (change > 0)) {
-      reg.setWaitqDate();
-    }
-
-    reg.setTicketsRequested(numTickets);
-
-    ChangeManager chgMan = sessMan.getChangeManager();
-
-    if (change < 0) {
-      reg.removeTickets(-change);
-      chgMan.addChange(reg, Change.typeUpdReg,
-                       ChangeItem.makeUpdNumTickets(change));
-      reallocate(-change, reg.getHref());
-    } else {
-      reg.addTickets(change);
-
-      chgMan.addChange(reg, Change.typeUpdReg,
-                       ChangeItem.makeUpdNumTickets(change));
     }
   }
 }

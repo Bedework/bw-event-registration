@@ -18,20 +18,25 @@ under the License.
  */
 package org.bedework.eventreg.web;
 
+import org.bedework.eventreg.bus.ChangeManager;
+import org.bedework.eventreg.bus.ChangeManager.ChangeItem;
+import org.bedework.eventreg.db.Change;
+import org.bedework.eventreg.db.Event;
 import org.bedework.eventreg.db.Registration;
 
 import org.springframework.web.servlet.ModelAndView;
-
-import javax.servlet.http.HttpServletRequest;
 
 /**
  * Ensure user is authenticated.
  *
  */
 public abstract class AuthAbstractController extends AbstractController {
+  /** True for an administration action */
+  protected boolean admin;
+
   @Override
-  protected ModelAndView setup(final HttpServletRequest request) throws Throwable {
-    ModelAndView mv = super.setup(request);
+  protected ModelAndView setup() throws Throwable {
+    ModelAndView mv = super.setup();
 
     if (mv != null) {
       return mv;
@@ -44,7 +49,7 @@ public abstract class AuthAbstractController extends AbstractController {
     return null;
   }
 
-  protected ModelAndView updateRegistration(final boolean admin) throws Throwable {
+  protected ModelAndView updateRegistration() throws Throwable {
     Long regId = req.getRegistrationId();
     if (regId == null) {
       return errorReturn("No registration id supplied");
@@ -107,5 +112,85 @@ public abstract class AuthAbstractController extends AbstractController {
     sessMan.getChangeManager().deleteReg(reg);
 
     return null;
+  }
+
+  /** Adjust tickets for the current event - perhaps as a result of increasing
+   * seats.
+   * @throws Throwable
+   */
+  protected void adjustTickets() throws Throwable {
+    Event currEvent = sessMan.getCurrEvent();
+
+    long allocated = sessMan.getRegTicketCount();
+    int total = currEvent.getMaxTickets();
+    int available = (int)(total - allocated);
+
+    if (available > 0) {
+      return;
+    }
+
+    reallocate(available, req.getHref());
+  }
+
+  protected void adjustTickets(final Registration reg) throws Throwable {
+    Event currEvent = sessMan.getCurrEvent();
+
+    int numTickets = req.getTicketsRequested();
+    if (numTickets < 0) {
+      // Not setting tickets
+      return;
+    }
+
+    /* change > 0 to add tickets, < 0 to release tickets */
+    int change = numTickets - reg.getTicketsRequested();
+
+    if (change == 0) {
+      // Not changing anything
+      return;
+    }
+
+    /* For a non-admin user limit the chnage to the number available */
+    if (!admin && (change > 0)) {
+      long allocated = sessMan.getRegTicketCount();
+      int total = currEvent.getMaxTickets();
+
+      /* Total number of available tickets - may be negative for over-allocated */
+      long available = Math.max(0, total - allocated);
+
+      /* The number to add to this registration */
+      int toAllocate = (int)Math.min(change, available);
+
+      if (toAllocate != change) {
+        /* We should check the request par expectedAvailable to see if it changed
+         * during this interaction. If it did we may have given the user stale
+         * information.
+         *
+         * If so abandon this and represent the information to the user.
+         */
+      }
+
+      change = toAllocate;
+    }
+
+    if ((reg.getWaitqDate() == null) ||
+        (change > 0)) {
+      reg.setWaitqDate();
+    }
+
+    reg.setTicketsRequested(numTickets);
+
+    ChangeManager chgMan = sessMan.getChangeManager();
+
+    if (change < 0) {
+      reg.removeTickets(-change);
+      chgMan.addChange(reg, Change.typeUpdReg,
+                       ChangeItem.makeUpdNumTickets(change));
+      reallocate(-change, reg.getHref());
+    } else {
+      reg.addTickets(change);
+
+      chgMan.addChange(reg, Change.typeUpdReg,
+                       ChangeItem.makeUpdNumTickets(change));
+    }
   }
 }

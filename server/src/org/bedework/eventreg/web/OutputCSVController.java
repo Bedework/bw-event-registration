@@ -24,17 +24,13 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.util.TreeSet;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 /**
  * @author douglm
  *
  */
 public class OutputCSVController extends AdminAuthAbstractController {
   @Override
-  public ModelAndView doRequest(final HttpServletRequest request,
-                                final HttpServletResponse response) throws Throwable {
+  public ModelAndView doRequest() throws Throwable {
     TreeSet<Registration> regs = new TreeSet<Registration>();
 
     for (Registration reg: sessMan.getRegistrationsByHref(req.getHref())) {
@@ -43,10 +39,10 @@ public class OutputCSVController extends AdminAuthAbstractController {
       regs.add(reg);
     }
 
-    response.setHeader("Content-Disposition",
+    req.getResponse().setHeader("Content-Disposition",
                        "Attachment; Filename=\"" +
                            req.getFilename("eventreg.csv") + "\"");
-    response.setContentType("application/vnd.ms-excel; charset=UTF-8");
+    //response.setContentType("application/vnd.ms-excel; charset=UTF-8");
 
     return objModel("csv", "regs", regs);
   }

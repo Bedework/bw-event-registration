@@ -23,16 +23,12 @@ import org.bedework.eventreg.db.Registration;
 
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 /** Hold tickets
  *
  */
 public class AdminHoldController extends AdminAuthAbstractController {
   @Override
-  public ModelAndView doRequest(final HttpServletRequest request,
-                                final HttpServletResponse response) throws Throwable {
+  public ModelAndView doRequest() throws Throwable {
     Event ev = sessMan.getCurrEvent();
     int numTickets = req.getTicketsRequested();
 

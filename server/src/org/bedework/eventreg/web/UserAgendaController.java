@@ -25,19 +25,13 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.util.TreeSet;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 /**
  * @author douglm
  *
  */
 public class UserAgendaController extends AuthAbstractController {
   @Override
-  public ModelAndView doRequest(final HttpServletRequest request,
-                                final HttpServletResponse response) throws Throwable {
-    logger.debug("UserAgendaController - " + sessMan.getCurrentUser());
-
+  public ModelAndView doRequest() throws Throwable {
     TreeSet<Registration> regs = new TreeSet<Registration>();
 
     for (Registration reg: sessMan.getRegistrationsByUser(sessMan.getCurrentUser())) {

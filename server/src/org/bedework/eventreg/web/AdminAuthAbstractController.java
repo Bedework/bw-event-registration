@@ -22,16 +22,14 @@ import org.bedework.eventreg.db.SysInfo;
 
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.http.HttpServletRequest;
-
 /**
  * Ensure we get a valid admin token.
  *
  */
 public abstract class AdminAuthAbstractController extends AuthAbstractController {
   @Override
-  protected ModelAndView setup(final HttpServletRequest request) throws Throwable {
-    ModelAndView mv = super.setup(request);
+  protected ModelAndView setup() throws Throwable {
+    ModelAndView mv = super.setup();
 
     if (mv != null) {
       return mv;
@@ -52,6 +50,8 @@ public abstract class AdminAuthAbstractController extends AuthAbstractController
     if (!adminToken.equals(req.getAdminToken())) {
       return errorReturn("Invalid admin token");
     }
+
+    admin = true;
 
     return null;
   }

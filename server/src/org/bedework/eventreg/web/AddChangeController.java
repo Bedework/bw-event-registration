@@ -20,17 +20,13 @@ package org.bedework.eventreg.web;
 
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 /**
  * @author douglm
  *
  */
 public class AddChangeController extends AdminAuthAbstractController {
   @Override
-  public ModelAndView doRequest(final HttpServletRequest request,
-                                final HttpServletResponse response) throws Throwable {
+  public ModelAndView doRequest() throws Throwable {
 
     return sessModel("ok");
   }

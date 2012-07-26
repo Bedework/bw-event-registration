@@ -26,17 +26,13 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.util.Date;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 /**
  * @author douglm
  *
  */
 public class EventregController extends AuthAbstractController {
   @Override
-  public ModelAndView doRequest(final HttpServletRequest request,
-                                final HttpServletResponse response) throws Throwable {
+  public ModelAndView doRequest() throws Throwable {
     Event ev = sessMan.getCurrEvent();
 
     int maxTicketsAllowed = ev.getMaxTickets();
