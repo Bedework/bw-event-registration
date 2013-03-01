@@ -13,9 +13,9 @@
 	<classpathentry kind="lib" path="lib/javax.mail-1.4.5.jar"/>
 	<classpathentry kind="lib" path="lib/hibernate-core-3.6.9.Final.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/rpiutil"/>
-	<classpathentry kind="lib" path="lib/ical4j-head-20100601.jar"/>
 	<classpathentry kind="lib" path="lib/log4j-1.2.15.jar"/>
 	<classpathentry kind="lib" path="lib/bw-calws-soapschema-3.9.jar"/>
 	<classpathentry kind="lib" path="lib/bw-icalschema-3.9.jar"/>
+	<classpathentry kind="lib" path="lib/ical4j-1.0-BW-SNAPSHOT.jar"/>
 	<classpathentry kind="output" path="bin/eventreg"/>
 </classpath>

@@ -102,13 +102,6 @@
         <version>${bedeworkRpiutilVersion}</version>
         <scope>provided</scope>
       </dependency>
-
-      <dependency>
-        <groupId>org.bedework</groupId>
-        <artifactId>bw-davio</artifactId>
-        <version>${bedeworkDavutilVersion}</version>
-        <scope>provided</scope>
-      </dependency>
       
       <dependency>
         <groupId>org.bedework.bwxml</groupId>
