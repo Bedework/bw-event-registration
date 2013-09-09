@@ -503,14 +503,14 @@ public class SessionManager {
     String body = "Thank you for registering to reserve tickets for EMPAC Opening events.";
     body = body.concat("\n\nJust click this link to confirm your email address," );
     body = body.concat("\nand you can start reserving tickets:" +
-    		"\nhttp://reg.empac.rpi.edu/empacreg/confirm.do?activationCode=" +
+    		"\nhttp://reg.empac.bedework.edu/empacreg/confirm.do?activationCode=" +
         this.getUserInfo().getGUID());
     body = body.concat("\n\nSee you there!\n-EMPAC\n\nQuestions? Call us @ 518.276.3921" );
     body = body.concat("\n\nExperimental Media and Performing Arts Center" );
     body = body.concat("\nRensselaer Polytechnic Institute" );
     body = body.concat("\n110 8th street" );
     body = body.concat("\nTroy, NY 12180" );
-    body = body.concat("\nhttp://empac.rpi.edu" );
+    body = body.concat("\nhttp://empac.bedework.edu" );
 
     / *    body = body.concat("Tickets will be available at will call on the day of the performance.\n");
     body = body.concat("All tickets must be picked up 30 minutes before performance time;\n");
@@ -518,11 +518,11 @@ public class SessionManager {
 
 
     body = body.concat("All venues are wheelchair accessible. Please contact the Ticket Office\n");
-    body = body.concat("at empacboxoffice@rpi.edu or 518-276-3921 to reserve accessible seating\n");
+    body = body.concat("at empacboxoffice@bedework.edu or 518-276-3921 to reserve accessible seating\n");
     body = body.concat("or to request additional disability-related accommodation.\n\n");
 
     body = body.concat("Questions about your reservation? Contact the EMPAC Ticket Office\n");
-    body = body.concat("at empacboxoffice@rpi.edu or 518-276-3921.\n\n");
+    body = body.concat("at empacboxoffice@bedework.edu or 518-276-3921.\n\n");
 
     body = body.concat("Ticket Policies:\n");
     body = body.concat("No refunds/exchanges\n");
@@ -535,13 +535,13 @@ public class SessionManager {
     body = body.concat("110 8th Street\n");
     body = body.concat("Troy, NY 12180\n");
     body = body.concat("518.276.4135\n");
-    body = body.concat("http://empac.rpi.edu\n");* /
+    body = body.concat("http://empac.bedework.edu\n");* /
 
     try {
       Mailer.postMail(recipients,
                       "EMPAC Registration",
                       body,
-                      "empacboxoffice@rpi.edu",
+                      "empacboxoffice@bedework.edu",
                       getUserInfo().getGUID());
     } catch (Exception e) {}
 

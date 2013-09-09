@@ -49,7 +49,7 @@ public class Mailer {
 
     //Set the host smtp address
     Properties props = new Properties();
-    props.put("mail.smtp.host", "mail.rpi.edu");
+    props.put("mail.smtp.host", "mail.bedework.edu");
 
     // create some properties and get the default Session
     Session session = Session.getDefaultInstance(props, null);
