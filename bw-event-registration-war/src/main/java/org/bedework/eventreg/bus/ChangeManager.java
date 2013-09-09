@@ -33,7 +33,7 @@ import java.util.List;
  */
 public class ChangeManager  {
   protected final Log logger = LogFactory.getLog(getClass());
-//  public final static String EVENTINFOURL = "http://events.rpi.edu/event/eventView.do";
+//  public final static String EVENTINFOURL = "http://events.bedework.edu/event/eventView.do";
 
   private SessionManager sessMan;
 
