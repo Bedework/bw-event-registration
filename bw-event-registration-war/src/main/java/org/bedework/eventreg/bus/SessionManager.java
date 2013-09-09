@@ -24,12 +24,10 @@ import org.bedework.eventreg.db.Event;
 import org.bedework.eventreg.db.EventregDb;
 import org.bedework.eventreg.db.Registration;
 import org.bedework.eventreg.db.SysInfo;
-
-import edu.rpi.cmt.calendar.XcalUtil.TzGetter;
-import edu.rpi.cmt.timezones.Timezones;
+import org.bedework.util.calendar.XcalUtil.TzGetter;
+import org.bedework.util.timezones.Timezones;
 
 import net.fortuna.ical4j.model.TimeZone;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 

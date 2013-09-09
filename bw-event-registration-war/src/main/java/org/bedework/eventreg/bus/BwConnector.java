@@ -20,7 +20,7 @@ package org.bedework.eventreg.bus;
 
 import org.bedework.eventreg.db.Event;
 
-import edu.rpi.cmt.calendar.XcalUtil.TzGetter;
+import org.bedework.util.calendar.XcalUtil.TzGetter;
 
 import org.apache.log4j.Logger;
 import org.oasis_open.docs.ws_calendar.ns.soap.CalWsService;

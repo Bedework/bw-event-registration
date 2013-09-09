@@ -20,8 +20,7 @@ package org.bedework.eventreg.service;
 
 import org.bedework.eventreg.db.EventregDb;
 import org.bedework.eventreg.db.SysInfo;
-
-import edu.rpi.cmt.db.hibernate.HibException;
+import org.bedework.util.hibernate.HibException;
 
 import org.apache.log4j.Logger;
 import org.hibernate.cfg.Configuration;

@@ -18,7 +18,7 @@ under the License.
  */
 package org.bedework.eventreg.db;
 
-import edu.rpi.sss.util.ToString;
+import org.bedework.util.misc.ToString;
 
 /** Concrete representation of a ticket. Will allow validation of tickets
  * presented by attendees.
@@ -137,7 +137,7 @@ public class Ticket extends DbItem<Ticket> {
 
   /** Add our stuff to the StringBuilder
    *
-   * @param sb    StringBuilder for result
+   * @param ts    StringBuilder for result
    */
   @Override
   protected void toStringSegment(final ToString ts) {

@@ -19,8 +19,8 @@ under the License.
 
 package org.bedework.eventreg.db;
 
-import edu.rpi.cmt.db.hibernate.Dump;
-import edu.rpi.cmt.db.hibernate.NoDump;
+import org.bedework.util.hibernate.Dump;
+import org.bedework.util.hibernate.NoDump;
 
 import java.util.Collection;
 import java.util.Set;

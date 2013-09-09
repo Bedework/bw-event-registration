@@ -18,7 +18,7 @@ under the License.
  */
 package org.bedework.eventreg.db;
 
-import edu.rpi.sss.util.ToString;
+import org.bedework.util.misc.ToString;
 
 import java.sql.Timestamp;
 import java.util.Set;

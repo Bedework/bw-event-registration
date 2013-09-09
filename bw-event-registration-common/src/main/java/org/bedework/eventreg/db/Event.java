@@ -19,10 +19,10 @@ under the License.
 
 package org.bedework.eventreg.db;
 
-import edu.rpi.cmt.calendar.XcalUtil;
-import edu.rpi.cmt.calendar.XcalUtil.TzGetter;
-import edu.rpi.cmt.timezones.Timezones;
-import edu.rpi.sss.util.DateTimeUtil;
+import org.bedework.util.calendar.XcalUtil;
+import org.bedework.util.calendar.XcalUtil.TzGetter;
+import org.bedework.util.timezones.DateTimeUtil;
+import org.bedework.util.timezones.Timezones;
 
 import ietf.params.xml.ns.icalendar_2.ArrayOfProperties;
 import ietf.params.xml.ns.icalendar_2.BaseComponentType;

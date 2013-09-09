@@ -18,7 +18,7 @@ under the License.
  */
 package org.bedework.eventreg.bus;
 
-import edu.rpi.sss.util.servlets.ReqUtil;
+import org.bedework.util.servlet.ReqUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

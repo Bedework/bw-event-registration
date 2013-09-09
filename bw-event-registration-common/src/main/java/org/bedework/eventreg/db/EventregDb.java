@@ -18,11 +18,10 @@
 */
 package org.bedework.eventreg.db;
 
-
-import edu.rpi.cmt.db.hibernate.HibException;
-import edu.rpi.cmt.db.hibernate.HibSession;
-import edu.rpi.cmt.db.hibernate.HibSessionFactory;
-import edu.rpi.cmt.db.hibernate.HibSessionImpl;
+import org.bedework.util.hibernate.HibException;
+import org.bedework.util.hibernate.HibSession;
+import org.bedework.util.hibernate.HibSessionFactory;
+import org.bedework.util.hibernate.HibSessionImpl;
 
 import org.apache.log4j.Logger;
 
@@ -653,7 +652,7 @@ public class EventregDb implements Serializable {
       }
       sess = new HibSessionImpl();
       try {
-        sess.init(HibSessionFactory.getSessionFactory(), getLogger());
+        sess.init(HibSessionFactory.getSessionFactory(null), getLogger());
       } catch (HibException he) {
         throw new Exception(he);
       }

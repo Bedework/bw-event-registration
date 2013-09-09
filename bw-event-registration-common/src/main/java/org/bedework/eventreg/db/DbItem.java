@@ -18,7 +18,7 @@
 */
 package org.bedework.eventreg.db;
 
-import edu.rpi.sss.util.ToString;
+import org.bedework.util.misc.ToString;
 
 import java.io.Serializable;
 
@@ -84,7 +84,7 @@ public class DbItem<T> implements Comparable<T>, Serializable {
 
   /** Add our stuff to the StringBuilder
    *
-   * @param sb    StringBuilder for result
+   * @param ts    StringBuilder for result
    */
   protected void toStringSegment(final ToString ts) {
     ts.append("id", getId());
