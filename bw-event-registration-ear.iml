@@ -18,7 +18,7 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module" module-name="bw-event-registration-ear-properties" />
+    <orderEntry type="library" name="Maven: org.bedework:bw-event-registration-ear-properties:4.0.0-SNAPSHOT" level="project" />
     <orderEntry type="module" module-name="bw-event-registration-service" />
     <orderEntry type="module" module-name="bw-event-registration-common" />
     <orderEntry type="module" module-name="bw-util-calendar" />

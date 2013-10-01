@@ -147,66 +147,6 @@ public class EventregDb implements Serializable {
   }
 
   /* ====================================================================
-   *                   System info methods
-   * ==================================================================== */
-
-  /**
-   * @return SysInfo
-   * @throws Throwable
-   */
-  public SysInfo getSys() throws Throwable {
-    try {
-      StringBuilder sb = new StringBuilder();
-
-      sb.append("from ");
-      sb.append(SysInfo.class.getName());
-
-      sess.createQuery(sb.toString());
-
-      @SuppressWarnings("unchecked")
-      List<SysInfo> scs = sess.getList();
-
-      if (scs.size() == 0) {
-        return null;
-      }
-
-      if (scs.size() == 1) {
-        return scs.get(0);
-      }
-
-      throw new Exception("Expect only 1 sysinfo entry");
-    } catch (HibException he) {
-      throw new Exception(he);
-    }
-  }
-
-  /** Add the system info.
-   *
-   * @param s
-   * @throws Throwable
-   */
-  public void addSys(final SysInfo s) throws Throwable {
-    try {
-      sess.save(s);
-    } catch (HibException he) {
-      throw new Exception(he);
-    }
-  }
-
-  /** Update the persisted state of the system.
-   *
-   * @param s
-   * @throws Throwable
-   */
-  public void updateSys(final SysInfo s) throws Throwable {
-    try {
-      sess.update(s);
-    } catch (HibException he) {
-      throw new Exception(he);
-    }
-  }
-
-  /* ====================================================================
    *                   Changes methods
    * ==================================================================== */
 

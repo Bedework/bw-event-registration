@@ -23,8 +23,11 @@ import org.bedework.eventreg.db.Change;
 import org.bedework.eventreg.db.Event;
 import org.bedework.eventreg.db.EventregDb;
 import org.bedework.eventreg.db.Registration;
-import org.bedework.eventreg.db.SysInfo;
+import org.bedework.eventreg.service.EventregSvc;
+import org.bedework.eventreg.service.EventregSvcMBean;
 import org.bedework.util.calendar.XcalUtil.TzGetter;
+import org.bedework.util.jmx.AnnotatedMBean;
+import org.bedework.util.jmx.ManagementContext;
 import org.bedework.util.timezones.Timezones;
 
 import net.fortuna.ical4j.model.TimeZone;
@@ -32,6 +35,10 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import java.util.List;
+import java.util.Set;
+import java.util.concurrent.CopyOnWriteArraySet;
+
+import javax.management.ObjectName;
 
 /**
  * @author douglm
@@ -39,6 +46,69 @@ import java.util.List;
  */
 public class SessionManager {
   protected final Log logger = LogFactory.getLog(getClass());
+
+  private static Set<ObjectName> registeredMBeans = new CopyOnWriteArraySet<>();
+  private static ManagementContext managementContext;
+  private static EventregSvc sysInfo;
+
+  static {
+    try {
+      sysInfo = new EventregSvc();
+      registerMbean(new ObjectName(sysInfo.getServiceName()),
+                    sysInfo);
+    } catch (Throwable e) {
+      e.printStackTrace();
+    }
+  }
+
+  public static void registerMbean(final ObjectName key,
+                                   final Object bean) {
+    try {
+      AnnotatedMBean.registerMBean(getManagementContext(), bean, key);
+      registeredMBeans.add(key);
+    } catch (Throwable e) {
+      e.printStackTrace();
+    }
+  }
+
+  /**
+   * @param key
+   */
+  public static void unregister(final ObjectName key) {
+    if (registeredMBeans.remove(key)) {
+      try {
+        getManagementContext().unregisterMBean(key);
+      } catch (Throwable e) {
+        e.printStackTrace();
+      }
+    }
+  }
+
+  /**
+   * @return the management context.
+   */
+  public static ManagementContext getManagementContext() {
+    if (managementContext == null) {
+      /* Try to find the jboss mbean server * /
+
+      MBeanServer mbsvr = null;
+
+      for (MBeanServer svr: MBeanServerFactory.findMBeanServer(null)) {
+        if (svr.getDefaultDomain().equals("jboss")) {
+          mbsvr = svr;
+          break;
+        }
+      }
+
+      if (mbsvr == null) {
+        Logger.getLogger(ConfBase.class).warn("Unable to locate jboss mbean server");
+      }
+      managementContext = new ManagementContext(mbsvr);
+      */
+      managementContext = new ManagementContext(ManagementContext.DEFAULT_DOMAIN);
+    }
+    return managementContext;
+  }
 
   private ChangeManager chgMan;
 
@@ -48,7 +118,6 @@ public class SessionManager {
 
   private Request req;
 
-  private SysInfo sys;
   private Event currEvent;
   private boolean deadlinePassed;
   private boolean registrationFull;
@@ -73,6 +142,10 @@ public class SessionManager {
     chgMan = new ChangeManager(this);
   }
 
+  public EventregSvcMBean getSysInfo() throws Throwable {
+    return sysInfo;
+  }
+
   /**
    * @return the change log manager
    */
@@ -89,7 +162,6 @@ public class SessionManager {
       this.db = db;
 
       db.open();
-      setSysInfo(db.getSys());
 
       Timezones.initTimezones(getSysInfo().getTzsUri());
 
@@ -147,20 +219,6 @@ public class SessionManager {
   /**
    * @param val
    */
-  public void setSysInfo(final SysInfo val) {
-    sys = val;
-  }
-
-  /**
-   * @return system info set at entry.
-   */
-  public SysInfo getSysInfo() {
-    return sys;
-  }
-
-  /**
-   * @param val
-   */
   public void setCurrentUser(final String val) {
     currentUser = val;
   }
@@ -177,13 +235,7 @@ public class SessionManager {
    * @throws Throwable
    */
   public boolean getAdminUser() throws Throwable {
-    SysInfo sysi = getSysInfo();
-
-    if (sysi == null) {
-      return false;
-    }
-
-    String adminToken = sysi.getEventregAdminToken();
+    String adminToken = getSysInfo().getEventregAdminToken();
 
     if (adminToken == null) {
       return false;

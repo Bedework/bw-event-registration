@@ -18,8 +18,6 @@ under the License.
  */
 package org.bedework.eventreg.web;
 
-import org.bedework.eventreg.db.SysInfo;
-
 import org.springframework.web.servlet.ModelAndView;
 
 /**
@@ -35,13 +33,7 @@ public abstract class AdminAuthAbstractController extends AuthAbstractController
       return mv;
     }
 
-    SysInfo sysi = sessMan.getSysInfo();
-
-    if (sysi == null) {
-      return errorReturn("No system properties");
-    }
-
-    String adminToken = sysi.getEventregAdminToken();
+    String adminToken = sessMan.getSysInfo().getEventregAdminToken();
 
     if (adminToken == null) {
       return errorReturn("No admin token set in system properties");

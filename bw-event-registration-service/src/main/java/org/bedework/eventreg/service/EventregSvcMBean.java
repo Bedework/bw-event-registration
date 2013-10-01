@@ -18,195 +18,19 @@
 */
 package org.bedework.eventreg.service;
 
+import org.bedework.util.jmx.ConfBaseMBean;
+import org.bedework.util.jmx.MBeanInfo;
+
 import java.util.List;
 
 /** Run the Bedework synch engine service
  *
  * @author douglm
  */
-public interface EventregSvcMBean {
-  /* ========================================================================
-   * Attributes
-   * ======================================================================== */
-
-  /** Name apparently must be the same as the name attribute in the
-   * jboss service definition
-   *
-   * @return Name
-   */
-  public String getName();
-
-  /** Application name - for config info
-   *
-   * @param val
-   */
-  public void setAppname(String val);
-
-  /**
-   * @return String application namee
-   */
-  public String getAppname();
-
-  /* ========================================================================
-   * System properties
-   * ======================================================================== */
-
-  /** Set the token for event reg admins
-   *
-   * @param val
-   */
-  public void setEventregAdminToken(final String val);
-
-  /** Get the token for event reg admins
-   *
-   * @return token
-   */
-  public String getEventregAdminToken();
-
-  /**
-   * @param val
-   */
-  public void setTzsUri(String val);
-
-  /**
-   * @return tzs uri
-   */
-  public String getTzsUri();
-
-  /** Location of wsdl
-   *
-   * @param val
-   */
-  public void setWsdlUri(String val);
-
-  /**
-   * @return Location of wsdl
-   */
-  public String getWsdlUri();
-
-  /* ========================================================================
-   * Dump/restore
-   * ======================================================================== */
-
-  /** Do we create tables?
-   *
-   * @param val
-   */
-  public void setCreate(boolean val);
-
-  /**
-   * @return true for create tables
-   */
-  public boolean getCreate();
-
-  /** Statement delimiter
-   *
-   * @param val
-   */
-  public void setDelimiter(String val);
-
-  /**
-   * @return Statement delimiter
-   */
-  public String getDelimiter();
-
-  /** Do we drop tables?
-   *
-   * @param val
-   */
-  public void setDrop(boolean val);
-
-  /**
-   * @return true for drop tables
-   */
-  public boolean getDrop();
-
-  /** Export to database?
-   *
-   * @param val
-   */
-  public void setExport(boolean val);
-
-  /**
-   * @return true for export
-   */
-  public boolean getExport();
-
-  /** Do we halt on error?
-   *
-   * @param val
-   */
-  public void setHaltOnError(boolean val);
-
-  /**
-   * @return true for halt on error
-   */
-  public boolean getHaltOnError();
-
-  /** Output file name - full path
-   *
-   * @param val
-   */
-  public void setSchemaOutFile(String val);
-
-  /**
-   * @return Output file name - full path
-   */
-  public String getSchemaOutFile();
-
-  /** SQL input file name - full path. Used instead of the configuration?
-   *
-   * @param val
-   */
-  public void setSqlIn(String val);
-
-  /**
-   * @return SQL input file name - full path
-   */
-  public String getSqlIn();
-
-  /** XML data input file name - full path. Used for data restore
-   *
-   * @param val
-   */
-  public void setDataIn(String val);
-
-  /**
-   * @return XML data input file name - full path
-   */
-  public String getDataIn();
-
-  /** XML data output directory name - full path. Used for data restore
-   *
-   * @param val
-   */
-  public void setDataOut(String val);
-
-  /**
-   * @return XML data output directory name - full path
-   */
-  public String getDataOut();
-
-  /** XML data output file prefix - for data dump
-   *
-   * @param val
-   */
-  public void setDataOutPrefix(String val);
-
-  /**
-   * @return XML data output file prefix - for data dump
-   */
-  public String getDataOutPrefix();
-
+public interface EventregSvcMBean extends ConfBaseMBean, EventregProperties {
   /* ========================================================================
    * Operations
    * ======================================================================== */
-
-  /** Return true if the schema appears to be valid
-   *
-   * @return true if it looks ok to us
-   */
-  public boolean testSchemaValid();
 
   /** Create or dump new schema. If export and drop set will try to drop tables.
    * Export and create will create a schema in the db and export, drop, create
@@ -217,61 +41,99 @@ public interface EventregSvcMBean {
    *
    * @return Completion message
    */
-  public String schema();
+  @MBeanInfo("Start build of the database schema. Set export flag to write to db.")
+  String schema();
+
+  /** Returns status of the schema build.
+   *
+   * @return Completion messages
+   */
+  @MBeanInfo("Status of the database schema build.")
+  List<String> schemaStatus();
+
+  /**
+   * @param value
+   */
+  @MBeanInfo("Set the hibernate dialect")
+  void setHibernateDialect(@MBeanInfo("value: a valid hibernate dialect class") final String value);
+
+  /**
+   * @return Completion messages
+   */
+  @MBeanInfo("Get the hibernate dialect")
+  String getHibernateDialect();
+
+  /** List the hibernate properties
+   *
+   * @return properties
+   */
+  @MBeanInfo("List the hibernate properties")
+  String listHibernateProperties();
+
+  /** Display the named property
+   *
+   * @param name
+   * @return value
+   */
+  @MBeanInfo("Display the named hibernate property")
+  String displayHibernateProperty(@MBeanInfo("name") final String name);
+
+  /** Remove the named property
+   *
+   * @param name
+   */
+  @MBeanInfo("Remove the named hibernate property")
+  void removeHibernateProperty(@MBeanInfo("name") final String name);
+
+  /**
+   * @param name
+   * @param value
+   */
+  @MBeanInfo("Add a hibernate property")
+  void addHibernateProperty(@MBeanInfo("name") final String name,
+                            @MBeanInfo("value") final String value);
+
+  /**
+   * @param name
+   * @param value
+   */
+  @MBeanInfo("Set a hibernate property")
+  void setHibernateProperty(@MBeanInfo("name") final String name,
+                            @MBeanInfo("value") final String value);
 
   /** Restores the data from the DataIn path. Will not restore if there appears
    * to be any data already in the db.
    *
    * @return Completion messages and stats
    */
-  public List<String> restoreData();
+  @MBeanInfo("Restores the data from the DataIn path")
+  List<String> restoreData();
+
+  /** Returns status of the restore.
+   *
+   * @return Completion messages and stats
+   */
+  @MBeanInfo("Show state of current restore")
+  List<String> restoreStatus();
 
   /** Dumps the data to a file in the DataOut directory.
    *
    * @return Completion messages and stats
    */
-  public List<String> dumpData();
+  @MBeanInfo("Dumps the data to a file in the DataOut directory")
+  List<String> dumpData();
 
-  /** Try to drop all the tables. May get errors for a partial db or for an updated
-   * db.
+  /** Returns status of the dump.
    *
-   * @return Completion message
+   * @return Completion messages and stats
    */
-  public String dropTables();
+  @MBeanInfo("Show status of current data dump")
+  List<String> dumpStatus();
 
   /** Generate an admin token.
    *
    * @return Completion message
    */
-  public String generateAdminToken();
-
-  /* ========================================================================
-   * Lifecycle
-   * ======================================================================== */
-
-  /** Lifecycle
-   *
-   */
-  public void create();
-
-  /** Lifecycle
-   *
-   */
-  public void start();
-
-  /** Lifecycle
-   *
-   */
-  public void stop();
-
-  /** Lifecycle
-   *
-   * @return true if started
-   */
-  public boolean isStarted();
-
-  /** Lifecycle
-   *
-   */
-  public void destroy();
+  @MBeanInfo("Generate an admin token")
+  String generateAdminToken();
 }

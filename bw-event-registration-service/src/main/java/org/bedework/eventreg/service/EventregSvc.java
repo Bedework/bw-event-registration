@@ -19,76 +19,108 @@
 package org.bedework.eventreg.service;
 
 import org.bedework.eventreg.db.EventregDb;
-import org.bedework.eventreg.db.SysInfo;
-import org.bedework.util.hibernate.HibException;
+import org.bedework.util.jmx.ConfBase;
+import org.bedework.util.jmx.InfoLines;
 
-import org.apache.log4j.Logger;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.tool.hbm2ddl.SchemaExport;
 
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 import java.util.UUID;
 
 /**
  * @author douglm
  *
  */
-public class EventregSvc implements EventregSvcMBean {
-  private transient Logger log;
-
-  private String appname;
+public class EventregSvc extends ConfBase<EventregPropertiesImpl>
+        implements EventregSvcMBean {
+  /* Name of the property holding the location of the config data */
+  public static final String confuriPname = "org.bedework.eventreg.confuri";
 
   /* ========================================================================
    * Dump/restore
    * ======================================================================== */
 
-  private boolean create;
+  private Configuration hibCfg;
 
-  private String delimiter;
+  private class SchemaThread extends Thread {
+    InfoLines infoLines = new InfoLines();
 
-  private boolean drop;
+    SchemaThread() {
+      super("BuildSchema");
+    }
 
-  /* Be safe - default to false */
-  private boolean export;
+    @Override
+    public void run() {
+      try {
+        infoLines.addLn("Started export of schema");
 
-  private boolean haltOnError;
+        long startTime = System.currentTimeMillis();
 
-  private String schemaOutFile;
+        SchemaExport se = new SchemaExport(getHibConfiguration());
 
-  private String sqlIn;
+//      if (getDelimiter() != null) {
+//        se.setDelimiter(getDelimiter());
+//      }
 
-  private String dataIn;
+        se.setFormat(true);       // getFormat());
+        se.setHaltOnError(false); // getHaltOnError());
+        se.setOutputFile(getSchemaOutFile());
+        /* There appears to be a bug in the hibernate code. Everybody initialises
+        this to /import.sql. Set to null causes an NPE
+        Make sure it refers to a non-existant file */
+        //se.setImportFile("not-a-file.sql");
 
-  private String dataOut;
+        se.execute(false, // script - causes write to System.out if true
+                   getExport(),
+                   false,   // drop
+                   true);   //   getCreate());
 
-  private String dataOutPrefix;
+        long millis = System.currentTimeMillis() - startTime;
+        long seconds = millis / 1000;
+        long minutes = seconds / 60;
+        seconds -= (minutes * 60);
 
-  private Configuration cfg;
+        infoLines.addLn("Elapsed time: " + minutes + ":" +
+                                twoDigits(seconds));
+      } catch (Throwable t) {
+        error(t);
+        infoLines.exceptionMsg(t);
+      } finally {
+        infoLines.addLn("Schema build completed");
+        getConfig().setExport(false);
+      }
+    }
+  }
 
-  /* ========================================================================
-   * Attributes
-   * ======================================================================== */
+  private SchemaThread buildSchema = new SchemaThread();
 
-  /* (non-Javadoc)
-   * @see org.bedework.dumprestore.BwDumpRestoreMBean#getName()
+  private final static String nm = "eventreg";
+
+  /**
    */
-  @Override
-  public String getName() {
-    /* This apparently must be the same as the name attribute in the
-     * jboss service definition
-     */
-    return "org.bedework:service=Eventreg";
+  public EventregSvc() {
+    super(getServiceName(nm));
+
+    setConfigName(nm);
+
+    setConfigPname(confuriPname);
+  }
+
+  /**
+   * @param name
+   * @return object name value for the mbean with this name
+   */
+  public static String getServiceName(final String name) {
+    return "org.bedework.eventreg:service=" + name;
   }
 
   @Override
-  public void setAppname(final String val) {
-    appname = val;
-  }
-
-  @Override
-  public String getAppname() {
-    return appname;
+  public String loadConfig() {
+    return loadConfig(EventregPropertiesImpl.class);
   }
 
   /* ========================================================================
@@ -97,155 +129,32 @@ public class EventregSvc implements EventregSvcMBean {
 
   @Override
   public void setEventregAdminToken(final String val) {
-    PropSetter<String> ps = new PropSetter<String>() {
-      @Override
-      void setValue(final String val) {
-        sysi.setEventregAdminToken(val);
-      }
-    };
-
-    ps.doSet(val);
+    getConfig().setEventregAdminToken(val);
   }
 
   @Override
   public String getEventregAdminToken() {
-    PropGetter<String> pg = new PropGetter<String>() {
-      @Override
-      String getValue() {
-        return sysi.getEventregAdminToken();
-      }
-    };
-
-    return pg.doGet();
+    return getConfig().getEventregAdminToken();
   }
 
   @Override
   public void setTzsUri(final String val) {
-    PropSetter<String> ps = new PropSetter<String>() {
-      @Override
-      void setValue(final String val) {
-        sysi.setTzsUri(val);
-      }
-    };
-
-    ps.doSet(val);
+    getConfig().setTzsUri(val);
   }
 
   @Override
   public String getTzsUri() {
-    PropGetter<String> pg = new PropGetter<String>() {
-      @Override
-      String getValue() {
-        return sysi.getTzsUri();
-      }
-    };
-
-    return pg.doGet();
+    return getConfig().getTzsUri();
   }
 
   @Override
   public void setWsdlUri(final String val) {
-    PropSetter<String> ps = new PropSetter<String>() {
-      @Override
-      void setValue(final String val) {
-        sysi.setWsdlUri(val);
-      }
-    };
-
-    ps.doSet(val);
+    getConfig().setWsdlUri(val);
   }
 
   @Override
   public String getWsdlUri() {
-    PropGetter<String> pg = new PropGetter<String>() {
-      @Override
-      String getValue() {
-        return sysi.getWsdlUri();
-      }
-    };
-
-    return pg.doGet();
-  }
-
-  private abstract class PropGetter <T>  {
-    protected SysInfo sysi;
-
-    abstract T getValue();
-
-    T doGet() {
-      T res = null;
-
-      EventregDb db = openDb();
-
-      if (db != null) {
-        boolean ignoreErrors = false;
-
-        try {
-          sysi = db.getSys();
-
-          if (sysi == null) {
-            return null;
-          }
-          res = getValue();
-        } catch (Throwable t) {
-          if (t.getCause() instanceof HibException) {
-            // Assume db not initialised?
-            warn("Error retrieving values: db not initialised?");
-            ignoreErrors = true;
-            return null;
-          }
-
-          error(t);
-        } finally {
-          closeDb(db, ignoreErrors);
-        }
-      }
-
-      return res;
-    }
-  }
-
-  private abstract class PropSetter <T>  {
-    protected SysInfo sysi;
-
-    abstract void setValue(T val);
-
-    void doSet(final T val) {
-      EventregDb db = openDb();
-
-      if (db != null) {
-        boolean ignoreErrors = false;
-
-        try {
-          sysi = db.getSys();
-          boolean create = false;
-
-          if (sysi == null) {
-            sysi = new SysInfo();
-            create = true;
-          }
-
-          setValue(val);
-
-          if (create) {
-            db.addSys(sysi);
-          } else {
-            db.updateSys(sysi);
-          }
-        } catch (Throwable t) {
-          if (t.getCause() instanceof HibException) {
-            // Assume db not initialised?
-            warn("Error retrieving values: db not initialised?");
-            ignoreErrors = true;
-            return;
-          }
-
-          error(t);
-        } finally {
-          closeDb(db, ignoreErrors);
-        }
-      }
-    }
+    return getConfig().getWsdlUri();
   }
 
   /* ========================================================================
@@ -253,103 +162,53 @@ public class EventregSvc implements EventregSvcMBean {
    * ======================================================================== */
 
   @Override
-  public void setCreate(final boolean val) {
-    create = val;
-  }
-
-  @Override
-  public boolean getCreate() {
-    return create;
-  }
-
-  @Override
-  public void setDelimiter(final String val) {
-    delimiter = val;
-  }
-
-  @Override
-  public String getDelimiter() {
-    return delimiter;
-  }
-
-  @Override
-  public void setDrop(final boolean val) {
-    drop = val;
-  }
-
-  @Override
-  public boolean getDrop() {
-    return drop;
-  }
-
-  @Override
   public void setExport(final boolean val) {
-    export = val;
+    getConfig().setExport(val);
   }
 
   @Override
   public boolean getExport() {
-    return export;
-  }
-
-  @Override
-  public void setHaltOnError(final boolean val) {
-    haltOnError = val;
-  }
-
-  @Override
-  public boolean getHaltOnError() {
-    return haltOnError;
+    return getConfig().getExport();
   }
 
   @Override
   public void setSchemaOutFile(final String val) {
-    schemaOutFile = val;
+    getConfig().setSchemaOutFile(val);
   }
 
   @Override
   public String getSchemaOutFile() {
-    return schemaOutFile;
-  }
-
-  @Override
-  public void setSqlIn(final String val) {
-    sqlIn = val;
-  }
-
-  @Override
-  public String getSqlIn() {
-    return sqlIn;
+    return getConfig().getSchemaOutFile();
   }
 
   @Override
   public void setDataIn(final String val) {
-    dataIn = val;
+    getConfig().setDataIn(val);
   }
 
   @Override
   public String getDataIn() {
-    return dataIn;
+    return getConfig().getDataIn();
   }
 
   @Override
   public void setDataOut(final String val) {
-    dataOut = val;
+    getConfig().setDataOut(val);
   }
 
   @Override
   public String getDataOut() {
-    return dataOut;
+    return getConfig().getDataOut();
   }
 
   @Override
   public void setDataOutPrefix(final String val) {
-    dataOutPrefix = val;
+    getConfig().setDataOutPrefix(val);
   }
 
   @Override
   public String getDataOutPrefix() {
-    return dataOutPrefix;
+    return getConfig().getDataOutPrefix();
   }
 
   @Override
@@ -363,45 +222,88 @@ public class EventregSvc implements EventregSvcMBean {
    * Operations
    * ======================================================================== */
 
-  @Override
-  public boolean testSchemaValid() {
-    return true;
-  }
-
   /* (non-Javadoc)
    * @see org.bedework.dumprestore.BwDumpRestoreMBean#schema()
    */
   @SuppressWarnings("deprecation")
   @Override
   public String schema() {
-    String result = "Export complete: check logs";
-
     try {
-      SchemaExport se = new SchemaExport(getConfiguration());
+//      buildSchema = new SchemaThread();
 
-      if (getDelimiter() != null) {
-        se.setDelimiter(getDelimiter());
-      }
+      buildSchema.start();
 
-      se.setFormat(true);
-      se.setHaltOnError(getHaltOnError());
-      se.setOutputFile(getSchemaOutFile());
-      se.setImportFile(getSqlIn());
-
-      se.execute(false, // script - causes write to System.out if true
-                 getExport(),
-                 getDrop(),
-                 getCreate());
+      return "OK";
     } catch (Throwable t) {
       error(t);
-      result = "Exception: " + t.getLocalizedMessage();
-    } finally {
-      create = false;
-      drop = false;
-      export = false;
+
+      return "Exception: " + t.getLocalizedMessage();
+    }
+  }
+
+  @Override
+  public synchronized List<String> schemaStatus() {
+    if (buildSchema == null) {
+      InfoLines infoLines = new InfoLines();
+
+      infoLines.addLn("Schema build has not been started");
+
+      return infoLines;
     }
 
-    return result;
+    return buildSchema.infoLines;
+  }
+
+  @Override
+  public void setHibernateDialect(final String value) {
+    getConfig().setHibernateDialect(value);
+  }
+
+  @Override
+  public String getHibernateDialect() {
+    return getConfig().getHibernateDialect();
+  }
+
+  @Override
+  public String listHibernateProperties() {
+    StringBuilder res = new StringBuilder();
+
+    List<String> ps = getConfig().getHibernateProperties();
+
+    for (String p: ps) {
+      res.append(p);
+      res.append("\n");
+    }
+
+    return res.toString();
+  }
+
+  @Override
+  public String displayHibernateProperty(final String name) {
+    String val = getConfig().getHibernateProperty(name);
+
+    if (val != null) {
+      return val;
+    }
+
+    return "Not found";
+  }
+
+  @Override
+  public void removeHibernateProperty(final String name) {
+    getConfig().removeHibernateProperty(name);
+  }
+
+  @Override
+  public void addHibernateProperty(final String name,
+                                   final String value) {
+    getConfig().addHibernateProperty(name, value);
+  }
+
+  @Override
+  public void setHibernateProperty(final String name,
+                                   final String value) {
+    getConfig().setHibernateProperty(name, value);
   }
 
   @Override
@@ -471,6 +373,15 @@ public class EventregSvc implements EventregSvcMBean {
   }
 
   @Override
+  public List<String> restoreStatus() {
+    List<String> res = new ArrayList<>();
+
+    res.add("************************Restore unimplemented *************************" + "\n");
+
+    return res;
+  }
+
+  @Override
   public List<String> dumpData() {
     List<String> infoLines = new ArrayList<String>();
 
@@ -527,75 +438,55 @@ public class EventregSvc implements EventregSvcMBean {
   }
 
   @Override
-  public String dropTables() {
-    return "Not implemented";
-  }
+  public List<String> dumpStatus() {
+    List<String> res = new ArrayList<>();
 
-  /* an example say's we need this  - we should probably implement some system
-   * independent jmx support which will build this using introspection and/or lists
-  public MBeanInfo getMBeanInfo() throws Exception {
-    InitialContext ic = new InitialContext();
-    RMIAdaptor server = (RMIAdaptor) ic.lookup("jmx/rmi/RMIAdaptor");
+    res.add("************************Dump unimplemented *************************" + "\n");
 
-    ObjectName name = new ObjectName(MBEAN_OBJ_NAME);
-
-    // Get the MBeanInfo for this MBean
-    MBeanInfo info = server.getMBeanInfo(name);
-    return info;
-  }
-  */
-
-  /* ========================================================================
-   * Lifecycle
-   * ======================================================================== */
-
-  /* (non-Javadoc)
-   * @see org.bedework.dumprestore.BwDumpRestoreMBean#create()
-   */
-  @Override
-  public void create() {
-    // An opportunity to initialise
-  }
-
-  /* (non-Javadoc)
-   * @see org.bedework.indexer.BwIndexerMBean#start()
-   */
-  @Override
-  public void start() {
-  }
-
-  /* (non-Javadoc)
-   * @see org.bedework.indexer.BwIndexerMBean#stop()
-   */
-  @Override
-  public void stop() {
-  }
-
-  /* (non-Javadoc)
-   * @see org.bedework.indexer.BwIndexerMBean#isStarted()
-   */
-  @Override
-  public boolean isStarted() {
-    return true;
-  }
-
-  /* (non-Javadoc)
-   * @see org.bedework.dumprestore.BwDumpRestoreMBean#destroy()
-   */
-  @Override
-  public void destroy() {
+    return res;
   }
 
   /* ====================================================================
    *                   Private methods
    * ==================================================================== */
 
-  private synchronized Configuration getConfiguration() {
-    if (cfg == null) {
-      cfg = new Configuration().configure();
+  /**
+   * @param val
+   * @return 2 digit val
+   */
+  private static String twoDigits(final long val) {
+    if (val < 10) {
+      return "0" + val;
     }
 
-    return cfg;
+    return String.valueOf(val);
+  }
+
+  private synchronized Configuration getHibConfiguration() {
+    if (hibCfg == null) {
+      try {
+        hibCfg = new Configuration();
+
+        StringBuilder sb = new StringBuilder();
+
+        List<String> ps = getConfig().getHibernateProperties();
+
+        for (String p: ps) {
+          sb.append(p);
+          sb.append("\n");
+        }
+
+        Properties hprops = new Properties();
+        hprops.load(new StringReader(sb.toString()));
+
+        hibCfg.addProperties(hprops).configure();
+      } catch (Throwable t) {
+        // Always bad.
+        error(t);
+      }
+    }
+
+    return hibCfg;
   }
 
   private EventregDb openDb() {
@@ -614,39 +505,5 @@ public class EventregSvc implements EventregSvcMBean {
   private void closeDb(final EventregDb db,
                        final boolean ignoreErrors) {
     db.close(ignoreErrors);
-  }
-
-  /* ====================================================================
-   *                   Protected methods
-   * ==================================================================== */
-
-  protected void info(final String msg) {
-    getLogger().info(msg);
-  }
-
-  protected void warn(final String msg) {
-    getLogger().warn(msg);
-  }
-
-  protected void trace(final String msg) {
-    getLogger().debug(msg);
-  }
-
-  protected void error(final Throwable t) {
-    getLogger().error(this, t);
-  }
-
-  protected void error(final String msg) {
-    getLogger().error(msg);
-  }
-
-  /* Get a logger for messages
-   */
-  protected Logger getLogger() {
-    if (log == null) {
-      log = Logger.getLogger(this.getClass());
-    }
-
-    return log;
   }
 }
