@@ -19,6 +19,12 @@
 			<version>${project.version}</version>
 			<scope>provided</scope>
 		</dependency>
+    <dependency>
+      <groupId>org.bedework</groupId>
+      <artifactId>bw-event-registration-service</artifactId>
+      <version>${project.version}</version>
+      <scope>provided</scope>
+    </dependency>
     <!-- Bedework: Util -->
     <dependency>
       <groupId>org.bedework</groupId>

@@ -80,7 +80,17 @@
       </dependency>
       <dependency>
         <groupId>org.bedework</groupId>
+        <artifactId>bw-util-config</artifactId>
+        <version>${bw-util.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.bedework</groupId>
         <artifactId>bw-util-hibernate</artifactId>
+        <version>${bw-util.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.bedework</groupId>
+        <artifactId>bw-util-jmx</artifactId>
         <version>${bw-util.version}</version>
       </dependency>
 			<dependency>
