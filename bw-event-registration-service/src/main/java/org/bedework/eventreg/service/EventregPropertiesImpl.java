@@ -43,9 +43,6 @@ public class EventregPropertiesImpl extends HibernateConfigBase<EventregProperti
    * Dump/restore
    * ======================================================================== */
 
-  /* Be safe - default to false */
-  private boolean export;
-
   private String schemaOutFile;
 
   private String dataIn;
@@ -91,16 +88,6 @@ public class EventregPropertiesImpl extends HibernateConfigBase<EventregProperti
   /* ========================================================================
    * Dump/restore
    * ======================================================================== */
-
-  @Override
-  public void setExport(final boolean val) {
-    export = val;
-  }
-
-  @Override
-  public boolean getExport() {
-    return export;
-  }
 
   @Override
   public void setSchemaOutFile(final String val) {

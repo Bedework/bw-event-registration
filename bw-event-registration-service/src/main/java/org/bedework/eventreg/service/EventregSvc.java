@@ -21,6 +21,7 @@ package org.bedework.eventreg.service;
 import org.bedework.eventreg.db.EventregDb;
 import org.bedework.util.jmx.ConfBase;
 import org.bedework.util.jmx.InfoLines;
+import org.bedework.util.jmx.MBeanInfo;
 
 import org.hibernate.cfg.Configuration;
 import org.hibernate.tool.hbm2ddl.SchemaExport;
@@ -39,6 +40,9 @@ public class EventregSvc extends ConfBase<EventregPropertiesImpl>
         implements EventregSvcMBean {
   /* Name of the property holding the location of the config data */
   public static final String confuriPname = "org.bedework.eventreg.confuri";
+
+  /* Be safe - default to false */
+  private boolean export;
 
   /* ========================================================================
    * Dump/restore
@@ -91,7 +95,7 @@ public class EventregSvc extends ConfBase<EventregPropertiesImpl>
         infoLines.exceptionMsg(t);
       } finally {
         infoLines.addLn("Schema build completed");
-        getConfig().setExport(false);
+        setExport(false);
       }
     }
   }
@@ -158,18 +162,54 @@ public class EventregSvc extends ConfBase<EventregPropertiesImpl>
   }
 
   /* ========================================================================
-   * Dump/restore
+   * Hibernate properties
    * ======================================================================== */
 
   @Override
-  public void setExport(final boolean val) {
-    getConfig().setExport(val);
+  public void setHibernateProperties(final List<String> val) {
+    getConfig().setHibernateProperties(val);
   }
 
   @Override
-  public boolean getExport() {
-    return getConfig().getExport();
+  public List<String> getHibernateProperties() {
+    return getConfig().getHibernateProperties();
   }
+
+  @Override
+  public void setHibernateDialect(final String value) {
+    getConfig().setHibernateDialect(value);
+  }
+
+  @Override
+  public String getHibernateDialect() {
+    return getConfig().getHibernateDialect();
+  }
+
+  @Override
+  public void removeHibernateProperty(final String name) {
+    getConfig().removeHibernateProperty(name);
+  }
+
+  @Override
+  public void addHibernateProperty(final String name,
+                                   final String value) {
+    getConfig().addHibernateProperty(name, value);
+  }
+
+  @Override
+  public String getHibernateProperty(final String name) {
+    return getConfig().getHibernateProperty(name);
+  }
+
+  @Override
+  public void setHibernateProperty(final String name,
+                                   final String value) {
+    getConfig().setHibernateProperty(name, value);
+  }
+
+  /* ========================================================================
+   * Dump/restore
+   * ======================================================================== */
 
   @Override
   public void setSchemaOutFile(final String val) {
@@ -211,16 +251,36 @@ public class EventregSvc extends ConfBase<EventregPropertiesImpl>
     return getConfig().getDataOutPrefix();
   }
 
+  /* ========================================================================
+   * Mbean attributes
+   * ======================================================================== */
+
+  /** Export to database?
+   *
+   * @param val
+   */
+  public void setExport(final boolean val) {
+    export = val;
+  }
+
+  /**
+   * @return true for export
+   */
+  @MBeanInfo("Export (write) schema to database?")
+  public boolean getExport() {
+    return export;
+  }
+
+  /* ========================================================================
+   * Operations
+   * ======================================================================== */
+
   @Override
   public String generateAdminToken() {
     setEventregAdminToken(UUID.randomUUID().toString());
 
     return "OK";
   }
-
-  /* ========================================================================
-   * Operations
-   * ======================================================================== */
 
   /* (non-Javadoc)
    * @see org.bedework.dumprestore.BwDumpRestoreMBean#schema()
@@ -255,16 +315,6 @@ public class EventregSvc extends ConfBase<EventregPropertiesImpl>
   }
 
   @Override
-  public void setHibernateDialect(final String value) {
-    getConfig().setHibernateDialect(value);
-  }
-
-  @Override
-  public String getHibernateDialect() {
-    return getConfig().getHibernateDialect();
-  }
-
-  @Override
   public String listHibernateProperties() {
     StringBuilder res = new StringBuilder();
 
@@ -287,23 +337,6 @@ public class EventregSvc extends ConfBase<EventregPropertiesImpl>
     }
 
     return "Not found";
-  }
-
-  @Override
-  public void removeHibernateProperty(final String name) {
-    getConfig().removeHibernateProperty(name);
-  }
-
-  @Override
-  public void addHibernateProperty(final String name,
-                                   final String value) {
-    getConfig().addHibernateProperty(name, value);
-  }
-
-  @Override
-  public void setHibernateProperty(final String name,
-                                   final String value) {
-    getConfig().setHibernateProperty(name, value);
   }
 
   @Override

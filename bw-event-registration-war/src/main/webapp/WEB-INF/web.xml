@@ -2,21 +2,24 @@
 
 <web-app xmlns="http://java.sun.com/xml/ns/j2ee"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee 
+    xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee
                         http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"
     version="2.4">
   <display-name>@DISPLAY-NAME@</display-name>
 
   <!-- Context params here -->
-  
+
   <!-- filter here -->
-  
+
   <!-- filter mapping here -->
-  
+
   <listener>
     <listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>
   </listener>
-  
+  <listener>
+    <listener-class>org.bedework.eventreg.bus.ContextListener</listener-class>
+  </listener>
+
   <servlet>
     <servlet-name>eventreg</servlet-name>
     <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
@@ -37,7 +40,7 @@
     <servlet-name>eventreg</servlet-name>
     <url-pattern>/info/*</url-pattern>
   </servlet-mapping>
-  
+
   <session-config>
     <session-timeout>20</session-timeout>
   </session-config>

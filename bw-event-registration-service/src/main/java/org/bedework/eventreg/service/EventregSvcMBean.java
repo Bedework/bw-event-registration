@@ -51,18 +51,6 @@ public interface EventregSvcMBean extends ConfBaseMBean, EventregProperties {
   @MBeanInfo("Status of the database schema build.")
   List<String> schemaStatus();
 
-  /**
-   * @param value
-   */
-  @MBeanInfo("Set the hibernate dialect")
-  void setHibernateDialect(@MBeanInfo("value: a valid hibernate dialect class") final String value);
-
-  /**
-   * @return Completion messages
-   */
-  @MBeanInfo("Get the hibernate dialect")
-  String getHibernateDialect();
-
   /** List the hibernate properties
    *
    * @return properties
@@ -77,29 +65,6 @@ public interface EventregSvcMBean extends ConfBaseMBean, EventregProperties {
    */
   @MBeanInfo("Display the named hibernate property")
   String displayHibernateProperty(@MBeanInfo("name") final String name);
-
-  /** Remove the named property
-   *
-   * @param name
-   */
-  @MBeanInfo("Remove the named hibernate property")
-  void removeHibernateProperty(@MBeanInfo("name") final String name);
-
-  /**
-   * @param name
-   * @param value
-   */
-  @MBeanInfo("Add a hibernate property")
-  void addHibernateProperty(@MBeanInfo("name") final String name,
-                            @MBeanInfo("value") final String value);
-
-  /**
-   * @param name
-   * @param value
-   */
-  @MBeanInfo("Set a hibernate property")
-  void setHibernateProperty(@MBeanInfo("name") final String name,
-                            @MBeanInfo("value") final String value);
 
   /** Restores the data from the DataIn path. Will not restore if there appears
    * to be any data already in the db.

@@ -19,6 +19,7 @@
 package org.bedework.eventreg.service;
 
 import org.bedework.util.config.ConfInfo;
+import org.bedework.util.config.HibernateConfigI;
 import org.bedework.util.jmx.MBeanInfo;
 
 /** Properties for the Bedework event registration service
@@ -26,7 +27,7 @@ import org.bedework.util.jmx.MBeanInfo;
  * @author douglm
  */
 @ConfInfo(elementName = "eventreg-properties")
-public interface EventregProperties {
+public interface EventregProperties extends HibernateConfigI {
   /* ========================================================================
    * Attributes
    * ======================================================================== */
@@ -67,18 +68,6 @@ public interface EventregProperties {
   /* ========================================================================
    * Schema
    * ======================================================================== */
-
-  /** Export to database?
-   *
-   * @param val
-   */
-  void setExport(boolean val);
-
-  /**
-   * @return true for export
-   */
-  @MBeanInfo("Export (write) schema to database?")
-  boolean getExport();
 
   /** Output file name - full path
    *

@@ -23,11 +23,8 @@ import org.bedework.eventreg.db.Change;
 import org.bedework.eventreg.db.Event;
 import org.bedework.eventreg.db.EventregDb;
 import org.bedework.eventreg.db.Registration;
-import org.bedework.eventreg.service.EventregSvc;
 import org.bedework.eventreg.service.EventregSvcMBean;
 import org.bedework.util.calendar.XcalUtil.TzGetter;
-import org.bedework.util.jmx.AnnotatedMBean;
-import org.bedework.util.jmx.ManagementContext;
 import org.bedework.util.timezones.Timezones;
 
 import net.fortuna.ical4j.model.TimeZone;
@@ -35,10 +32,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import java.util.List;
-import java.util.Set;
-import java.util.concurrent.CopyOnWriteArraySet;
-
-import javax.management.ObjectName;
 
 /**
  * @author douglm
@@ -46,69 +39,6 @@ import javax.management.ObjectName;
  */
 public class SessionManager {
   protected final Log logger = LogFactory.getLog(getClass());
-
-  private static Set<ObjectName> registeredMBeans = new CopyOnWriteArraySet<>();
-  private static ManagementContext managementContext;
-  private static EventregSvc sysInfo;
-
-  static {
-    try {
-      sysInfo = new EventregSvc();
-      registerMbean(new ObjectName(sysInfo.getServiceName()),
-                    sysInfo);
-    } catch (Throwable e) {
-      e.printStackTrace();
-    }
-  }
-
-  public static void registerMbean(final ObjectName key,
-                                   final Object bean) {
-    try {
-      AnnotatedMBean.registerMBean(getManagementContext(), bean, key);
-      registeredMBeans.add(key);
-    } catch (Throwable e) {
-      e.printStackTrace();
-    }
-  }
-
-  /**
-   * @param key
-   */
-  public static void unregister(final ObjectName key) {
-    if (registeredMBeans.remove(key)) {
-      try {
-        getManagementContext().unregisterMBean(key);
-      } catch (Throwable e) {
-        e.printStackTrace();
-      }
-    }
-  }
-
-  /**
-   * @return the management context.
-   */
-  public static ManagementContext getManagementContext() {
-    if (managementContext == null) {
-      /* Try to find the jboss mbean server * /
-
-      MBeanServer mbsvr = null;
-
-      for (MBeanServer svr: MBeanServerFactory.findMBeanServer(null)) {
-        if (svr.getDefaultDomain().equals("jboss")) {
-          mbsvr = svr;
-          break;
-        }
-      }
-
-      if (mbsvr == null) {
-        Logger.getLogger(ConfBase.class).warn("Unable to locate jboss mbean server");
-      }
-      managementContext = new ManagementContext(mbsvr);
-      */
-      managementContext = new ManagementContext(ManagementContext.DEFAULT_DOMAIN);
-    }
-    return managementContext;
-  }
 
   private ChangeManager chgMan;
 
@@ -143,7 +73,7 @@ public class SessionManager {
   }
 
   public EventregSvcMBean getSysInfo() throws Throwable {
-    return sysInfo;
+    return ContextListener.getSysInfo();
   }
 
   /**
@@ -546,58 +476,6 @@ public class SessionManager {
   public void setMessage(final String message) {
     this.message = message;
   }
-
-  /*
-  public void resendConfirmationEmail(final int userid) {
-    String [] recipients = new String [1];
-    recipients[0] = getUserInfo().getEmail();
-
-    String body = "Thank you for registering to reserve tickets for EMPAC Opening events.";
-    body = body.concat("\n\nJust click this link to confirm your email address," );
-    body = body.concat("\nand you can start reserving tickets:" +
-    		"\nhttp://reg.empac.bedework.edu/empacreg/confirm.do?activationCode=" +
-        this.getUserInfo().getGUID());
-    body = body.concat("\n\nSee you there!\n-EMPAC\n\nQuestions? Call us @ 518.276.3921" );
-    body = body.concat("\n\nExperimental Media and Performing Arts Center" );
-    body = body.concat("\nRensselaer Polytechnic Institute" );
-    body = body.concat("\n110 8th street" );
-    body = body.concat("\nTroy, NY 12180" );
-    body = body.concat("\nhttp://empac.bedework.edu" );
-
-    / *    body = body.concat("Tickets will be available at will call on the day of the performance.\n");
-    body = body.concat("All tickets must be picked up 30 minutes before performance time;\n");
-    body = body.concat("Unclaimed tickets will bereleased 30 minutes before performance time.\n\n ");
-
-
-    body = body.concat("All venues are wheelchair accessible. Please contact the Ticket Office\n");
-    body = body.concat("at empacboxoffice@bedework.edu or 518-276-3921 to reserve accessible seating\n");
-    body = body.concat("or to request additional disability-related accommodation.\n\n");
-
-    body = body.concat("Questions about your reservation? Contact the EMPAC Ticket Office\n");
-    body = body.concat("at empacboxoffice@bedework.edu or 518-276-3921.\n\n");
-
-    body = body.concat("Ticket Policies:\n");
-    body = body.concat("No refunds/exchanges\n");
-    body = body.concat("Use of cameras or recording devices in venues is not permitted.\n");
-    body = body.concat("Late arrivals will be seated at the discretion of venue management.\n");
-    body = body.concat("Not responsible for items lost, stolen or left behind.\n\n");
-
-    body = body.concat("EMPAC\n");
-    body = body.concat("Experimental Media & Performing Arts Center\n");
-    body = body.concat("110 8th Street\n");
-    body = body.concat("Troy, NY 12180\n");
-    body = body.concat("518.276.4135\n");
-    body = body.concat("http://empac.bedework.edu\n");* /
-
-    try {
-      Mailer.postMail(recipients,
-                      "EMPAC Registration",
-                      body,
-                      "empacboxoffice@bedework.edu",
-                      getUserInfo().getGUID());
-    } catch (Exception e) {}
-
-  }*/
 
   /* ====================================================================
    *                   Current event methods
