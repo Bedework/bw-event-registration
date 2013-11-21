@@ -20,8 +20,7 @@ package org.bedework.eventreg.bus;
 
 import org.bedework.eventreg.service.EventregSvc;
 import org.bedework.eventreg.service.EventregSvcMBean;
-
-import edu.rpi.cmt.jmx.ConfBase;
+import org.bedework.util.jmx.ConfBase;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
