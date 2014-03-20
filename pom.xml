@@ -47,8 +47,8 @@
 	</licenses>
 
 	<scm>
-		<connection>scm:git:git://github.com/Bedework/bw-event-registration.git</connection>
-		<developerConnection>scm:git:git://github.com/Bedework/bw-event-registration.git</developerConnection>
+		<connection>scm:git:git@github.com:Bedework/bw-event-registration.git</connection>
+		<developerConnection>scm:git:git@github.com:Bedework/bw-event-registration.git</developerConnection>
 		<url>https://github.com/Bedework/bw-event-registration</url>
 	</scm>
 
