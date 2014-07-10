@@ -5,7 +5,7 @@
     xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee
                         http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"
     version="2.4">
-  <display-name>@DISPLAY-NAME@</display-name>
+  <display-name>Bedework event registration application</display-name>
 
   <!-- Context params here -->
 
@@ -93,7 +93,7 @@
     </auth-constraint>
     <user-data-constraint>
       <description>no description</description>
-      <transport-guarantee>@TRANSPORT-GUARANTEE@</transport-guarantee>
+      <transport-guarantee>${app.transport.guarantee}</transport-guarantee>
     </user-data-constraint>
   </security-constraint>
 
@@ -109,15 +109,16 @@
 
   <login-config>
     <auth-method>FORM</auth-method>
-    <realm-name>@SECURITY-DOMAIN@</realm-name>
+    <realm-name>${app.security.domain}</realm-name>
     <form-login-config>
       <form-login-page>/docs/login/login.html</form-login-page>
       <form-error-page>/docs/login/error.html</form-error-page>
     </form-login-config>
   </login-config>
 
+  <!-- Roles are not used -->
   <security-role>
     <description>A calendar system user</description>
-    <role-name>@SECURITY-PREFIX@.user</role-name>
+    <role-name>bedework.user</role-name>
   </security-role>
 </web-app>
