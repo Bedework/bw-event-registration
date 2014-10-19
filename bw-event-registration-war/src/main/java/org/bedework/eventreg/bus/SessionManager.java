@@ -91,6 +91,8 @@ public class SessionManager {
     try {
       this.db = db;
 
+      db.setSysInfo(getSysInfo());
+
       db.open();
 
       Timezones.initTimezones(getSysInfo().getTzsUri());

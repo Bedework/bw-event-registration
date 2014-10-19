@@ -28,6 +28,18 @@ import java.util.List;
  * @author douglm
  */
 public interface EventregSvcMBean extends ConfBaseMBean, EventregProperties {
+  /** Export schema to database?
+   *
+   * @param val
+   */
+  public void setExport(boolean val);
+
+  /**
+   * @return true for export schema
+   */
+  @MBeanInfo("Export (write) schema to database?")
+  public boolean getExport();
+
   /* ========================================================================
    * Operations
    * ======================================================================== */

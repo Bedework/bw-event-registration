@@ -18,17 +18,22 @@
 */
 package org.bedework.eventreg.db;
 
+import org.bedework.eventreg.service.EventregSvcMBean;
+
 import org.bedework.util.hibernate.HibException;
 import org.bedework.util.hibernate.HibSession;
-import org.bedework.util.hibernate.HibSessionFactory;
 import org.bedework.util.hibernate.HibSessionImpl;
 
 import org.apache.log4j.Logger;
+import org.hibernate.SessionFactory;
+import org.hibernate.cfg.Configuration;
 
 import java.io.Serializable;
+import java.io.StringReader;
 import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.List;
+import java.util.Properties;
 
 /** This class manages the Exchange synch database.
  *
@@ -49,11 +54,19 @@ public class EventregDb implements Serializable {
    */
   protected HibSession sess;
 
+  private static SessionFactory sessionFactory;
+
+  private EventregSvcMBean sysInfo;
+
   /**
    *
    */
   public EventregDb() {
     debug = getLogger().isDebugEnabled();
+  }
+
+  public void setSysInfo(final EventregSvcMBean sysInfo) {
+    this.sysInfo = sysInfo;
   }
 
   /**
@@ -571,6 +584,42 @@ public class EventregDb implements Serializable {
     }
   }
 
+  private SessionFactory getSessionFactory() throws Throwable {
+    if (sessionFactory != null) {
+      return sessionFactory;
+    }
+
+    synchronized (this) {
+      if (sessionFactory != null) {
+        return sessionFactory;
+      }
+
+      /** Get a new hibernate session factory. This is configured from an
+       * application resource hibernate.cfg.xml together with some run time values
+       */
+      final Configuration conf = new Configuration();
+
+      final StringBuilder sb = new StringBuilder();
+
+      @SuppressWarnings("unchecked")
+      final List<String> ps = sysInfo.getHibernateProperties();
+
+      for (final String p: ps) {
+        sb.append(p);
+        sb.append("\n");
+      }
+
+      final Properties hprops = new Properties();
+      hprops.load(new StringReader(sb.toString()));
+
+      conf.addProperties(hprops).configure();
+
+      sessionFactory = conf.buildSessionFactory();
+
+      return sessionFactory;
+    }
+  }
+
   protected synchronized void openSession() throws Throwable {
     if (isOpen()) {
       throw new Exception("Already open");
@@ -592,8 +641,8 @@ public class EventregDb implements Serializable {
       }
       sess = new HibSessionImpl();
       try {
-        sess.init(HibSessionFactory.getSessionFactory(null), getLogger());
-      } catch (HibException he) {
+        sess.init(getSessionFactory(), getLogger());
+      } catch (final HibException he) {
         throw new Exception(he);
       }
       trace("Open session for " + objTimestamp);

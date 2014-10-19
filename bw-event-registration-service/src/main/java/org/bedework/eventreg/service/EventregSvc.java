@@ -255,17 +255,12 @@ public class EventregSvc extends ConfBase<EventregPropertiesImpl>
    * Mbean attributes
    * ======================================================================== */
 
-  /** Export to database?
-   *
-   * @param val
-   */
+  @Override
   public void setExport(final boolean val) {
     export = val;
   }
 
-  /**
-   * @return true for export
-   */
+  @Override
   @MBeanInfo("Export (write) schema to database?")
   public boolean getExport() {
     return export;

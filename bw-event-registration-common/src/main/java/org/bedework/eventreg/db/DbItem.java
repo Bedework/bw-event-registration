@@ -30,7 +30,7 @@ import java.io.Serializable;
  */
 public class DbItem<T> implements Comparable<T>, Serializable {
   // hibernate
-  private long id;
+  private Long id;
 
   // hibernate
   private int seq;
