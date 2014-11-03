@@ -16,7 +16,7 @@
     specific language governing permissions and limitations
     under the License.
 */
-package org.bedework.eventreg.service;
+package org.bedework.eventreg;
 
 import org.bedework.util.config.ConfInfo;
 import org.bedework.util.config.HibernateConfigI;

@@ -18,6 +18,7 @@
 */
 package org.bedework.eventreg.service;
 
+import org.bedework.eventreg.EventregProperties;
 import org.bedework.util.config.ConfInfo;
 import org.bedework.util.config.HibernateConfigBase;
 

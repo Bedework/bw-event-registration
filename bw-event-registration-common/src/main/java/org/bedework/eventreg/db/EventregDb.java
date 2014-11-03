@@ -18,8 +18,7 @@
 */
 package org.bedework.eventreg.db;
 
-import org.bedework.eventreg.service.EventregSvcMBean;
-
+import org.bedework.eventreg.EventregProperties;
 import org.bedework.util.hibernate.HibException;
 import org.bedework.util.hibernate.HibSession;
 import org.bedework.util.hibernate.HibSessionImpl;
@@ -56,7 +55,7 @@ public class EventregDb implements Serializable {
 
   private static SessionFactory sessionFactory;
 
-  private EventregSvcMBean sysInfo;
+  private EventregProperties sysInfo;
 
   /**
    *
@@ -65,7 +64,7 @@ public class EventregDb implements Serializable {
     debug = getLogger().isDebugEnabled();
   }
 
-  public void setSysInfo(final EventregSvcMBean sysInfo) {
+  public void setSysInfo(final EventregProperties sysInfo) {
     this.sysInfo = sysInfo;
   }
 
