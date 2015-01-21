@@ -26,6 +26,10 @@
     </dependency>
     <dependency>
       <groupId>org.bedework</groupId>
+      <artifactId>bw-util-jmx</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.bedework</groupId>
       <artifactId>bw-util-timezones</artifactId>
     </dependency>
 		<!-- Bedework: Access -->
