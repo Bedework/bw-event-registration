@@ -18,9 +18,7 @@ under the License.
  */
 package org.bedework.eventreg.bus;
 
-import org.bedework.eventreg.service.EventregSvc;
 import org.bedework.eventreg.service.EventregSvcMBean;
-import org.bedework.util.jmx.ConfBase;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -37,7 +35,7 @@ public class ContextListener implements ServletContextListener {
   protected final Log logger = LogFactory.getLog(getClass());
 
   static class Configurator extends ConfBase {
-    EventregSvc sysInfo;
+    EventregSvcMBean sysInfo;
 
     public Configurator() {
       super("org.bedework.eventreg:service=EventRegContext");
@@ -53,11 +51,13 @@ public class ContextListener implements ServletContextListener {
       try {
         getManagementContext().start();
 
-        sysInfo = new EventregSvc();
+        final ConfBase conf = loadInstance("org.bedework.eventreg.service.EventregSvc");
         register(new ObjectName(sysInfo.getServiceName()),
                  sysInfo);
-        sysInfo.loadConfig();
-      } catch (Throwable t){
+        conf.loadConfig();
+        sysInfo = (EventregSvcMBean)conf;
+        sysInfo.setEventregRequestHandler(new SvcRequestHandler());
+      } catch (final Throwable t){
         t.printStackTrace();
       }
     }
@@ -66,13 +66,35 @@ public class ContextListener implements ServletContextListener {
     public void stop() {
       try {
         getManagementContext().stop();
-      } catch (Throwable t){
+      } catch (final Throwable t){
         t.printStackTrace();
       }
     }
   }
 
-  private static Configurator conf = new Configurator();
+  private static ConfBase loadInstance(final String cname) {
+    try {
+      final ClassLoader loader = Thread.currentThread().getContextClassLoader();
+      final Class cl = loader.loadClass(cname);
+
+      if (cl == null) {
+        throw new Exception("Class " + cname + " not found");
+      }
+
+      final Object o = cl.newInstance();
+
+      if (o == null) {
+        throw new Exception("Unable to instantiate class " + cname);
+      }
+
+      return (ConfBase)o;
+    } catch (final Throwable t) {
+      t.printStackTrace();
+      throw new RuntimeException(t);
+    }
+  }
+
+  private static final Configurator conf = new Configurator();
 
   static {
     // Initialise now so it's visible after deployment

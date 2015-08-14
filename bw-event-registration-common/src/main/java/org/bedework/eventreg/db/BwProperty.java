@@ -36,6 +36,7 @@ public class BwProperty extends DbItem<BwProperty> {
 
   /** Constructor
    */
+  @SuppressWarnings("UnusedDeclaration")
   public BwProperty() {
     super();
   }

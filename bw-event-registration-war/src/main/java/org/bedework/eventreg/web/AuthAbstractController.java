@@ -119,13 +119,13 @@ public abstract class AuthAbstractController extends AbstractController {
    * @throws Throwable
    */
   protected void adjustTickets() throws Throwable {
-    Event currEvent = sessMan.getCurrEvent();
+    final Event currEvent = sessMan.getCurrEvent();
 
-    long allocated = sessMan.getRegTicketCount();
-    int total = currEvent.getMaxTickets();
-    int available = (int)(total - allocated);
+    final long allocated = sessMan.getRegTicketCount();
+    final int total = currEvent.getMaxTickets();
+    final int available = (int)(total - allocated);
 
-    if (available > 0) {
+    if (available <= 0) {
       return;
     }
 
@@ -149,7 +149,7 @@ public abstract class AuthAbstractController extends AbstractController {
       return;
     }
 
-    /* For a non-admin user limit the chnage to the number available */
+    /* For a non-admin user limit the change to the number available */
     if (!admin && (change > 0)) {
       long allocated = sessMan.getRegTicketCount();
       int total = currEvent.getMaxTickets();

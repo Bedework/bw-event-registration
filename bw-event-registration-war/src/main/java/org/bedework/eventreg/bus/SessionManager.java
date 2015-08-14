@@ -24,6 +24,7 @@ import org.bedework.eventreg.db.Event;
 import org.bedework.eventreg.db.EventregDb;
 import org.bedework.eventreg.db.Registration;
 import org.bedework.eventreg.service.EventregSvcMBean;
+import org.bedework.eventreg.requests.EventregRequest;
 import org.bedework.util.calendar.XcalUtil.TzGetter;
 import org.bedework.util.timezones.Timezones;
 
@@ -146,6 +147,10 @@ public class SessionManager {
 
     open = false;
     return db.close();
+  }
+
+  public boolean handleRequest(final EventregRequest request) throws Throwable {
+    return getSysInfo().handleRequest(request);
   }
 
   /**

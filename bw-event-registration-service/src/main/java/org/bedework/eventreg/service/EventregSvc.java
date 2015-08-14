@@ -19,6 +19,7 @@
 package org.bedework.eventreg.service;
 
 import org.bedework.eventreg.db.EventregDb;
+import org.bedework.eventreg.requests.EventregRequest;
 import org.bedework.util.jmx.ConfBase;
 import org.bedework.util.jmx.InfoLines;
 import org.bedework.util.jmx.MBeanInfo;
@@ -31,6 +32,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 import java.util.UUID;
+import java.util.concurrent.BlockingDeque;
+import java.util.concurrent.LinkedBlockingDeque;
 
 /**
  * @author douglm
@@ -41,12 +44,19 @@ public class EventregSvc extends ConfBase<EventregPropertiesImpl>
   /* Name of the property holding the location of the config data */
   public static final String confuriPname = "org.bedework.eventreg.confuri";
 
+  public static final String statusDone = "Done";
+  public static final String statusFailed = "Failed";
+  public static final String statusRunning = "Running";
+  public static final String statusStopped = "Stopped";
+
+  private static String status;
+
   /* Be safe - default to false */
   private boolean export;
 
-  /* ========================================================================
+  /* ==============================================================
    * Dump/restore
-   * ======================================================================== */
+   * ============================================================== */
 
   private Configuration hibCfg;
 
@@ -62,9 +72,9 @@ public class EventregSvc extends ConfBase<EventregPropertiesImpl>
       try {
         infoLines.addLn("Started export of schema");
 
-        long startTime = System.currentTimeMillis();
+        final long startTime = System.currentTimeMillis();
 
-        SchemaExport se = new SchemaExport(getHibConfiguration());
+        final SchemaExport se = new SchemaExport(getHibConfiguration());
 
 //      if (getDelimiter() != null) {
 //        se.setDelimiter(getDelimiter());
@@ -104,6 +114,61 @@ public class EventregSvc extends ConfBase<EventregPropertiesImpl>
 
   private final static String nm = "eventreg";
 
+  private EventregRequestHandler hdlr;
+
+  /**
+   * This process handles queued up requests from the calendar
+   * system.
+   */
+  private class Processor extends AbstractProcessorThread {
+    private final BlockingDeque<EventregRequest> requests =
+            new LinkedBlockingDeque<>();
+    // Capacity could be specified for the queue
+
+    /**
+     * @param name for the thread
+     */
+    public Processor(final String name) throws Throwable {
+      super(name);
+    }
+
+    public void addRequest(final EventregRequest val) throws Throwable {
+      requests.put(val);
+    }
+
+    @Override
+    public void runInit() {
+    }
+
+    @Override
+    public void runProcess() throws Throwable {
+      while (running) {
+        final EventregRequest req = requests.remove();
+
+        if (debug) {
+          debug("handling request: " + req);
+        }
+
+        hdlr.handle(req);
+      }
+    }
+
+    @Override
+    public void close() {
+      while (!requests.isEmpty()) {
+        final EventregRequest req = requests.remove();
+
+        try {
+          hdlr.handle(req);
+        } catch (final Throwable t) {
+          error(t);
+        }
+      }
+    }
+  }
+
+  AbstractProcessorThread processor;
+
   /**
    */
   public EventregSvc() {
@@ -125,6 +190,14 @@ public class EventregSvc extends ConfBase<EventregPropertiesImpl>
   @Override
   public String loadConfig() {
     return loadConfig(EventregPropertiesImpl.class);
+  }
+
+  AbstractProcessorThread getProcessor() throws Throwable {
+    return new Processor("Eventreg");
+  }
+
+  public void setEventregRequestHandler(final EventregRequestHandler val) {
+    hdlr = val;
   }
 
   /* ========================================================================
@@ -277,9 +350,23 @@ public class EventregSvc extends ConfBase<EventregPropertiesImpl>
     return "OK";
   }
 
-  /* (non-Javadoc)
-   * @see org.bedework.dumprestore.BwDumpRestoreMBean#schema()
-   */
+  @Override
+  public boolean handleRequest(final EventregRequest request) {
+    if (!isRunning()) {
+      return false;
+    }
+
+    try {
+      ((Processor)processor).addRequest(request);
+    } catch (final Throwable t) {
+      error(t);
+
+      return false;
+    }
+
+    return true;
+  }
+
   @SuppressWarnings("deprecation")
   @Override
   public String schema() {
@@ -472,6 +559,95 @@ public class EventregSvc extends ConfBase<EventregPropertiesImpl>
     res.add("************************Dump unimplemented *************************" + "\n");
 
     return res;
+  }
+
+  public String getStatus() {
+    return status;
+  }
+
+  public void setStatus(final String val) {
+    status = val;
+  }
+
+  @Override
+  public boolean isRunning() {
+    if (processor == null) {
+      return false;
+    }
+
+    if (!processor.isAlive()) {
+      processor = null;
+      return false;
+    }
+
+    if (processor.getRunning()) {
+      return true;
+    }
+
+        /* Kill it and return false */
+    processor.interrupt();
+    try {
+      processor.join(5000);
+    } catch (final Throwable ignored) {}
+
+    if (!processor.isAlive()) {
+      processor = null;
+      return false;
+    }
+
+    warn("Processor was unstoppable. Acquiring new processor");
+    processor = null;
+    return false;
+  }
+
+  @Override
+  public synchronized void start() {
+    if (isRunning()) {
+      error("Already started");
+      return;
+    }
+
+    setStatus(statusStopped);
+
+    try {
+      processor = getProcessor();
+    } catch (final Throwable t) {
+      error("Error getting processor");
+      error(t);
+      return;
+    }
+    processor.setRunning(true);
+    processor.start();
+  }
+
+  @Override
+  public synchronized void stop() {
+    if (processor == null) {
+      error("Already stopped");
+      return;
+    }
+
+    info("************************************************************");
+    info(" * Stopping feeder");
+    info("************************************************************");
+
+    processor.setRunning(false);
+    //?? ProcessorThread.stopProcess(processor);
+
+    processor.interrupt();
+    try {
+      processor.join(20 * 1000);
+    } catch (final InterruptedException ignored) {
+    } catch (final Throwable t) {
+      error("Error waiting for processor termination");
+      error(t);
+    }
+
+    processor = null;
+
+    info("************************************************************");
+    info(" * Feeder terminated");
+    info("************************************************************");
   }
 
   /* ====================================================================
