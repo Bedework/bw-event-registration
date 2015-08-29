@@ -27,7 +27,7 @@ import org.springframework.web.servlet.ModelAndView;
  * @author douglm
  *
  */
-public class EventChangeController extends AdminAuthAbstractController {
+public class EventChangeController extends WSAbstractController {
   @Override
   public ModelAndView doRequest() throws Throwable {
     final String href = req.getHref();

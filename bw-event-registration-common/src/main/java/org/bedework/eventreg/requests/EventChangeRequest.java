@@ -18,7 +18,7 @@
 */
 package org.bedework.eventreg.requests;
 
-import edu.rpi.sss.util.ToString;
+import org.bedework.util.misc.ToString;
 
 /** Requests coming in to the Bedework event registration service.
  * These are the ones that need to be handled asynchronously, for

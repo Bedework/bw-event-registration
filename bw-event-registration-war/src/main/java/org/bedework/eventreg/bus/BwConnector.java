@@ -57,14 +57,14 @@ import javax.xml.soap.SOAPMessage;
 public class BwConnector {
   private transient Logger log;
 
-  private TzGetter tzs;
+  private final TzGetter tzs;
 
-  private static ietf.params.xml.ns.icalendar_2.ObjectFactory icalOf =
+  private final static ietf.params.xml.ns.icalendar_2.ObjectFactory icalOf =
       new ietf.params.xml.ns.icalendar_2.ObjectFactory();
 
-  private String wsdlUri;
+  private final String wsdlUri;
 
-  private Map<String, Event> events = new HashMap<String, Event>();
+  private final Map<String, Event> events = new HashMap<>();
 
   protected ObjectFactory of = new ObjectFactory();
   protected MessageFactory soapMsgFactory;
@@ -72,7 +72,7 @@ public class BwConnector {
 
   /**
    * @param wsdlUri for SOAP
-   * @param tzs
+   * @param tzs getter for timezones
    */
   public BwConnector(final String wsdlUri,
                      final TzGetter tzs) {
@@ -88,7 +88,7 @@ public class BwConnector {
   }
 
   /**
-   * @param href
+   * @param href of event
    * @return cached event or event retrieved from service
    * @throws Throwable
    */
@@ -109,7 +109,7 @@ public class BwConnector {
 
     // Pull from server.
 
-    FetchItemResponseType fir = fetchItem(href);
+    final FetchItemResponseType fir = fetchItem(href);
 
     if ((fir == null) ||
         (fir.getIcalendar() == null) ||
@@ -118,11 +118,13 @@ public class BwConnector {
       return null;
     }
 
-    ArrayOfComponents aoc = fir.getIcalendar().getVcalendar().get(0).getComponents();
+    final ArrayOfComponents aoc =
+            fir.getIcalendar().getVcalendar().get(0).getComponents();
 
-    List<BaseComponentType> comps = new ArrayList<BaseComponentType>();
+    final List<BaseComponentType> comps = new ArrayList<>();
 
-    for (JAXBElement<? extends BaseComponentType> comp: aoc.getBaseComponent()) {
+    for (final JAXBElement<? extends BaseComponentType> comp:
+            aoc.getBaseComponent()) {
       comps.add(comp.getValue());
     }
 
@@ -139,14 +141,14 @@ public class BwConnector {
   }
 
   /**
-   * @param href
+   * @param href of item to fetch
    * @return FetchItemResponseType
    * @throws Throwable
    */
   public FetchItemResponseType fetchItem(final String href) throws Throwable {
     //ObjectFactory of = getIcalObjectFactory();
 
-    FetchItemType fi = new FetchItemType();
+    final FetchItemType fi = new FetchItemType();
 
     fi.setHref(href);
 

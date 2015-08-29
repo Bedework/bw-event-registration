@@ -19,19 +19,32 @@ under the License.
 
 package org.bedework.eventreg.bus;
 
+import org.bedework.eventreg.common.EventregException;
 import org.bedework.eventreg.db.Change;
 import org.bedework.eventreg.db.Event;
 import org.bedework.eventreg.db.EventregDb;
 import org.bedework.eventreg.db.Registration;
-import org.bedework.eventreg.service.EventregSvcMBean;
 import org.bedework.eventreg.requests.EventregRequest;
+import org.bedework.eventreg.service.EventregSvcMBean;
 import org.bedework.util.calendar.XcalUtil.TzGetter;
+import org.bedework.util.http.BasicHttpClient;
 import org.bedework.util.timezones.Timezones;
+import org.bedework.util.xml.XmlEmit;
+import org.bedework.util.xml.tagdefs.AppleIcalTags;
+import org.bedework.util.xml.tagdefs.AppleServerTags;
+import org.bedework.util.xml.tagdefs.BedeworkServerTags;
+import org.bedework.util.xml.tagdefs.CaldavDefs;
+import org.bedework.util.xml.tagdefs.WebdavTags;
 
 import net.fortuna.ical4j.model.TimeZone;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.http.Header;
+import org.apache.http.message.BasicHeader;
 
+import java.io.StringWriter;
+import java.net.URI;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -59,7 +72,12 @@ public class SessionManager {
 
   private BwConnector cnctr;
 
-  private static TzGetter tzs = new TzGetter() {
+  protected StringWriter davXmlSw;
+  protected XmlEmit davXml;
+
+  protected BasicHttpClient bwClient;
+
+  private final static TzGetter tzs = new TzGetter() {
     @Override
     public TimeZone getTz(final String id) throws Throwable {
       return Timezones.getTz(id);
@@ -69,12 +87,97 @@ public class SessionManager {
   /**
    *
    */
-  public SessionManager() {
+  public SessionManager() throws EventregException {
     chgMan = new ChangeManager(this);
   }
 
-  public EventregSvcMBean getSysInfo() throws Throwable {
-    return ContextListener.getSysInfo();
+  public void addNamespace(final XmlEmit xml) throws EventregException {
+    try {
+      xml.addNs(new XmlEmit.NameSpace(WebdavTags.namespace, "DAV"), true);
+
+      xml.addNs(new XmlEmit.NameSpace(CaldavDefs.caldavNamespace, "C"), true);
+      xml.addNs(new XmlEmit.NameSpace(AppleIcalTags.appleIcalNamespace, "AI"), false);
+      xml.addNs(new XmlEmit.NameSpace(CaldavDefs.icalNamespace, "ical"), false);
+      xml.addNs(new XmlEmit.NameSpace(AppleServerTags.appleCaldavNamespace, "CS"), false);
+      xml.addNs(new XmlEmit.NameSpace(BedeworkServerTags.bedeworkCaldavNamespace, "BSS"), false);
+      xml.addNs(new XmlEmit.NameSpace(
+                        BedeworkServerTags.bedeworkSystemNamespace,
+                        "BW"),
+                false);
+    } catch (final Throwable t) {
+      throw new EventregException(t);
+    }
+  }
+
+  protected XmlEmit startDavEmit() throws EventregException {
+    try {
+      davXmlSw = new StringWriter();
+      davXml = new XmlEmit();
+      davXml.startEmit(davXmlSw);
+
+      addNamespace(davXml);
+
+      return davXml;
+    } catch (final Throwable t) {
+      throw new EventregException(t);
+    }
+  }
+
+  protected String endDavEmit() throws EventregException {
+    try {
+      davXml.flush();
+      return davXmlSw.toString();
+    } catch (final Throwable t) {
+      throw new EventregException(t);
+    }
+  }
+
+  protected BasicHttpClient getBwClient() throws EventregException {
+    if (bwClient != null) {
+      return bwClient;
+    }
+
+    try {
+      bwClient = new BasicHttpClient(30 * 1000,
+                                   false);  // followRedirects
+      bwClient.setBaseURI(new URI(getSysInfo().getBwUrl()));
+      //if (sub.getUri() != null) {
+      //  client.setBaseURI(new URI(sub.getUri()));
+      //}
+
+      return bwClient;
+    } catch (final Throwable t) {
+      throw new EventregException(t);
+    }
+  }
+
+  private List<Header> authheaders;
+
+  List<Header> getAuthHeaders() throws EventregException {
+    if (authheaders != null) {
+      return authheaders;
+    }
+
+    final String id = getSysInfo().getBwId();
+    final String token = getSysInfo().getBwToken();
+
+    if ((id == null) || (token == null)) {
+      return null;
+    }
+
+    authheaders = new ArrayList<>(1);
+    authheaders.add(new BasicHeader("X-BEDEWORK-NOTE", id + ":" + token));
+    authheaders.add(new BasicHeader("X-BEDEWORK-EXTENSIONS", "true"));
+
+    return authheaders;
+  }
+
+  public EventregSvcMBean getSysInfo() throws EventregException {
+    try {
+      return ContextListener.getSysInfo();
+    } catch (final Throwable t) {
+      throw new EventregException(t);
+    }
   }
 
   /**
@@ -172,7 +275,7 @@ public class SessionManager {
    * @throws Throwable
    */
   public boolean getAdminUser() throws Throwable {
-    String adminToken = getSysInfo().getEventregAdminToken();
+    final String adminToken = getSysInfo().getEventregAdminToken();
 
     if (adminToken == null) {
       return false;
@@ -188,20 +291,29 @@ public class SessionManager {
     cnctr.flush();
   }
 
-  /**
+  /** Get the current event. If we haven't yet retrieved it we retrieve
+   * the event specified by the request href parameter.
+   *
    * @return event
    * @throws Throwable
    */
   public Event getCurrEvent() throws Throwable {
-    String href = req.getHref();
+    return getCurrEvent(req.getHref());
+  }
 
-    if (currEvent != null) {
-      // we already have an event; check to see if its href matches
-      // the event being requested and return it if so.
-      if (currEvent.getHref().equals(href)) {
-        logger.debug("Returning cached event.");
-        return currEvent;
-      }
+  /** Get the current event. If we haven't yet retrieved it we retrieve
+   * the event specified by the href parameter.
+   *
+   * @return event
+   * @throws Throwable
+   */
+  public Event getCurrEvent(final String href) throws Throwable {
+    // we already have an event; check to see if its href matches
+    // the event being requested and return it if so.
+    if ((currEvent != null) &&
+            currEvent.getHref().equals(href)) {
+      logger.debug("Returning cached event.");
+      return currEvent;
     }
 
     if (href == null) {
@@ -489,7 +601,7 @@ public class SessionManager {
    * ==================================================================== */
 
   /**
-   * @param href
+   * @param href of event
    * @return event
    * @throws Throwable
    */

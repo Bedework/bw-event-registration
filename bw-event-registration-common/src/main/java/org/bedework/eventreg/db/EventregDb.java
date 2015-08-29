@@ -18,7 +18,7 @@
 */
 package org.bedework.eventreg.db;
 
-import org.bedework.eventreg.EventregProperties;
+import org.bedework.eventreg.service.EventregProperties;
 import org.bedework.util.hibernate.HibException;
 import org.bedework.util.hibernate.HibSession;
 import org.bedework.util.hibernate.HibSessionImpl;
@@ -34,7 +34,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Properties;
 
-/** This class manages the Exchange synch database.
+/** This class manages the Event registration database.
  *
  * @author Mike Douglass
  */

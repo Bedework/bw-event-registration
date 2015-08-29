@@ -32,11 +32,19 @@
     </dependency>
     <dependency>
       <groupId>org.bedework</groupId>
+      <artifactId>bw-util-http</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.bedework</groupId>
       <artifactId>bw-util-servlet</artifactId>
     </dependency>
     <dependency>
       <groupId>org.bedework</groupId>
       <artifactId>bw-util-timezones</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.bedework</groupId>
+      <artifactId>bw-util-xml</artifactId>
     </dependency>
 		<!-- Bedework: Web Services -->
 		<dependency>

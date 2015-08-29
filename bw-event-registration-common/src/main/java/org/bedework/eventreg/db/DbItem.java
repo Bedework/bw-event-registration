@@ -28,7 +28,8 @@ import java.io.Serializable;
  *
  * @param <T>
  */
-public class DbItem<T> implements Comparable<T>, Serializable {
+public class DbItem<T> extends SerializableProperties
+        implements Comparable<T>, Serializable {
   // hibernate
   private Long id;
 
@@ -42,7 +43,7 @@ public class DbItem<T> implements Comparable<T>, Serializable {
   }
 
   /**
-   * @param val
+   * @param val the id
    */
   public void setId(final Long val) {
     id = val;

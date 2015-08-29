@@ -97,7 +97,7 @@ public abstract class AbstractController implements Controller {
   }
 
   protected ModelAndView sessModel(final String view) {
-    Map<String, Object> myModel = new HashMap<String, Object>();
+    final Map<String, Object> myModel = new HashMap<>();
     myModel.put("sessMan", sessMan);
     myModel.put("req", req);
 
@@ -107,7 +107,7 @@ public abstract class AbstractController implements Controller {
   protected ModelAndView objModel(final String view,
                                   final String name,
                                   final Object m) {
-    Map<String, Object> myModel = new HashMap<String, Object>();
+    final Map<String, Object> myModel = new HashMap<>();
     myModel.put("sessMan", sessMan);
     myModel.put("req", req);
     myModel.put(name, m);
@@ -121,7 +121,7 @@ public abstract class AbstractController implements Controller {
 
   protected ModelAndView errorReturn(final String msg) {
     sessMan.setMessage(msg);
-    Map<String, Object> myModel = new HashMap<String, Object>();
+    final Map<String, Object> myModel = new HashMap<>();
     myModel.put("sessMan", sessMan);
     myModel.put("req", req);
 
@@ -155,9 +155,9 @@ public abstract class AbstractController implements Controller {
   public void dumpRequest(final HttpServletRequest req) {
     try {
       @SuppressWarnings("unchecked")
-      Enumeration<String> names = req.getParameterNames();
+      final Enumeration<String> names = req.getParameterNames();
 
-      String title = "Request parameters";
+      final String title = "Request parameters";
 
       logger.debug(title + " - global info and uris");
       logger.debug("getRequestURI = " + req.getRequestURI());
@@ -172,13 +172,13 @@ public abstract class AbstractController implements Controller {
       logger.debug(title);
 
       while (names.hasMoreElements()) {
-        String key = names.nextElement();
-        String[] vals = req.getParameterValues(key);
-        for (String val: vals) {
+        final String key = names.nextElement();
+        final String[] vals = req.getParameterValues(key);
+        for (final String val: vals) {
           logger.debug("  " + key + " = \"" + val + "\"");
         }
       }
-    } catch (Throwable t) {
+    } catch (final Throwable t) {
       logger.error(this, t);
     }
   }
@@ -191,11 +191,11 @@ public abstract class AbstractController implements Controller {
    */
   protected void reallocate(final int numTickets,
                             final String href) throws Throwable {
-    List<Registration> regs = sessMan.getWaiting(href);
+    final List<Registration> regs = sessMan.getWaiting(href);
 
     int remaining = numTickets;
 
-    for (Registration reg: regs) {
+    for (final Registration reg: regs) {
       int required = reg.getTicketsRequested() - reg.getNumTickets();
 
       if (required <= 0) {

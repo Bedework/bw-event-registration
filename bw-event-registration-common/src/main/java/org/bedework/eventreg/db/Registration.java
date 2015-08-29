@@ -18,6 +18,7 @@ under the License.
  */
 package org.bedework.eventreg.db;
 
+import org.bedework.eventreg.common.EventregException;
 import org.bedework.util.misc.ToString;
 
 import java.sql.Timestamp;
@@ -25,7 +26,8 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.UUID;
 
-/**
+/** A registration to an event for a single person (or entity)
+ *
  * @author douglm
  *
  */
@@ -62,7 +64,7 @@ public class Registration extends DbItem<Registration> {
   }
 
   /**
-   * @param val
+   * @param val the id
    */
   public void setRegistrationId(final Long val) {
     registrationId = val;
@@ -76,7 +78,7 @@ public class Registration extends DbItem<Registration> {
   }
 
   /**
-   * @param val
+   * @param val the authid
    */
   public void setAuthid(final String val) {
     authid = val;
@@ -90,7 +92,7 @@ public class Registration extends DbItem<Registration> {
   }
 
   /**
-   * @param val
+   * @param val email of user (do we need this if notify engine has it)
    */
   public void setEmail(final String val) {
     email = val;
@@ -104,7 +106,7 @@ public class Registration extends DbItem<Registration> {
   }
 
   /**
-   * @param val
+   * @param val href of event
    */
   public void setHref(final String val) {
     href = val;
@@ -132,7 +134,7 @@ public class Registration extends DbItem<Registration> {
   }
 
   /**
-   * @param val
+   * @param val hold/reg etc
    */
   public void setType(final String val) {
     type = val;
@@ -146,7 +148,7 @@ public class Registration extends DbItem<Registration> {
   }
 
   /**
-   * @param val
+   * @param val date
    */
   public void setCreated(final String val) {
     created = val;
@@ -160,7 +162,7 @@ public class Registration extends DbItem<Registration> {
   }
 
   /**
-   * @param val
+   * @param val date
    */
   public void setLastmod(final String val) {
     lastmod = val;
@@ -175,13 +177,13 @@ public class Registration extends DbItem<Registration> {
 
   /** The waitqDate is almost the lastmod and orders the waitq. We need a separate
    * date to avoid somebody going to the back of the queue because of a trivial
-   * modifcation. For example changing the number of tickets required should
+   * modification. For example changing the number of tickets required should
    * preserve your place if you're already on the q.
    *
    * <p>On the other hand we need to ensure that somebody goes to the back of the
    * queue if they are already fulfilled but decide they want more.
    *
-   * @param val
+   * @param val date
    */
   public void setWaitqDate(final String val) {
     waitqDate = val;
@@ -195,7 +197,7 @@ public class Registration extends DbItem<Registration> {
   }
 
   /**
-   * @param val
+   * @param val a comment
    */
   public void setComment(final String val) {
     comment = val;
@@ -209,7 +211,7 @@ public class Registration extends DbItem<Registration> {
   }
 
   /**
-   * @param val
+   * @param val a message
    */
   public void setMessage(final String val) {
     message = val;
@@ -223,7 +225,7 @@ public class Registration extends DbItem<Registration> {
   }
 
   /**
-   * @param val
+   * @param val set of tickets
    */
   public void setTickets(final Set<Ticket> val) {
     tickets = val;
@@ -237,11 +239,30 @@ public class Registration extends DbItem<Registration> {
   }
 
   /* ====================================================================
+   *                   Property fields
+   * ==================================================================== */
+
+  /**
+   * @param val flag to say we sent a cancel message
+   */
+  public void setCancelSent(final boolean val) {
+    setBoolean("cancelSent", val);
+  }
+
+  /**
+   * @return flag to say we sent a cancel message
+   */
+  public boolean getCancelSent() throws EventregException {
+    return mayBool("cancelSent");
+  }
+
+
+  /* ====================================================================
    *                   Non db fields
    * ==================================================================== */
 
   /**
-   * @param val
+   * @param val the event
    */
   public void setEvent(final Event val) {
     event = val;
@@ -262,7 +283,8 @@ public class Registration extends DbItem<Registration> {
    *
    */
   public void setTimestamps() {
-    Timestamp sqlDate = new Timestamp(new java.util.Date().getTime());
+    final Timestamp sqlDate =
+            new Timestamp(new java.util.Date().getTime());
 
     setCreated(sqlDate.toString());
     setLastmod(getCreated());
@@ -273,7 +295,8 @@ public class Registration extends DbItem<Registration> {
    *
    */
   public void setLastmod() {
-    Timestamp sqlDate = new Timestamp(new java.util.Date().getTime());
+    final Timestamp sqlDate =
+            new Timestamp(new java.util.Date().getTime());
 
     setLastmod(sqlDate.toString());
   }
@@ -282,34 +305,40 @@ public class Registration extends DbItem<Registration> {
    *
    */
   public void setWaitqDate() {
-    Timestamp sqlDate = new Timestamp(new java.util.Date().getTime());
+    final Timestamp sqlDate =
+            new Timestamp(new java.util.Date().getTime());
 
     setLastmod(sqlDate.toString());
   }
 
   /** Add our stuff to the StringBuilder
    *
-   * @param sb    StringBuilder for result
+   * @param ts    for result
    */
   @Override
   protected void toStringSegment(final ToString ts) {
-    super.toStringSegment(ts);
-    ts.append("registrationId", getRegistrationId());
-    ts.append("authid", getAuthid());
-    ts.append("email", getEmail());
-    ts.append("href", getHref());
-    ts.append("ticketsRequested", getTicketsRequested());
-    ts.append("type", getType());
-    ts.append("created", getCreated());
-    ts.append("lastmod", getLastmod());
-    ts.append("waitqDate", getWaitqDate());
-    ts.append("comment", getComment());
-    ts.append("message", getMessage());
-    ts.append("numTickets", getNumTickets());
+    try {
+      super.toStringSegment(ts);
+      ts.append("registrationId", getRegistrationId());
+      ts.append("authid", getAuthid());
+      ts.append("email", getEmail());
+      ts.append("href", getHref());
+      ts.append("ticketsRequested", getTicketsRequested());
+      ts.append("type", getType());
+      ts.append("created", getCreated());
+      ts.append("lastmod", getLastmod());
+      ts.append("waitqDate", getWaitqDate());
+      ts.append("comment", getComment());
+      ts.append("message", getMessage());
+      ts.append("numTickets", getNumTickets());
+      ts.append("cancelSent", getCancelSent());
+    } catch (final Throwable t) {
+      ts.append("exception", t.getLocalizedMessage());
+    }
   }
 
   /**
-   * @param val
+   * @param val a ticket
    */
   public void addTicket(final Ticket val) {
     Set<Ticket> ts = getTickets();
@@ -326,7 +355,7 @@ public class Registration extends DbItem<Registration> {
    *
    */
   public void addTicket() {
-    Ticket t = new Ticket();
+    final Ticket t = new Ticket();
 
     t.setRegistrationId(getRegistrationId());
     t.setAuthid(getAuthid());
@@ -404,7 +433,7 @@ public class Registration extends DbItem<Registration> {
 
   @Override
   public String toString() {
-    ToString ts = new ToString(this);
+    final ToString ts = new ToString(this);
 
     toStringSegment(ts);
 

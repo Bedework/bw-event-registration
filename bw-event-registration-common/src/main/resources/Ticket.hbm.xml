@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+  "-//Hibernate/Hibernate Mapping DTD//EN"
+  "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<!-- ===================================================================
+     Object to represent an event ticket.
+     =================================================================== -->
+
+<hibernate-mapping>
+  <class name="org.bedework.eventreg.db.Ticket"
+         table="bwevreg_tkts" >
+    <cache usage="read-write"/>
+    
+    <id name="id" type="long" column="bwevreg_id">
+      <generator class="native"/>
+    </id>
+
+    <!-- db entity properties -->
+
+    <version name="seq" column="bwevreg_seq" type="integer" />
+
+    <property name="registrationId" column="bwevreg_regid" type="long"
+              not-null="true"
+              index="bwevregidx_tktregid" />
+
+    <property name="authid" column="bwevreg_authid" type="string" length="500"
+              not-null="true"
+              index="bwevregidx_tktauthid" />
+
+    <property name="href" column="bwevreg_href" type="string" length="1000"
+              not-null="true"
+              index="bwevregidx_tkthref" />
+
+    <property name="uuid" column="bwevreg_uuid" type="string" length="40"
+              not-null="true"
+              unique="true"
+              index="bwevregidx_tktuuid" />
+              
+    <property name="created" column="bwevreg_created" type="string" length="30" />
+  </class>
+</hibernate-mapping>
+

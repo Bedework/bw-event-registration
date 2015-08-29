@@ -23,6 +23,7 @@ import org.bedework.eventreg.requests.EventregRequest;
 import org.bedework.util.jmx.ConfBase;
 import org.bedework.util.jmx.InfoLines;
 import org.bedework.util.jmx.MBeanInfo;
+import org.bedework.util.misc.AbstractProcessorThread;
 
 import org.hibernate.cfg.Configuration;
 import org.hibernate.tool.hbm2ddl.SchemaExport;
@@ -110,7 +111,7 @@ public class EventregSvc extends ConfBase<EventregPropertiesImpl>
     }
   }
 
-  private SchemaThread buildSchema = new SchemaThread();
+  private final SchemaThread buildSchema = new SchemaThread();
 
   private final static String nm = "eventreg";
 
@@ -143,7 +144,7 @@ public class EventregSvc extends ConfBase<EventregPropertiesImpl>
     @Override
     public void runProcess() throws Throwable {
       while (running) {
-        final EventregRequest req = requests.remove();
+        final EventregRequest req = requests.take();
 
         if (debug) {
           debug("handling request: " + req);
@@ -232,6 +233,36 @@ public class EventregSvc extends ConfBase<EventregPropertiesImpl>
   @Override
   public String getWsdlUri() {
     return getConfig().getWsdlUri();
+  }
+
+  @Override
+  public void setBwId(final String val) {
+    getConfig().setBwId(val);
+  }
+
+  @Override
+  public String getBwId() {
+    return getConfig().getBwId();
+  }
+
+  @Override
+  public void setBwToken(final String val) {
+    getConfig().setBwToken(val);
+  }
+
+  @Override
+  public String getBwToken() {
+    return getConfig().getBwToken();
+  }
+
+  @Override
+  public void setBwUrl(final String val) {
+    getConfig().setBwUrl(val);
+  }
+
+  @Override
+  public String getBwUrl() {
+    return getConfig().getBwUrl();
   }
 
   /* ========================================================================
@@ -554,7 +585,7 @@ public class EventregSvc extends ConfBase<EventregPropertiesImpl>
 
   @Override
   public List<String> dumpStatus() {
-    List<String> res = new ArrayList<>();
+    final List<String> res = new ArrayList<>();
 
     res.add("************************Dump unimplemented *************************" + "\n");
 
@@ -584,7 +615,7 @@ public class EventregSvc extends ConfBase<EventregPropertiesImpl>
       return true;
     }
 
-        /* Kill it and return false */
+    /* Kill it and return false */
     processor.interrupt();
     try {
       processor.join(5000);

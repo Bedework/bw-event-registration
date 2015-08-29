@@ -26,5 +26,5 @@ import org.bedework.eventreg.requests.EventregRequest;
  *
  */
 public interface EventregRequestHandler {
-  void handle(final EventregRequest request) throws Throwable;
+  void handle(EventregRequest request) throws Throwable;
 }

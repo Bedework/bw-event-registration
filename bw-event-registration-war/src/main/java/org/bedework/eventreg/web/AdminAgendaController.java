@@ -33,11 +33,12 @@ public class AdminAgendaController extends AdminAuthAbstractController {
   @Override
   public ModelAndView doRequest() throws Throwable {
     sessMan.flushCurrEvent();
-    Event ev = sessMan.getCurrEvent();
+    final Event ev = sessMan.getCurrEvent();
 
-    TreeSet<Registration> regs = new TreeSet<Registration>();
+    final TreeSet<Registration> regs = new TreeSet<>();
 
-    for (Registration reg: sessMan.getRegistrationsByHref(ev.getHref())) {
+    for (final Registration reg:
+            sessMan.getRegistrationsByHref(ev.getHref())) {
       reg.setEvent(ev);
 
       regs.add(reg);

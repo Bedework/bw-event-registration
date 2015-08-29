@@ -18,7 +18,6 @@
 */
 package org.bedework.eventreg.service;
 
-import org.bedework.eventreg.EventregProperties;
 import org.bedework.util.config.ConfInfo;
 import org.bedework.util.config.HibernateConfigBase;
 
@@ -39,6 +38,12 @@ public class EventregPropertiesImpl extends HibernateConfigBase<EventregProperti
   private String tzsUri;
 
   private String wsdlUri;
+
+  private String bwId;
+
+  private String bwToken;
+
+  private String bwUrl;
 
   /* ========================================================================
    * Dump/restore
@@ -84,6 +89,36 @@ public class EventregPropertiesImpl extends HibernateConfigBase<EventregProperti
   @Override
   public String getWsdlUri() {
     return wsdlUri;
+  }
+
+  @Override
+  public void setBwId(final String val) {
+    bwId = val;
+  }
+
+  @Override
+  public String getBwId() {
+    return bwId;
+  }
+
+  @Override
+  public void setBwToken(final String val) {
+    bwToken = val;
+  }
+
+  @Override
+  public String getBwToken() {
+    return bwToken;
+  }
+
+  @Override
+  public void setBwUrl(final String val) {
+    bwUrl = val;
+  }
+
+  @Override
+  public String getBwUrl() {
+    return bwUrl;
   }
 
   /* ========================================================================

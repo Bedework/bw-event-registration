@@ -16,7 +16,7 @@
 		<bedework.releases.repo.url>scp://dev.bedework.org/data/repository/maven/maven2</bedework.releases.repo.url>
 		<bedework.snapshots.repo.url>scp://dev.bedework.org/data/repository/maven/maven2</bedework.snapshots.repo.url>
 		<bw-ws.version>4.0.0-SNAPSHOT</bw-ws.version>
-		<bw-util.version>4.0.0-SNAPSHOT</bw-util.version>
+		<bw-util.version>4.0.1-SNAPSHOT</bw-util.version>
 		<bw-access.version>4.0.0-SNAPSHOT</bw-access.version>
 		<!-- Third Party Library Versions -->
 		<spring.version>3.0.5.RELEASE</spring.version>
@@ -90,6 +90,11 @@
       </dependency>
       <dependency>
         <groupId>org.bedework</groupId>
+        <artifactId>bw-util-http</artifactId>
+        <version>${bw-util.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.bedework</groupId>
         <artifactId>bw-util-jmx</artifactId>
         <version>${bw-util.version}</version>
       </dependency>
@@ -106,6 +111,11 @@
       <dependency>
         <groupId>org.bedework</groupId>
         <artifactId>bw-util-timezones</artifactId>
+        <version>${bw-util.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.bedework</groupId>
+        <artifactId>bw-util-xml</artifactId>
         <version>${bw-util.version}</version>
       </dependency>
 			<!-- Bedework: Web Services -->

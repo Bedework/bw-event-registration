@@ -32,6 +32,7 @@ import ietf.params.xml.ns.icalendar_2.DtstartPropType;
 import ietf.params.xml.ns.icalendar_2.IntegerPropertyType;
 import ietf.params.xml.ns.icalendar_2.LocationPropType;
 import ietf.params.xml.ns.icalendar_2.RecurrenceIdPropType;
+import ietf.params.xml.ns.icalendar_2.StatusPropType;
 import ietf.params.xml.ns.icalendar_2.SummaryPropType;
 import ietf.params.xml.ns.icalendar_2.TextPropertyType;
 import ietf.params.xml.ns.icalendar_2.UidPropType;
@@ -51,14 +52,14 @@ import javax.xml.bind.JAXBElement;
  *
  */
 public class Event implements Comparable<Event> {
-  private BaseComponentType comp;
-  private String href;
+  private final BaseComponentType comp;
+  private final String href;
 
-  private TzGetter tzs;
+  private final TzGetter tzs;
 
   /* Everything else derived from comp. */
 
-  private ArrayOfProperties properties;
+  private final ArrayOfProperties properties;
 
   /** An object of this class is present if the property has been searched for
    * in the icalendar data.
@@ -96,7 +97,7 @@ public class Event implements Comparable<Event> {
   private static class TextPinfo extends Pinfo<TextPropertyType> {
     @Override
     String getValue() {
-      TextPropertyType p = getProp();
+      final TextPropertyType p = getProp();
       if (p == null) {
         return null;
       }
@@ -108,7 +109,7 @@ public class Event implements Comparable<Event> {
   private static class IntPinfo extends Pinfo<IntegerPropertyType> {
     @Override
     String getValue() {
-      IntegerPropertyType p = getProp();
+      final IntegerPropertyType p = getProp();
       if (p == null) {
         return null;
       }
@@ -117,7 +118,7 @@ public class Event implements Comparable<Event> {
     }
 
     public Integer getInt() {
-      IntegerPropertyType p = getProp();
+      final IntegerPropertyType p = getProp();
       if (p == null) {
         return null;
       }
@@ -137,7 +138,7 @@ public class Event implements Comparable<Event> {
         return utc;
       }
 
-      DateDatetimePropertyType p = getProp();
+      final DateDatetimePropertyType p = getProp();
       if (p == null) {
         return null;
       }
@@ -178,12 +179,13 @@ public class Event implements Comparable<Event> {
   private DateDatetimePinfo regStart;
   private TextPinfo location;
   private TextPinfo summary;
+  private TextPinfo status;
   private DateDatetimePinfo dtStart;
 
   /**
-   * @param comp
-   * @param href
-   * @param tzs
+   * @param comp component
+   * @param href of event
+   * @param tzs for timezones
    */
   public Event(final BaseComponentType comp,
                final String href,
@@ -272,7 +274,7 @@ public class Event implements Comparable<Event> {
       regEnd.addProperty((XBedeworkRegistrationEndPropType)findProperty(XBedeworkRegistrationEndPropType.class));
     }
 
-    XcalUtil.DtTzid dt = regEnd.getDt();
+    final XcalUtil.DtTzid dt = regEnd.getDt();
 
     if (dt == null) {
       return null;
@@ -291,7 +293,7 @@ public class Event implements Comparable<Event> {
       regEnd.addProperty((XBedeworkRegistrationEndPropType)findProperty(XBedeworkRegistrationEndPropType.class));
     }
 
-    XcalUtil.DtTzid dt = regEnd.getDt();
+    final XcalUtil.DtTzid dt = regEnd.getDt();
 
     if (dt == null) {
       return null;
@@ -310,7 +312,7 @@ public class Event implements Comparable<Event> {
       regStart.addProperty((XBedeworkRegistrationStartPropType)findProperty(XBedeworkRegistrationStartPropType.class));
     }
 
-    XcalUtil.DtTzid dt = regStart.getDt();
+    final XcalUtil.DtTzid dt = regStart.getDt();
 
     if (dt == null) {
       return null;
@@ -329,7 +331,7 @@ public class Event implements Comparable<Event> {
       regStart.addProperty((XBedeworkRegistrationStartPropType)findProperty(XBedeworkRegistrationStartPropType.class));
     }
 
-    XcalUtil.DtTzid dt = regStart.getDt();
+    final XcalUtil.DtTzid dt = regStart.getDt();
 
     if (dt == null) {
       return null;
@@ -360,6 +362,18 @@ public class Event implements Comparable<Event> {
     }
 
     return summary.getValue();
+  }
+
+  /**
+   * @return status of event
+   */
+  public String getStatus() {
+    if (status == null) {
+      status = new TextPinfo();
+      status.addProperty((StatusPropType)findProperty(StatusPropType.class));
+    }
+
+    return status.getValue();
   }
 
   /**

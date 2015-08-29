@@ -19,6 +19,7 @@ under the License.
 package org.bedework.eventreg.bus;
 
 import org.bedework.eventreg.service.EventregSvcMBean;
+import org.bedework.util.jmx.ConfBase;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -52,11 +53,13 @@ public class ContextListener implements ServletContextListener {
         getManagementContext().start();
 
         final ConfBase conf = loadInstance("org.bedework.eventreg.service.EventregSvc");
-        register(new ObjectName(sysInfo.getServiceName()),
-                 sysInfo);
+        register(new ObjectName(conf.getServiceName()),
+                 conf);
         conf.loadConfig();
         sysInfo = (EventregSvcMBean)conf;
         sysInfo.setEventregRequestHandler(new SvcRequestHandler());
+
+        sysInfo.start();
       } catch (final Throwable t){
         t.printStackTrace();
       }

@@ -18,9 +18,9 @@
 */
 package org.bedework.eventreg.service;
 
-import edu.rpi.cmt.config.ConfInfo;
-import edu.rpi.cmt.config.HibernateConfigI;
-import edu.rpi.cmt.jmx.MBeanInfo;
+import org.bedework.util.config.ConfInfo;
+import org.bedework.util.config.HibernateConfigI;
+import org.bedework.util.jmx.MBeanInfo;
 
 /** Properties for the Bedework event registration service
  *
@@ -34,7 +34,7 @@ public interface EventregProperties extends HibernateConfigI {
 
   /** Set the token for event reg admins
    *
-   * @param val
+   * @param val the token for event reg admins
    */
   void setEventregAdminToken(final String val);
 
@@ -42,6 +42,7 @@ public interface EventregProperties extends HibernateConfigI {
    *
    * @return token
    */
+  @MBeanInfo("The token for event reg admins")
   String getEventregAdminToken();
 
   /**
@@ -52,6 +53,7 @@ public interface EventregProperties extends HibernateConfigI {
   /**
    * @return tzs uri
    */
+  @MBeanInfo("Timezones service URI")
   String getTzsUri();
 
   /** Location of wsdl
@@ -63,7 +65,47 @@ public interface EventregProperties extends HibernateConfigI {
   /**
    * @return Location of wsdl
    */
+  @MBeanInfo("Location of wsdl")
   String getWsdlUri();
+
+  /**
+   *
+   * @param val the token for bedework webservice calls
+   */
+  void setBwId(final String val);
+
+  /** Get the token for bedework webservice calls
+   *
+   * @return token
+   */
+  @MBeanInfo("token for bedework webservice calls")
+  String getBwId();
+
+  /**
+   *
+   * @param val the token for bedework webservice calls
+   */
+  void setBwToken(final String val);
+
+  /** Get the token for bedework webservice calls
+   *
+   * @return token
+   */
+  @MBeanInfo("token for bedework webservice calls")
+  String getBwToken();
+
+  /**
+   *
+   * @param val the url for bedework webservice calls
+   */
+  void setBwUrl(final String val);
+
+  /** Get the url for bedework webservice calls
+   *
+   * @return url
+   */
+  @MBeanInfo("URL for bedework webservice calls")
+  String getBwUrl();
 
   /* ========================================================================
    * Schema
