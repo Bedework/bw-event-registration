@@ -18,12 +18,32 @@
 */
 package org.bedework.eventreg.requests;
 
-/** Requests coming in to the Bedework event registration service or
- * generated internally as a result of changes.
- * These are handled asynchronously by the service module.
+import org.bedework.eventreg.db.Registration;
+import org.bedework.util.misc.ToString;
+
+/** Requests coming in to the Bedework event registration service.
+ * These are the ones that need to be handled asynchronously, for
+ * example, notifications of event changes.
  *
  *
  * @author douglm
  */
-public class EventregRequest {
+public class NewRegistration extends EventregRequest {
+  private final Registration reg;
+
+  public NewRegistration(final Registration reg) {
+    this.reg = reg;
+  }
+
+  public Registration getReg() {
+    return reg;
+  }
+
+  public String toString() {
+    final ToString ts = new ToString(this);
+
+    ts.append("registration", getReg());
+
+    return ts.toString();
+  }
 }

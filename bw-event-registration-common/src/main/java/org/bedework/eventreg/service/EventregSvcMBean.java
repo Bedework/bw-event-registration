@@ -121,7 +121,7 @@ public interface EventregSvcMBean extends ConfBaseMBean, EventregProperties {
    * @return false if service not accepting requests
    */
   @MBeanInfo("handle an incoming request")
-  boolean handleRequest(EventregRequest request);
+  boolean queueRequest(EventregRequest request);
 
   void setEventregRequestHandler(final EventregRequestHandler val);
 }

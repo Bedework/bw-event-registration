@@ -26,7 +26,7 @@ import org.springframework.web.servlet.ModelAndView;
 public class UpdateRegController extends AuthAbstractController {
   @Override
   public ModelAndView doRequest() throws Throwable {
-    ModelAndView mv = updateRegistration();
+    final ModelAndView mv = updateRegistration();
 
     if (mv != null) {
       return mv;

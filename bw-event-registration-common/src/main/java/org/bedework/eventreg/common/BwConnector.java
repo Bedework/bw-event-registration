@@ -16,12 +16,13 @@ KIND, either express or implied. See the License for the
 specific language governing permissions and limitations
 under the License.
  */
-package org.bedework.eventreg.bus;
+package org.bedework.eventreg.common;
 
 import org.bedework.eventreg.db.Event;
+import org.bedework.util.calendar.XcalUtil;
 
-import org.bedework.util.calendar.XcalUtil.TzGetter;
-
+import ietf.params.xml.ns.icalendar_2.ArrayOfComponents;
+import ietf.params.xml.ns.icalendar_2.BaseComponentType;
 import org.apache.log4j.Logger;
 import org.oasis_open.docs.ws_calendar.ns.soap.CalWsService;
 import org.oasis_open.docs.ws_calendar.ns.soap.CalWsServicePortType;
@@ -29,9 +30,6 @@ import org.oasis_open.docs.ws_calendar.ns.soap.FetchItemResponseType;
 import org.oasis_open.docs.ws_calendar.ns.soap.FetchItemType;
 import org.oasis_open.docs.ws_calendar.ns.soap.ObjectFactory;
 import org.w3c.dom.Document;
-
-import ietf.params.xml.ns.icalendar_2.ArrayOfComponents;
-import ietf.params.xml.ns.icalendar_2.BaseComponentType;
 
 import java.io.OutputStream;
 import java.net.URL;
@@ -57,7 +55,7 @@ import javax.xml.soap.SOAPMessage;
 public class BwConnector {
   private transient Logger log;
 
-  private final TzGetter tzs;
+  private final XcalUtil.TzGetter tzs;
 
   private final static ietf.params.xml.ns.icalendar_2.ObjectFactory icalOf =
       new ietf.params.xml.ns.icalendar_2.ObjectFactory();
@@ -75,7 +73,7 @@ public class BwConnector {
    * @param tzs getter for timezones
    */
   public BwConnector(final String wsdlUri,
-                     final TzGetter tzs) {
+                     final XcalUtil.TzGetter tzs) {
     this.wsdlUri = wsdlUri;
     this.tzs = tzs;
   }

@@ -382,7 +382,7 @@ public class EventregSvc extends ConfBase<EventregPropertiesImpl>
   }
 
   @Override
-  public boolean handleRequest(final EventregRequest request) {
+  public boolean queueRequest(final EventregRequest request) {
     if (!isRunning()) {
       return false;
     }

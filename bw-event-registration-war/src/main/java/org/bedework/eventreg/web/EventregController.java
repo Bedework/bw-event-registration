@@ -63,7 +63,7 @@ public class EventregController extends AuthAbstractController {
    * @throws Throwable
    */
   public Long registerUserInEvent() throws Throwable {
-    String href = req.getHref();
+    final String href = req.getHref();
 
     if (debug) {
       logger.debug("Event details: " + sessMan.getCurrentUser() + " " +

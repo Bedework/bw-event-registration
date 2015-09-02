@@ -38,7 +38,7 @@ public class EventChangeController extends WSAbstractController {
 
     final EventChangeRequest req = new EventChangeRequest(href);
 
-    if (!sessMan.handleRequest(req)) {
+    if (!sessMan.queueRequest(req)) {
       // What?
     }
 
