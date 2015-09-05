@@ -28,10 +28,10 @@ import org.bedework.util.misc.ToString;
  *
  * @author douglm
  */
-public class NewRegistration extends EventregRequest {
+public class RegistrationAction extends EventregRequest {
   private final Registration reg;
 
-  public NewRegistration(final Registration reg) {
+  public RegistrationAction(final Registration reg) {
     this.reg = reg;
   }
 

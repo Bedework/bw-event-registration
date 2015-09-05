@@ -26,7 +26,7 @@ import org.bedework.eventreg.db.Event;
 import org.bedework.eventreg.db.EventregDb;
 import org.bedework.eventreg.db.Registration;
 import org.bedework.eventreg.requests.EventregRequest;
-import org.bedework.eventreg.requests.NewRegistration;
+import org.bedework.eventreg.requests.RegistrationAction;
 import org.bedework.eventreg.service.EventregSvcMBean;
 import org.bedework.util.calendar.XcalUtil.TzGetter;
 import org.bedework.util.timezones.Timezones;
@@ -258,7 +258,7 @@ public class SessionManager {
    */
   public void addRegistration(final Registration r) throws Throwable {
     db.add(r);
-    queueRequest(new NewRegistration(r));
+    queueRequest(new RegistrationAction(r));
   }
 
   /**
@@ -277,6 +277,7 @@ public class SessionManager {
     reg.setLastmod();
 
     db.update(reg);
+    queueRequest(new RegistrationAction(reg));
   }
 
   /**

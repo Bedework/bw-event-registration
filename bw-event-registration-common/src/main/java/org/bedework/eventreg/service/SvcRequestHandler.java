@@ -25,7 +25,7 @@ import org.bedework.eventreg.db.EventregDb;
 import org.bedework.eventreg.db.Registration;
 import org.bedework.eventreg.requests.EventChangeRequest;
 import org.bedework.eventreg.requests.EventregRequest;
-import org.bedework.eventreg.requests.NewRegistration;
+import org.bedework.eventreg.requests.RegistrationAction;
 import org.bedework.util.calendar.IcalDefs;
 import org.bedework.util.calendar.XcalUtil;
 import org.bedework.util.http.BasicHttpClient;
@@ -92,8 +92,8 @@ public class SvcRequestHandler implements EventregRequestHandler {
         handleChange((EventChangeRequest)request);
       }
 
-      if (request instanceof NewRegistration) {
-        handleNewReg((NewRegistration)request);
+      if (request instanceof RegistrationAction) {
+        handleNewReg((RegistrationAction)request);
       }
     } finally {
       closeDb();
@@ -182,12 +182,16 @@ public class SvcRequestHandler implements EventregRequestHandler {
     }
   }
 
-  private void handleNewReg(final NewRegistration nr) throws Throwable {
+  private void handleNewReg(final RegistrationAction nr) throws Throwable {
       /* We need to fetch the event and notify the registered individual.
        */
     final Registration reg = nr.getReg();
     final String href = reg.getHref();
     final Event ev = cnctr.getEvent(href);
+
+    if (reg.getEmail() != null) {
+      subscribeNotifications(reg);
+    }
 
     /* Tell the calendar system we need to notify the user. We send
          something like:
@@ -274,6 +278,67 @@ public class SvcRequestHandler implements EventregRequestHandler {
 
     open = false;
     return db.close();
+  }
+
+  protected void subscribeNotifications(final Registration reg) throws Throwable {
+    final String email = reg.getEmail();
+
+    if (email == null) {
+      return;
+    }
+
+    /* Tell the calendar system we need to notify the user. We send
+         something like:
+          <?xml version="1.0" encoding="UTF-8" ?>
+
+          <BSS:notifySubscribe xmlns:C="urn:ietf:params:xml:ns:caldav"
+                        xmlns:BSS="http://bedework.org/ns/"
+                        xmlns:BW="http://bedeworkcalserver.org/ns/"
+                        xmlns:CSS="http://calendarserver.org/ns/"
+                        xmlns:DAV="DAV:">
+            <DAV:principal-URL>
+              <DAV:href>/ucaldav/principals/users/douglm</DAV:href>
+            </DAV:principal-URL>
+            <BSS:action>add</BSS:action>
+            <BSS:email>fred@example.org</BSS:email>
+          </BSS:notifySubscribe>
+
+       */
+    final XmlEmit xml = startDavEmit();
+
+    xml.openTag(BedeworkServerTags.notifySubscribe);
+
+    xml.openTag(WebdavTags.principalURL);
+    xml.property(WebdavTags.href, makePrincipal(reg.getAuthid()));
+    xml.closeTag(WebdavTags.principalURL);
+
+    xml.property(BedeworkServerTags.action, "add");
+    xml.property(BedeworkServerTags.email, email);
+
+    xml.closeTag(BedeworkServerTags.notifySubscribe);
+
+    final String content = endDavEmit();
+
+    final BasicHttpClient cl = getBwClient();
+
+    final int respStatus = cl.sendRequest("POST",
+                                          getSysInfo().getBwUrl(),
+                                          getAuthHeaders(),
+                                          "application/xml",
+                                          content.length(),
+                                          content.getBytes());
+  }
+
+  protected String makePrincipal(final String id) {
+    if (id.startsWith("/")) {
+      return id;
+    }
+
+    if (id.startsWith("mailto:")) {
+      return id;
+    }
+
+    return "/principals/users/" + id;
   }
 
   protected BasicHttpClient getBwClient() throws EventregException {

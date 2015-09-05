@@ -80,6 +80,7 @@
               <input type="hidden" name="numtickets" value="1"/>
             </c:otherwise>
           </c:choose>
+          email:<input type="text" name="email" />
           <input type="hidden" name="href" value="${req.href}"/>
           <!-- input type="hidden" name="type" value="registered"/-->
           <input type="submit" value="Register"/>

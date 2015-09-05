@@ -52,6 +52,10 @@ public class Request extends ReqUtil {
    */
   public static final String reqparCSVHeader = "csvheader";
 
+  /** Request parameter - email address
+   */
+  public static final String reqparEmail = "email";
+
   /** Request parameter - filename
    */
   public static final String reqparFilename = "fn";
@@ -61,8 +65,8 @@ public class Request extends ReqUtil {
   public static final String reqparLastmod = "lastmod";
 
   /**
-   * @param request
-   * @param response
+   * @param request http request
+   * @param response http response
    */
   public Request(final HttpServletRequest request,
                  final HttpServletResponse response) {
@@ -85,7 +89,7 @@ public class Request extends ReqUtil {
   }
 
   /**
-   * @param def
+   * @param def default
    * @return filename or null for no parameter
    */
   public String getFilename(final String def) {
@@ -120,6 +124,13 @@ public class Request extends ReqUtil {
    */
   public String getLastmod() {
     return getReqPar(reqparLastmod);
+  }
+
+  /**
+   * @return email or null for no parameter
+   */
+  public String getEmail() {
+    return getReqPar(reqparEmail);
   }
 
   /**

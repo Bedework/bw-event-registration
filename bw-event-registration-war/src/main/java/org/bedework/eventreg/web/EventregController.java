@@ -33,14 +33,14 @@ import java.util.Date;
 public class EventregController extends AuthAbstractController {
   @Override
   public ModelAndView doRequest() throws Throwable {
-    Event ev = sessMan.getCurrEvent();
+    final Event ev = sessMan.getCurrEvent();
 
-    int maxTicketsAllowed = ev.getMaxTickets();
+    final int maxTicketsAllowed = ev.getMaxTickets();
     if (maxTicketsAllowed < 0) {
       return errorReturn("Cannot register for this event.");
     }
 
-    Date end = ev.getRegistrationEndDate();
+    final Date end = ev.getRegistrationEndDate();
 
     if (end == null) {
       return errorReturn("Application register: missing end date.");
@@ -93,6 +93,7 @@ public class EventregController extends AuthAbstractController {
     reg.setType(Registration.typeRegistered);
     reg.setHref(href);
     reg.setRegistrationId(sessMan.getNextRegistrationId());
+    reg.setEmail(req.getEmail());
 
     reg.setTimestamps();
 
