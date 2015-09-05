@@ -213,6 +213,8 @@ public class SvcRequestHandler implements EventregRequestHandler {
     xml.openTag(BedeworkServerTags.eventregRegistered);
     xml.property(WebdavTags.href, href);
     xml.property(AppleServerTags.uid, UUID.randomUUID().toString());
+    xml.property(BedeworkServerTags.eventregNumTicketsRequested,
+                 String.valueOf(reg.getTicketsRequested()));
     xml.property(BedeworkServerTags.eventregNumTickets,
                  String.valueOf(reg.getNumTickets()));
 
