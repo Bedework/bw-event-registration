@@ -45,7 +45,7 @@
     <orderEntry type="library" scope="PROVIDED" name="Maven: aopalliance:aopalliance:1.0" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.springframework:spring-expression:3.0.5.RELEASE" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.springframework:spring-beans:3.0.5.RELEASE" level="project" />
-    <orderEntry type="module" module-name="ical4j (2) (net.fortuna.ical4j)" scope="PROVIDED" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: net.fortuna.ical4j:ical4j:1.1-BW-SNAPSHOT" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: commons-codec:commons-codec:1.5" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: commons-lang:commons-lang:2.4" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: backport-util-concurrent:backport-util-concurrent:3.1" level="project" />
