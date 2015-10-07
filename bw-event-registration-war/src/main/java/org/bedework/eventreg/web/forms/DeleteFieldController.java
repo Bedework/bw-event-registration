@@ -16,48 +16,63 @@ KIND, either express or implied. See the License for the
 specific language governing permissions and limitations
 under the License.
  */
-package org.bedework.eventreg.web;
+package org.bedework.eventreg.web.forms;
 
-import org.bedework.eventreg.bus.CSVOutputter;
+import org.bedework.eventreg.bus.FormFields;
+import org.bedework.eventreg.db.FieldDef;
 import org.bedework.eventreg.db.FormDef;
-import org.bedework.eventreg.db.Registration;
+import org.bedework.eventreg.web.AuthAbstractController;
 
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.TreeSet;
+import java.util.Set;
 
 /**
  * @author douglm
  *
  */
-public class OutputCSVController extends AdminAuthAbstractController {
+public class DeleteFieldController extends AuthAbstractController {
   @Override
   public ModelAndView doRequest() throws Throwable {
     if (sessMan.getCurrentCalsuite() == null) {
       return errorReturn("No calsuite");
     }
 
-    final String formName = sessMan.getCurrentFormName();
+    final String formName = req.getFormName();
 
     final FormDef form = sessMan.getFormDef(formName);
 
-    final TreeSet<Registration> regs = new TreeSet<>();
-
-    for (final Registration reg:
-            sessMan.getRegistrationsByHref(req.getHref())) {
-      reg.setEvent(sessMan.retrieveEvent(reg));
-
-      regs.add(reg);
+    if (form == null) {
+      return errorReturn("No current form");
     }
 
-    final CSVOutputter csv = new CSVOutputter(sessMan.getCurrEvent(),
-                                              form, regs);
+    final String fieldName = req.getName();
 
-    req.getResponse().setHeader("Content-Disposition",
-                       "Attachment; Filename=\"" +
-                           req.getFilename("eventreg.csv") + "\"");
-    //response.setContentType("application/vnd.ms-excel; charset=UTF-8");
+    if (fieldName == null) {
+      return errorReturn("No field name");
+    }
 
-    return objModel(getForwardSuccess(), "csv", csv);
+    FieldDef fld = null;
+    final Set<FieldDef> flds = form.getFields();
+
+    for (final FieldDef f: flds) {
+      if (f.getName().equals(fieldName)) {
+        fld = f;
+        break;
+      }
+    }
+
+    if (fld == null) {
+      return errorReturn("Field not found " + fieldName);
+    }
+
+    flds.remove(fld);
+    sessMan.updateFormDef(form);
+
+    sessMan.setCurrentFormName(formName);
+
+    sessMan.setMessage("ok");
+    return objModel(getForwardSuccess(), "form", form,
+                    "fields", new FormFields(flds));
   }
 }

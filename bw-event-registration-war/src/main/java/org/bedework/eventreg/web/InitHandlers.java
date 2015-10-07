@@ -38,23 +38,30 @@ public class InitHandlers extends HandlerInterceptorAdapter {
 
   private SessionManager sessMan;
 
+  protected boolean debug;
+
   /**
    * @param sm
    */
   public void setSessionManager(final SessionManager sm) {
     sessMan = sm;
+    debug = logger.isDebugEnabled();
   }
 
   @Override
   public boolean preHandle(final HttpServletRequest request,
                            final HttpServletResponse response,
                            final Object handler) throws Exception {
-    logger.debug("init handler Intercepter");
+    if (debug) {
+      logger.debug("init handler Intercepter");
+    }
 
-    sessMan.setReq(new Request(request, response));
     try {
+      if (!sessMan.setReq(new Request(request, response))) {
+        return false;
+      }
       sessMan.openDb();
-    } catch (Throwable e) {
+    } catch (final Throwable e) {
       throw new Exception(e);
     }
 

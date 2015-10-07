@@ -41,6 +41,7 @@ import org.bedework.util.xml.tagdefs.WebdavTags;
 import net.fortuna.ical4j.model.TimeZone;
 import org.apache.http.Header;
 import org.apache.http.message.BasicHeader;
+import org.apache.log4j.Logger;
 
 import java.io.StringWriter;
 import java.net.URI;
@@ -54,6 +55,10 @@ import java.util.UUID;
  *
  */
 public class SvcRequestHandler implements EventregRequestHandler {
+  private transient Logger log;
+
+  protected boolean debug;
+
   private final EventregDb db;
   private final EventregProperties props;
 
@@ -75,6 +80,7 @@ public class SvcRequestHandler implements EventregRequestHandler {
 
   public SvcRequestHandler(final EventregProperties props) throws Throwable {
     this.props = props;
+    debug = getLogger().isDebugEnabled();
 
     db = new EventregDb();
     db.setSysInfo(getSysInfo());
@@ -105,9 +111,15 @@ public class SvcRequestHandler implements EventregRequestHandler {
          maybe notify people.
        */
     final String href = request.getHref();
+    cnctr.flush();
     final Event ev = cnctr.getEvent(href);
 
     final String status = ev.getStatus();
+
+    if (debug) {
+      debug("chage: status=" + status + " for event " + ev.getSummary());
+    }
+
     if ((status != null) && IcalDefs.statusCancelled.equalsIgnoreCase(status)) {
       // Have we seen this already?
       final List<Registration> regs = db.getByEvent(href);
@@ -420,5 +432,35 @@ public class SvcRequestHandler implements EventregRequestHandler {
     } catch (final Throwable t) {
       throw new EventregException(t);
     }
+  }
+
+  protected void info(final String msg) {
+    getLogger().info(msg);
+  }
+
+  protected void warn(final String msg) {
+    getLogger().warn(msg);
+  }
+
+  protected void debug(final String msg) {
+    getLogger().debug(msg);
+  }
+
+  protected void error(final Throwable t) {
+    getLogger().error(this, t);
+  }
+
+  protected void error(final String msg) {
+    getLogger().error(msg);
+  }
+
+  /* Get a logger for messages
+   */
+  protected Logger getLogger() {
+    if (log == null) {
+      log = Logger.getLogger(this.getClass());
+    }
+
+    return log;
   }
 }

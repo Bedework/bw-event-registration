@@ -16,39 +16,40 @@ KIND, either express or implied. See the License for the
 specific language governing permissions and limitations
 under the License.
  */
-package org.bedework.eventreg.web;
+package org.bedework.eventreg.web.forms;
 
-import org.bedework.eventreg.db.Event;
-import org.bedework.eventreg.db.Registration;
+import org.bedework.eventreg.db.FormDef;
+import org.bedework.eventreg.web.AuthAbstractController;
 
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.TreeSet;
+import java.util.List;
 
-/**
+/** Needs formName and calSuite to fetch
+ *
  * @author douglm
  *
  */
-public class UserAgendaController extends AuthAbstractController {
+public class DeleteFormController extends AuthAbstractController {
   @Override
   public ModelAndView doRequest() throws Throwable {
-    final TreeSet<Registration> regs = new TreeSet<>();
-
-    for (final Registration reg:
-            sessMan.getRegistrationsByUser(sessMan.getCurrentUser())) {
-      final Event ev = sessMan.retrieveEvent(reg);
-
-      if ((ev == null) ||  // TODO Event deleted - should delete registration?
-          (ev.getMaxTickets() < 0)) {
-        // XXX Warn? - not registrable any more
-        continue;
-      }
-
-      reg.setEvent(ev);
-
-      regs.add(reg);
+    if (sessMan.getCurrentCalsuite() == null) {
+      return errorReturn("No calsuite");
     }
 
-    return objModel("agenda", "regs", regs);
+    final String formName = req.getFormName();
+
+    final FormDef form = sessMan.getFormDef(formName);
+
+    if (form == null) {
+      return errorReturn("Form " + formName + " does not exist");
+    }
+
+    sessMan.removeFormDef(form);
+
+    final List<FormDef> forms = sessMan.getFormDefs();
+
+    return objModel(getForwardSuccess(),
+                    "forms", forms);
   }
 }

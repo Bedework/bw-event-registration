@@ -21,9 +21,8 @@ package org.bedework.eventreg.web;
 import org.bedework.eventreg.bus.Request;
 import org.bedework.eventreg.bus.SessionManager;
 import org.bedework.eventreg.db.Registration;
+import org.bedework.util.misc.Logged;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.Controller;
 
@@ -39,16 +38,17 @@ import javax.servlet.http.HttpServletResponse;
  * Provide some useful common functionality.
  *
  */
-public abstract class AbstractController implements Controller {
-  protected final Log logger = LogFactory.getLog(getClass());
-
+public abstract class AbstractController extends Logged
+        implements Controller {
   protected SessionManager sessMan;
 
   protected Request req;
 
-  private String forwardTo;
+  private String forwardSuccess;
 
-  protected boolean debug;
+  private String forwardFail;
+
+  private String forwardTo;
 
   /**
    * @return ModelAndView
@@ -60,36 +60,34 @@ public abstract class AbstractController implements Controller {
   public ModelAndView handleRequest(final HttpServletRequest request,
                                     final HttpServletResponse response) throws Exception {
     try {
-      ModelAndView mv = setup();
+      final ModelAndView mv = setup();
 
       if (mv != null) {
         return mv;
       }
 
       return doRequest();
-    } catch (Exception e) {
-      logger.error(this, e);
+    } catch (final Exception e) {
+      error(e);
 
       return errorReturn(e);
-    } catch (Throwable t) {
-      logger.error(t);
+    } catch (final Throwable t) {
+      error(t);
 
       return errorReturn(t);
     } finally {
       if (!sessMan.closeDb()) {
-        return errorReturn("Error during close");
+        errorReturn("Error during close");
       }
     }
   }
 
   protected ModelAndView setup() throws Throwable {
-    debug = logger.isDebugEnabled();
-
     req = sessMan.getReq();
     sessMan.setMessage("");
 
     if (debug) {
-      logger.debug("Entry: " + getClass().getSimpleName());
+      debug("Entry: " + getClass().getSimpleName());
       dumpRequest(req.getRequest());
     }
 
@@ -115,28 +113,47 @@ public abstract class AbstractController implements Controller {
     return new ModelAndView(view, myModel);
   }
 
+  protected ModelAndView objModel(final String view,
+                                  final String name,
+                                  final Object m,
+                                  final String name2,
+                                  final Object m2) {
+    final Map<String, Object> myModel = new HashMap<>();
+    myModel.put("sessMan", sessMan);
+    myModel.put("req", req);
+    myModel.put(name, m);
+    myModel.put(name2, m2);
+
+    return new ModelAndView(view, myModel);
+  }
+
   protected ModelAndView errorReturn(final Throwable t) {
     return errorReturn(t.getLocalizedMessage());
   }
 
   protected ModelAndView errorReturn(final String msg) {
+    return errorReturn(getForwardFail(), msg);
+  }
+
+  protected ModelAndView errorReturn(final String forward,
+                                     final String msg) {
     sessMan.setMessage(msg);
     final Map<String, Object> myModel = new HashMap<>();
     myModel.put("sessMan", sessMan);
     myModel.put("req", req);
 
-    return new ModelAndView("error", myModel);
+    return new ModelAndView(forward, myModel);
   }
 
   /**
-   * @param sm
+   * @param sm session manager
    */
   public void setSessionManager(final SessionManager sm) {
     sessMan = sm;
   }
 
   /** Set by Spring
-   * @param val
+   * @param val forward
    */
   public void setForwardTo(final String val) {
     forwardTo = val;
@@ -149,8 +166,36 @@ public abstract class AbstractController implements Controller {
     return forwardTo;
   }
 
+  /** Set by Spring
+   * @param val forward
+   */
+  public void setForwardSuccess(final String val) {
+    forwardSuccess = val;
+  }
+
   /**
-   * @param req
+   * @return forward
+   */
+  public String getForwardSuccess() {
+    return forwardSuccess;
+  }
+
+  /** Set by Spring
+   * @param val forward
+   */
+  public void setForwardFail(final String val) {
+    forwardFail = val;
+  }
+
+  /**
+   * @return forward
+   */
+  public String getForwardFail() {
+    return forwardFail;
+  }
+
+  /**
+   * @param req request
    */
   public void dumpRequest(final HttpServletRequest req) {
     try {
@@ -159,34 +204,34 @@ public abstract class AbstractController implements Controller {
 
       final String title = "Request parameters";
 
-      logger.debug(title + " - global info and uris");
-      logger.debug("getRequestURI = " + req.getRequestURI());
-      logger.debug("getRemoteUser = " + req.getRemoteUser());
-      logger.debug("getRequestedSessionId = " + req.getRequestedSessionId());
-      logger.debug("HttpUtils.getRequestURL(req) = " + req.getRequestURL());
-      logger.debug("query=" + req.getQueryString());
-      logger.debug("contentlen=" + req.getContentLength());
-      logger.debug("request=" + req);
-      logger.debug("parameters:");
+      debug(title + " - global info and uris");
+      debug("getRequestURI = " + req.getRequestURI());
+      debug("getRemoteUser = " + req.getRemoteUser());
+      debug("getRequestedSessionId = " + req.getRequestedSessionId());
+      debug("HttpUtils.getRequestURL(req) = " + req.getRequestURL());
+      debug("query=" + req.getQueryString());
+      debug("contentlen=" + req.getContentLength());
+      debug("request=" + req);
+      debug("parameters:");
 
-      logger.debug(title);
+      debug(title);
 
       while (names.hasMoreElements()) {
         final String key = names.nextElement();
         final String[] vals = req.getParameterValues(key);
         for (final String val: vals) {
-          logger.debug("  " + key + " = \"" + val + "\"");
+          debug("  " + key + " = \"" + val + "\"");
         }
       }
     } catch (final Throwable t) {
-      logger.error(this, t);
+      error(t);
     }
   }
 
   /** Allocate given number of tickets for the event to any waiters
    *
-   * @param numTickets
-   * @param href
+   * @param numTickets number of tickets
+   * @param href of event
    * @throws Throwable
    */
   protected void reallocate(final int numTickets,

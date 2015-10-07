@@ -33,7 +33,7 @@ public class EventChangeController extends WSAbstractController {
     final String href = req.getHref();
 
     if (debug) {
-      logger.debug("Event change: " + href);
+      debug("Event change: " + href);
     }
 
     final EventChangeRequest req = new EventChangeRequest(href);

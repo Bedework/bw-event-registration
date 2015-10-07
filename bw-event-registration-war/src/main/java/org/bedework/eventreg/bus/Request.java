@@ -18,6 +18,9 @@ under the License.
  */
 package org.bedework.eventreg.bus;
 
+import org.bedework.eventreg.common.EventregException;
+import org.bedework.eventreg.common.EventregInvalidNameException;
+import org.bedework.util.misc.Util;
 import org.bedework.util.servlet.ReqUtil;
 
 import javax.servlet.http.HttpServletRequest;
@@ -32,9 +35,17 @@ public class Request extends ReqUtil {
    */
   public static final String reqparAdminToken = "atkn";
 
+  /** Request parameter - calsuite
+   */
+  public static final String reqparCalsuite = "calsuite";
+
   /** Request parameter - comment
    */
   public static final String reqparComment = "comment";
+
+  /** Request parameter - comment
+   */
+  public static final String reqparDescription = "description";
 
   /** Request parameter - href
    */
@@ -63,6 +74,40 @@ public class Request extends ReqUtil {
   /** Request parameter - lastmod
    */
   public static final String reqparLastmod = "lastmod";
+
+  /* ==============================================================
+   *                form fields
+   */
+
+  public static final String reqparDefault = "default";
+
+  /** Request parameter - form name
+   */
+  private static final String reqparFormName = "formName";
+
+  private static final String reqparGroup = "group";
+
+  private static final String reqparName = "name";
+
+  public static final String reqparDisable = "disable";
+
+  public static final String reqparHeight = "height";
+
+  public static final String reqparLabel = "label";
+
+  public static final String reqparMulti = "multi";
+
+  public static final String reqparOrder = "order";
+
+  public static final String reqparRequired = "req";
+
+  public static final String reqparOptions = "options";
+
+  public static final String reqparType = "type";
+
+  public static final String reqparValue = "value";
+
+  public static final String reqparWidth = "width";
 
   /**
    * @param request http request
@@ -115,6 +160,13 @@ public class Request extends ReqUtil {
   /**
    * @return comment or null for no parameter
    */
+  public String getCalsuite() {
+    return getReqPar(reqparCalsuite);
+  }
+
+  /**
+   * @return comment or null for no parameter
+   */
   public String getComment() {
     return getReqPar(reqparComment);
   }
@@ -138,5 +190,157 @@ public class Request extends ReqUtil {
    */
   public String getHref() {
     return getReqPar(reqparHref);
+  }
+
+  /* ==============================================================
+   *                form fields
+   */
+
+  /**
+   * @return par or null for no parameter
+   */
+  public boolean getDefault() throws Throwable {
+    return getBooleanReqPar(reqparDefault, false);
+  }
+
+  /**
+   * @return par or null for no parameter
+   */
+  public boolean formNamePresent() throws EventregException {
+    return Util.checkNull(getReqPar(reqparFormName)) != null;
+  }
+
+  /**
+   * @return par or null for no parameter
+   */
+  public String getFormName() throws EventregException {
+    return validName(getReqPar(reqparFormName));
+  }
+
+  /**
+   * @return par or null for no parameter
+   */
+  public String getName()throws EventregException {
+    return validName(getReqPar(reqparName));
+  }
+
+  /**
+   * @return par or null for no parameter
+   */
+  public boolean groupPresent() throws EventregException {
+    return getReqPar(reqparGroup) != null;
+  }
+
+  /**
+   * @return par or null for no parameter
+   */
+  public String getGroup() throws EventregException {
+    return validName(getReqPar(reqparGroup));
+  }
+
+  /**
+   * @return par or null for no parameter
+   */
+  public String getDescription() {
+    return getReqPar(reqparDescription);
+  }
+
+  /**
+   * @return par or null for no parameter
+   */
+  public String getHeight() {
+    return getReqPar(reqparHeight);
+  }
+
+  /**
+   * @return par or null for no parameter
+   */
+  public String getLabel() {
+    return getReqPar(reqparLabel);
+  }
+
+  /**
+   * @return par or null for no parameter
+   */
+  public boolean getDisable() throws Throwable {
+    return getBooleanReqPar(reqparDisable, false);
+  }
+
+  /**
+   * @return par or null for no parameter
+   */
+  public boolean getMulti() throws Throwable {
+    return getBooleanReqPar(reqparMulti, false);
+  }
+
+  /**
+   * @return par or null for no parameter
+   */
+  public int getOrder() throws Throwable {
+    return getIntReqPar(reqparOrder, 0);
+  }
+
+  /**
+   * @return par or null for no parameter
+   */
+  public boolean getRequired() throws Throwable {
+    return getBooleanReqPar(reqparRequired, false);
+  }
+
+  /**
+   * @return par or null for no parameter
+   */
+  public String getOptions() {
+    return getReqPar(reqparOptions);
+  }
+
+  /**
+   * @return par or null for no parameter
+   */
+  public String getType() {
+    return getReqPar(reqparType);
+  }
+
+  /**
+   * @return par or null for no parameter
+   */
+  public String getValue() {
+    return getReqPar(reqparValue);
+  }
+
+  /**
+   * @return par or null for no parameter
+   */
+  public String getWidth() {
+    return getReqPar(reqparWidth);
+  }
+
+  /* name validation. form, field and group names must all be
+     valid json names.
+   */
+  public static String validName(final String name) throws EventregException {
+    if ((name == null) || (name.length() == 0)) {
+      throw new EventregInvalidNameException(name);
+    }
+
+    if (!Character.isLetter(name.charAt(0))) {
+      throw new EventregInvalidNameException(name);
+    }
+
+    for (int i = 1; i < name.length(); i++) {
+      final char ch = name.charAt(i);
+
+      if (Character.isLetterOrDigit(ch)) {
+        continue;
+      }
+
+      if ((ch == '-') || (ch == '_')) {
+        continue;
+      }
+
+      throw new EventregInvalidNameException(name);
+    }
+
+    return name;
   }
 }

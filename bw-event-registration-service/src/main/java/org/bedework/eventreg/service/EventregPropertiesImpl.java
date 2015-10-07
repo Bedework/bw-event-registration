@@ -57,6 +57,8 @@ public class EventregPropertiesImpl extends HibernateConfigBase<EventregProperti
 
   private String dataOutPrefix;
 
+  private String defaultEmailDomain;
+
   /* ========================================================================
    * Attributes
    * ======================================================================== */
@@ -163,6 +165,16 @@ public class EventregPropertiesImpl extends HibernateConfigBase<EventregProperti
   @Override
   public String getDataOutPrefix() {
     return dataOutPrefix;
+  }
+
+  @Override
+  public void setDefaultEmailDomain(final String val) {
+    defaultEmailDomain = val;
+  }
+
+  @Override
+  public String getDefaultEmailDomain() {
+    return defaultEmailDomain;
   }
 }
 

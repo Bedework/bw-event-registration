@@ -56,7 +56,7 @@ public abstract class AuthAbstractController extends AbstractController {
     }
 
     if (debug) {
-      logger.debug("updating registration " + regId);
+      debug("updating registration " + regId);
     }
 
     Registration reg = sessMan.getRegistrationById(regId);
@@ -92,8 +92,8 @@ public abstract class AuthAbstractController extends AbstractController {
     }
 
     if (debug) {
-      logger.debug("remove reg id: " + regId +
-                   ", user: " + sessMan.getCurrentUser());
+      debug("remove reg id: " + regId +
+                    ", user: " + sessMan.getCurrentUser());
     }
 
     Registration reg = sessMan.getRegistrationById(regId);

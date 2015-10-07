@@ -18,37 +18,15 @@ under the License.
  */
 package org.bedework.eventreg.web;
 
-import org.bedework.eventreg.db.Event;
-import org.bedework.eventreg.db.Registration;
-
 import org.springframework.web.servlet.ModelAndView;
-
-import java.util.TreeSet;
 
 /**
  * @author douglm
  *
  */
-public class UserAgendaController extends AuthAbstractController {
+public class NoopController extends AdminAuthAbstractController {
   @Override
   public ModelAndView doRequest() throws Throwable {
-    final TreeSet<Registration> regs = new TreeSet<>();
-
-    for (final Registration reg:
-            sessMan.getRegistrationsByUser(sessMan.getCurrentUser())) {
-      final Event ev = sessMan.retrieveEvent(reg);
-
-      if ((ev == null) ||  // TODO Event deleted - should delete registration?
-          (ev.getMaxTickets() < 0)) {
-        // XXX Warn? - not registrable any more
-        continue;
-      }
-
-      reg.setEvent(ev);
-
-      regs.add(reg);
-    }
-
-    return objModel("agenda", "regs", regs);
+    return sessModel(getForwardSuccess());
   }
 }

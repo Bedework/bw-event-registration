@@ -19,7 +19,7 @@ under the License.
 package org.bedework.eventreg.common;
 
 import org.bedework.eventreg.db.Event;
-import org.bedework.util.calendar.XcalUtil;
+import org.bedework.util.calendar.XcalUtil.TzGetter;
 
 import ietf.params.xml.ns.icalendar_2.ArrayOfComponents;
 import ietf.params.xml.ns.icalendar_2.BaseComponentType;
@@ -55,7 +55,7 @@ import javax.xml.soap.SOAPMessage;
 public class BwConnector {
   private transient Logger log;
 
-  private final XcalUtil.TzGetter tzs;
+  private final TzGetter tzs;
 
   private final static ietf.params.xml.ns.icalendar_2.ObjectFactory icalOf =
       new ietf.params.xml.ns.icalendar_2.ObjectFactory();
@@ -73,7 +73,7 @@ public class BwConnector {
    * @param tzs getter for timezones
    */
   public BwConnector(final String wsdlUri,
-                     final XcalUtil.TzGetter tzs) {
+                     final TzGetter tzs) {
     this.wsdlUri = wsdlUri;
     this.tzs = tzs;
   }

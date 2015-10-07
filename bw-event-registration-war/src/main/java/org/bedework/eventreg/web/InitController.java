@@ -18,7 +18,9 @@ under the License.
  */
 package org.bedework.eventreg.web;
 
+import org.bedework.eventreg.bus.FormFields;
 import org.bedework.eventreg.db.Event;
+import org.bedework.eventreg.db.FormDef;
 
 import org.springframework.web.servlet.ModelAndView;
 
@@ -32,27 +34,27 @@ public class InitController extends AuthAbstractController {
   @Override
   public ModelAndView doRequest() throws Throwable {
     sessMan.flushCurrEvent();
-    Event ev = sessMan.getCurrEvent();
+    final Event ev = sessMan.getCurrEvent();
 
     if (ev == null) {
       return errorReturn("Cannot retrieve the event.");
     }
 
     /* Set registrationFull to true or false */
-    int maxTickets = ev.getMaxTickets();
+    final int maxTickets = ev.getMaxTickets();
     if (maxTickets < 0) {
       return errorReturn("Cannot register for this event.");
     }
 
-    long curTickets = sessMan.getRegTicketCount();
+    final long curTickets = sessMan.getRegTicketCount();
     if (debug) {
-      logger.debug("maxTickets: " + maxTickets);
-      logger.debug("curTickets: " + curTickets);
+      debug("maxTickets: " + maxTickets);
+      debug("curTickets: " + curTickets);
     }
 
     sessMan.setRegistrationFull(curTickets >= maxTickets);
 
-    Date end = ev.getRegistrationEndDate();
+    final Date end = ev.getRegistrationEndDate();
 
     if (end == null) {
       return errorReturn("Application register: missing end date.");
@@ -60,6 +62,34 @@ public class InitController extends AuthAbstractController {
 
     sessMan.setDeadlinePassed(new Date().after(end));
 
-    return sessModel("init");
+    if (!req.formNamePresent()) {
+      if (debug) {
+        debug("No form specified");
+      }
+      return sessModel("init");
+    }
+
+    final String formName = req.getFormName();
+    final FormDef form = sessMan.getFormDef(formName);
+
+    if (sessMan.getCurrentCalsuite() == null) {
+      return errorReturn("No calsuite");
+    }
+
+    if (form == null) {
+      warn("Form " + formName + "does not exist");
+
+      return sessModel("init");
+    }
+
+    sessMan.setCurrentFormName(formName);
+    if (debug) {
+      debug("Set form name " + formName +
+                    " for form with " + form.getFields().size() +
+                    " fields");
+    }
+
+    return objModel("init", "form", form,
+                    "fields", new FormFields(form.getFields()));
   }
 }

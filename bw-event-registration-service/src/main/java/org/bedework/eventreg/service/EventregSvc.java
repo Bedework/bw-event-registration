@@ -355,6 +355,16 @@ public class EventregSvc extends ConfBase<EventregPropertiesImpl>
     return getConfig().getDataOutPrefix();
   }
 
+  @Override
+  public void setDefaultEmailDomain(final String val) {
+    getConfig().setDefaultEmailDomain(val);
+  }
+
+  @Override
+  public String getDefaultEmailDomain() {
+    return getConfig().getDefaultEmailDomain();
+  }
+
   /* ========================================================================
    * Mbean attributes
    * ======================================================================== */

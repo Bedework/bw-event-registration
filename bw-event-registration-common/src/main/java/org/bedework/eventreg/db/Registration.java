@@ -22,6 +22,7 @@ import org.bedework.eventreg.common.EventregException;
 import org.bedework.util.misc.ToString;
 
 import java.sql.Timestamp;
+import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.UUID;
@@ -43,6 +44,16 @@ public class Registration extends DbItem<Registration> {
   private String waitqDate;
   private String comment;
   private String message;
+
+  private String formName;
+  private String formOwner;
+
+  private String evSummary;
+  private String evDate;
+  private String evTime;
+  private String evLocation;
+  private String notificationTimestamp;
+
   private Set<Ticket> tickets;
 
   /** Type values
@@ -225,6 +236,34 @@ public class Registration extends DbItem<Registration> {
   }
 
   /**
+   * @param val name
+   */
+  public void setFormName(final String val) {
+    formName = val;
+  }
+
+  /**
+   * @return name
+   */
+  public String getFormName() {
+    return formName;
+  }
+
+  /**
+   * @param val name
+   */
+  public void setFormOwner(final String val) {
+    formOwner = val;
+  }
+
+  /**
+   * @return name
+   */
+  public String getFormOwner() {
+    return formOwner;
+  }
+
+  /**
    * @param val set of tickets
    */
   public void setTickets(final Set<Ticket> val) {
@@ -238,7 +277,47 @@ public class Registration extends DbItem<Registration> {
     return tickets;
   }
 
-  /* ====================================================================
+  public String getEvSummary() {
+    return evSummary;
+  }
+
+  public void setEvSummary(final String evSummary) {
+    this.evSummary = evSummary;
+  }
+
+  public String getEvDate() {
+    return evDate;
+  }
+
+  public void setEvDate(final String evDate) {
+    this.evDate = evDate;
+  }
+
+  public String getEvTime() {
+    return evTime;
+  }
+
+  public void setEvTime(final String evTime) {
+    this.evTime = evTime;
+  }
+
+  public String getEvLocation() {
+    return evLocation;
+  }
+
+  public void setEvLocation(final String evLocation) {
+    this.evLocation = evLocation;
+  }
+
+  public String getNotificationTimestamp() {
+    return notificationTimestamp;
+  }
+
+  public void setNotificationTimestamp(
+          final String notificationTimestamp) {
+    this.notificationTimestamp = notificationTimestamp;
+  }
+/* ====================================================================
    *                   Property fields
    * ==================================================================== */
 
@@ -256,6 +335,23 @@ public class Registration extends DbItem<Registration> {
     return mayBool("cancelSent");
   }
 
+  /* ====================================================================
+   *                   Property fields
+   * ==================================================================== */
+
+  /**
+   * @param val Saved form fields as a serialized json string
+   */
+  public void setFormValues(final String val) {
+    setString("formValues", val);
+  }
+
+  /**
+   * @return Saved form fields as a serialized json string
+   */
+  public String getFormValues() throws EventregException {
+    return may("formValues");
+  }
 
   /* ====================================================================
    *                   Non db fields
@@ -278,6 +374,20 @@ public class Registration extends DbItem<Registration> {
   /* ====================================================================
    *                   Convenience methods
    * ==================================================================== */
+
+  public void saveFormValues(final Map vals) throws EventregException {
+    final SerializableProperties sp = new SerializableProperties();
+
+    sp.init(vals);
+
+    setFormValues(sp.asString());
+  }
+
+  public Map restoreFormValues() throws EventregException {
+    final SerializableProperties sp = new SerializableProperties();
+
+    return sp.asMap(getFormValues());
+  }
 
   /** Set the various timestamps to now for a new registration.
    *

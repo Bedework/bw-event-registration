@@ -162,4 +162,16 @@ public interface EventregProperties extends HibernateConfigI {
    */
   @MBeanInfo("XML data output file prefix - for data dump")
   String getDataOutPrefix();
+
+  /** Create an email address as current user + "@" + this
+   *
+   * @param val Create an email address as current user + "@" + this
+   */
+  void setDefaultEmailDomain(String val);
+
+  /**
+   * @return Create an email address as current user + "@" + this
+   */
+  @MBeanInfo("Create an email address as current user + \"@\" + this")
+  String getDefaultEmailDomain();
 }

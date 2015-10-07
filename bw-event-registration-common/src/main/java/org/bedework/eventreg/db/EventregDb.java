@@ -494,6 +494,12 @@ public class EventregDb implements Serializable {
     }
   }
 
+  private final static String getUserTicketCountQuery =
+          "select count(*) from " +
+                  Ticket.class.getName() +
+                  " tkt where tkt.href=:href" +
+                  " and tkt.authid=:user";
+
   /**
    * @param eventHref
    * @param user
@@ -503,14 +509,7 @@ public class EventregDb implements Serializable {
   public long getUserTicketCount(final String eventHref,
                                  final String user) throws Throwable {
     try {
-      StringBuilder sb = new StringBuilder();
-
-      sb.append("select count(*) from ");
-      sb.append(Ticket.class.getName());
-      sb.append(" tkt where tkt.href=:href");
-      sb.append(" and tkt.authid=:user");
-
-      sess.createQuery(sb.toString());
+      sess.createQuery(getUserTicketCountQuery);
       sess.setString("href", eventHref);
       sess.setString("user", user);
       @SuppressWarnings("unchecked")
@@ -518,53 +517,86 @@ public class EventregDb implements Serializable {
 
       long total = 0;
 
-      for (Long l: counts) {
+      for (final Long l: counts) {
         total += l;
       }
 
       return total;
-    } catch (HibException he) {
+    } catch (final HibException he) {
       throw new Exception(he);
     }
   }
 
-  /** Add the registration.
+  /* ====================================================================
+   *                   Form definition methods
+   * ==================================================================== */
+
+  private final static String getCalSuiteFormsQuery =
+          "from " + FormDef.class.getName() +
+                  " form where form.owner=:owner";
+
+  public List<FormDef> getCalSuiteForms(final String calsuite) throws Throwable {
+    sess.createQuery(getCalSuiteFormsQuery);
+    sess.setString("owner", calsuite);
+
+    return sess.getList();
+  }
+
+  private final static String getCalSuiteFormQuery =
+          "from " + FormDef.class.getName() +
+                  " form where form.owner=:owner and" +
+                  " form.formName=:formName";
+
+  public FormDef getCalSuiteForm(final String formName,
+                                       final String calsuite) throws Throwable {
+    sess.createQuery(getCalSuiteFormQuery);
+    sess.setString("formName", formName);
+    sess.setString("owner", calsuite);
+
+    return (FormDef)sess.getUnique();
+  }
+
+  /* ====================================================================
+   *                   Dbitem methods
+   * ==================================================================== */
+
+  /** Add the item.
    *
-   * @param reg
+   * @param val the dbitem
    * @throws Exception
    */
-  public void add(final Registration reg) throws Exception {
+  public void add(final DbItem val) throws Exception {
     try {
-      sess.save(reg);
-    } catch (HibException he) {
+      sess.save(val);
+    } catch (final HibException he) {
       throw new Exception(he);
     }
   }
 
-  /** Update the persisted state of the registration.
+  /** Update the persisted state of the item.
    *
-   * @param reg
+   * @param val the dbitem
    * @throws Exception
    */
-  public void update(final Registration reg) throws Exception {
+  public void update(final DbItem val) throws Exception {
     try {
-      sess.update(reg);
-    } catch (HibException he) {
+      sess.update(val);
+    } catch (final HibException he) {
       throw new Exception(he);
     }
   }
 
-  /** Delete the registration.
+  /** Delete the dbitem.
    *
-   * @param reg
+   * @param val the dbitem
    * @throws Throwable
    */
-  public void delete(final Registration reg) throws Throwable {
-    boolean opened = open();
+  public void delete(final DbItem val) throws Throwable {
+    final boolean opened = open();
 
     try {
-      sess.delete(reg);
-    } catch (HibException he) {
+      sess.delete(val);
+    } catch (final HibException he) {
       throw new Exception(he);
     } finally {
       if (opened) {

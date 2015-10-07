@@ -21,6 +21,7 @@
 		<!-- Third Party Library Versions -->
 		<spring.version>3.0.5.RELEASE</spring.version>
 		<commons-codec.version>1.5</commons-codec.version>
+    <commons.csv.version>1.2</commons.csv.version>
 		<servlet-api.version>2.5</servlet-api.version>
     <ical4j.version>1.1-BW-SNAPSHOT</ical4j.version>
 		<apache-http.version>4.2.2</apache-http.version>
@@ -170,6 +171,11 @@
 				<artifactId>commons-codec</artifactId>
 				<version>${commons-codec.version}</version>
 			</dependency>
+      <dependency>
+        <groupId>org.apache.commons</groupId>
+        <artifactId>commons-csv</artifactId>
+        <version>${commons.csv.version}</version>
+      </dependency>
 			<dependency>
 				<groupId>net.sf.ehcache</groupId>
 				<artifactId>ehcache</artifactId>
