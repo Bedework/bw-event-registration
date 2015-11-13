@@ -45,6 +45,8 @@ public class EventregPropertiesImpl extends HibernateConfigBase<EventregProperti
 
   private String bwUrl;
 
+  private int regidBatchSize;
+
   /* ========================================================================
    * Dump/restore
    * ======================================================================== */
@@ -121,6 +123,16 @@ public class EventregPropertiesImpl extends HibernateConfigBase<EventregProperti
   @Override
   public String getBwUrl() {
     return bwUrl;
+  }
+
+  @Override
+  public void setRegidBatchSize(final int val) {
+    regidBatchSize = val;
+  }
+
+  @Override
+  public int getRegidBatchSize() {
+    return regidBatchSize;
   }
 
   /* ========================================================================

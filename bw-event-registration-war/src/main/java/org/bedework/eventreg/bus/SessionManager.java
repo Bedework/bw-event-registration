@@ -662,29 +662,12 @@ public class SessionManager extends Logged {
     return req;
   }
 
-  private static transient volatile Long nextRegId = (long)-1;
-
   /**
    * @return next id
    * @throws Throwable
    */
   public Long getNextRegistrationId() throws Throwable {
-    synchronized (nextRegId) {
-      if (nextRegId < 0) {
-        Long nid = db.getMaxRegistrationId();
-        if (nid == null) {
-          // First time I guess
-          nextRegId = (long)1;
-        } else {
-          nextRegId = nid + 1;
-        }
-      }
-
-      Long rid = nextRegId;
-      nextRegId++;
-
-      return rid;
-    }
+    return db.getNextRegistrationId();
   }
 
   /* ====================================================================

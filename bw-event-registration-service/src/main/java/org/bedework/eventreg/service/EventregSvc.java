@@ -94,14 +94,14 @@ public class EventregSvc extends ConfBase<EventregPropertiesImpl>
                    false,   // drop
                    true);   //   getCreate());
 
-        long millis = System.currentTimeMillis() - startTime;
+        final long millis = System.currentTimeMillis() - startTime;
         long seconds = millis / 1000;
-        long minutes = seconds / 60;
+        final long minutes = seconds / 60;
         seconds -= (minutes * 60);
 
         infoLines.addLn("Elapsed time: " + minutes + ":" +
                                 twoDigits(seconds));
-      } catch (Throwable t) {
+      } catch (final Throwable t) {
         error(t);
         infoLines.exceptionMsg(t);
       } finally {
@@ -172,6 +172,7 @@ public class EventregSvc extends ConfBase<EventregPropertiesImpl>
 
   /**
    */
+  @SuppressWarnings("unused")
   public EventregSvc() {
     super(getServiceName(nm));
 
@@ -181,7 +182,7 @@ public class EventregSvc extends ConfBase<EventregPropertiesImpl>
   }
 
   /**
-   * @param name
+   * @param name of service
    * @return object name value for the mbean with this name
    */
   public static String getServiceName(final String name) {
@@ -263,6 +264,16 @@ public class EventregSvc extends ConfBase<EventregPropertiesImpl>
   @Override
   public String getBwUrl() {
     return getConfig().getBwUrl();
+  }
+
+  @Override
+  public void setRegidBatchSize(final int val) {
+    getConfig().setRegidBatchSize(val);
+  }
+
+  @Override
+  public int getRegidBatchSize() {
+    return getConfig().getRegidBatchSize();
   }
 
   /* ========================================================================

@@ -46,7 +46,7 @@ public interface EventregProperties extends HibernateConfigI {
   String getEventregAdminToken();
 
   /**
-   * @param val
+   * @param val uri
    */
   void setTzsUri(String val);
 
@@ -58,7 +58,7 @@ public interface EventregProperties extends HibernateConfigI {
 
   /** Location of wsdl
    *
-   * @param val
+   * @param val uri
    */
   void setWsdlUri(String val);
 
@@ -107,13 +107,26 @@ public interface EventregProperties extends HibernateConfigI {
   @MBeanInfo("URL for bedework webservice calls")
   String getBwUrl();
 
+  /**
+   *
+   * @param val batch size for registration ids
+   */
+  void setRegidBatchSize(final int val);
+
+  /**
+   *
+   * @return batch size for registration ids
+   */
+  @MBeanInfo("batch size for registration ids")
+  int getRegidBatchSize();
+
   /* ========================================================================
    * Schema
    * ======================================================================== */
 
-  /** Output file name - full path
+  /**
    *
-   * @param val
+   * @param val Output file name - full path
    */
   void setSchemaOutFile(String val);
 
@@ -127,9 +140,9 @@ public interface EventregProperties extends HibernateConfigI {
    * Dump/restore
    * ======================================================================== */
 
-  /** XML data input file name - full path. Used for data restore
+  /**
    *
-   * @param val
+   * @param val XML data input file name - full path. Used for data restore
    */
   void setDataIn(String val);
 
@@ -139,9 +152,9 @@ public interface EventregProperties extends HibernateConfigI {
   @MBeanInfo("XML data input file name - full path")
   String getDataIn();
 
-  /** XML data output directory name - full path. Used for data restore
+  /**
    *
-   * @param val
+   * @param val XML data output directory name - full path. Used for data restore
    */
   void setDataOut(String val);
 
@@ -153,7 +166,7 @@ public interface EventregProperties extends HibernateConfigI {
 
   /** XML data output file prefix - for data dump
    *
-   * @param val
+   * @param val the prefix
    */
   void setDataOutPrefix(String val);
 

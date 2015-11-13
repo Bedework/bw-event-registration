@@ -33,6 +33,7 @@ import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.List;
 import java.util.Properties;
+import java.util.concurrent.atomic.AtomicLong;
 
 /** This class manages the Event registration database.
  *
@@ -42,6 +43,17 @@ public class EventregDb implements Serializable {
   private transient Logger log;
 
   private final boolean debug;
+
+  /* Value used to create a registration. Each running jvm has its
+     own batch of these which it renews when empty.
+   */
+  private static final int defaultRegidBatchSize = 50;
+
+  private static final AtomicLong nextRegid = new AtomicLong();
+
+  /** Last one we can allocate - if negative we haven't got a batch
+   */
+  private static long lastRegid = -1;
 
   /** */
   protected boolean open;
@@ -62,6 +74,48 @@ public class EventregDb implements Serializable {
    */
   public EventregDb() {
     debug = getLogger().isDebugEnabled();
+  }
+
+  /**
+   * @return next id
+   * @throws Throwable
+   */
+  public Long getNextRegistrationId() throws Throwable {
+    synchronized (nextRegid) {
+      int attempts = 0;
+
+      while ((lastRegid < 0) ||
+              (nextRegid.longValue() > lastRegid)) {
+        /* Haven't got ourselves a batch yet or we ran out of ids.
+         * This may take a few tries and we need to discard the db on
+         * failure.
+         */
+
+        final IdBatch batch = getIdBatch(sysInfo);
+
+        if (batch != null) {
+          /* We now have a batch.
+           */
+          nextRegid.set(batch.start);
+          lastRegid = batch.end;
+
+          break;
+        }
+
+        warn("Error trying to get regid batch after " +
+                     attempts + " tries.");
+        attempts++;
+        final long wait = attempts * 500;
+        warn("Retrying in " + wait + " millisecs");
+        try {
+          this.wait(wait);
+        } catch (final InterruptedException ie) {
+          return null; // Presumably shutting down
+        }
+      }
+    }
+
+    return nextRegid.getAndIncrement();
   }
 
   public void setSysInfo(final EventregProperties sysInfo) {
@@ -137,11 +191,11 @@ public class EventregDb implements Serializable {
 
     try {
       endTransaction();
-    } catch (Throwable t) {
+    } catch (final Throwable t) {
       ok = false;
       try {
         rollbackTransaction();
-      } catch (Throwable t1) {}
+      } catch (final Throwable ignored) {}
 
       if (!ignoreErrors) {
         error(t);
@@ -149,7 +203,7 @@ public class EventregDb implements Serializable {
     } finally {
       try {
         closeSession();
-      } catch (Exception wde1) {
+      } catch (final Exception wde1) {
         ok = false;
       }
       open = false;
@@ -323,26 +377,6 @@ public class EventregDb implements Serializable {
       sess.setString("href", href);
 
       return sess.getList();
-    } catch (HibException he) {
-      throw new Exception(he);
-    }
-  }
-
-  /**
-   * @return max registrationid
-   * @throws Throwable
-   */
-  public Long getMaxRegistrationId() throws Throwable {
-    try {
-      StringBuilder sb = new StringBuilder();
-
-      sb.append("select max(registrationId) from ");
-      sb.append(Registration.class.getName());
-      sb.append(" reg");
-
-      sess.createQuery(sb.toString());
-
-      return (Long)sess.getUnique();
     } catch (HibException he) {
       throw new Exception(he);
     }
@@ -770,21 +804,21 @@ public class EventregDb implements Serializable {
   }
 
   /**
-   * @param t
+   * @param t exception
    */
   protected void error(final Throwable t) {
     getLogger().error(this, t);
   }
 
   /**
-   * @param msg
+   * @param msg the message
    */
   protected void warn(final String msg) {
     getLogger().warn(msg);
   }
 
   /**
-   * @param msg
+   * @param msg the message
    */
   protected void trace(final String msg) {
     getLogger().debug(msg);
@@ -793,5 +827,117 @@ public class EventregDb implements Serializable {
   /* ====================================================================
    *                   private methods
    * ==================================================================== */
+
+  private static final String maxRegistrationIdQuery =
+          "select max(registrationId) from " +
+                  Registration.class.getName() + " reg";
+
+  /**
+   * @return max registrationid
+   * @throws Throwable
+   */
+  private Long getMaxRegistrationId() throws Throwable {
+    try {
+      sess.createQuery(maxRegistrationIdQuery);
+
+      return (Long)sess.getUnique();
+    } catch (final HibException he) {
+      throw new Exception(he);
+    }
+  }
+
+  private static final String regIdQuery =
+          "from " +
+                  RegId.class.getName();
+
+  /**
+   * @return max registrationid
+   * @throws Throwable
+   */
+  private RegId getRegId() throws Throwable {
+    try {
+      sess.createQuery(regIdQuery);
+
+      return (RegId)sess.getUnique();
+    } catch (final HibException he) {
+      throw new Exception(he);
+    }
+  }
+
+  private static class IdBatch {
+    Long start;
+    Long end;
+  }
+
+  public static IdBatch getIdBatch(final EventregProperties sysInfo) throws Throwable {
+    /* This may take a few tries and we need to discard the db.
+     */
+
+    final String op;
+    final EventregDb nidDb = new EventregDb();
+
+    long regidBatchSize = sysInfo.getRegidBatchSize();
+
+    if (regidBatchSize == 0) {
+      regidBatchSize = defaultRegidBatchSize;
+    }
+
+    nidDb.setSysInfo(sysInfo);
+
+    try {
+      nidDb.open();
+
+      RegId regId = nidDb.getRegId();
+
+      final IdBatch batch = new IdBatch();
+
+      if (regId == null) {
+        /* First time I guess
+             We need to reserve ourselves a batch of ids. Note we may
+             be doing this on top of a system that didn't have the
+             nextid table so move past any already allocated ids.
+           */
+
+        batch.start = nidDb.getMaxRegistrationId();
+
+        if (batch.start == null) {
+          // Empty system
+          batch.start = (long)1;
+        } else {
+          batch.start += 100; // Leave a gap for
+        }
+
+        regId = new RegId();
+        op = "add";
+      } else {
+        batch.start = regId.getNextRegistrationId();
+        op = "update";
+      }
+
+      batch.end = batch.start + regidBatchSize - 1; // Last one we allocate
+
+      regId.setNextRegistrationId(
+              batch.end + 1); // Next one for someone else
+
+      try {
+        if ("add".equals(op)) {
+          nidDb.add(regId);
+        } else {
+          nidDb.update(regId);
+        }
+      } catch (final Throwable t) {
+        nidDb.warn("Exception trying to " + op +
+                           " id batch record");
+        nidDb.warn("Message was " + t.getMessage());
+        return null;
+      }
+
+      return batch;
+    } finally {
+      try {
+        nidDb.close();
+      } catch (final Throwable ignored) {}
+    }
+  }
 
 }
