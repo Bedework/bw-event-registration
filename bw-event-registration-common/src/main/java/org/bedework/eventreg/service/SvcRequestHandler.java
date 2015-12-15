@@ -29,6 +29,11 @@ import org.bedework.eventreg.requests.RegistrationAction;
 import org.bedework.util.calendar.IcalDefs;
 import org.bedework.util.calendar.XcalUtil;
 import org.bedework.util.http.BasicHttpClient;
+import org.bedework.util.jms.JmsNotificationsHandlerImpl;
+import org.bedework.util.jms.NotificationException;
+import org.bedework.util.jms.NotificationsHandler;
+import org.bedework.util.jms.events.SysEvent;
+import org.bedework.util.jms.listeners.JmsSysEventListener;
 import org.bedework.util.misc.Util;
 import org.bedework.util.timezones.Timezones;
 import org.bedework.util.xml.XmlEmit;
@@ -54,7 +59,7 @@ import java.util.UUID;
  * @author douglm
  *
  */
-public class SvcRequestHandler implements EventregRequestHandler {
+public class SvcRequestHandler extends JmsSysEventListener implements EventregRequestHandler {
   private transient Logger log;
 
   protected boolean debug;
@@ -69,6 +74,10 @@ public class SvcRequestHandler implements EventregRequestHandler {
 
   protected BasicHttpClient bwClient;
 
+  private final NotificationsHandler sender;
+
+  private final SvcRequestDelayHandler delayHandler;
+
   private final static XcalUtil.TzGetter tzs = new XcalUtil.TzGetter() {
     @Override
     public TimeZone getTz(final String id) throws Throwable {
@@ -78,6 +87,35 @@ public class SvcRequestHandler implements EventregRequestHandler {
 
   private final BwConnector cnctr;
 
+  private class Processor extends AbstractProcessorThread {
+    private final SvcRequestHandler handler;
+
+    /**
+     * @param name for the thread
+     */
+    public Processor(final String name,
+                     final SvcRequestHandler handler) throws Throwable {
+      super(name);
+      this.handler = handler;
+    }
+
+    @Override
+    public void runInit() {
+    }
+
+    @Override
+    public void runProcess() throws Throwable {
+      handler.listen();
+    }
+
+    @Override
+    public void close() {
+      handler.close();
+    }
+  }
+
+  private AbstractProcessorThread processor;
+
   public SvcRequestHandler(final EventregProperties props) throws Throwable {
     this.props = props;
     debug = getLogger().isDebugEnabled();
@@ -85,28 +123,193 @@ public class SvcRequestHandler implements EventregRequestHandler {
     db = new EventregDb();
     db.setSysInfo(getSysInfo());
 
+    delayHandler = new SvcRequestDelayHandler(this, props);
+
     Timezones.initTimezones(getSysInfo().getTzsUri());
 
     cnctr = new BwConnector(getSysInfo().getWsdlUri(), tzs);
+
+    sender = new JmsNotificationsHandlerImpl(props.getActionQueueName(),
+                                             ConfigBase.toProperties(props.getSyseventsProperties()));
   }
 
-  public void handle(final EventregRequest request) throws Throwable {
+  @Override
+  public void action(final SysEvent ev) throws NotificationException {
+    if (ev == null) {
+      return;
+    }
+
+    try {
+      if (debug) {
+        debug("handling request: " + ev);
+      }
+
+      if (!(ev instanceof EventregRequest)) {
+        return;
+      }
+
+      final EventregRequest req = (EventregRequest)ev;
+      boolean ok = false;
+
+      try {
+        ok = handle(req);
+      } catch (final Throwable t) {
+        error("Error handling request: " + req);
+        error(t);
+      }
+
+      if (ok) {
+        return;
+      }
+
+      if (req.getDiscard()) {
+        warn("Discarding: " + req);
+        return;
+      }
+
+      req.incRetries();
+
+      if (req.getRetries() > props.getRetries()) {
+        warn("Discarding - too many retries: " + req);
+        return;
+      }
+
+      delayHandler.delay(req);
+    } catch (final Throwable t) {
+      throw new NotificationException(t);
+    }
+  }
+
+  public void listen() {
+    try {
+      open(props.getActionQueueName(),
+           ConfigBase.toProperties(props.getSyseventsProperties()));
+
+      process(false);
+    } catch (final Throwable t) {
+      error(t);
+      throw new RuntimeException(t);
+    }
+  }
+
+  @Override
+  public void addRequest(final EventregRequest val) throws Throwable {
+    sender.post(val);
+  }
+
+  public void close() {
+    stop();
+    super.close();
+  }
+
+  AbstractProcessorThread getProcessor() throws Throwable {
+    return new Processor("EventregAction", this);
+  }
+
+  public boolean isRunning() {
+    if (processor == null) {
+      return false;
+    }
+
+    if (!processor.isAlive()) {
+      processor = null;
+      return false;
+    }
+
+    if (processor.getRunning()) {
+      return true;
+    }
+
+    /* Kill it and return false */
+    processor.interrupt();
+    try {
+      processor.join(5000);
+    } catch (final Throwable ignored) {}
+
+    if (!processor.isAlive()) {
+      processor = null;
+      return false;
+    }
+
+    warn("Processor was unstoppable. Acquiring new processor");
+    processor = null;
+    return false;
+  }
+
+  public synchronized void start() {
+    if (!delayHandler.isRunning()) {
+      delayHandler.start();
+    }
+
+    if (isRunning()) {
+      error("Already started");
+      return;
+    }
+
+    try {
+      processor = getProcessor();
+    } catch (final Throwable t) {
+      error("Error getting processor");
+      error(t);
+      return;
+    }
+    processor.setRunning(true);
+    processor.start();
+  }
+
+  public synchronized void stop() {
+    if (delayHandler.isRunning()) {
+      delayHandler.stop();
+    }
+
+    if (processor == null) {
+      error("Already stopped");
+      return;
+    }
+
+    info("************************************************************");
+    info(" * Stopping event reg action processor");
+    info("************************************************************");
+
+    processor.setRunning(false);
+    //?? ProcessorThread.stopProcess(processor);
+
+    processor.interrupt();
+    try {
+      processor.join(20 * 1000);
+    } catch (final InterruptedException ignored) {
+    } catch (final Throwable t) {
+      error("Error waiting for processor termination");
+      error(t);
+    }
+
+    processor = null;
+
+    info("************************************************************");
+    info(" * Event reg action processor terminated");
+    info("************************************************************");
+  }
+
+  public boolean handle(final EventregRequest request) throws Throwable {
     try {
       openDb();
 
       if (request instanceof EventChangeRequest) {
-        handleChange((EventChangeRequest)request);
+        return handleChange((EventChangeRequest)request);
       }
 
       if (request instanceof RegistrationAction) {
-        handleNewReg((RegistrationAction)request);
+        return handleNewReg((RegistrationAction)request);
       }
+
+      request.discard();
+      return false;
     } finally {
       closeDb();
     }
   }
 
-  private void handleChange(final EventChangeRequest request) throws Throwable {
+  private boolean handleChange(final EventChangeRequest request) throws Throwable {
       /* We need to fetch the event, possibly adjust tickets and
          maybe notify people.
        */
@@ -117,31 +320,34 @@ public class SvcRequestHandler implements EventregRequestHandler {
     final String status = ev.getStatus();
 
     if (debug) {
-      debug("chage: status=" + status + " for event " + ev.getSummary());
+      debug("change: status=" + status + " for event " + ev.getSummary());
     }
 
-    if ((status != null) && IcalDefs.statusCancelled.equalsIgnoreCase(status)) {
-      // Have we seen this already?
-      final List<Registration> regs = db.getByEvent(href);
+    if ((status == null) || IcalDefs.statusCancelled.equalsIgnoreCase(status)) {
+      return true; // Nothing to do
+    }
 
-      if (Util.isEmpty(regs)) {
-        // No registrations
-        return;
+    // Have we seen this already?
+    final List<Registration> regs = db.getByEvent(href);
+
+    if (Util.isEmpty(regs)) {
+      // No registrations
+      return true;
+    }
+
+    final List<String> principals = new ArrayList<>();
+    final List<Registration> update = new ArrayList<>();
+
+    for (final Registration reg: regs) {
+      if (reg.getCancelSent()) {
+        continue;
       }
 
-      final List<String> principals = new ArrayList<>();
-      final List<Registration> update = new ArrayList<>();
+      principals.add(reg.getAuthid());
+      update.add(reg);
+    }
 
-      for (final Registration reg: regs) {
-        if (reg.getCancelSent()) {
-          continue;
-        }
-
-        principals.add(reg.getAuthid());
-        update.add(reg);
-      }
-
-      /* Tell the calendar system we need to notify the user. We send
+    /* Tell the calendar system we need to notify the user. We send
          something like:
           <?xml version="1.0" encoding="UTF-8" ?>
 
@@ -162,39 +368,40 @@ public class SvcRequestHandler implements EventregRequestHandler {
             </BSS:eventregCancelled>
 
        */
-      final XmlEmit xml = startDavEmit();
+    final XmlEmit xml = startDavEmit();
 
-      xml.openTag(BedeworkServerTags.eventregCancelled);
-      xml.property(WebdavTags.href, href);
-      xml.property(AppleServerTags.uid, UUID.randomUUID().toString());
+    xml.openTag(BedeworkServerTags.eventregCancelled);
+    xml.property(WebdavTags.href, href);
+    xml.property(AppleServerTags.uid, UUID.randomUUID().toString());
 
-      for (final String pr: principals) {
-        xml.openTag(WebdavTags.principalURL);
-        if (pr.startsWith("/")) {
-          xml.property(WebdavTags.href, pr);
-        } else if (pr.startsWith("mailto:")) {
-          xml.property(WebdavTags.href, pr);
-        } else {
-          xml.property(WebdavTags.href, "/principals/users/" + pr);
-        }
-        xml.closeTag(WebdavTags.principalURL);
+    for (final String pr: principals) {
+      xml.openTag(WebdavTags.principalURL);
+      if (pr.startsWith("/")) {
+        xml.property(WebdavTags.href, pr);
+      } else if (pr.startsWith("mailto:")) {
+        xml.property(WebdavTags.href, pr);
+      } else {
+        xml.property(WebdavTags.href, "/principals/users/" + pr);
       }
-
-      xml.closeTag(BedeworkServerTags.eventregCancelled);
-
-      final String content = endDavEmit();
-
-      final BasicHttpClient cl = getBwClient();
-
-      final int respStatus = cl.sendRequest("POST",
-                                            getSysInfo().getBwUrl(),
-                                            getAuthHeaders(),
-                                            "application/xml",
-                                            content.length(), content.getBytes());
+      xml.closeTag(WebdavTags.principalURL);
     }
+
+    xml.closeTag(BedeworkServerTags.eventregCancelled);
+
+    final String content = endDavEmit();
+
+    final BasicHttpClient cl = getBwClient();
+
+    final int respStatus = cl.sendRequest("POST",
+                                          getSysInfo().getBwUrl(),
+                                          getAuthHeaders(),
+                                          "application/xml",
+                                          content.length(), content.getBytes());
+
+    return true;
   }
 
-  private void handleNewReg(final RegistrationAction nr) throws Throwable {
+  private boolean handleNewReg(final RegistrationAction nr) throws Throwable {
       /* We need to fetch the event and notify the registered individual.
        */
     final Registration reg = nr.getReg();
@@ -258,6 +465,8 @@ public class SvcRequestHandler implements EventregRequestHandler {
                                           "application/xml",
                                           content.length(),
                                           content.getBytes());
+
+    return true;
   }
 
   public EventregProperties getSysInfo() {

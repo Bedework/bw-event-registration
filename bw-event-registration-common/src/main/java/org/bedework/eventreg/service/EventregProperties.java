@@ -22,6 +22,8 @@ import org.bedework.util.config.ConfInfo;
 import org.bedework.util.config.HibernateConfigI;
 import org.bedework.util.jmx.MBeanInfo;
 
+import java.util.List;
+
 /** Properties for the Bedework event registration service
  *
  * @author douglm
@@ -187,4 +189,102 @@ public interface EventregProperties extends HibernateConfigI {
    */
   @MBeanInfo("Create an email address as current user + \"@\" + this")
   String getDefaultEmailDomain();
+
+  /* sysevents properties
+   */
+
+  /**
+   *
+   * @param val The action queue name
+   */
+  void setActionQueueName(String val);
+
+  /**
+   * @return The action queue name - e.g. eventregAction
+   */
+  @MBeanInfo("The action queue name - e.g. eventregAction")
+  String getActionQueueName();
+
+  /**
+   *
+   * @param val The delay queue name
+   */
+  void setActionDelayQueueName(String val);
+
+  /**
+   * @return The delay queue name - e.g. eventregActionDelay
+   */
+  @MBeanInfo("The delay queue name - e.g. eventregActionDelay")
+  String getActionDelayQueueName();
+
+  /**
+   *
+   * @param val how long we delay failed actions
+   */
+  void setDelayMillis(final int val);
+
+  /**
+   *
+   * @return how long we delay failed actions
+   */
+  @MBeanInfo("how long we delay failed actions")
+  int getDelayMillis();
+
+  /**
+   *
+   * @param val how often we retry failed actions
+   */
+  void setRetries(final int val);
+
+  /**
+   *
+   * @return how often we retry failed actions
+   */
+  @MBeanInfo("how often we retry failed actions")
+  int getRetries();
+
+  /**
+   *
+   * @param val the list of properties
+   */
+  void setSyseventsProperties(final List<String> val);
+
+  /**
+   *
+   * @return String val
+   */
+  @ConfInfo(collectionElementName = "syseventsProperty" ,
+          elementType = "java.lang.String")
+  List<String> getSyseventsProperties();
+
+  /** Add a sysevents property
+   *
+   * @param name of property
+   * @param val of property
+   */
+  void addSyseventsProperty(final String name,
+                            final String val);
+
+  /** Get a sysevents property
+   *
+   * @param name of property
+   * @return value or null
+   */
+  @ConfInfo(dontSave = true)
+  String getSyseventsProperty(final String name);
+
+  /** Remove a sysevents property
+   *
+   * @param name of property
+   */
+  void removeSyseventsProperty(final String name);
+
+  /** Set a sysevents property
+   *
+   * @param name of property
+   * @param val of property
+   */
+  @ConfInfo(dontSave = true)
+  void setSyseventsProperty(final String name,
+                            final String val);
 }

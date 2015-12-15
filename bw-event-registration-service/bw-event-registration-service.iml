@@ -10,19 +10,19 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="bw-event-registration-common" scope="PROVIDED" />
-    <orderEntry type="module" module-name="bw-util-calendar" scope="PROVIDED" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: org.bedework:bw-util-calendar:4.0.1-SNAPSHOT" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.bedework:bw-ws-icalendar:4.0.3" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.bedework:bw-ical4j-cl:1.1.1" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: com.fasterxml.jackson.core:jackson-databind:2.3.1" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: com.fasterxml.jackson.core:jackson-core:2.3.1" level="project" />
-    <orderEntry type="module" module-name="bw-util-hibernate" scope="PROVIDED" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: org.bedework:bw-util-hibernate:4.0.1-SNAPSHOT" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.apache.derby:derbynet:10.8.2.2" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.apache.derby:derby:10.8.2.2" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: com.h2database:h2:1.2.130" level="project" />
-    <orderEntry type="module" module-name="bw-util-misc" />
-    <orderEntry type="module" module-name="bw-util-timezones" scope="PROVIDED" />
-    <orderEntry type="module" module-name="bw-util-caching" scope="PROVIDED" />
-    <orderEntry type="module" module-name="bw-util-http" scope="PROVIDED" />
+    <orderEntry type="library" name="Maven: org.bedework:bw-util-misc:4.0.1-SNAPSHOT" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: org.bedework:bw-util-timezones:4.0.1-SNAPSHOT" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: org.bedework:bw-util-caching:4.0.1-SNAPSHOT" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: org.bedework:bw-util-http:4.0.1-SNAPSHOT" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.apache.httpcomponents:httpclient:4.2.2" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: com.fasterxml.jackson.core:jackson-annotations:2.3.1" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.bedework:bw-access:4.0.0-SNAPSHOT" level="project" />
@@ -60,12 +60,12 @@
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.apache.httpcomponents:httpcore:4.2.2" level="project" />
     <orderEntry type="library" name="Maven: log4j:log4j:1.2.15" level="project" />
     <orderEntry type="library" name="Maven: javax.mail:mail:1.4" level="project" />
-    <orderEntry type="module" module-name="bw-util-config" />
-    <orderEntry type="module" module-name="bw-util-xml" />
+    <orderEntry type="library" name="Maven: org.bedework:bw-util-config:4.0.1-SNAPSHOT" level="project" />
+    <orderEntry type="library" name="Maven: org.bedework:bw-util-xml:4.0.1-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Maven: org.bedework:bw-ws-tzsvr:4.0.3" level="project" />
     <orderEntry type="library" name="Maven: org.bedework:bw-ws-calws-soap:4.0.3" level="project" />
     <orderEntry type="library" name="Maven: jtidy:jtidy:4aug2000r7-dev" level="project" />
-    <orderEntry type="module" module-name="bw-util-jmx" />
+    <orderEntry type="library" name="Maven: org.bedework:bw-util-jmx:4.0.1-SNAPSHOT" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.jboss.jbossas:jboss-as-system:5.1.0.GA" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.jboss.deployers:jboss-deployers-vfs-spi:2.0.7.GA" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.jboss.deployers:jboss-deployers-spi:2.0.7.GA" level="project" />

@@ -29,9 +29,15 @@ import org.bedework.util.misc.ToString;
  * @author douglm
  */
 public class RegistrationAction extends EventregRequest {
+  private static final long serialVersionUID = 1L;
+
+  public static final String syseventEventregRegistration =
+          "EventregActionRegistration";
+
   private final Registration reg;
 
   public RegistrationAction(final Registration reg) {
+    super(syseventEventregRegistration);
     this.reg = reg;
   }
 
@@ -39,11 +45,10 @@ public class RegistrationAction extends EventregRequest {
     return reg;
   }
 
-  public String toString() {
-    final ToString ts = new ToString(this);
+  @Override
+  public void toStringSegment(final ToString ts) {
+    super.toStringSegment(ts);
 
     ts.append("registration", getReg());
-
-    return ts.toString();
   }
 }

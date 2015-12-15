@@ -21,6 +21,8 @@ package org.bedework.eventreg.service;
 import org.bedework.util.config.ConfInfo;
 import org.bedework.util.config.HibernateConfigBase;
 
+import java.util.List;
+
 /**
  * @author douglm
  *
@@ -46,6 +48,16 @@ public class EventregPropertiesImpl extends HibernateConfigBase<EventregProperti
   private String bwUrl;
 
   private int regidBatchSize;
+
+  private String actionQueueName;
+
+  private String actionDelayQueueName;
+
+  private int delayMillis;
+
+  private int retries;
+
+  private List<String> syseventsProperties;
 
   /* ========================================================================
    * Dump/restore
@@ -187,6 +199,82 @@ public class EventregPropertiesImpl extends HibernateConfigBase<EventregProperti
   @Override
   public String getDefaultEmailDomain() {
     return defaultEmailDomain;
+  }
+
+  @Override
+  public void setActionQueueName(final String val) {
+    actionQueueName = val;
+  }
+
+  @Override
+  public String getActionQueueName() {
+    return actionQueueName;
+  }
+
+  @Override
+  public void setActionDelayQueueName(final String val) {
+    actionDelayQueueName = val;
+  }
+
+  @Override
+  public String getActionDelayQueueName() {
+    return actionDelayQueueName;
+  }
+
+  @Override
+  public void setDelayMillis(final int val) {
+    delayMillis = val;
+  }
+
+  @Override
+  public int getDelayMillis() {
+    return delayMillis;
+  }
+
+  @Override
+  public void setRetries(final int val) {
+    retries = val;
+  }
+
+  @Override
+  public int getRetries() {
+    return retries;
+  }
+
+  @Override
+  public void setSyseventsProperties(final List<String> val) {
+    syseventsProperties = val;
+  }
+
+  @Override
+  @ConfInfo(collectionElementName = "syseventsProperty" ,
+          elementType = "java.lang.String")
+  public List<String> getSyseventsProperties() {
+    return syseventsProperties;
+  }
+
+  @Override
+  public void addSyseventsProperty(final String name,
+                                   final String val) {
+    setSyseventsProperties(addListProperty(getSyseventsProperties(),
+                                           name, val));
+  }
+
+  @Override
+  public String getSyseventsProperty(final String name) {
+    return getProperty(getSyseventsProperties(), name);
+  }
+
+  @Override
+  public void removeSyseventsProperty(final String name) {
+    removeProperty(getSyseventsProperties(), name);
+  }
+
+  @Override
+  public void setSyseventsProperty(final String name,
+                                   final String val) {
+    setSyseventsProperties(setListProperty(getSyseventsProperties(),
+                                           name, val));
   }
 }
 

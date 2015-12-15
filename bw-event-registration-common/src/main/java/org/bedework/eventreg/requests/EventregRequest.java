@@ -18,6 +18,9 @@
 */
 package org.bedework.eventreg.requests;
 
+import org.bedework.util.jms.events.SysEvent;
+import org.bedework.util.misc.ToString;
+
 /** Requests coming in to the Bedework event registration service or
  * generated internally as a result of changes.
  * These are handled asynchronously by the service module.
@@ -25,5 +28,58 @@ package org.bedework.eventreg.requests;
  *
  * @author douglm
  */
-public class EventregRequest {
+public class EventregRequest extends SysEvent {
+  private static final long serialVersionUID = 1L;
+
+  /* millisecs time to retry */
+  private long waitUntil;
+
+  private int retries;
+  private boolean discard;
+
+  /**
+   * @param code the system event code
+   */
+  public EventregRequest(final String code) {
+    super(code);
+  }
+
+  public int getRetries() {
+    return retries;
+  }
+
+  public void incRetries() {
+    retries++;
+    waitUntil = System.currentTimeMillis() + 1000;
+  }
+
+  public void setWaitUntil(final long val) {
+    retries++;
+    waitUntil = System.currentTimeMillis() + 1000;
+  }
+
+  public long getWaitUntil() {
+    return waitUntil;
+  }
+
+  public boolean getDiscard() {
+    return discard;
+  }
+
+  public void discard() {
+    discard = true;
+  }
+
+  public void toStringSegment(final ToString ts) {
+    ts.append("retries", getRetries());
+    ts.append("discard", getDiscard());
+  }
+
+  public String toString() {
+    final ToString ts = new ToString(this);
+
+    toStringSegment(ts);
+
+    return ts.toString();
+  }
 }

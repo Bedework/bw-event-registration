@@ -20,11 +20,46 @@ package org.bedework.eventreg.service;
 
 import org.bedework.eventreg.requests.EventregRequest;
 
-/** Does the work of processing a request
+/** Does the work of processing eventreg system messages
  *
  * @author douglm
  *
  */
 public interface EventregRequestHandler {
-  void handle(EventregRequest request) throws Throwable;
+  /** Lifecycle
+   *
+   */
+  @MBeanInfo("Start the service")
+  void start();
+
+  /** Lifecycle
+   *
+   */
+  @MBeanInfo("Stop the service")
+  void stop();
+
+  /** Lifecycle
+   *
+   * @return true if service running
+   */
+  @MBeanInfo("Show if service is running")
+  boolean isRunning();
+
+  /** Listen for messages and process them.
+   *
+   * Returns at shutdown.
+   */
+  void listen();
+
+  /**
+   *
+   * @param val a request for processing
+   * @throws Throwable
+   */
+  void addRequest(final EventregRequest val) throws Throwable;
+
+  /**
+   * Shut down the process
+   */
+  void close();
 }

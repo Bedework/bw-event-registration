@@ -18,12 +18,10 @@
 */
 package org.bedework.eventreg.service;
 
-import org.bedework.eventreg.db.EventregDb;
 import org.bedework.eventreg.requests.EventregRequest;
 import org.bedework.util.jmx.ConfBase;
 import org.bedework.util.jmx.InfoLines;
 import org.bedework.util.jmx.MBeanInfo;
-import org.bedework.util.misc.AbstractProcessorThread;
 
 import org.hibernate.cfg.Configuration;
 import org.hibernate.tool.hbm2ddl.SchemaExport;
@@ -33,8 +31,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 import java.util.UUID;
-import java.util.concurrent.BlockingDeque;
-import java.util.concurrent.LinkedBlockingDeque;
 
 /**
  * @author douglm
@@ -118,59 +114,6 @@ public class EventregSvc extends ConfBase<EventregPropertiesImpl>
   private EventregRequestHandler hdlr;
 
   /**
-   * This process handles queued up requests from the calendar
-   * system.
-   */
-  private class Processor extends AbstractProcessorThread {
-    private final BlockingDeque<EventregRequest> requests =
-            new LinkedBlockingDeque<>();
-    // Capacity could be specified for the queue
-
-    /**
-     * @param name for the thread
-     */
-    public Processor(final String name) throws Throwable {
-      super(name);
-    }
-
-    public void addRequest(final EventregRequest val) throws Throwable {
-      requests.put(val);
-    }
-
-    @Override
-    public void runInit() {
-    }
-
-    @Override
-    public void runProcess() throws Throwable {
-      while (running) {
-        final EventregRequest req = requests.take();
-
-        if (debug) {
-          debug("handling request: " + req);
-        }
-
-        hdlr.handle(req);
-      }
-    }
-
-    @Override
-    public void close() {
-      while (!requests.isEmpty()) {
-        final EventregRequest req = requests.remove();
-
-        try {
-          hdlr.handle(req);
-        } catch (final Throwable t) {
-          error(t);
-        }
-      }
-    }
-  }
-
-  AbstractProcessorThread processor;
-
-  /**
    */
   @SuppressWarnings("unused")
   public EventregSvc() {
@@ -192,10 +135,6 @@ public class EventregSvc extends ConfBase<EventregPropertiesImpl>
   @Override
   public String loadConfig() {
     return loadConfig(EventregPropertiesImpl.class);
-  }
-
-  AbstractProcessorThread getProcessor() throws Throwable {
-    return new Processor("Eventreg");
   }
 
   public void setEventregRequestHandler(final EventregRequestHandler val) {
@@ -376,6 +315,78 @@ public class EventregSvc extends ConfBase<EventregPropertiesImpl>
     return getConfig().getDefaultEmailDomain();
   }
 
+  @Override
+  public void setActionQueueName(final String val) {
+    getConfig().setActionQueueName(val);
+  }
+
+  @Override
+  public String getActionQueueName() {
+    return getConfig().getActionQueueName();
+  }
+
+  @Override
+  public void setActionDelayQueueName(final String val) {
+    getConfig().setActionDelayQueueName(val);
+  }
+
+  @Override
+  public String getActionDelayQueueName() {
+    return getConfig().getActionDelayQueueName();
+  }
+
+  @Override
+  public void setDelayMillis(final int val) {
+    getConfig().setDelayMillis(val);
+  }
+
+  @Override
+  public int getDelayMillis() {
+    return getConfig().getDelayMillis();
+  }
+
+  @Override
+  public void setRetries(final int val) {
+    getConfig().setRetries(val);
+  }
+
+  @Override
+  public int getRetries() {
+    return getConfig().getRetries();
+  }
+
+  @Override
+  public void setSyseventsProperties(final List<String> val) {
+    getConfig().setSyseventsProperties(val);
+  }
+
+  @Override
+  public List<String> getSyseventsProperties() {
+    return getConfig().getSyseventsProperties();
+  }
+
+  @Override
+  public void addSyseventsProperty(final String name,
+                                   final String val) {
+    getConfig().addSyseventsProperty(name, val);
+  }
+
+  @Override
+  public String getSyseventsProperty(final String name) {
+    return getConfig().getSyseventsProperty(name);
+  }
+
+  @Override
+  public void removeSyseventsProperty(final String name) {
+    getConfig().removeSyseventsProperty(name);
+  }
+
+  @Override
+  public void setSyseventsProperty(final String name,
+                                   final String val) {
+    getConfig().setSyseventsProperty(name, val);
+  }
+
   /* ========================================================================
    * Mbean attributes
    * ======================================================================== */
@@ -409,7 +420,7 @@ public class EventregSvc extends ConfBase<EventregPropertiesImpl>
     }
 
     try {
-      ((Processor)processor).addRequest(request);
+      hdlr.addRequest(request);
     } catch (final Throwable t) {
       error(t);
 
@@ -428,7 +439,7 @@ public class EventregSvc extends ConfBase<EventregPropertiesImpl>
       buildSchema.start();
 
       return "OK";
-    } catch (Throwable t) {
+    } catch (final Throwable t) {
       error(t);
 
       return "Exception: " + t.getLocalizedMessage();
@@ -438,7 +449,7 @@ public class EventregSvc extends ConfBase<EventregPropertiesImpl>
   @Override
   public synchronized List<String> schemaStatus() {
     if (buildSchema == null) {
-      InfoLines infoLines = new InfoLines();
+      final InfoLines infoLines = new InfoLines();
 
       infoLines.addLn("Schema build has not been started");
 
@@ -450,11 +461,11 @@ public class EventregSvc extends ConfBase<EventregPropertiesImpl>
 
   @Override
   public String listHibernateProperties() {
-    StringBuilder res = new StringBuilder();
+    final StringBuilder res = new StringBuilder();
 
-    List<String> ps = getConfig().getHibernateProperties();
+    final List<String> ps = getConfig().getHibernateProperties();
 
-    for (String p: ps) {
+    for (final String p: ps) {
       res.append(p);
       res.append("\n");
     }
@@ -464,7 +475,7 @@ public class EventregSvc extends ConfBase<EventregPropertiesImpl>
 
   @Override
   public String displayHibernateProperty(final String name) {
-    String val = getConfig().getHibernateProperty(name);
+    final String val = getConfig().getHibernateProperty(name);
 
     if (val != null) {
       return val;
@@ -475,7 +486,7 @@ public class EventregSvc extends ConfBase<EventregPropertiesImpl>
 
   @Override
   public synchronized List<String> restoreData() {
-    List<String> infoLines = new ArrayList<String>();
+    final List<String> infoLines = new ArrayList<String>();
 
     try {
       /*
@@ -541,7 +552,7 @@ public class EventregSvc extends ConfBase<EventregPropertiesImpl>
 
   @Override
   public List<String> restoreStatus() {
-    List<String> res = new ArrayList<>();
+    final List<String> res = new ArrayList<>();
 
     res.add("************************Restore unimplemented *************************" + "\n");
 
@@ -550,7 +561,7 @@ public class EventregSvc extends ConfBase<EventregPropertiesImpl>
 
   @Override
   public List<String> dumpData() {
-    List<String> infoLines = new ArrayList<String>();
+    final List<String> infoLines = new ArrayList<String>();
 
     try {
       /*
@@ -596,7 +607,7 @@ public class EventregSvc extends ConfBase<EventregPropertiesImpl>
       infoLines.add("Dump complete" + "\n");
       */
       infoLines.add("************************Dump unimplemented *************************" + "\n");
-    } catch (Throwable t) {
+    } catch (final Throwable t) {
       error(t);
       infoLines.add("Exception - check logs: " + t.getMessage() + "\n");
     }
@@ -623,83 +634,17 @@ public class EventregSvc extends ConfBase<EventregPropertiesImpl>
 
   @Override
   public boolean isRunning() {
-    if (processor == null) {
-      return false;
-    }
-
-    if (!processor.isAlive()) {
-      processor = null;
-      return false;
-    }
-
-    if (processor.getRunning()) {
-      return true;
-    }
-
-    /* Kill it and return false */
-    processor.interrupt();
-    try {
-      processor.join(5000);
-    } catch (final Throwable ignored) {}
-
-    if (!processor.isAlive()) {
-      processor = null;
-      return false;
-    }
-
-    warn("Processor was unstoppable. Acquiring new processor");
-    processor = null;
-    return false;
+    return hdlr.isRunning();
   }
 
   @Override
   public synchronized void start() {
-    if (isRunning()) {
-      error("Already started");
-      return;
-    }
-
-    setStatus(statusStopped);
-
-    try {
-      processor = getProcessor();
-    } catch (final Throwable t) {
-      error("Error getting processor");
-      error(t);
-      return;
-    }
-    processor.setRunning(true);
-    processor.start();
+    hdlr.start();
   }
 
   @Override
   public synchronized void stop() {
-    if (processor == null) {
-      error("Already stopped");
-      return;
-    }
-
-    info("************************************************************");
-    info(" * Stopping feeder");
-    info("************************************************************");
-
-    processor.setRunning(false);
-    //?? ProcessorThread.stopProcess(processor);
-
-    processor.interrupt();
-    try {
-      processor.join(20 * 1000);
-    } catch (final InterruptedException ignored) {
-    } catch (final Throwable t) {
-      error("Error waiting for processor termination");
-      error(t);
-    }
-
-    processor = null;
-
-    info("************************************************************");
-    info(" * Feeder terminated");
-    info("************************************************************");
+    hdlr.stop();
   }
 
   /* ====================================================================
@@ -707,7 +652,7 @@ public class EventregSvc extends ConfBase<EventregPropertiesImpl>
    * ==================================================================== */
 
   /**
-   * @param val
+   * @param val the number
    * @return 2 digit val
    */
   private static String twoDigits(final long val) {
@@ -723,43 +668,25 @@ public class EventregSvc extends ConfBase<EventregPropertiesImpl>
       try {
         hibCfg = new Configuration();
 
-        StringBuilder sb = new StringBuilder();
+        final StringBuilder sb = new StringBuilder();
 
-        List<String> ps = getConfig().getHibernateProperties();
+        final List<String> ps = getConfig().getHibernateProperties();
 
-        for (String p: ps) {
+        for (final String p: ps) {
           sb.append(p);
           sb.append("\n");
         }
 
-        Properties hprops = new Properties();
+        final Properties hprops = new Properties();
         hprops.load(new StringReader(sb.toString()));
 
         hibCfg.addProperties(hprops).configure();
-      } catch (Throwable t) {
+      } catch (final Throwable t) {
         // Always bad.
         error(t);
       }
     }
 
     return hibCfg;
-  }
-
-  private EventregDb openDb() {
-    try {
-      EventregDb db = new EventregDb();
-
-      db.open();
-
-      return db;
-    } catch (Throwable t) {
-      error(t);
-      return null;
-    }
-  }
-
-  private void closeDb(final EventregDb db,
-                       final boolean ignoreErrors) {
-    db.close(ignoreErrors);
   }
 }
