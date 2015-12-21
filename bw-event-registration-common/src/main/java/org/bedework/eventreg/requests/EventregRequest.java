@@ -50,12 +50,10 @@ public class EventregRequest extends SysEvent {
 
   public void incRetries() {
     retries++;
-    waitUntil = System.currentTimeMillis() + 1000;
   }
 
   public void setWaitUntil(final long val) {
-    retries++;
-    waitUntil = System.currentTimeMillis() + 1000;
+    waitUntil = val;
   }
 
   public long getWaitUntil() {

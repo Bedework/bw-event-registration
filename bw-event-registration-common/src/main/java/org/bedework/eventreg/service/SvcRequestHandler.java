@@ -54,6 +54,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import javax.servlet.http.HttpServletResponse;
+
 /** Does the work of processing a request
  *
  * @author douglm
@@ -159,21 +161,15 @@ public class SvcRequestHandler extends JmsSysEventListener implements EventregRe
       }
 
       if (ok) {
+        if (debug) {
+          debug("Sucess processing message.");
+        }
         return;
       }
 
-      if (req.getDiscard()) {
-        warn("Discarding: " + req);
-        return;
+      if (debug) {
+        debug("Failed to process message. Adding to delay handler queue");
       }
-
-      req.incRetries();
-
-      if (req.getRetries() > props.getRetries()) {
-        warn("Discarding - too many retries: " + req);
-        return;
-      }
-
       delayHandler.delay(req);
     } catch (final Throwable t) {
       throw new NotificationException(t);
@@ -290,7 +286,7 @@ public class SvcRequestHandler extends JmsSysEventListener implements EventregRe
     info("************************************************************");
   }
 
-  public boolean handle(final EventregRequest request) throws Throwable {
+  private boolean handle(final EventregRequest request) throws Throwable {
     try {
       openDb();
 
@@ -398,7 +394,11 @@ public class SvcRequestHandler extends JmsSysEventListener implements EventregRe
                                           "application/xml",
                                           content.length(), content.getBytes());
 
-    return true;
+    if (debug) {
+      debug("Status was " + respStatus);
+    }
+
+    return respStatus == HttpServletResponse.SC_OK;
   }
 
   private boolean handleNewReg(final RegistrationAction nr) throws Throwable {
@@ -466,7 +466,11 @@ public class SvcRequestHandler extends JmsSysEventListener implements EventregRe
                                           content.length(),
                                           content.getBytes());
 
-    return true;
+    if (debug) {
+      debug("Status was " + respStatus);
+    }
+
+    return respStatus == HttpServletResponse.SC_OK;
   }
 
   public EventregProperties getSysInfo() {
