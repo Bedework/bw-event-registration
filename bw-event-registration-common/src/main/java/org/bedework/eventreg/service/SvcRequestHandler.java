@@ -319,7 +319,9 @@ public class SvcRequestHandler extends JmsSysEventListener implements EventregRe
       debug("change: status=" + status + " for event " + ev.getSummary());
     }
 
-    if ((status == null) || IcalDefs.statusCancelled.equalsIgnoreCase(status)) {
+    /* For the time being we'll only handle events that are canceled */
+    if ((status == null) ||
+            !IcalDefs.statusCancelled.equalsIgnoreCase(status)) {
       return true; // Nothing to do
     }
 
