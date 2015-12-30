@@ -585,13 +585,7 @@ public class SvcRequestHandler extends JmsSysEventListener implements EventregRe
     }
   }
 
-  private List<Header> authheaders;
-
   List<Header> getAuthHeaders() throws EventregException {
-    if (authheaders != null) {
-      return authheaders;
-    }
-
     final String id = getSysInfo().getBwId();
     final String token = getSysInfo().getBwToken();
 
@@ -599,7 +593,7 @@ public class SvcRequestHandler extends JmsSysEventListener implements EventregRe
       return null;
     }
 
-    authheaders = new ArrayList<>(1);
+    final List<Header> authheaders = new ArrayList<>(2);
     authheaders.add(new BasicHeader("X-BEDEWORK-NOTE", id + ":" + token));
     authheaders.add(new BasicHeader("X-BEDEWORK-EXTENSIONS", "true"));
 
