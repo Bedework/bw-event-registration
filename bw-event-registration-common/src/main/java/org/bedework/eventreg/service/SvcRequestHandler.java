@@ -388,19 +388,32 @@ public class SvcRequestHandler extends JmsSysEventListener implements EventregRe
 
     final String content = endDavEmit();
 
-    final BasicHttpClient cl = getBwClient();
+    BasicHttpClient cl = null;
 
-    final int respStatus = cl.sendRequest("POST",
-                                          getSysInfo().getBwUrl(),
-                                          getAuthHeaders(),
-                                          "application/xml",
-                                          content.length(), content.getBytes());
+    try {
+      cl = getBwClient();
 
-    if (debug) {
-      debug("Status was " + respStatus);
+      final int respStatus = cl.sendRequest("POST",
+                                            getSysInfo().getBwUrl(),
+                                            getAuthHeaders(),
+                                            "application/xml",
+                                            content.length(),
+                                            content.getBytes());
+
+      if (debug) {
+        debug("Status was " + respStatus);
+      }
+
+      return respStatus == HttpServletResponse.SC_OK;
+    } finally {
+      if (cl != null) {
+        try {
+          cl.release();
+        } catch (final Throwable t) {
+          error(t);
+        }
+      }
     }
-
-    return respStatus == HttpServletResponse.SC_OK;
   }
 
   private boolean handleNewReg(final RegistrationAction nr) throws Throwable {
@@ -459,20 +472,32 @@ public class SvcRequestHandler extends JmsSysEventListener implements EventregRe
 
     final String content = endDavEmit();
 
-    final BasicHttpClient cl = getBwClient();
+    BasicHttpClient cl = null;
 
-    final int respStatus = cl.sendRequest("POST",
-                                          getSysInfo().getBwUrl(),
-                                          getAuthHeaders(),
-                                          "application/xml",
-                                          content.length(),
-                                          content.getBytes());
+    try {
+      cl = getBwClient();
 
-    if (debug) {
-      debug("Status was " + respStatus);
+      final int respStatus = cl.sendRequest("POST",
+                                            getSysInfo().getBwUrl(),
+                                            getAuthHeaders(),
+                                            "application/xml",
+                                            content.length(),
+                                            content.getBytes());
+
+      if (debug) {
+        debug("Status was " + respStatus);
+      }
+
+      return respStatus == HttpServletResponse.SC_OK;
+    } finally {
+      if (cl != null) {
+        try {
+          cl.release();
+        } catch (final Throwable t) {
+          error(t);
+        }
+      }
     }
-
-    return respStatus == HttpServletResponse.SC_OK;
   }
 
   public EventregProperties getSysInfo() {
@@ -546,14 +571,26 @@ public class SvcRequestHandler extends JmsSysEventListener implements EventregRe
 
     final String content = endDavEmit();
 
-    final BasicHttpClient cl = getBwClient();
+    BasicHttpClient cl = null;
 
-    final int respStatus = cl.sendRequest("POST",
-                                          getSysInfo().getBwUrl(),
-                                          getAuthHeaders(),
-                                          "application/xml",
-                                          content.length(),
-                                          content.getBytes());
+    try {
+      cl = getBwClient();
+
+      final int respStatus = cl.sendRequest("POST",
+                                            getSysInfo().getBwUrl(),
+                                            getAuthHeaders(),
+                                            "application/xml",
+                                            content.length(),
+                                            content.getBytes());
+    } finally {
+      if (cl != null) {
+        try {
+          cl.release();
+        } catch (final Throwable t) {
+          error(t);
+        }
+      }
+    }
   }
 
   protected String makePrincipal(final String id) {
@@ -643,33 +680,7 @@ public class SvcRequestHandler extends JmsSysEventListener implements EventregRe
     }
   }
 
-  protected void info(final String msg) {
-    getLogger().info(msg);
-  }
-
-  protected void warn(final String msg) {
-    getLogger().warn(msg);
-  }
-
   protected void debug(final String msg) {
     getLogger().debug(msg);
-  }
-
-  protected void error(final Throwable t) {
-    getLogger().error(this, t);
-  }
-
-  protected void error(final String msg) {
-    getLogger().error(msg);
-  }
-
-  /* Get a logger for messages
-   */
-  protected Logger getLogger() {
-    if (log == null) {
-      log = Logger.getLogger(this.getClass());
-    }
-
-    return log;
   }
 }

@@ -20,6 +20,7 @@ package org.bedework.eventreg.bus;
 
 import org.bedework.eventreg.service.EventregSvcMBean;
 import org.bedework.eventreg.service.SvcRequestHandler;
+import org.bedework.util.http.service.HttpOut;
 import org.bedework.util.jmx.ConfBase;
 
 import org.apache.commons.logging.Log;
@@ -61,6 +62,15 @@ public class ContextListener implements ServletContextListener {
         sysInfo.setEventregRequestHandler(new SvcRequestHandler(sysInfo));
 
         sysInfo.start();
+
+
+      /* ------------- Http properties -------------------- */
+        final HttpOut ho = new HttpOut("org.bedework.eventreg.confuri",
+                                       "org.bedework.eventreg",
+                                       "httpConfig");
+        register(new ObjectName(ho.getServiceName()), ho);
+        ho.loadConfig();
+
       } catch (final Throwable t){
         t.printStackTrace();
       }
