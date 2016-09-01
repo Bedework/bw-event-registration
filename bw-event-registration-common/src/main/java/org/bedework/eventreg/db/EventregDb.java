@@ -448,30 +448,29 @@ public class EventregDb implements Serializable {
     }
   }
 
+  private final static String getWaitingTicketCountQuery =
+          "select sum(ticketsRequested) from " +
+                  Registration.class.getName() +
+                  " reg where reg.href=:href";
+
   /**
-   * @param eventHref
-   * @return number of registrations on the waiting list for the event
-   * @throws Throwable
+   * @param eventHref href of event
+   * @return number of tickets requested on the waiting list for the event
+   * @throws Throwable on fatal error
    */
   public long getWaitingTicketCount(final String eventHref) throws Throwable {
     try {
-      StringBuilder sb = new StringBuilder();
-
-      sb.append("select sum(ticketsRequested) from ");
-      sb.append(Registration.class.getName());
-      sb.append(" reg where reg.href=:href");
-
-      sess.createQuery(sb.toString());
+      sess.createQuery(getWaitingTicketCountQuery);
       sess.setString("href", eventHref);
 
-      Long ct = (Long)sess.getUnique();
+      final Long ct = (Long)sess.getUnique();
       trace("Count returned " + ct);
       if (ct == null) {
         return 0;
       }
 
       return Math.max(0, ct - getTicketCount(eventHref));
-    } catch (HibException he) {
+    } catch (final HibException he) {
       throw new Exception(he);
     }
   }

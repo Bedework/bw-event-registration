@@ -67,16 +67,22 @@ public class EventregController extends AuthAbstractController {
               "Cannot register for this event - deadline has passed");
     }
 
-    registerUserInEvent(ev);
+    if (!registerUserInEvent(ev)) {
+      if (debug) {
+        debug("event registration stop - waitlist is full");
+      }
+      return errorReturn(
+              "Cannot register for this event - waitlist is full");
+    }
 
     return sessModel("eventreg");
   }
 
   /**
-   * @return ticketId for registration
-   * @throws Throwable
+   * @return false if event full
+   * @throws Throwable on fatal error
    */
-  public Long registerUserInEvent(final Event ev) throws Throwable {
+  private boolean registerUserInEvent(final Event ev) throws Throwable {
     final String href = req.getHref();
 
     if (debug) {
@@ -95,7 +101,7 @@ public class EventregController extends AuthAbstractController {
 
       sessMan.updateRegistration(reg);
 
-      return reg.getRegistrationId();
+      return true;
     }
 
     /* Create new entry */
@@ -126,7 +132,9 @@ public class EventregController extends AuthAbstractController {
 
     reg.setTimestamps();
 
-    adjustTickets(reg);
+    if (adjustTickets(reg) == AdjustResult.waitListFull) {
+      return false;
+    }
 
     handleFormInfo(reg);
 
@@ -134,7 +142,7 @@ public class EventregController extends AuthAbstractController {
 
     sessMan.getChangeManager().addChange(reg, Change.typeNewReg);
 
-    return reg.getRegistrationId();
+    return true;
   }
 
   /* return null for ok - otherwise error message */

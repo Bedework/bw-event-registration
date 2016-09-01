@@ -18,6 +18,7 @@ under the License.
  */
 package org.bedework.eventreg.db;
 
+import org.bedework.eventreg.common.EventregException;
 import org.bedework.util.misc.ToString;
 
 import java.sql.Timestamp;
@@ -148,6 +149,34 @@ public class FormDef extends DbItem<FormDef> {
   /* ====================================================================
    *                   Property fields
    * ==================================================================== */
+
+  /**
+   * @param val a wait list limit - as an integer or an integer followed by "%"
+   */
+  public void setWaitListLimit(final String val) throws EventregException {
+    // validate
+    final String checkVal;
+    if (val.endsWith("%")) {
+      checkVal = val.substring(0, val.length() - 1);
+    } else {
+      checkVal = val;
+    }
+    
+    try {
+      //noinspection ResultOfMethodCallIgnored
+      Integer.valueOf(checkVal);
+    } catch (final Throwable ignored) {
+      throw new EventregException("invalid wait list limit" + val);
+    }
+    setString("waitListLimit", val);
+  }
+
+  /**
+   * @return a wait list limit - as an integer or an integer followed by "%"
+   */
+  public String getWaitListLimit() throws EventregException {
+    return may("waitListLimit");
+  }
 
   /**
    * @param val flag to say we sent a cancel message

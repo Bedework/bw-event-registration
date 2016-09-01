@@ -19,6 +19,7 @@ under the License.
 package org.bedework.eventreg.service;
 
 import org.bedework.eventreg.requests.EventregRequest;
+import org.bedework.util.jmx.MBeanInfo;
 
 /** Does the work of processing eventreg system messages
  *

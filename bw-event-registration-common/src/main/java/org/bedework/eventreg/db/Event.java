@@ -40,6 +40,7 @@ import ietf.params.xml.ns.icalendar_2.XBedeworkMaxTicketsPerUserPropType;
 import ietf.params.xml.ns.icalendar_2.XBedeworkMaxTicketsPropType;
 import ietf.params.xml.ns.icalendar_2.XBedeworkRegistrationEndPropType;
 import ietf.params.xml.ns.icalendar_2.XBedeworkRegistrationStartPropType;
+import ietf.params.xml.ns.icalendar_2.XBedeworkWaitListLimitPropType;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -173,6 +174,7 @@ public class Event implements Comparable<Event> {
 
   private TextPinfo uid;
   private DateDatetimePinfo recurrenceId;
+  private TextPinfo waitListLimit;
   private IntPinfo ticketsAllowed;
   private IntPinfo maxRegistrants;
   private DateDatetimePinfo regEnd;
@@ -219,7 +221,7 @@ public class Event implements Comparable<Event> {
 
   /**
    * @return recurrence id or null
-   * @throws Throwable
+   * @throws Throwable on fatal error
    */
   public String getRecurrenceId() throws Throwable {
     if (recurrenceId == null) {
@@ -231,6 +233,18 @@ public class Event implements Comparable<Event> {
   }
 
   /**
+   * @return wait list limit as String - either an integer absolute limit or a percentage
+   */
+  public String getWaitListLimit() {
+    if (waitListLimit == null) {
+      waitListLimit = new TextPinfo();
+      waitListLimit.addProperty((XBedeworkWaitListLimitPropType)findProperty(XBedeworkWaitListLimitPropType.class));
+    }
+
+    return waitListLimit.getValue();
+  }
+
+  /**
    * @return max number of tickets per user
    */
   public int getMaxTicketsPerUser() {
@@ -239,12 +253,12 @@ public class Event implements Comparable<Event> {
       ticketsAllowed.addProperty((XBedeworkMaxTicketsPerUserPropType)findProperty(XBedeworkMaxTicketsPerUserPropType.class));
     }
 
-    Integer i = ticketsAllowed.getInt();
+    final Integer i = ticketsAllowed.getInt();
     if (i == null) {
       return -1;
     }
 
-    return  i;
+    return i;
   }
 
   /**
@@ -256,7 +270,7 @@ public class Event implements Comparable<Event> {
       maxRegistrants.addProperty((XBedeworkMaxTicketsPropType)findProperty(XBedeworkMaxTicketsPropType.class));
     }
 
-    Integer i = maxRegistrants.getInt();
+    final Integer i = maxRegistrants.getInt();
     if (i == null) {
       return -1;
     }
@@ -266,7 +280,7 @@ public class Event implements Comparable<Event> {
 
   /**
    * @return the end of registration
-   * @throws Throwable
+   * @throws Throwable on fatal error
    */
   public String getRegistrationEnd() throws Throwable {
     if (regEnd == null) {
@@ -285,7 +299,7 @@ public class Event implements Comparable<Event> {
 
   /**
    * @return the tzid for the end of registration
-   * @throws Throwable
+   * @throws Throwable on fatal error
    */
   public String getRegistrationEndTzid() throws Throwable {
     if (regEnd == null) {

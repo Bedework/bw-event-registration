@@ -116,7 +116,7 @@ public abstract class AuthAbstractController extends AbstractController {
 
   /** Adjust tickets for the current event - perhaps as a result of increasing
    * seats.
-   * @throws Throwable
+   * @throws Throwable on fatal error
    */
   protected void adjustTickets() throws Throwable {
     final Event currEvent = sessMan.getCurrEvent();
@@ -132,33 +132,66 @@ public abstract class AuthAbstractController extends AbstractController {
     reallocate(available, req.getHref());
   }
 
-  protected void adjustTickets(final Registration reg) throws Throwable {
-    Event currEvent = sessMan.getCurrEvent();
+  protected enum AdjustResult {
+    removed,
+    added,
+    nochange,     // No change to registration
+    notickets,    // Not allocating tickets
+    waitListFull  // Wait list is full
+  }
+  
+  protected AdjustResult adjustTickets(final Registration reg) throws Throwable {
+    final Event currEvent = sessMan.getCurrEvent();
 
-    int numTickets = req.getTicketsRequested();
+    final int numTickets = req.getTicketsRequested();
     if (numTickets < 0) {
       // Not setting tickets
-      return;
+      return AdjustResult.notickets;
     }
 
-    /* change > 0 to add tickets, < 0 to release tickets */
+    /* change > 0 to add tickets, < 0 to release tickets 
+     * For a new registration  reg.getTicketsRequested() == 0
+     * */
     int change = numTickets - reg.getTicketsRequested();
 
     if (change == 0) {
       // Not changing anything
-      return;
+      return AdjustResult.nochange;
     }
 
     /* For a non-admin user limit the change to the number available */
     if (!admin && (change > 0)) {
-      long allocated = sessMan.getRegTicketCount();
-      int total = currEvent.getMaxTickets();
+      /* First see if wait list is full
+       */
+      String waitListLimitVal = currEvent.getWaitListLimit();
+      final int total = currEvent.getMaxTickets();
+      
+      if (waitListLimitVal != null) {
+        final boolean percentage = waitListLimitVal.endsWith("%");
+        if (percentage) {
+          waitListLimitVal =
+                  waitListLimitVal.substring(0, 
+                                             waitListLimitVal.length() - 1);
+        }
+        
+        int waitListLimit = Integer.valueOf(waitListLimitVal);
+        if (percentage) {
+          waitListLimit = total * waitListLimit / 100;
+        }
+        
+        final long waiting = sessMan.getWaitingTicketCount();
+        if (waiting >= waitListLimit) {
+          return AdjustResult.waitListFull;
+        }
+      }
+        
+      final long allocated = sessMan.getRegTicketCount();
 
       /* Total number of available tickets - may be negative for over-allocated */
-      long available = Math.max(0, total - allocated);
+      final long available = Math.max(0, total - allocated);
 
       /* The number to add to this registration */
-      int toAllocate = (int)Math.min(change, available);
+      final int toAllocate = (int)Math.min(change, available);
 
       if (toAllocate != change) {
         /* We should check the request par expectedAvailable to see if it changed
@@ -179,18 +212,21 @@ public abstract class AuthAbstractController extends AbstractController {
 
     reg.setTicketsRequested(numTickets);
 
-    ChangeManager chgMan = sessMan.getChangeManager();
+    final ChangeManager chgMan = sessMan.getChangeManager();
 
     if (change < 0) {
       reg.removeTickets(-change);
       chgMan.addChange(reg, Change.typeUpdReg,
                        ChangeItem.makeUpdNumTickets(change));
       reallocate(-change, reg.getHref());
-    } else {
-      reg.addTickets(change);
 
-      chgMan.addChange(reg, Change.typeUpdReg,
-                       ChangeItem.makeUpdNumTickets(change));
+      return AdjustResult.removed;
     }
+
+    reg.addTickets(change);
+
+    chgMan.addChange(reg, Change.typeUpdReg,
+                     ChangeItem.makeUpdNumTickets(change));
+    return AdjustResult.added;
   }
 }
