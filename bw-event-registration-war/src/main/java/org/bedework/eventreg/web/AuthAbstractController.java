@@ -165,6 +165,11 @@ public abstract class AuthAbstractController extends AbstractController {
        */
       String waitListLimitVal = currEvent.getWaitListLimit();
       final int total = currEvent.getMaxTickets();
+
+      final long allocated = sessMan.getRegTicketCount();
+
+      /* Total number of available tickets - may be negative for over-allocated */
+      final long available = Math.max(0, total - allocated);
       
       if (waitListLimitVal != null) {
         final boolean percentage = waitListLimitVal.endsWith("%");
@@ -180,15 +185,10 @@ public abstract class AuthAbstractController extends AbstractController {
         }
         
         final long waiting = sessMan.getWaitingTicketCount();
-        if (waiting >= waitListLimit) {
+        if ((available < change) && ((waiting + change - available) > waitListLimit)) {
           return AdjustResult.waitListFull;
         }
       }
-        
-      final long allocated = sessMan.getRegTicketCount();
-
-      /* Total number of available tickets - may be negative for over-allocated */
-      final long available = Math.max(0, total - allocated);
 
       /* The number to add to this registration */
       final int toAllocate = (int)Math.min(change, available);
