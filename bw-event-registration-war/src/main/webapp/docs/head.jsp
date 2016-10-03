@@ -3,8 +3,11 @@
   <head>
     <title>Bedework Event Registration System</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <script src="/evreg/jquery-1.11.3.min.js" type="text/javascript"></script>
+    <script src="/evreg/jquery-ui-1.11.4/jquery-ui.min.js" type="text/javascript"></script>
+    <link rel="stylesheet" href="/evreg/jquery-ui-1.11.4/jquery-ui.min.css" type="text/css" media="all"/>
+    <link rel="stylesheet" href="/evreg/jquery-ui-1.11.4/jquery-ui.theme.min.css" type="text/css" media="all"/>
     <c:if test="${regs != null}">
-      <script src="/evreg/jquery-1.7.2.min.js" type="text/javascript"></script>
       <script src="/evreg/tablesorter-2.0.5/jquery.tablesorter.min.js" type="text/javascript"></script>
       <link rel="stylesheet" href="/evreg/tablesorter-2.0.5/style.css" type="text/css" media="all"/>
       <script type="text/javascript">

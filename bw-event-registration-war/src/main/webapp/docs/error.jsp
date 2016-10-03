@@ -15,12 +15,13 @@
     <div class="box">
       <h4>Event Registration Error:</h4>
       <p>${sessMan.message}</p>
-      <p>
+      <p><a href="javascript:window.history.back();">Back</a></p>
+      <!--p>
         <a class="quietLink" href="javascript:window.top.location = window.top.location;"> 
-        <!-- set the location explicitly back to itself, rather than .reload() which causes prompts, etc. -->
+        < ! - - set the location explicitly back to itself, rather than .reload() which causes prompts, etc. - -  >
           Please reload the page.
         </a>
-      </p>
+      </p-->
     </div>
   </body>
 </html>

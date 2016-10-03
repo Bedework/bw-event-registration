@@ -4,7 +4,7 @@
 
   <div class="fullpage">
     <div class="rightLinks">
-      Welcome <c:out value="${sessMan.currentUser}"/> <br/>
+      Welcome <c:out value="${sessMan.currentUser}"/> | <a href="logout.do">logout</a> <br/>
       <a href="javascript:print();">print</a> |
       <a href="javascript:self.close();">close this window</a>
     </div>
@@ -73,7 +73,7 @@
                 <td class="ticketDateTime">
                   <c:set var="eventDate" scope="page" value="${reg.event.dateTime}"/>
                   ${fn:substring(eventDate,-1,4)}-${fn:substring(eventDate,4,6)}-${fn:substring(eventDate,6,8)}
-                  ${fn:substring(eventDate,11,13)}:${fn:substring(eventDate,14,16)}
+                  ${fn:substring(eventDate,11,13)}:${fn:substring(eventDate,13,15)}
                   (${fn:substring(eventDate,18,-1)})
                 </td>
                 <td class="ticketLocation">

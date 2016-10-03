@@ -5,17 +5,18 @@
     <c:if test="${sessMan.adminUser}">
       <div class="fullpage">
         <div class="rightLinks">
-          Welcome <c:out value="${sessMan.currentUser}"/> (admin)<br/>
-          <a href="javascript:print();">print</a> |
-          <a href="adminAgenda.do?href=${req.href}&amp;atkn=${req.adminToken}">refresh</a> |
+          Welcome <c:out value="${sessMan.currentUser}"/> (admin) | <a href="logout.do">logout</a><br/>
           <c:set var="fileName" scope="page">EventReg-<c:out value="${fn:substring(fn:replace(sessMan.currEvent.summary, ' ',''),0,9)}"/>-<c:out value="${fn:substring(sessMan.currEvent.dateTime,0,7)}"/>.csv</c:set>
-          <a href="download.do?href=${req.href}&amp;atkn=${req.adminToken}&amp;fn=${fileName}">download registrations</a>
+          <a href="download.do?href=${req.href}&amp;atkn=${req.adminToken}&amp;fn=${fileName}&amp;calsuite=${sessMan.currentCalsuite}&amp;formName=${sessMan.currentFormName}">download registrations</a> |
+          <a href="listForms.do?calsuite=${req.calsuite}&atkn=${req.adminToken}">manage custom fields</a> |
+          <a href="javascript:print();">print</a> |
+          <a href="adminAgenda.do?href=${req.href}&amp;atkn=${req.adminToken}">refresh</a>
         </div>
         <h1><c:out value="${sessMan.currEvent.summary}"/></h1>
         <div class="eventDateTime">
           <c:set var="eventDate" scope="page" value="${sessMan.currEvent.dateTime}"/>
           ${fn:substring(eventDate,-1,4)}-${fn:substring(eventDate,4,6)}-${fn:substring(eventDate,6,8)}
-          ${fn:substring(eventDate,11,13)}:${fn:substring(eventDate,14,16)}
+          ${fn:substring(eventDate,11,13)}:${fn:substring(eventDate,13,15)}
           (${fn:substring(eventDate,18,-1)})
         </div>
         <form id="adminHoldTickets" action="adminHold.do">
@@ -29,6 +30,15 @@
           <p class="left">
             Fulfilled tickets:  <c:out value="${sessMan.regTicketCount}"/><br/>
             Waiting tickets: <c:out value="${sessMan.waitingTicketCount}"/><br/>
+            Wait list limit:
+            <c:choose>
+              <c:when test="${empty sessMan.currEvent.waitListLimit}"><br/>
+                <c:out value="unlimited"/>
+              </c:when>
+              <c:otherwise>
+                <c:out value="${sessMan.currEvent.waitListLimit}"/><br/>
+              </c:otherwise>
+            </c:choose>
             Registrations: <c:out value="${sessMan.registrantCount}"/>
           </p>
           <p class="left">
@@ -63,10 +73,14 @@
                 ticket<c:if test="${overallocation > 1}">s</c:if>
               </span>
             </c:if>
+            <c:if test="${not empty sessMan.currentFormName}">
+              <br/>Custom fields:
+              <a href="editForm.do?calsuite=${sessMan.currentCalsuite}&atkn=${req.adminToken}&formName=${sessMan.currentFormName}">${sessMan.currentFormName}</a>
+            </c:if>
           </p>
         </div>
         <form name="adminagenda" action="">
-          <c:if test="${sessMan.message != null and sessMan.message != ''}">
+          <c:if test="${not empty sessMan.message}">
             <div id="message">
               <c:out value="${sessMan.message}"/>
             </div>
@@ -106,6 +120,13 @@
                   Created
                 </span>
               </th>
+              <%-- XXX expose the fields here
+              <th>
+                <span class="thText">
+                  Custom Fields
+                </span>
+              </th>
+              --%>
               <th>
                 <span class="thText">
                   Comment
@@ -122,7 +143,7 @@
               <c:choose>
                 <c:when test="${empty regs}">
                   <tr class="b">
-                    <td colspan="8">
+                    <td colspan="9">
                       No tickets reserved
                     </td>
                   </tr>
@@ -176,11 +197,16 @@
                       <td class="regCreated">
                         <c:out value="${fn:substring(reg.created,-1,16)}"/>
                       </td>
+                      <%--
+                      <td class="regCustomFields">
+                        *TBD*
+                      </td>
+                      --%>
                       <td class="regComment">
                         <input name="comment<c:out value="${reg.registrationId}"/>" id="comment<c:out value="${reg.registrationId}"/>" type="text" value="<c:out value="${reg.comment}"/>" size="45"/>
                       </td>
                       <td class="regControls">
-                        <a href="javascript:doUpdateAdminTicket('<c:out value="${reg.registrationId}"/>','<c:out value="${reg.event.href}"/>','${req.adminToken}')" onclick="return confirmUpdateAdminTicket()">update</a> |
+                        <a href="javascript:doUpdateAdminTicket('<c:out value="${reg.registrationId}"/>','<c:out value="${reg.event.href}"/>','${req.adminToken}','${sessMan.currentCalsuite}','${sessMan.currentFormName}')" onclick="return confirmUpdateAdminTicket()">update</a> |
                         <a href='adminRemoveAgendaReg.do?regid=<c:out value="${reg.registrationId}"/>&amp;href=<c:out value="${reg.event.href}"/>&amp;atkn=<c:out value="${req.adminToken}"/>' onclick="return confirmRemoveAdminTicket('<c:out value="${reg.authid}"/>','<c:out value="${reg.type}"/>')">remove</a>
                       </td>
                     </tr>

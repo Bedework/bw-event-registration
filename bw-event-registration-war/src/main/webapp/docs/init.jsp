@@ -14,7 +14,7 @@
           Your tickets will be allocated if space becomes available.
         </p>
         <p class="unregister">
-          <a href="removeReg.do?regid=<c:out value="${sessMan.registration.registrationId}"/>&amp;href=${req.href}" onclick="return confirmRemoveTicket('<c:out value="${sessMan.currEvent.summary}"/>')">remove me</a>
+          <a href="removeReg.do?regid=<c:out value="${sessMan.registration.registrationId}"/>&amp;href=${req.href}&calsuite=${sessMan.currentCalsuite}&amp;name=${sessMann.formDef.formName}&amp;email=${sessMan.currEmail}" onclick="return confirmRemoveTicket('<c:out value="${sessMan.currEvent.summary}"/>')">remove me</a>
         </p>
       </div>
     </c:when>
@@ -25,7 +25,7 @@
           <span class="checkmark">&#x2713;</span> You are registered for this event.
         </p>
         <p class="unregister">
-          <a href="removeReg.do?regid=<c:out value="${sessMan.registration.registrationId}"/>&amp;href=${req.href}" onclick="return confirmRemoveTicket('<c:out value="${sessMan.currEvent.summary}')"/>">unregister</a>
+          <a href="removeReg.do?regid=<c:out value="${sessMan.registration.registrationId}"/>&amp;href=${req.href}&calsuite=${sessMan.currentCalsuite}&amp;name=${sessMann.formDef.formName}&amp;email=${sessMan.currEmail}" onclick="return confirmRemoveTicket('<c:out value="${sessMan.currEvent.summary}')"/>">unregister</a>
         </p>
       </div>
     </c:when>
@@ -40,50 +40,66 @@
         <%@ include file="/docs/userNav.jsp" %>
         Registration is full.<br/>
         <form action="eventreg.do" class="commonForm" method="POST">
+          <input type="hidden" name="href" value="${req.href}"/>
+          <input type="hidden" name="calsuite" value="${sessMann.currentCalsuite}"/>
+          <input type="hidden" name="name" value="${sessMann.formDef.formName}"/>
+          <input type="hidden" name="email" value="${sessMan.currEmail}"/>
           <c:choose>
             <c:when test="${sessMan.currEvent.maxTicketsPerUser > 1}">
-              Tickets:
-              <select id="numtickets" name="numtickets">
-                <c:forEach var="i" begin="1" end="${sessMan.currEvent.maxTicketsPerUser}">
-                   <option value="${i}">${i}</option>
-                </c:forEach>
-              </select>
+              <div id="bwNumtickets">
+                Tickets:
+                <select id="numtickets" name="numtickets">
+                  <c:forEach var="i" begin="1" end="${sessMan.currEvent.maxTicketsPerUser}">
+                     <option value="${i}">${i}</option>
+                  </c:forEach>
+                </select>
+              </div>
             </c:when>
             <c:otherwise>
               <input type="hidden" name="numtickets" value="1"/>
             </c:otherwise>
           </c:choose>
-          <input type="hidden" name="href" value="${req.href}"/>
-          <input type="submit" value="Join waiting list"/>
+
+          <%@ include file="/docs/forms/customFieldsForReg.jspf" %>
+
+          <input type="submit" id="joinWaiting" class="button" value="Join waiting list"/>
         </form>
       </div>
     </c:when>
     <c:otherwise>
       <div class="box">
-        <%@ include file="/docs/userNav.jsp" %>
-        <div class="ticketVals">
-          <!-- em>Tickets</em><br/-->
-          Total: ${sessMan.currEvent.maxTickets}<br/>
-          Available: ${sessMan.currEvent.maxTickets - sessMan.regTicketCount}
+        <div id="regheadBox">
+          <%@ include file="/docs/userNav.jsp" %>
+          <div class="ticketVals">
+            <!-- em>Tickets</em><br/-->
+            Total: ${sessMan.currEvent.maxTickets}<br/>
+            Available: ${sessMan.currEvent.maxTickets - sessMan.regTicketCount}
+          </div>
         </div>
         <form action="eventreg.do" class="commonForm" method="POST">
+          <input type="hidden" name="href" value="${req.href}"/>
+          <input type="hidden" name="calsuite" value="${sessMann.currentCalsuite}"/>
+          <input type="hidden" name="name" value="${sessMann.formDef.formName}"/>
+          <input type="hidden" name="email" value="${sessMan.currEmail}"/>
           <c:choose>
             <c:when test="${sessMan.currEvent.maxTicketsPerUser > 1}">
-              Tickets:
-              <select id="numtickets" name="numtickets">
-                <c:forEach var="i" begin="1" end="${sessMan.currEvent.maxTicketsPerUser}">
-                   <option value="${i}">${i}</option>
-                </c:forEach>
-              </select>
+              <div id="bwNumtickets">
+                Tickets:
+                <select id="numtickets" name="numtickets">
+                  <c:forEach var="i" begin="1" end="${sessMan.currEvent.maxTicketsPerUser}">
+                     <option value="${i}">${i}</option>
+                  </c:forEach>
+                </select>
+              </div>
             </c:when>
             <c:otherwise>
               <input type="hidden" name="numtickets" value="1"/>
             </c:otherwise>
           </c:choose>
-          email:<input type="text" name="email" />
-          <input type="hidden" name="href" value="${req.href}"/>
-          <!-- input type="hidden" name="type" value="registered"/-->
-          <input type="submit" value="Register"/>
+
+          <%@ include file="/docs/forms/customFieldsForReg.jspf" %>
+
+          <input type="submit" id="register" class="button" value="Register"/>
         </form>
       </div>
     </c:otherwise>

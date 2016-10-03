@@ -4,8 +4,8 @@
 --%><%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %><%--
 --%><%@ taglib prefix="spring" uri="/spring" %><%--
 --%><%@ page contentType="application/vnd.ms-excel" %><%--
---%><c:if test="${req.csvHeader}">event,date,time,location,registrationId,userid,ticketsRequested,ticketsAllocated,type,comment,created,lastmod
+--%><c:if test="${req.csvHeader}"><c:out value="${csv.header}"/>
 </c:if
-><c:forEach var="reg" items="${regs}" varStatus="loopStatus"><%--
---%>"${reg.event.summary}","${reg.event.date}","${reg.event.time}","${reg.event.location}","${reg.registrationId}","${reg.authid}","${reg.ticketsRequested}","${reg.numTickets}","${reg.type}","${reg.comment}","${reg.created}","${reg.lastmod}"
+        ><c:forEach var="rec" items="${csv}" varStatus="loopStatus"><%--
+--%><c:out value="${rec}" escapeXml="false"/>
 </c:forEach>
