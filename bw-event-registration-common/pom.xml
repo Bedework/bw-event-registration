@@ -2,12 +2,13 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
-		<groupId>org.bedework</groupId>
+		<groupId>org.bedework.evreg</groupId>
 		<artifactId>bw-event-registration</artifactId>
 		<version>4.0.0-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
-	<artifactId>bw-event-registration-common</artifactId>
+  
+	<artifactId>bw-evreg-common</artifactId>
 	<name>bw-event-registration-common</name>
 
 	<dependencies>
@@ -23,6 +24,10 @@
     <dependency>
       <groupId>org.bedework</groupId>
       <artifactId>bw-util-misc</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.bedework</groupId>
+      <artifactId>bw-util-jms</artifactId>
     </dependency>
     <dependency>
       <groupId>org.bedework</groupId>
@@ -46,6 +51,12 @@
 			<groupId>org.bedework</groupId>
 			<artifactId>bw-ws-exchangews</artifactId>
 		</dependency>
+
+    <dependency>
+      <groupId>org.bedework.bw-msg</groupId>
+      <artifactId>bw-msg-sysevmsgs</artifactId>
+    </dependency>
+
 		<!-- Third Party Libraries -->
 		<dependency>
 			<groupId>org.apache.geronimo.framework</groupId>

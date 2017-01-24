@@ -2,30 +2,32 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
-		<groupId>org.bedework</groupId>
+		<groupId>org.bedework.evreg</groupId>
 		<artifactId>bw-event-registration</artifactId>
 		<version>4.0.0-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
-	<artifactId>bw-event-registration-ear</artifactId>
+	<artifactId>bw-evreg-ear</artifactId>
 	<packaging>ear</packaging>
 	<name>bw-event-registration-ear</name>
 
 	<dependencies>
 		<!-- Project Dependencies -->
+    <!--
 		<dependency>
 			<groupId>${project.groupId}</groupId>
-			<artifactId>bw-event-registration-ear-properties</artifactId>
+			<artifactId>bw-evreg-ear-properties</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		-->
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>bw-evreg-service</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
-			<artifactId>bw-event-registration-service</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>bw-event-registration-common</artifactId>
+			<artifactId>bw-evreg-common</artifactId>
 			<version>${project.version}</version>
 			<exclusions>
 				<exclusion>
@@ -87,8 +89,8 @@
 			</exclusions>
 		</dependency>
 		<dependency>
-			<groupId>org.bedework</groupId>
-			<artifactId>bw-event-registration-war</artifactId>
+      <groupId>${project.groupId}</groupId>
+			<artifactId>bw-evreg-war</artifactId>
 			<version>${project.version}</version>
 			<type>war</type>
 		</dependency>
@@ -142,30 +144,12 @@
 			<artifactId>httpcore</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>asm</groupId>
-			<artifactId>asm</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>asm</groupId>
-			<artifactId>asm-attrs</artifactId>
-		</dependency>
-		<dependency>
 			<groupId>cglib</groupId>
 			<artifactId>cglib-nodep</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>net.sf.ehcache</groupId>
 			<artifactId>ehcache</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.hibernate</groupId>
-			<artifactId>hibernate-validator</artifactId>
-			<exclusions>
-				<exclusion>
-					<artifactId>slf4j-api</artifactId>
-					<groupId>org.slf4j</groupId>
-				</exclusion>
-			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.hibernate</groupId>
@@ -213,11 +197,12 @@
 	</dependencies>
 
 	<build>
-		<finalName>bw-event-registration-${project.version}</finalName>
+		<finalName>bw-evreg-${project.version}</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-ear-plugin</artifactId>
+        <version>2.10</version>
 				<configuration>
 					<!-- Exclude eclipse generated application.xml during mvn package -->
 					<earSourceExcludes>**/application.xml</earSourceExcludes>
@@ -229,16 +214,16 @@
 					<modules>
 						<webModule>
 							<groupId>${project.groupId}</groupId>
-							<artifactId>bw-event-registration-war</artifactId>
+							<artifactId>bw-evreg-war</artifactId>
 							<contextRoot>/eventreg</contextRoot>
 						</webModule>
 						<jarModule>
 							<groupId>${project.groupId}</groupId>
-							<artifactId>bw-event-registration-common</artifactId>
+							<artifactId>bw-evreg-common</artifactId>
 						</jarModule>
 						<jarModule>
 							<groupId>${project.groupId}</groupId>
-							<artifactId>bw-event-registration-service</artifactId>
+							<artifactId>bw-evreg-service</artifactId>
 						</jarModule>
 					</modules>
 				</configuration>

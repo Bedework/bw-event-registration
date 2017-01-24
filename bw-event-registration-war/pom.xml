@@ -2,26 +2,27 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
-		<groupId>org.bedework</groupId>
+		<groupId>org.bedework.evreg</groupId>
 		<artifactId>bw-event-registration</artifactId>
 		<version>4.0.0-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
-	<artifactId>bw-event-registration-war</artifactId>
+  
+	<artifactId>bw-evreg-war</artifactId>
 	<packaging>war</packaging>
 	<name>bw-event-registration-war</name>
 
 	<dependencies>
 		<!-- Internal Project Dependencies -->
 		<dependency>
-			<groupId>org.bedework</groupId>
-			<artifactId>bw-event-registration-common</artifactId>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>bw-evreg-common</artifactId>
 			<version>${project.version}</version>
 			<scope>provided</scope>
 		</dependency>
     <dependency>
-      <groupId>org.bedework</groupId>
-      <artifactId>bw-event-registration-service</artifactId>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>bw-evreg-service</artifactId>
       <version>${project.version}</version>
       <scope>provided</scope>
     </dependency>
@@ -29,6 +30,10 @@
     <dependency>
       <groupId>org.bedework</groupId>
       <artifactId>bw-util-calendar</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.bedework</groupId>
+      <artifactId>bw-util-hibernate</artifactId>
     </dependency>
     <dependency>
       <groupId>org.bedework</groupId>

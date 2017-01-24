@@ -19,14 +19,12 @@
 package org.bedework.eventreg.service;
 
 import org.bedework.eventreg.requests.EventregRequest;
+import org.bedework.util.hibernate.HibConfig;
+import org.bedework.util.hibernate.SchemaThread;
 import org.bedework.util.jmx.ConfBase;
 import org.bedework.util.jmx.InfoLines;
 import org.bedework.util.jmx.MBeanInfo;
 
-import org.hibernate.cfg.Configuration;
-import org.hibernate.tool.hbm2ddl.SchemaExport;
-
-import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -55,59 +53,22 @@ public class EventregSvc extends ConfBase<EventregPropertiesImpl>
    * Dump/restore
    * ============================================================== */
 
-  private Configuration hibCfg;
+  private class SchemaBuilder extends SchemaThread {
 
-  private class SchemaThread extends Thread {
-    InfoLines infoLines = new InfoLines();
-
-    SchemaThread() {
-      super("BuildSchema");
+    SchemaBuilder(final String outFile, 
+                  final boolean export,
+                  final Properties hibConfig) {
+      super(outFile, export, hibConfig);
     }
 
     @Override
-    public void run() {
-      try {
-        infoLines.addLn("Started export of schema");
-
-        final long startTime = System.currentTimeMillis();
-
-        final SchemaExport se = new SchemaExport(getHibConfiguration());
-
-//      if (getDelimiter() != null) {
-//        se.setDelimiter(getDelimiter());
-//      }
-
-        se.setFormat(true);       // getFormat());
-        se.setHaltOnError(false); // getHaltOnError());
-        se.setOutputFile(getSchemaOutFile());
-        /* There appears to be a bug in the hibernate code. Everybody initialises
-        this to /import.sql. Set to null causes an NPE
-        Make sure it refers to a non-existant file */
-        //se.setImportFile("not-a-file.sql");
-
-        se.execute(false, // script - causes write to System.out if true
-                   getExport(),
-                   false,   // drop
-                   true);   //   getCreate());
-
-        final long millis = System.currentTimeMillis() - startTime;
-        long seconds = millis / 1000;
-        final long minutes = seconds / 60;
-        seconds -= (minutes * 60);
-
-        infoLines.addLn("Elapsed time: " + minutes + ":" +
-                                twoDigits(seconds));
-      } catch (final Throwable t) {
-        error(t);
-        infoLines.exceptionMsg(t);
-      } finally {
-        infoLines.addLn("Schema build completed");
-        setExport(false);
-      }
+    public void completed(final String status) {
+      setExport(false);
+      info("Schema build completed with status " + status);
     }
   }
-
-  private final SchemaThread buildSchema = new SchemaThread();
+  
+  private SchemaBuilder buildSchema;
 
   private final static String nm = "eventreg";
 
@@ -434,7 +395,13 @@ public class EventregSvc extends ConfBase<EventregPropertiesImpl>
   @Override
   public String schema() {
     try {
-//      buildSchema = new SchemaThread();
+      final HibConfig hc = new HibConfig(getConfig());
+
+      buildSchema = new SchemaBuilder(getSchemaOutFile(),
+                                      getExport(),
+                                      hc.getHibConfiguration().getProperties());
+
+      setStatus(statusStopped);
 
       buildSchema.start();
 
@@ -486,7 +453,7 @@ public class EventregSvc extends ConfBase<EventregPropertiesImpl>
 
   @Override
   public synchronized List<String> restoreData() {
-    final List<String> infoLines = new ArrayList<String>();
+    final List<String> infoLines = new ArrayList<>();
 
     try {
       /*
@@ -529,11 +496,11 @@ public class EventregSvc extends ConfBase<EventregPropertiesImpl>
       infoLines.add("Restore complete" + "\n");
       */
       infoLines.add("************************Restore unimplemented *************************" + "\n");
-    } catch (Throwable t) {
+    } catch (final Throwable t) {
       error(t);
       infoLines.add("Exception - check logs: " + t.getMessage() + "\n");
-    } finally {
       /*
+    } finally {
       try {
         if (!reindex()) {
           infoLines.add("***********************************");
@@ -561,7 +528,7 @@ public class EventregSvc extends ConfBase<EventregPropertiesImpl>
 
   @Override
   public List<String> dumpData() {
-    final List<String> infoLines = new ArrayList<String>();
+    final List<String> infoLines = new ArrayList<>();
 
     try {
       /*
@@ -650,43 +617,4 @@ public class EventregSvc extends ConfBase<EventregPropertiesImpl>
   /* ====================================================================
    *                   Private methods
    * ==================================================================== */
-
-  /**
-   * @param val the number
-   * @return 2 digit val
-   */
-  private static String twoDigits(final long val) {
-    if (val < 10) {
-      return "0" + val;
-    }
-
-    return String.valueOf(val);
-  }
-
-  private synchronized Configuration getHibConfiguration() {
-    if (hibCfg == null) {
-      try {
-        hibCfg = new Configuration();
-
-        final StringBuilder sb = new StringBuilder();
-
-        final List<String> ps = getConfig().getHibernateProperties();
-
-        for (final String p: ps) {
-          sb.append(p);
-          sb.append("\n");
-        }
-
-        final Properties hprops = new Properties();
-        hprops.load(new StringReader(sb.toString()));
-
-        hibCfg.addProperties(hprops).configure();
-      } catch (final Throwable t) {
-        // Always bad.
-        error(t);
-      }
-    }
-
-    return hibCfg;
-  }
 }
