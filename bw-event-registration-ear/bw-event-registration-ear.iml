@@ -41,7 +41,7 @@
     <orderEntry type="library" name="Maven: commons-codec:commons-codec:1.5" level="project" />
     <orderEntry type="module" module-name="bw-access" />
     <orderEntry type="library" scope="TEST" name="Maven: junit:junit:4.8.2" level="project" />
-    <orderEntry type="module" module-name="bw-msg-sysevmsgs" />
+    <orderEntry type="library" name="Maven: org.bedework.bw-msg:bw-msg-sysevmsgs:4.0.0-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Maven: org.apache.geronimo.framework:geronimo-kernel:2.2.1" level="project" />
     <orderEntry type="library" name="Maven: asm:asm:3.1" level="project" />
     <orderEntry type="library" name="Maven: asm:asm-commons:3.1" level="project" />

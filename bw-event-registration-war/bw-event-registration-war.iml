@@ -31,7 +31,7 @@
     <orderEntry type="library" scope="PROVIDED" name="Maven: javax.jms:javax.jms-api:2.0" level="project" />
     <orderEntry type="library" name="Maven: org.bedework:bw-util-jmx:4.0.12-SNAPSHOT" level="project" />
     <orderEntry type="module" module-name="bw-access" scope="PROVIDED" />
-    <orderEntry type="module" module-name="bw-msg-sysevmsgs" scope="PROVIDED" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: org.bedework.bw-msg:bw-msg-sysevmsgs:4.0.0-SNAPSHOT" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.apache.geronimo.framework:geronimo-kernel:2.2.1" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: asm:asm:3.1" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: asm:asm-commons:3.1" level="project" />
