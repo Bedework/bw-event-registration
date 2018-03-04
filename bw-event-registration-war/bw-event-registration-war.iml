@@ -66,8 +66,8 @@
     <orderEntry type="library" name="Maven: org.bedework:bw-ws-tzsvr:4.0.4" level="project" />
     <orderEntry type="library" name="Maven: org.bedework:bw-ws-calws-soap:4.0.4" level="project" />
     <orderEntry type="library" name="Maven: jtidy:jtidy:4aug2000r7-dev" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: org.bedework:bw-ws-synchws:4.0.4-SNAPSHOT" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: org.bedework:bw-ws-exchangews:4.0.4-SNAPSHOT" level="project" />
+    <orderEntry type="module" module-name="bw-xml-synchws" scope="PROVIDED" />
+    <orderEntry type="module" module-name="bw-xml-exchangews" scope="PROVIDED" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.springframework:spring-core:3.0.5.RELEASE" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.springframework:spring-asm:3.0.5.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: commons-logging:commons-logging:1.1.1" level="project" />

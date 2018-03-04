@@ -17,7 +17,7 @@
 		<bedework.snapshots.repo.url>scp://dev.bedework.org/data/repository/maven/maven2</bedework.snapshots.repo.url>
 
     <bw-msg.version>4.0.0-SNAPSHOT</bw-msg.version>
-		<bw-ws.version>4.0.4-SNAPSHOT</bw-ws.version>
+		<bw-xml.version>4.0.5-SNAPSHOT</bw-xml.version>
 		<bw-util.version>4.0.12-SNAPSHOT</bw-util.version>
 		<bw-access.version>4.0.2-SNAPSHOT</bw-access.version>
 		<!-- Third Party Library Versions -->
@@ -137,13 +137,13 @@
 			<!-- Bedework: Web Services -->
 			<dependency>
 				<groupId>org.bedework</groupId>
-				<artifactId>bw-ws-synchws</artifactId>
-				<version>${bw-ws.version}</version>
+				<artifactId>bw-xml-synchws</artifactId>
+				<version>${bw-xml.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.bedework</groupId>
-				<artifactId>bw-ws-exchangews</artifactId>
-				<version>${bw-ws.version}</version>
+				<artifactId>bw-xml-exchangews</artifactId>
+				<version>${bw-xml.version}</version>
 			</dependency>
 
       <dependency>

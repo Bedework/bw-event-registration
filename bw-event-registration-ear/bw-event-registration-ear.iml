@@ -47,8 +47,8 @@
     <orderEntry type="library" name="Maven: asm:asm-commons:3.1" level="project" />
     <orderEntry type="library" name="Maven: org.apache.geronimo.framework:geronimo-crypto:2.2.1" level="project" />
     <orderEntry type="module" module-name="bw-event-registration-war" />
-    <orderEntry type="library" name="Maven: org.bedework:bw-ws-synchws:4.0.4-SNAPSHOT" level="project" />
-    <orderEntry type="library" name="Maven: org.bedework:bw-ws-exchangews:4.0.4-SNAPSHOT" level="project" />
+    <orderEntry type="module" module-name="bw-xml-synchws" />
+    <orderEntry type="module" module-name="bw-xml-exchangews" />
     <orderEntry type="library" name="Maven: org.bedework.ical4j:ical4j:2.0.3" level="project" />
     <orderEntry type="library" name="Maven: org.slf4j:slf4j-api:1.7.10" level="project" />
     <orderEntry type="library" name="Maven: org.apache.commons:commons-collections4:4.0" level="project" />
