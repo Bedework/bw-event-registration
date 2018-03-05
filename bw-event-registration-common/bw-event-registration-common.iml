@@ -16,17 +16,11 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="bw-util-calendar" />
-    <orderEntry type="module" module-name="bw-xml-icalendar" />
     <orderEntry type="module" module-name="bw-util-xml" />
     <orderEntry type="module" module-name="bw-xml-tzsvr" />
-    <orderEntry type="module" module-name="bw-xml-calws-soap" />
-    <orderEntry type="library" name="Maven: jtidy:jtidy:4aug2000r7-dev" level="project" />
     <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-databind:2.3.1" level="project" />
     <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-core:2.3.1" level="project" />
     <orderEntry type="module" module-name="bw-util-hibernate" />
-    <orderEntry type="library" name="Maven: org.apache.derby:derbynet:10.8.2.2" level="project" />
-    <orderEntry type="library" name="Maven: org.apache.derby:derby:10.8.2.2" level="project" />
-    <orderEntry type="library" name="Maven: com.h2database:h2:1.4.190" level="project" />
     <orderEntry type="module" module-name="bw-util-jms" />
     <orderEntry type="library" name="Maven: javax.jms:javax.jms-api:2.0" level="project" />
     <orderEntry type="module" module-name="bw-util-jmx" />
@@ -39,7 +33,8 @@
     <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-annotations:2.3.1" level="project" />
     <orderEntry type="module" module-name="bw-access" />
     <orderEntry type="module" module-name="bw-xml-synchws" />
-    <orderEntry type="library" name="Maven: org.bedework:bw-xml-exchangews:unknown" level="project" />
+    <orderEntry type="module" module-name="bw-xml-calws-soap" />
+    <orderEntry type="module" module-name="bw-xml-icalendar" />
     <orderEntry type="library" name="Maven: org.apache.geronimo.framework:geronimo-kernel:2.2.1" level="project" />
     <orderEntry type="library" name="Maven: asm:asm:3.1" level="project" />
     <orderEntry type="library" name="Maven: asm:asm-commons:3.1" level="project" />

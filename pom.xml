@@ -167,6 +167,13 @@
 				<artifactId>bw-xml-synchws</artifactId>
 				<version>${bw-xml.version}</version>
 			</dependency>
+
+      <dependency>
+        <groupId>org.bedework</groupId>
+        <artifactId>bw-xml-calws-soap</artifactId>
+        <version>${bw-xml.version}</version>
+      </dependency>
+
 			<dependency>
 				<groupId>org.bedework</groupId>
 				<artifactId>bw-xml-icalendar</artifactId>

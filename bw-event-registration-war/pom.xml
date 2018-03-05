@@ -59,7 +59,7 @@
 		</dependency>
 		<dependency>
 			<groupId>org.bedework</groupId>
-			<artifactId>bw-xml-exchangews</artifactId>
+			<artifactId>bw-xml-icalendar</artifactId>
 			<scope>provided</scope>
 		</dependency>
 		<!-- Third Party Libraries -->

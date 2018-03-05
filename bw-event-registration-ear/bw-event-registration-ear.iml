@@ -26,15 +26,10 @@
     <orderEntry type="module" module-name="bw-util-calendar" />
     <orderEntry type="module" module-name="bw-util-xml" />
     <orderEntry type="module" module-name="bw-xml-tzsvr" />
-    <orderEntry type="module" module-name="bw-xml-calws-soap" />
-    <orderEntry type="library" name="Maven: jtidy:jtidy:4aug2000r7-dev" level="project" />
     <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-databind:2.3.1" level="project" />
     <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-core:2.3.1" level="project" />
     <orderEntry type="module" module-name="bw-util-config" />
     <orderEntry type="module" module-name="bw-util-hibernate" />
-    <orderEntry type="library" name="Maven: org.apache.derby:derbynet:10.8.2.2" level="project" />
-    <orderEntry type="library" name="Maven: org.apache.derby:derby:10.8.2.2" level="project" />
-    <orderEntry type="library" name="Maven: com.h2database:h2:1.4.190" level="project" />
     <orderEntry type="module" module-name="bw-util-jms" />
     <orderEntry type="library" name="Maven: log4j:log4j:1.2.15" level="project" />
     <orderEntry type="library" name="Maven: javax.mail:mail:1.4" level="project" />
@@ -48,8 +43,9 @@
     <orderEntry type="library" name="Maven: org.apache.httpcomponents:httpclient:4.5.3" level="project" />
     <orderEntry type="library" name="Maven: commons-codec:commons-codec:1.5" level="project" />
     <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-annotations:2.3.1" level="project" />
-    <orderEntry type="module" module-name="bw-xml-synchws" />
+    <orderEntry type="module" module-name="bw-xml-calws-soap" />
     <orderEntry type="module" module-name="bw-xml-icalendar" />
+    <orderEntry type="module" module-name="bw-xml-synchws" />
     <orderEntry type="library" name="Maven: org.bedework.ical4j:ical4j:2.0.3" level="project" />
     <orderEntry type="library" name="Maven: org.jasig.cas.client:cas-client-core:3.4.1" level="project" />
     <orderEntry type="library" name="Maven: org.slf4j:slf4j-api:1.7.1" level="project" />

@@ -86,17 +86,22 @@
     </dependency>
 
 		<!-- Third Party Dependencies (needed by the above) -->
-		<dependency>
-			<groupId>org.bedework</groupId>
-			<artifactId>bw-xml-synchws</artifactId>
-		</dependency>
+    <dependency>
+      <groupId>org.bedework</groupId>
+      <artifactId>bw-xml-calws-soap</artifactId>
+    </dependency>
 
 		<dependency>
 			<groupId>org.bedework</groupId>
 			<artifactId>bw-xml-icalendar</artifactId>
     </dependency>
 
-		<dependency>
+    <dependency>
+      <groupId>org.bedework</groupId>
+      <artifactId>bw-xml-synchws</artifactId>
+    </dependency>
+
+    <dependency>
       <groupId>${ical4j.groupId}</groupId>
       <artifactId>${ical4j.artifactId}</artifactId>
       <exclusions>
