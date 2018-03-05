@@ -8,7 +8,7 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
   
-	<artifactId>bw-evreg-common</artifactId>
+	<artifactId>bw-event-registration-common</artifactId>
 	<name>bw-event-registration-common</name>
 
 	<dependencies>
@@ -23,15 +23,15 @@
     </dependency>
     <dependency>
       <groupId>org.bedework</groupId>
-      <artifactId>bw-util-misc</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.bedework</groupId>
       <artifactId>bw-util-jms</artifactId>
     </dependency>
     <dependency>
       <groupId>org.bedework</groupId>
       <artifactId>bw-util-jmx</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.bedework</groupId>
+      <artifactId>bw-util-misc</artifactId>
     </dependency>
     <dependency>
       <groupId>org.bedework</groupId>
@@ -51,11 +51,6 @@
 			<groupId>org.bedework</groupId>
 			<artifactId>bw-xml-exchangews</artifactId>
 		</dependency>
-
-    <dependency>
-      <groupId>org.bedework.bw-msg</groupId>
-      <artifactId>bw-msg-sysevmsgs</artifactId>
-    </dependency>
 
 		<!-- Third Party Libraries -->
 		<dependency>

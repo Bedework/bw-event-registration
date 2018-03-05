@@ -8,7 +8,7 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
   
-	<artifactId>bw-evreg-war</artifactId>
+	<artifactId>bw-event-registration-war</artifactId>
 	<packaging>war</packaging>
 	<name>bw-event-registration-war</name>
 
@@ -16,13 +16,13 @@
 		<!-- Internal Project Dependencies -->
 		<dependency>
 			<groupId>${project.groupId}</groupId>
-			<artifactId>bw-evreg-common</artifactId>
+			<artifactId>bw-event-registration-common</artifactId>
 			<version>${project.version}</version>
 			<scope>provided</scope>
 		</dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>bw-evreg-service</artifactId>
+      <artifactId>bw-event-registration-service</artifactId>
       <version>${project.version}</version>
       <scope>provided</scope>
     </dependency>

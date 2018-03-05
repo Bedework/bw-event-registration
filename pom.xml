@@ -16,9 +16,8 @@
 		<bedework.releases.repo.url>scp://dev.bedework.org/data/repository/maven/maven2</bedework.releases.repo.url>
 		<bedework.snapshots.repo.url>scp://dev.bedework.org/data/repository/maven/maven2</bedework.snapshots.repo.url>
 
-    <bw-msg.version>4.0.0-SNAPSHOT</bw-msg.version>
 		<bw-xml.version>4.0.5-SNAPSHOT</bw-xml.version>
-		<bw-util.version>4.0.12-SNAPSHOT</bw-util.version>
+		<bw-util.version>4.0.17-SNAPSHOT</bw-util.version>
 		<bw-access.version>4.0.2-SNAPSHOT</bw-access.version>
 		<!-- Third Party Library Versions -->
 		<spring.version>3.0.5.RELEASE</spring.version>
@@ -67,6 +66,34 @@
 		<system>github</system>
 		<url>https://github.com/Bedework/bw-event-registration/issues</url>
 	</issueManagement>
+
+  <developers>
+    <developer>
+      <name>Mike Douglass</name>
+      <organization>
+        Spherical Cow Group
+      </organization>
+      <organizationUrl>http://sphericalcowgroup.com/</organizationUrl>
+    </developer>
+    <developer>
+      <name>Arlen Johnson</name>
+      <organization>
+        Spherical Cow Group
+      </organization>
+      <organizationUrl>http://sphericalcowgroup.com/</organizationUrl>
+    </developer>
+  </developers>
+
+  <distributionManagement>
+    <snapshotRepository>
+      <id>ossrh</id>
+      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+    </snapshotRepository>
+    <repository>
+      <id>ossrh</id>
+      <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+    </repository>
+  </distributionManagement>
 
 	<modules>
 		<module>bw-event-registration-common</module>
@@ -142,18 +169,18 @@
 			</dependency>
 			<dependency>
 				<groupId>org.bedework</groupId>
-				<artifactId>bw-xml-exchangews</artifactId>
+				<artifactId>bw-xml-icalendar</artifactId>
 				<version>${bw-xml.version}</version>
 			</dependency>
 
+			<!-- Third Party Libraries -->
+
       <dependency>
-        <groupId>org.bedework.bw-msg</groupId>
-        <artifactId>bw-msg-sysevmsgs</artifactId>
-        <version>${bw-msg.version}</version>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-aop</artifactId>
+        <version>${spring.version}</version>
       </dependency>
 
-			<!-- Third Party Libraries -->
-      
 			<dependency>
 				<groupId>org.springframework</groupId>
 				<artifactId>spring-core</artifactId>
@@ -269,59 +296,6 @@
 		</dependencies>
 	</dependencyManagement>
 
-	<repositories>
-		<repository>
-			<id>jboss.repository</id>
-			<name>JBoss Public Repository Group</name>
-			<url>http://repository.jboss.org/nexus/content/groups/developer/</url>
-			<layout>default</layout>
-			<releases>
-				<enabled>true</enabled>
-			</releases>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-		</repository>
-		<!-- Only needed for JBoss 5 dependencies. We should remove this when we
-			move Bedework off of JBoss 5. -->
-		<repository>
-			<id>jboss-deprecated</id>
-			<name>JBoss Deprecated Repository</name>
-			<url>http://repository.jboss.org/nexus/content/repositories/deprecated</url>
-			<releases>
-				<enabled>true</enabled>
-			</releases>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-		</repository>
-		<repository>
-			<id>bedework.repository</id>
-			<name>Bedework Maven Repository</name>
-			<url>http://repository.bedework.org/maven2/</url>
-			<layout>default</layout>
-			<releases>
-				<enabled>true</enabled>
-			</releases>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-		</repository>
-	</repositories>
-
-	<distributionManagement>
-		<repository>
-			<id>bedework-releases-repository</id>
-			<name>Bedework Releases Repository</name>
-			<url>${bedework.releases.repo.url}</url>
-		</repository>
-		<snapshotRepository>
-			<id>bedework-snapshots-repository</id>
-			<name>Bedework Snapshots Repository</name>
-			<url>${bedework.snapshots.repo.url}</url>
-		</snapshotRepository>
-	</distributionManagement>
-
 	<build>
 		<extensions>
 			<extension>
@@ -337,8 +311,8 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>${maven.compiler.plugin.version}</version>
 				<configuration>
-					<source>1.7</source>
-					<target>1.7</target>
+					<source>1.8</source>
+					<target>1.8</target>
 					<showDeprecation>false</showDeprecation>
 					<showWarnings>false</showWarnings>
 				</configuration>
@@ -361,5 +335,59 @@
 			</plugin>
 		</plugins>
 	</build>
+
+  <profiles>
+    <profile>
+      <id>release</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-source-plugin</artifactId>
+            <version>2.2.1</version>
+            <executions>
+              <execution>
+                <id>attach-sources</id>
+                <goals>
+                  <goal>jar-no-fork</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-javadoc-plugin</artifactId>
+            <version>2.9.1</version>
+            <executions>
+              <execution>
+                <id>attach-javadocs</id>
+                <goals>
+                  <goal>jar</goal>
+                </goals>
+              </execution>
+            </executions>
+            <configuration>
+              <additionalparam>-Xdoclint:none</additionalparam>
+              <failOnError>false</failOnError>
+            </configuration>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-gpg-plugin</artifactId>
+            <version>1.5</version>
+            <executions>
+              <execution>
+                <id>sign-artifacts</id>
+                <phase>verify</phase>
+                <goals>
+                  <goal>sign</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 
 </project>

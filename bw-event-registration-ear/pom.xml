@@ -7,7 +7,7 @@
 		<version>4.0.0-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
-	<artifactId>bw-evreg-ear</artifactId>
+	<artifactId>bw-event-registration-ear</artifactId>
 	<packaging>ear</packaging>
 	<name>bw-event-registration-ear</name>
 
@@ -16,160 +16,159 @@
     <!--
 		<dependency>
 			<groupId>${project.groupId}</groupId>
-			<artifactId>bw-evreg-ear-properties</artifactId>
+			<artifactId>bw-event-registration-ear-properties</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		-->
 		<dependency>
 			<groupId>${project.groupId}</groupId>
-			<artifactId>bw-evreg-service</artifactId>
+			<artifactId>bw-event-registration-service</artifactId>
 			<version>${project.version}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>*</groupId>
+          <artifactId>*</artifactId>
+        </exclusion>
+      </exclusions>
 		</dependency>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
-			<artifactId>bw-evreg-common</artifactId>
+			<artifactId>bw-event-registration-common</artifactId>
 			<version>${project.version}</version>
-			<exclusions>
-				<exclusion>
-					<groupId>org.apache.derby</groupId>
-					<artifactId>derbynet</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>log4j</groupId>
-					<artifactId>log4j</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>org.apache.lucene</groupId>
-					<artifactId>lucene-core</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>org.apache.lucene</groupId>
-					<artifactId>lucene-misc</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>org.apache.struts</groupId>
-					<artifactId>struts-core</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>com.h2database</groupId>
-					<artifactId>h2</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>jtidy</groupId>
-					<artifactId>jtidy</artifactId>
-				</exclusion>
-				<exclusion>
-					<artifactId>cglib-nodep</artifactId>
-					<groupId>cglib</groupId>
-				</exclusion>
-				<exclusion>
-					<artifactId>jackson-annotations</artifactId>
-					<groupId>com.fasterxml.jackson.core</groupId>
-				</exclusion>
-				<exclusion>
-					<artifactId>jackson-core</artifactId>
-					<groupId>com.fasterxml.jackson.core</groupId>
-				</exclusion>
-				<exclusion>
-					<artifactId>jackson-databind</artifactId>
-					<groupId>com.fasterxml.jackson.core</groupId>
-				</exclusion>
-				<exclusion>
-					<artifactId>slf4j-api</artifactId>
-					<groupId>org.slf4j</groupId>
-				</exclusion>
-				<exclusion>
-					<artifactId>xbean-reflect</artifactId>
-					<groupId>org.apache.xbean</groupId>
-				</exclusion>
-				<exclusion>
-					<artifactId>xstream</artifactId>
-					<groupId>com.thoughtworks.xstream</groupId>
-				</exclusion>
-			</exclusions>
+      <exclusions>
+        <exclusion>
+          <groupId>*</groupId>
+          <artifactId>*</artifactId>
+        </exclusion>
+      </exclusions>
 		</dependency>
+
 		<dependency>
       <groupId>${project.groupId}</groupId>
-			<artifactId>bw-evreg-war</artifactId>
+			<artifactId>bw-event-registration-war</artifactId>
 			<version>${project.version}</version>
 			<type>war</type>
 		</dependency>
+
+    <dependency>
+      <groupId>org.bedework</groupId>
+      <artifactId>bw-util-calendar</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.bedework</groupId>
+      <artifactId>bw-util-config</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.bedework</groupId>
+      <artifactId>bw-util-hibernate</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.bedework</groupId>
+      <artifactId>bw-util-jms</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.bedework</groupId>
+      <artifactId>bw-util-jmx</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.bedework</groupId>
+      <artifactId>bw-util-misc</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.bedework</groupId>
+      <artifactId>bw-util-timezones</artifactId>
+    </dependency>
+
 		<!-- Third Party Dependencies (needed by the above) -->
 		<dependency>
 			<groupId>org.bedework</groupId>
 			<artifactId>bw-xml-synchws</artifactId>
 		</dependency>
+
 		<dependency>
 			<groupId>org.bedework</groupId>
-			<artifactId>bw-xml-exchangews</artifactId>
-		</dependency>
+			<artifactId>bw-xml-icalendar</artifactId>
+    </dependency>
+
 		<dependency>
       <groupId>${ical4j.groupId}</groupId>
       <artifactId>${ical4j.artifactId}</artifactId>
-			<exclusions>
-				<exclusion>
-					<artifactId>commons-codec</artifactId>
-					<groupId>commons-codec</groupId>
-				</exclusion>
-				<exclusion>
-					<artifactId>commons-logging</artifactId>
-					<groupId>commons-logging</groupId>
-				</exclusion>
-			</exclusions>
+      <exclusions>
+        <exclusion>
+          <groupId>*</groupId>
+          <artifactId>*</artifactId>
+        </exclusion>
+      </exclusions>
 		</dependency>
-		<dependency>
-			<groupId>org.hibernate</groupId>
-			<artifactId>hibernate-core</artifactId>
-			<exclusions>
-				<exclusion>
-					<artifactId>slf4j-api</artifactId>
-					<groupId>org.slf4j</groupId>
-				</exclusion>
-				<exclusion>
-					<artifactId>dom4j</artifactId>
-					<groupId>dom4j</groupId>
-				</exclusion>
-				<exclusion>
-					<groupId>antlr</groupId>
-					<artifactId>antlr</artifactId>
-				</exclusion>
-				<exclusion>
-					<artifactId>jta</artifactId>
-					<groupId>javax.transaction</groupId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-		<dependency>
+
+    <dependency>
+      <groupId>org.jasig.cas.client</groupId>
+      <artifactId>cas-client-core</artifactId>
+      <version>3.4.1</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-csv</artifactId>
+      <version>${commons.csv.version}</version>
+    </dependency>
+
+    <dependency>
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>httpcore</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>cglib</groupId>
-			<artifactId>cglib-nodep</artifactId>
-		</dependency>
+
+    <dependency>
+      <groupId>cglib</groupId>
+      <artifactId>cglib-nodep</artifactId>
+      <version>${cglib.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.fasterxml</groupId>
+      <artifactId>classmate</artifactId>
+      <version>${classmate.version}</version>
+    </dependency>
+
 		<dependency>
 			<groupId>net.sf.ehcache</groupId>
 			<artifactId>ehcache</artifactId>
 		</dependency>
+
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-ehcache</artifactId>
 			<version>${hibernate.version}</version>
-			<exclusions>
-				<exclusion>
-					<artifactId>slf4j-api</artifactId>
-					<groupId>org.slf4j</groupId>
-				</exclusion>
-				<exclusion>
-					<artifactId>ehcache-core</artifactId>
-					<groupId>net.sf.ehcache</groupId>
-				</exclusion>
-			</exclusions>
+      <exclusions>
+        <exclusion>
+          <groupId>*</groupId>
+          <artifactId>*</artifactId>
+        </exclusion>
+      </exclusions>
 		</dependency>
+
+    <dependency>
+      <groupId>aopalliance</groupId>
+      <artifactId>aopalliance</artifactId>
+      <version>1.0</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-aop</artifactId>
+    </dependency>
+
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-core</artifactId>
 		</dependency>
+
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-context</artifactId>
@@ -180,10 +179,12 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
+
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-beans</artifactId>
 		</dependency>
+
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-web</artifactId>
@@ -197,7 +198,7 @@
 	</dependencies>
 
 	<build>
-		<finalName>bw-evreg-${project.version}</finalName>
+		<finalName>bw-event-registration-${project.version}</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -214,20 +215,41 @@
 					<modules>
 						<webModule>
 							<groupId>${project.groupId}</groupId>
-							<artifactId>bw-evreg-war</artifactId>
+							<artifactId>bw-event-registration-war</artifactId>
 							<contextRoot>/eventreg</contextRoot>
 						</webModule>
 						<jarModule>
 							<groupId>${project.groupId}</groupId>
-							<artifactId>bw-evreg-common</artifactId>
+							<artifactId>bw-event-registration-common</artifactId>
 						</jarModule>
 						<jarModule>
 							<groupId>${project.groupId}</groupId>
-							<artifactId>bw-evreg-service</artifactId>
+							<artifactId>bw-event-registration-service</artifactId>
 						</jarModule>
 					</modules>
 				</configuration>
 			</plugin>
+
+      <plugin>
+        <groupId>org.bedework</groupId>
+        <artifactId>bw-deploy-maven-plugin</artifactId>
+        <version>${bw-util.version}</version>
+        <executions>
+          <execution>
+            <phase>install</phase>
+            <goals>
+              <goal>bw-deploy</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <noversion>true</noversion>
+          <delete>true</delete>
+          <earName>bw-event-registration</earName>
+          <baseDirPath>${project.basedir}/../..</baseDirPath>
+          <propsPath>${org.bedework.deployment.properties}</propsPath>
+        </configuration>
+      </plugin>
 		</plugins>
 	</build>
 
