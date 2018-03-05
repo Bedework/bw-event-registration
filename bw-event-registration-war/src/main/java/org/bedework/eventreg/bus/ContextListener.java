@@ -22,9 +22,7 @@ import org.bedework.eventreg.service.EventregSvcMBean;
 import org.bedework.eventreg.service.SvcRequestHandler;
 import org.bedework.util.http.service.HttpOut;
 import org.bedework.util.jmx.ConfBase;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.bedework.util.misc.Logged;
 
 import javax.management.ObjectName;
 import javax.servlet.ServletContextEvent;
@@ -34,9 +32,7 @@ import javax.servlet.ServletContextListener;
  * @author douglm
  *
  */
-public class ContextListener implements ServletContextListener {
-  protected final Log logger = LogFactory.getLog(getClass());
-
+public class ContextListener extends Logged implements ServletContextListener {
   static class Configurator extends ConfBase {
     EventregSvcMBean sysInfo;
 

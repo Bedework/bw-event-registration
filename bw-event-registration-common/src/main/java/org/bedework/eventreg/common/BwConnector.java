@@ -20,10 +20,10 @@ package org.bedework.eventreg.common;
 
 import org.bedework.eventreg.db.Event;
 import org.bedework.util.calendar.XcalUtil.TzGetter;
+import org.bedework.util.misc.Logged;
 
 import ietf.params.xml.ns.icalendar_2.ArrayOfComponents;
 import ietf.params.xml.ns.icalendar_2.BaseComponentType;
-import org.apache.log4j.Logger;
 import org.oasis_open.docs.ws_calendar.ns.soap.CalWsService;
 import org.oasis_open.docs.ws_calendar.ns.soap.CalWsServicePortType;
 import org.oasis_open.docs.ws_calendar.ns.soap.FetchItemResponseType;
@@ -52,9 +52,7 @@ import javax.xml.soap.SOAPMessage;
 /** Implements the client end of a SOAP connection for a single eventreg session.
  *
  */
-public class BwConnector {
-  private transient Logger log;
-
+public class BwConnector extends Logged {
   private final TzGetter tzs;
 
   private final static ietf.params.xml.ns.icalendar_2.ObjectFactory icalOf =
@@ -220,36 +218,6 @@ public class BwConnector {
     }
 
     return soapMsgFactory;
-  }
-
-  protected void info(final String msg) {
-    getLogger().info(msg);
-  }
-
-  protected void trace(final String msg) {
-    getLogger().debug(msg);
-  }
-
-  protected void error(final Throwable t) {
-    getLogger().error(this, t);
-  }
-
-  protected void error(final String msg) {
-    getLogger().error(msg);
-  }
-
-  protected void warn(final String msg) {
-    getLogger().warn(msg);
-  }
-
-  /* Get a logger for messages
-   */
-  protected Logger getLogger() {
-    if (log == null) {
-      log = Logger.getLogger(this.getClass());
-    }
-
-    return log;
   }
 
   /* ====================================================================

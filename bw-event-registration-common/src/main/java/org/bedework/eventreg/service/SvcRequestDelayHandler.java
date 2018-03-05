@@ -27,8 +27,6 @@ import org.bedework.util.jms.events.SysEvent;
 import org.bedework.util.jms.listeners.JmsSysEventListener;
 import org.bedework.util.misc.AbstractProcessorThread;
 
-import org.apache.log4j.Logger;
-
 /** This just delays requests that appear to be having problems. They
  * get requeued after a period of time.
  *
@@ -36,16 +34,12 @@ import org.apache.log4j.Logger;
  * amount of time - so events can just be queued and the listener can
  * fetch an event from the front and wait till it's expiry time.
  *
- * <p>At that point t is requeued on the main handler</p>
+ * <p>At that point it is requeued on the main handler</p>
  *
  * @author douglm
  *
  */
 public class SvcRequestDelayHandler extends JmsSysEventListener {
-  private transient Logger log;
-
-  protected boolean debug;
-
   private final EventregProperties props;
 
   private final SvcRequestHandler handler;
@@ -85,7 +79,6 @@ public class SvcRequestDelayHandler extends JmsSysEventListener {
                                 final EventregProperties props) throws Throwable {
     this.props = props;
     this.handler = handler;
-    debug = getLogger().isDebugEnabled();
 
     if (props.getDelayMillis() <= 0) {
       warn("Bad or unset value for delayMillis: set to 30 seconds");
@@ -143,6 +136,7 @@ public class SvcRequestDelayHandler extends JmsSysEventListener {
     super.close();
   }
 
+  @SuppressWarnings("UnusedReturnValue")
   public boolean delay(final EventregRequest req) throws Throwable {
     if (req.getDiscard()) {
       warn("Discarding: " + req);
@@ -258,35 +252,5 @@ public class SvcRequestDelayHandler extends JmsSysEventListener {
     info("************************************************************");
     info(" * Event reg action delay processor terminated");
     info("************************************************************");
-  }
-
-  protected void info(final String msg) {
-    getLogger().info(msg);
-  }
-
-  protected void warn(final String msg) {
-    getLogger().warn(msg);
-  }
-
-  protected void debug(final String msg) {
-    getLogger().debug(msg);
-  }
-
-  protected void error(final Throwable t) {
-    getLogger().error(this, t);
-  }
-
-  protected void error(final String msg) {
-    getLogger().error(msg);
-  }
-
-  /* Get a logger for messages
-   */
-  protected Logger getLogger() {
-    if (log == null) {
-      log = Logger.getLogger(this.getClass());
-    }
-
-    return log;
   }
 }

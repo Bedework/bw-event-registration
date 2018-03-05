@@ -253,8 +253,7 @@ public interface EventregProperties extends HibernateConfigI {
    *
    * @return String val
    */
-  @ConfInfo(collectionElementName = "syseventsProperty" ,
-          elementType = "java.lang.String")
+  @ConfInfo(collectionElementName = "syseventsProperty")
   List<String> getSyseventsProperties();
 
   /** Add a sysevents property

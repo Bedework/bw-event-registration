@@ -29,7 +29,8 @@ import org.bedework.eventreg.requests.RegistrationAction;
 import org.bedework.util.calendar.IcalDefs;
 import org.bedework.util.calendar.XcalUtil;
 import org.bedework.util.config.ConfigBase;
-import org.bedework.util.http.BasicHttpClient;
+import org.bedework.util.http.Headers;
+import org.bedework.util.http.HttpUtil;
 import org.bedework.util.jms.JmsNotificationsHandlerImpl;
 import org.bedework.util.jms.NotificationException;
 import org.bedework.util.jms.NotificationsHandler;
@@ -45,11 +46,10 @@ import org.bedework.util.xml.tagdefs.BedeworkServerTags;
 import org.bedework.util.xml.tagdefs.CaldavDefs;
 import org.bedework.util.xml.tagdefs.WebdavTags;
 
-import net.fortuna.ical4j.model.TimeZone;
-import org.apache.http.Header;
-import org.apache.http.message.BasicHeader;
-import org.apache.log4j.Logger;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.impl.client.CloseableHttpClient;
 
+import java.io.IOException;
 import java.io.StringWriter;
 import java.net.URI;
 import java.util.ArrayList;
@@ -58,16 +58,16 @@ import java.util.UUID;
 
 import javax.servlet.http.HttpServletResponse;
 
+import static org.bedework.util.xml.tagdefs.WebdavTags.href;
+import static org.bedework.util.xml.tagdefs.WebdavTags.namespace;
+import static org.bedework.util.xml.tagdefs.WebdavTags.principalURL;
+
 /** Does the work of processing a request
  *
  * @author douglm
  *
  */
 public class SvcRequestHandler extends JmsSysEventListener implements EventregRequestHandler {
-  private transient Logger log;
-
-  protected boolean debug;
-
   private final EventregDb db;
   private final EventregProperties props;
 
@@ -76,18 +76,15 @@ public class SvcRequestHandler extends JmsSysEventListener implements EventregRe
   protected StringWriter davXmlSw;
   protected XmlEmit davXml;
 
-  protected BasicHttpClient bwClient;
+  protected CloseableHttpClient client;
+
+  private final URI bwUri;
 
   private final NotificationsHandler sender;
 
   private final SvcRequestDelayHandler delayHandler;
 
-  private final static XcalUtil.TzGetter tzs = new XcalUtil.TzGetter() {
-    @Override
-    public TimeZone getTz(final String id) throws Throwable {
-      return Timezones.getTz(id);
-    }
-  };
+  private final static XcalUtil.TzGetter tzs = id -> Timezones.getTz(id);
 
   private final BwConnector cnctr;
 
@@ -122,7 +119,6 @@ public class SvcRequestHandler extends JmsSysEventListener implements EventregRe
 
   public SvcRequestHandler(final EventregProperties props) throws Throwable {
     this.props = props;
-    debug = getLogger().isDebugEnabled();
 
     db = new EventregDb();
     db.setSysInfo(getSysInfo());
@@ -135,6 +131,8 @@ public class SvcRequestHandler extends JmsSysEventListener implements EventregRe
 
     sender = new JmsNotificationsHandlerImpl(props.getActionQueueName(),
                                              ConfigBase.toProperties(props.getSyseventsProperties()));
+
+    bwUri = new URI(getSysInfo().getBwUrl());
   }
 
   @Override
@@ -375,47 +373,12 @@ public class SvcRequestHandler extends JmsSysEventListener implements EventregRe
     xml.property(AppleServerTags.uid, UUID.randomUUID().toString());
 
     for (final String pr: principals) {
-      xml.openTag(WebdavTags.principalURL);
-      if (pr.startsWith("/")) {
-        xml.property(WebdavTags.href, pr);
-      } else if (pr.startsWith("mailto:")) {
-        xml.property(WebdavTags.href, pr);
-      } else {
-        xml.property(WebdavTags.href, "/principals/users/" + pr);
-      }
-      xml.closeTag(WebdavTags.principalURL);
+      doXmlPrUrl(xml, pr);
     }
 
     xml.closeTag(BedeworkServerTags.eventregCancelled);
 
-    final String content = endDavEmit();
-
-    BasicHttpClient cl = null;
-
-    try {
-      cl = getBwClient();
-
-      final int respStatus = cl.sendRequest("POST",
-                                            getSysInfo().getBwUrl(),
-                                            getAuthHeaders(),
-                                            "application/xml",
-                                            content.length(),
-                                            content.getBytes());
-
-      if (debug) {
-        debug("Status was " + respStatus);
-      }
-
-      return respStatus == HttpServletResponse.SC_OK;
-    } finally {
-      if (cl != null) {
-        try {
-          cl.release();
-        } catch (final Throwable t) {
-          error(t);
-        }
-      }
-    }
+    return postXml(endDavEmit());
   }
 
   private boolean handleNewReg(final RegistrationAction nr) throws Throwable {
@@ -458,48 +421,25 @@ public class SvcRequestHandler extends JmsSysEventListener implements EventregRe
     xml.property(BedeworkServerTags.eventregNumTickets,
                  String.valueOf(reg.getNumTickets()));
 
-    xml.openTag(WebdavTags.principalURL);
-
-    final String pr = reg.getAuthid();
-    if (pr.startsWith("/")) {
-      xml.property(WebdavTags.href, pr);
-    } else if (pr.startsWith("mailto:")) {
-      xml.property(WebdavTags.href, pr);
-    } else {
-      xml.property(WebdavTags.href, "/principals/users/" + pr);
-    }
-    xml.closeTag(WebdavTags.principalURL);
+    doXmlPrUrl(xml, reg.getAuthid());
 
     xml.closeTag(BedeworkServerTags.eventregRegistered);
 
-    final String content = endDavEmit();
+    return postXml(endDavEmit());
+  }
 
-    BasicHttpClient cl = null;
+  private void doXmlPrUrl(final XmlEmit xml,
+                          final String pr) throws IOException {
+    xml.openTag(principalURL);
 
-    try {
-      cl = getBwClient();
-
-      final int respStatus = cl.sendRequest("POST",
-                                            getSysInfo().getBwUrl(),
-                                            getAuthHeaders(),
-                                            "application/xml",
-                                            content.length(),
-                                            content.getBytes());
-
-      if (debug) {
-        debug("Status was " + respStatus);
-      }
-
-      return respStatus == HttpServletResponse.SC_OK;
-    } finally {
-      if (cl != null) {
-        try {
-          cl.release();
-        } catch (final Throwable t) {
-          error(t);
-        }
-      }
+    if (pr.startsWith("/")) {
+      xml.property(href, pr);
+    } else if (pr.startsWith("mailto:")) {
+      xml.property(href, pr);
+    } else {
+      xml.property(href, "/principals/users/" + pr);
     }
+    xml.closeTag(principalURL);
   }
 
   public EventregProperties getSysInfo() {
@@ -507,7 +447,7 @@ public class SvcRequestHandler extends JmsSysEventListener implements EventregRe
   }
 
   /**
-   * @throws Throwable
+   * @throws Throwable on error
    */
   public synchronized void openDb() throws Throwable {
     if (db == null) {
@@ -534,11 +474,13 @@ public class SvcRequestHandler extends JmsSysEventListener implements EventregRe
     return db.close();
   }
 
-  protected void subscribeNotifications(final Registration reg) throws Throwable {
+  protected boolean subscribeNotifications(final Registration reg)
+          throws Throwable {
     final String email = reg.getEmail();
 
     if (email == null) {
-      return;
+      error("No email");
+      return false;
     }
 
     /* Tell the calendar system we need to notify the user. We send
@@ -562,36 +504,36 @@ public class SvcRequestHandler extends JmsSysEventListener implements EventregRe
 
     xml.openTag(BedeworkServerTags.notifySubscribe);
 
-    xml.openTag(WebdavTags.principalURL);
-    xml.property(WebdavTags.href, makePrincipal(reg.getAuthid()));
-    xml.closeTag(WebdavTags.principalURL);
+    xml.openTag(principalURL);
+    xml.property(href, makePrincipal(reg.getAuthid()));
+    xml.closeTag(principalURL);
 
     xml.property(BedeworkServerTags.action, "add");
     xml.property(BedeworkServerTags.email, email);
 
     xml.closeTag(BedeworkServerTags.notifySubscribe);
 
-    final String content = endDavEmit();
+    return postXml(endDavEmit());
+  }
 
-    BasicHttpClient cl = null;
-
+  protected boolean postXml(final String xml) throws EventregException {
     try {
-      cl = getBwClient();
+      try (CloseableHttpResponse hresp =
+                   HttpUtil.doPost(getClient(),
+                                   bwUri,
+                                   getAuthHeaders(),
+                                   "application/xml",
+                                   xml)) {
+        final int rc = HttpUtil.getStatus(hresp);
 
-      final int respStatus = cl.sendRequest("POST",
-                                            getSysInfo().getBwUrl(),
-                                            getAuthHeaders(),
-                                            "application/xml",
-                                            content.length(),
-                                            content.getBytes());
-    } finally {
-      if (cl != null) {
-        try {
-          cl.release();
-        } catch (final Throwable t) {
-          error(t);
+        if (debug) {
+          debug("Status was " + rc);
         }
+
+        return rc == HttpServletResponse.SC_OK;
       }
+    } catch (final IOException ioe) {
+      throw new EventregException(ioe);
     }
   }
 
@@ -607,26 +549,17 @@ public class SvcRequestHandler extends JmsSysEventListener implements EventregRe
     return "/principals/users/" + id;
   }
 
-  protected BasicHttpClient getBwClient() throws EventregException {
-    if (bwClient != null) {
-      return bwClient;
+  protected CloseableHttpClient getClient() throws EventregException {
+    if (client != null) {
+      return client;
     }
 
-    try {
-      bwClient = new BasicHttpClient(30 * 1000,
-                                     false);  // followRedirects
-      bwClient.setBaseURI(new URI(getSysInfo().getBwUrl()));
-      //if (sub.getUri() != null) {
-      //  client.setBaseURI(new URI(sub.getUri()));
-      //}
+    client = HttpUtil.getClient(false);
 
-      return bwClient;
-    } catch (final Throwable t) {
-      throw new EventregException(t);
-    }
+    return client;
   }
 
-  List<Header> getAuthHeaders() throws EventregException {
+  Headers getAuthHeaders() {
     final String id = getSysInfo().getBwId();
     final String token = getSysInfo().getBwToken();
 
@@ -634,9 +567,9 @@ public class SvcRequestHandler extends JmsSysEventListener implements EventregRe
       return null;
     }
 
-    final List<Header> authheaders = new ArrayList<>(2);
-    authheaders.add(new BasicHeader("X-BEDEWORK-NOTE", id + ":" + token));
-    authheaders.add(new BasicHeader("X-BEDEWORK-EXTENSIONS", "true"));
+    final Headers authheaders = new Headers();
+    authheaders.add("X-BEDEWORK-NOTE", id + ":" + token);
+    authheaders.add("X-BEDEWORK-EXTENSIONS", "true");
 
     return authheaders;
   }
@@ -666,7 +599,7 @@ public class SvcRequestHandler extends JmsSysEventListener implements EventregRe
 
   public void addNamespace(final XmlEmit xml) throws EventregException {
     try {
-      xml.addNs(new XmlEmit.NameSpace(WebdavTags.namespace, "DAV"), true);
+      xml.addNs(new XmlEmit.NameSpace(namespace, "DAV"), true);
 
       xml.addNs(new XmlEmit.NameSpace(CaldavDefs.caldavNamespace, "C"), true);
       xml.addNs(new XmlEmit.NameSpace(AppleIcalTags.appleIcalNamespace, "AI"), false);
@@ -680,9 +613,5 @@ public class SvcRequestHandler extends JmsSysEventListener implements EventregRe
     } catch (final Throwable t) {
       throw new EventregException(t);
     }
-  }
-
-  protected void debug(final String msg) {
-    getLogger().debug(msg);
   }
 }

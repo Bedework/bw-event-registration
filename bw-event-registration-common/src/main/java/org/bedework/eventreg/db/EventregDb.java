@@ -23,8 +23,7 @@ import org.bedework.util.hibernate.HibException;
 import org.bedework.util.hibernate.HibSession;
 import org.bedework.util.hibernate.HibSessionFactory;
 import org.bedework.util.hibernate.HibSessionImpl;
-
-import org.apache.log4j.Logger;
+import org.bedework.util.misc.Logged;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
@@ -36,11 +35,7 @@ import java.util.concurrent.atomic.AtomicLong;
  *
  * @author Mike Douglass
  */
-public class EventregDb implements Serializable {
-  private transient Logger log;
-
-  private final boolean debug;
-
+public class EventregDb extends Logged implements Serializable {
   /* Value used to create a registration. Each running jvm has its
      own batch of these which it renews when empty.
    */
@@ -68,7 +63,6 @@ public class EventregDb implements Serializable {
    *
    */
   public EventregDb() {
-    debug = getLogger().isDebugEnabled();
   }
 
   /**
@@ -459,7 +453,9 @@ public class EventregDb implements Serializable {
       sess.setString("href", eventHref);
 
       final Long ct = (Long)sess.getUnique();
-      trace("Count returned " + ct);
+      if (debug) {
+        debug("Count returned " + ct);
+      }
       if (ct == null) {
         return 0;
       }
@@ -470,6 +466,13 @@ public class EventregDb implements Serializable {
     }
   }
 
+  private final String getWaitingQuery =
+          "from " +
+                  Registration.class.getName() +
+                  " reg where reg.href=:href" +
+                  " and size(reg.tickets) < reg.ticketsRequested" +
+                  " order by reg.waitqDate";
+
   /**
    * @param eventHref
    * @return registrations on the waiting list for the event
@@ -477,22 +480,19 @@ public class EventregDb implements Serializable {
    */
   public List<Registration> getWaiting(final String eventHref) throws Throwable {
     try {
-      StringBuilder sb = new StringBuilder();
-
-      sb.append("from ");
-      sb.append(Registration.class.getName());
-      sb.append(" reg where reg.href=:href");
-      sb.append(" and size(reg.tickets) < reg.ticketsRequested");
-      sb.append(" order by reg.waitqDate");
-
-      sess.createQuery(sb.toString());
+      sess.createQuery(getWaitingQuery);
       sess.setString("href", eventHref);
 
       return sess.getList();
-    } catch (HibException he) {
+    } catch (final HibException he) {
       throw new Exception(he);
     }
   }
+
+  private final String getTicketCountQuery =
+          "select count(*) from " +
+                  Ticket.class.getName() +
+                  " tkt where tkt.href=:href";
 
   /**
    * @param eventHref
@@ -501,17 +501,13 @@ public class EventregDb implements Serializable {
    */
   public long getTicketCount(final String eventHref) throws Throwable {
     try {
-      StringBuilder sb = new StringBuilder();
-
-      sb.append("select count(*) from ");
-      sb.append(Ticket.class.getName());
-      sb.append(" tkt where tkt.href=:href");
-
-      sess.createQuery(sb.toString());
+      sess.createQuery(getTicketCountQuery);
       sess.setString("href", eventHref);
 
       Long ct = (Long)sess.getUnique();
-      trace("Count returned " + ct);
+      if (debug) {
+        debug("Count returned " + ct);
+      }
       if (ct == null) {
         return 0;
       }
@@ -660,17 +656,18 @@ public class EventregDb implements Serializable {
 
     if (sess == null) {
       if (debug) {
-        trace("New hibernate session for " + objTimestamp);
+        debug("New hibernate session for " + objTimestamp);
       }
       sess = new HibSessionImpl();
       try {
         sess.init(HibSessionFactory
-                          .getSessionFactory(sysInfo.getHibernateProperties()), 
-                  getLogger());
+                          .getSessionFactory(sysInfo.getHibernateProperties()));
       } catch (final HibException he) {
         throw new Exception(he);
       }
-      trace("Open session for " + objTimestamp);
+      if (debug) {
+        debug("Open session for " + objTimestamp);
+      }
     }
 
     beginTransaction();
@@ -679,13 +676,13 @@ public class EventregDb implements Serializable {
   protected synchronized void closeSession() throws Exception {
     if (!isOpen()) {
       if (debug) {
-        trace("Close for " + objTimestamp + " closed session");
+        debug("Close for " + objTimestamp + " closed session");
       }
       return;
     }
 
     if (debug) {
-      trace("Close for " + objTimestamp);
+      debug("Close for " + objTimestamp);
     }
 
     try {
@@ -716,7 +713,7 @@ public class EventregDb implements Serializable {
     checkOpen();
 
     if (debug) {
-      trace("Begin transaction for " + objTimestamp);
+      debug("Begin transaction for " + objTimestamp);
     }
     try {
       sess.beginTransaction();
@@ -729,7 +726,7 @@ public class EventregDb implements Serializable {
     checkOpen();
 
     if (debug) {
-      trace("End transaction for " + objTimestamp);
+      debug("End transaction for " + objTimestamp);
     }
 
     try {
@@ -750,38 +747,6 @@ public class EventregDb implements Serializable {
       throw new Exception(he);
     } finally {
     }
-  }
-
-  /**
-   * @return Logger
-   */
-  protected Logger getLogger() {
-    if (log == null) {
-      log = Logger.getLogger(this.getClass());
-    }
-
-    return log;
-  }
-
-  /**
-   * @param t exception
-   */
-  protected void error(final Throwable t) {
-    getLogger().error(this, t);
-  }
-
-  /**
-   * @param msg the message
-   */
-  protected void warn(final String msg) {
-    getLogger().warn(msg);
-  }
-
-  /**
-   * @param msg the message
-   */
-  protected void trace(final String msg) {
-    getLogger().debug(msg);
   }
 
   /* ====================================================================

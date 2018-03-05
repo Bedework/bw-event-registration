@@ -20,9 +20,7 @@ package org.bedework.eventreg.bus;
 
 import org.bedework.eventreg.db.Change;
 import org.bedework.eventreg.db.Registration;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.bedework.util.misc.Logged;
 
 import java.util.List;
 
@@ -31,10 +29,7 @@ import java.util.List;
  * @author douglm
  *
  */
-public class ChangeManager  {
-  protected final Log logger = LogFactory.getLog(getClass());
-//  public final static String EVENTINFOURL = "http://events.rpi.edu/event/eventView.do";
-
+public class ChangeManager extends Logged {
   private SessionManager sessMan;
 
   /** Specify the change by label and value

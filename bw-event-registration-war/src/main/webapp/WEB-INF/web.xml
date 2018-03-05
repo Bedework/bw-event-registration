@@ -100,8 +100,8 @@
   <security-constraint>
     <!-- The role name of * below means all roles defined in this web.xml -->
     <web-resource-collection>
-      <web-resource-name>Bedework</web-resource-name>
-      <description>Bedework user</description>
+      <web-resource-name>BedeworkEvreg</web-resource-name>
+      <description>Bedework event registration</description>
       <url-pattern>/*</url-pattern>
     </web-resource-collection>
     <auth-constraint>
@@ -144,7 +144,6 @@
 
   <!-- Roles are not used -->
   <security-role>
-    <description>A calendar system user</description>
-    <role-name>bedework.user</role-name>
+    <role-name>*</role-name>
   </security-role>
 </web-app>
