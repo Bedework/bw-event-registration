@@ -200,6 +200,17 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
+
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-webmvc</artifactId>
+      <exclusions>
+        <exclusion>
+          <artifactId>aopalliance</artifactId>
+          <groupId>aopalliance</groupId>
+        </exclusion>
+      </exclusions>
+    </dependency>
 	</dependencies>
 
 	<build>

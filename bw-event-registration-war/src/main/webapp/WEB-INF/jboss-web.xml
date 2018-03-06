@@ -8,7 +8,7 @@
   <resource-ref>
     <res-ref-name>jdbc/EventregDB</res-ref-name>
     <res-type>javax.sql.DataSource</res-type>
-    <jndi-name>java:${org.bedework.global.jboss.eventreg.datasource.jndiname}</jndi-name>
+    <jndi-name>java:${org.bedework.global.jboss.event-registration.datasource.jndiname}</jndi-name>
   </resource-ref>
 
   <resource-ref>
