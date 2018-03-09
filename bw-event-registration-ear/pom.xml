@@ -52,7 +52,7 @@
 
     <dependency>
       <groupId>org.bedework</groupId>
-      <artifactId>bw-util-calendar</artifactId>
+      <artifactId>bw-util2-calendar</artifactId>
     </dependency>
 
     <dependency>
