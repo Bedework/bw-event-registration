@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+  "-//Hibernate/Hibernate Mapping DTD//EN"
+  "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<!-- ===================================================================
+     Object to represent a form definition.
+     =================================================================== -->
+
+<hibernate-mapping>
+  <class name="org.bedework.eventreg.db.FormDef"
+         table="bwfdef_forms" >
+    <cache usage="read-write"/>
+
+    <id name="id" type="long" column="bwfdef_id">
+      <generator class="native"/>
+    </id>
+
+    <!-- db entity properties -->
+
+    <version name="seq" column="bwfdef_seq" type="integer" />
+
+    <property name="formName" column="bwfdef_formname" type="string" length="100"
+              not-null="true"
+              index="bwfdefidx_frmid" />
+
+    <property name="owner" column="bwfdef_owner" type="string" length="500"
+              not-null="true"
+              index="bwfdef_frmowner" />
+
+    <property name="created" column="bwfdef_created" type="string" length="30" />
+
+    <property name="lastmod" column="bwfdef_lastmod" type="string" length="30" />
+
+    <property name="committed" column="bwfdef_committed" type="true_false" />
+
+    <property name="disabled" column="bwfdef_disabled" type="true_false" />
+
+    <property name="comment" column="bwfdef_comment" type="string" length="250" />
+
+    <property name="properties" column="bwfdef_props"
+              type="text" length="30000" />
+
+    <set name="fields" table="bwfdef_fields"
+         cascade="all,delete-orphan"
+         lazy="false">
+      <cache usage="read-write"/>
+      <key column="bwdef_id" foreign-key="bwfdef_form_fk" />
+      <many-to-many class="org.bedework.eventreg.db.FieldDef"
+                    unique="true"
+                    column="bw_fdid"
+                    foreign-key="bwfdef_fld_fk" />
+    </set>
+  </class>
+</hibernate-mapping>
+

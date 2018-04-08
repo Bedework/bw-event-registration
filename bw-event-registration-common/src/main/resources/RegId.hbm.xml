@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+  "-//Hibernate/Hibernate Mapping DTD//EN"
+  "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<!-- ===================================================================
+     Object to represent a synch subscription.
+     =================================================================== -->
+
+<hibernate-mapping>
+  <class name="org.bedework.eventreg.db.RegId"
+         table="bwevchg_regids" >
+    <cache usage="read-write"/>
+
+    <id name="id" type="long" column="bwevchg_id">
+      <generator class="native"/>
+    </id>
+
+    <!-- db entity properties -->
+
+    <version name="seq" column="bwevchg_seq" type="integer" />
+
+    <property name="nextRegistrationId" column="bwevchg_nxtregid" type="long"
+              not-null="true" />
+  </class>
+</hibernate-mapping>
+

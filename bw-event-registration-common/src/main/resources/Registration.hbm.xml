@@ -51,6 +51,20 @@
 
     <property name="message" column="bwevreg_message" type="string" length="2000" />
 
+    <property name="formName" column="bwevreg_formName" type="string" length="100" />
+
+    <property name="formOwner" column="bwevreg_formOwner" type="string" length="500" />
+
+    <property name="evSummary" column="bwevreg_evsummary" type="string" length="250" />
+
+    <property name="evDate" column="bwevreg_evdate" type="string" length="30" />
+
+    <property name="evTime" column="bwevreg_evtime" type="string" length="30" />
+
+    <property name="evLocation" column="bwevreg_evloc" type="string" length="250" />
+
+    <property name="notificationTimestamp" column="bwevreg_notified" type="string" length="30" />
+
     <property name="properties" column="bwevreg_props"
               type="text" length="30000" />
 

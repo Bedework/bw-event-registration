@@ -39,12 +39,6 @@ public class EventregSvc extends ConfBase<EventregPropertiesImpl>
   /* Name of the property holding the location of the config data */
   public static final String confuriPname = "org.bedework.eventreg.confuri";
 
-  public static final String statusDone = "Done";
-  public static final String statusFailed = "Failed";
-  public static final String statusRunning = "Running";
-  public static final String statusStopped = "Stopped";
-
-  private static String status;
 
   /* Be safe - default to false */
   private boolean export;
@@ -63,6 +57,11 @@ public class EventregSvc extends ConfBase<EventregPropertiesImpl>
 
     @Override
     public void completed(final String status) {
+      if (status.equals(SchemaThread.statusDone)) {
+        EventregSvc.this.setStatus(ConfBase.statusDone);
+      } else {
+        EventregSvc.this.setStatus(ConfBase.statusFailed);
+      }
       setExport(false);
       info("Schema build completed with status " + status);
     }
@@ -401,7 +400,7 @@ public class EventregSvc extends ConfBase<EventregPropertiesImpl>
                                       getExport(),
                                       hc.getHibConfiguration().getProperties());
 
-      setStatus(statusStopped);
+      setStatus(statusRunning);
 
       buildSchema.start();
 
@@ -589,14 +588,6 @@ public class EventregSvc extends ConfBase<EventregPropertiesImpl>
     res.add("************************Dump unimplemented *************************" + "\n");
 
     return res;
-  }
-
-  public String getStatus() {
-    return status;
-  }
-
-  public void setStatus(final String val) {
-    status = val;
   }
 
   @Override

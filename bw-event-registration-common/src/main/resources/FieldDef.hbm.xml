@@ -1,0 +1,70 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+  "-//Hibernate/Hibernate Mapping DTD//EN"
+  "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<!-- ===================================================================
+     Object to represent an event registration.
+     =================================================================== -->
+
+<hibernate-mapping>
+  <class name="org.bedework.eventreg.db.FieldDef"
+         table="bwfdef_flds" >
+    <cache usage="read-write"/>
+
+    <id name="id" type="long" column="bwfdef_id">
+      <generator class="native"/>
+    </id>
+
+    <!-- db entity properties -->
+
+    <version name="seq" column="bwfdef_seq" type="integer" />
+
+    <property name="formName" column="bwfdef_formname" type="string"
+              not-null="true"
+              index="bwfld_frmid" />
+
+    <property name="owner" column="bwfdef_owner" type="string" length="500"
+              not-null="true"
+              index="bwfld_frmowner" />
+
+    <property name="name" column="bwfdef_name" type="string"
+              length="100"
+              not-null="true"
+              index="bwfld_frmname" />
+
+    <property name="type" column="bwfdef_type" type="string"
+              length="20"
+              not-null="true" />
+
+    <property name="label" column="bwfdef_label" type="string"
+              length="100" />
+
+    <property name="value" column="bwfdef_value" type="string"
+              length="500" />
+
+    <property name="description" column="bwfdef_desc" type="string"
+              length="1000" />
+
+    <property name="group" column="bwfdef_group" type="string"
+              length="100" />
+
+    <property name="required" column="bwfdef_req" type="true_false" />
+
+    <property name="order" column="bwfdef_order" type="integer" />
+
+    <property name="defaultValue" column="bwfdef_def" type="true_false" />
+
+    <property name="multivalued" column="bwfdef_multi" type="true_false" />
+
+    <property name="properties" column="bwfdef_props"
+              type="text" length="30000" />
+
+    <property name="width" column="bwfdef_width" type="string"
+              length="20" />
+
+    <property name="height" column="bwfdef_height" type="string"
+              length="20" />
+  </class>
+</hibernate-mapping>
+
