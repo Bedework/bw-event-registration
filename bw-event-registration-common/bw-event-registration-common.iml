@@ -28,11 +28,14 @@
     <orderEntry type="library" name="Maven: org.bedework:bw-util-xml:4.0.18" level="project" />
     <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-databind:2.3.1" level="project" />
     <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-core:2.3.1" level="project" />
-    <orderEntry type="library" name="Maven: org.bedework:bw-util-hibernate:4.0.18" level="project" />
+    <orderEntry type="module" module-name="bw-util-hibernate" />
+    <orderEntry type="library" name="Maven: org.bedework:bw-util-config:4.0.18" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.derby:derbynet:10.8.2.2" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.derby:derby:10.8.2.2" level="project" />
+    <orderEntry type="library" name="Maven: com.h2database:h2:1.4.190" level="project" />
     <orderEntry type="library" name="Maven: org.bedework:bw-util-jms:4.0.18" level="project" />
     <orderEntry type="library" name="Maven: javax.jms:javax.jms-api:2.0" level="project" />
     <orderEntry type="library" name="Maven: org.bedework:bw-util-jmx:4.0.18" level="project" />
-    <orderEntry type="library" name="Maven: org.bedework:bw-util-config:4.0.18" level="project" />
     <orderEntry type="library" name="Maven: org.bedework:bw-util-misc:4.0.18" level="project" />
     <orderEntry type="library" name="Maven: org.bedework:bw-util-timezones:4.0.18" level="project" />
     <orderEntry type="library" name="Maven: org.bedework:bw-util-caching:4.0.18" level="project" />
