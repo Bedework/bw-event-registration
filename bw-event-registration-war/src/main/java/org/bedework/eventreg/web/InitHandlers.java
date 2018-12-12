@@ -21,9 +21,8 @@ package org.bedework.eventreg.web;
 
 import org.bedework.eventreg.bus.Request;
 import org.bedework.eventreg.bus.SessionManager;
+import org.bedework.util.logging.Logged;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import javax.servlet.http.HttpServletRequest;
@@ -33,27 +32,23 @@ import javax.servlet.http.HttpServletResponse;
  * @author douglm
  *
  */
-public class InitHandlers extends HandlerInterceptorAdapter {
-  protected final Log logger = LogFactory.getLog(getClass());
-
+public class InitHandlers extends HandlerInterceptorAdapter
+        implements Logged {
   private SessionManager sessMan;
 
-  protected boolean debug;
-
   /**
-   * @param sm
+   * @param sm session manager
    */
   public void setSessionManager(final SessionManager sm) {
     sessMan = sm;
-    debug = logger.isDebugEnabled();
   }
 
   @Override
   public boolean preHandle(final HttpServletRequest request,
                            final HttpServletResponse response,
                            final Object handler) throws Exception {
-    if (debug) {
-      logger.debug("init handler Intercepter");
+    if (debug()) {
+      debug("init handler Intercepter");
     }
 
     try {

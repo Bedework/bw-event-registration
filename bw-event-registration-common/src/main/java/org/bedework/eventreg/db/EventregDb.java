@@ -23,7 +23,7 @@ import org.bedework.util.hibernate.HibException;
 import org.bedework.util.hibernate.HibSession;
 import org.bedework.util.hibernate.HibSessionFactory;
 import org.bedework.util.hibernate.HibSessionImpl;
-import org.bedework.util.misc.Logged;
+import org.bedework.util.logging.Logged;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
@@ -35,7 +35,7 @@ import java.util.concurrent.atomic.AtomicLong;
  *
  * @author Mike Douglass
  */
-public class EventregDb extends Logged implements Serializable {
+public class EventregDb implements Logged, Serializable {
   /* Value used to create a registration. Each running jvm has its
      own batch of these which it renews when empty.
    */
@@ -453,7 +453,7 @@ public class EventregDb extends Logged implements Serializable {
       sess.setString("href", eventHref);
 
       final Long ct = (Long)sess.getUnique();
-      if (debug) {
+      if (debug()) {
         debug("Count returned " + ct);
       }
       if (ct == null) {
@@ -505,7 +505,7 @@ public class EventregDb extends Logged implements Serializable {
       sess.setString("href", eventHref);
 
       Long ct = (Long)sess.getUnique();
-      if (debug) {
+      if (debug()) {
         debug("Count returned " + ct);
       }
       if (ct == null) {
@@ -655,7 +655,7 @@ public class EventregDb extends Logged implements Serializable {
     }
 
     if (sess == null) {
-      if (debug) {
+      if (debug()) {
         debug("New hibernate session for " + objTimestamp);
       }
       sess = new HibSessionImpl();
@@ -665,7 +665,7 @@ public class EventregDb extends Logged implements Serializable {
       } catch (final HibException he) {
         throw new Exception(he);
       }
-      if (debug) {
+      if (debug()) {
         debug("Open session for " + objTimestamp);
       }
     }
@@ -675,13 +675,13 @@ public class EventregDb extends Logged implements Serializable {
 
   protected synchronized void closeSession() throws Exception {
     if (!isOpen()) {
-      if (debug) {
+      if (debug()) {
         debug("Close for " + objTimestamp + " closed session");
       }
       return;
     }
 
-    if (debug) {
+    if (debug()) {
       debug("Close for " + objTimestamp);
     }
 
@@ -712,7 +712,7 @@ public class EventregDb extends Logged implements Serializable {
   protected void beginTransaction() throws Throwable {
     checkOpen();
 
-    if (debug) {
+    if (debug()) {
       debug("Begin transaction for " + objTimestamp);
     }
     try {
@@ -725,7 +725,7 @@ public class EventregDb extends Logged implements Serializable {
   protected void endTransaction() throws Throwable {
     checkOpen();
 
-    if (debug) {
+    if (debug()) {
       debug("End transaction for " + objTimestamp);
     }
 

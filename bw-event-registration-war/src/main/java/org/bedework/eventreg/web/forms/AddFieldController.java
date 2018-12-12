@@ -148,7 +148,7 @@ public class AddFieldController extends AuthAbstractController {
       final String value = Util.checkNull(valLabel[0]);
 
       if (value == null) {
-        if (debug) {
+        if (debug()) {
           // ....
         }
         return false;

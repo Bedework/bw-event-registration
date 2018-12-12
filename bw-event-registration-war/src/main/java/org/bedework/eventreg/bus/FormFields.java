@@ -19,7 +19,7 @@ under the License.
 package org.bedework.eventreg.bus;
 
 import org.bedework.eventreg.db.FieldDef;
-import org.bedework.util.misc.Logged;
+import org.bedework.util.logging.Logged;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -32,8 +32,8 @@ import java.util.Set;
  *
  * @author douglm
  */
-public class FormFields extends Logged
-        implements Iterator<FieldDef>, Iterable<FieldDef> {
+public class FormFields
+        implements Logged, Iterator<FieldDef>, Iterable<FieldDef> {
   private final Set<FieldDef> fields;
 
   final List<FieldDef> formEls = new ArrayList<>();

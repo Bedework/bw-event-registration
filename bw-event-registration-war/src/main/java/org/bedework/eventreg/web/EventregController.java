@@ -60,7 +60,7 @@ public class EventregController extends AuthAbstractController {
     sessMan.setDeadlinePassed(new Date().after(end));
 
     if (sessMan.getDeadlinePassed()) {
-      if (debug) {
+      if (debug()) {
         debug("event registration stop - deadline has passed");
       }
       return errorReturn(
@@ -68,7 +68,7 @@ public class EventregController extends AuthAbstractController {
     }
 
     if (!registerUserInEvent(ev)) {
-      if (debug) {
+      if (debug()) {
         debug("event registration stop - waitlist is full");
       }
       return errorReturn(
@@ -85,7 +85,7 @@ public class EventregController extends AuthAbstractController {
   private boolean registerUserInEvent(final Event ev) throws Throwable {
     final String href = req.getHref();
 
-    if (debug) {
+    if (debug()) {
       debug("Event details: " + sessMan.getCurrentUser() + " " +
                     href);
     }
@@ -120,7 +120,7 @@ public class EventregController extends AuthAbstractController {
       email = sessMan.getCurrEmail();
     }
 
-    if (debug) {
+    if (debug()) {
       debug("req.email=" + req.getEmail() + " current=" + email);
     }
     reg.setEmail(email);

@@ -22,7 +22,7 @@ import org.bedework.eventreg.db.Event;
 import org.bedework.eventreg.db.FieldDef;
 import org.bedework.eventreg.db.FormDef;
 import org.bedework.eventreg.db.Registration;
-import org.bedework.util.misc.Logged;
+import org.bedework.util.logging.Logged;
 
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
@@ -37,8 +37,8 @@ import java.util.Set;
  *
  * @author douglm
  */
-public class CSVOutputter extends Logged
-        implements Iterator<String>, Iterable<String> {
+public class CSVOutputter
+        implements Logged, Iterator<String>, Iterable<String> {
   private final Event ev;
   private final Set<Registration> regs;
   private final FormDef form;

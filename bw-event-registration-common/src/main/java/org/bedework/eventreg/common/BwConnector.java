@@ -20,7 +20,7 @@ package org.bedework.eventreg.common;
 
 import org.bedework.eventreg.db.Event;
 import org.bedework.util.calendar.XcalUtil.TzGetter;
-import org.bedework.util.misc.Logged;
+import org.bedework.util.logging.Logged;
 
 import ietf.params.xml.ns.icalendar_2.ArrayOfComponents;
 import ietf.params.xml.ns.icalendar_2.BaseComponentType;
@@ -52,7 +52,7 @@ import javax.xml.soap.SOAPMessage;
 /** Implements the client end of a SOAP connection for a single eventreg session.
  *
  */
-public class BwConnector extends Logged {
+public class BwConnector implements Logged {
   private final TzGetter tzs;
 
   private final static ietf.params.xml.ns.icalendar_2.ObjectFactory icalOf =

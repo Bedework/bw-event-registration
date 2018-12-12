@@ -55,7 +55,7 @@ public abstract class AuthAbstractController extends AbstractController {
       return errorReturn("No registration id supplied");
     }
 
-    if (debug) {
+    if (debug()) {
       debug("updating registration " + regId);
     }
 
@@ -91,7 +91,7 @@ public abstract class AuthAbstractController extends AbstractController {
       return errorReturn("No registration id supplied");
     }
 
-    if (debug) {
+    if (debug()) {
       debug("remove reg id: " + regId +
                     ", user: " + sessMan.getCurrentUser());
     }

@@ -67,7 +67,8 @@ import static org.bedework.util.xml.tagdefs.WebdavTags.principalURL;
  * @author douglm
  *
  */
-public class SvcRequestHandler extends JmsSysEventListener implements EventregRequestHandler {
+public class SvcRequestHandler extends JmsSysEventListener
+        implements EventregRequestHandler {
   private final EventregDb db;
   private final EventregProperties props;
 
@@ -142,7 +143,7 @@ public class SvcRequestHandler extends JmsSysEventListener implements EventregRe
     }
 
     try {
-      if (debug) {
+      if (debug()) {
         debug("handling request: " + ev);
       }
 
@@ -161,13 +162,13 @@ public class SvcRequestHandler extends JmsSysEventListener implements EventregRe
       }
 
       if (ok) {
-        if (debug) {
+        if (debug()) {
           debug("Sucess processing message.");
         }
         return;
       }
 
-      if (debug) {
+      if (debug()) {
         debug("Failed to process message. Adding to delay handler queue");
       }
       delayHandler.delay(req);
@@ -315,7 +316,7 @@ public class SvcRequestHandler extends JmsSysEventListener implements EventregRe
 
     final String status = ev.getStatus();
 
-    if (debug) {
+    if (debug()) {
       debug("change: status=" + status + " for event " + ev.getSummary());
     }
 
@@ -526,7 +527,7 @@ public class SvcRequestHandler extends JmsSysEventListener implements EventregRe
                                    xml)) {
         final int rc = HttpUtil.getStatus(hresp);
 
-        if (debug) {
+        if (debug()) {
           debug("Status was " + rc);
         }
 

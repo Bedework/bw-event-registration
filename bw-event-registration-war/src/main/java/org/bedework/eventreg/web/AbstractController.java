@@ -21,7 +21,7 @@ package org.bedework.eventreg.web;
 import org.bedework.eventreg.bus.Request;
 import org.bedework.eventreg.bus.SessionManager;
 import org.bedework.eventreg.db.Registration;
-import org.bedework.util.misc.Logged;
+import org.bedework.util.logging.Logged;
 
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.Controller;
@@ -38,8 +38,8 @@ import javax.servlet.http.HttpServletResponse;
  * Provide some useful common functionality.
  *
  */
-public abstract class AbstractController extends Logged
-        implements Controller {
+public abstract class AbstractController
+        implements Logged, Controller {
   protected SessionManager sessMan;
 
   protected Request req;
@@ -86,7 +86,7 @@ public abstract class AbstractController extends Logged
     req = sessMan.getReq();
     sessMan.setMessage("");
 
-    if (debug) {
+    if (debug()) {
       debug("Entry: " + getClass().getSimpleName());
       dumpRequest(req.getRequest());
     }

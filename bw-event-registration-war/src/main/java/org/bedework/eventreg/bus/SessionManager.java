@@ -30,7 +30,7 @@ import org.bedework.eventreg.requests.EventregRequest;
 import org.bedework.eventreg.requests.RegistrationAction;
 import org.bedework.eventreg.service.EventregSvcMBean;
 import org.bedework.util.calendar.XcalUtil.TzGetter;
-import org.bedework.util.misc.Logged;
+import org.bedework.util.logging.Logged;
 import org.bedework.util.misc.Util;
 import org.bedework.util.timezones.Timezones;
 
@@ -52,7 +52,7 @@ import javax.sql.DataSource;
  * @author douglm
  *
  */
-public class SessionManager extends Logged {
+public class SessionManager implements Logged {
   private ChangeManager chgMan;
 
   private Timestamp ts = new Timestamp(System.currentTimeMillis());
@@ -265,7 +265,7 @@ public class SessionManager extends Logged {
    */
   public String getCurrEmail() throws Throwable {
     if (currEmail == null) {
-      if (debug) {
+      if (debug()) {
         debug("Try to get email for " + currentUser);
       }
 
@@ -602,7 +602,7 @@ public class SessionManager extends Logged {
    * ==================================================================== */
 
   public void logout() {
-    if (debug) {
+    if (debug()) {
       debug("logout for " + ts);
     }
 
@@ -622,7 +622,7 @@ public class SessionManager extends Logged {
    * @throws Exception
    */
   public boolean setReq(final Request val) throws Throwable {
-    if (debug) {
+    if (debug()) {
       debug("setReq for " + ts);
     }
     req = val;
@@ -780,14 +780,14 @@ public class SessionManager extends Logged {
                           "getAccount", pars, signature);
 
       if (ainfo == null) {
-        if (debug) {
+        if (debug()) {
           debug("No account info for " + currentUser);
         }
 
         return currentUser + "@columbia.edu";
       }
 
-      if (debug) {
+      if (debug()) {
         debug("Retrieved account info " + ainfo);
       }
 

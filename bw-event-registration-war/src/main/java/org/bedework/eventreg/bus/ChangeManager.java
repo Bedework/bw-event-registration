@@ -20,7 +20,7 @@ package org.bedework.eventreg.bus;
 
 import org.bedework.eventreg.db.Change;
 import org.bedework.eventreg.db.Registration;
-import org.bedework.util.misc.Logged;
+import org.bedework.util.logging.Logged;
 
 import java.util.List;
 
@@ -29,7 +29,7 @@ import java.util.List;
  * @author douglm
  *
  */
-public class ChangeManager extends Logged {
+public class ChangeManager implements Logged {
   private SessionManager sessMan;
 
   /** Specify the change by label and value

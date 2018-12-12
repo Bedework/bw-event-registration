@@ -32,7 +32,7 @@ public class EventChangeController extends WSAbstractController {
   public ModelAndView doRequest() throws Throwable {
     final String href = req.getHref();
 
-    if (debug) {
+    if (debug()) {
       debug("Event change: " + href);
     }
 

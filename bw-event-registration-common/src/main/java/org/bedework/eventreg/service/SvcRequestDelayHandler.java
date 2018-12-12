@@ -96,7 +96,7 @@ public class SvcRequestDelayHandler extends JmsSysEventListener {
     }
 
     try {
-      if (debug) {
+      if (debug()) {
         debug("handling delayed request: " + ev);
       }
 
@@ -111,7 +111,7 @@ public class SvcRequestDelayHandler extends JmsSysEventListener {
                 System.currentTimeMillis();
 
         if (waitTime > 0) {
-          if (debug) {
+          if (debug()) {
             debug("Waiting " + waitTime + " millis");
           }
 
@@ -165,7 +165,7 @@ public class SvcRequestDelayHandler extends JmsSysEventListener {
 
       process(false);
 
-      if (debug) {
+      if (debug()) {
         debug("Eventregdelay returned from process");
       }
     } catch (final Throwable t) {

@@ -47,7 +47,7 @@ public class InitController extends AuthAbstractController {
     }
 
     final long curTickets = sessMan.getRegTicketCount();
-    if (debug) {
+    if (debug()) {
       debug("maxTickets: " + maxTickets);
       debug("curTickets: " + curTickets);
     }
@@ -63,7 +63,7 @@ public class InitController extends AuthAbstractController {
     sessMan.setDeadlinePassed(new Date().after(end));
 
     if (!req.formNamePresent()) {
-      if (debug) {
+      if (debug()) {
         debug("No form specified");
       }
       return sessModel("init");
@@ -83,7 +83,7 @@ public class InitController extends AuthAbstractController {
     }
 
     sessMan.setCurrentFormName(formName);
-    if (debug) {
+    if (debug()) {
       debug("Set form name " + formName +
                     " for form with " + form.getFields().size() +
                     " fields");
