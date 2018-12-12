@@ -35,9 +35,9 @@
     <orderEntry type="library" scope="PROVIDED" name="Maven: com.fasterxml.jackson.core:jackson-annotations:2.9.6" level="project" />
     <orderEntry type="module" module-name="bw-access" scope="PROVIDED" />
     <orderEntry type="library" scope="TEST" name="Maven: junit:junit:4.8.2" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: org.bedework:bw-xml-synchws:4.0.6" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: org.bedework:bw-xml-calws-soap:4.0.6" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: org.bedework:bw-xml-icalendar:4.0.6" level="project" />
+    <orderEntry type="module" module-name="bw-xml-synchws" scope="PROVIDED" />
+    <orderEntry type="module" module-name="bw-xml-calws-soap" scope="PROVIDED" />
+    <orderEntry type="module" module-name="bw-xml-icalendar" scope="PROVIDED" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.apache.geronimo.framework:geronimo-kernel:2.2.1" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: asm:asm:3.1" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: asm:asm-commons:3.1" level="project" />
