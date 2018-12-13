@@ -46,7 +46,6 @@
     <orderEntry type="library" name="Maven: org.apache.httpcomponents:httpclient:4.5.3" level="project" />
     <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-annotations:2.9.6" level="project" />
     <orderEntry type="module" module-name="bw-access" />
-    <orderEntry type="library" scope="TEST" name="Maven: junit:junit:4.8.2" level="project" />
     <orderEntry type="module" module-name="bw-xml-synchws" />
     <orderEntry type="module" module-name="bw-xml-calws-soap" />
     <orderEntry type="module" module-name="bw-xml-icalendar" />

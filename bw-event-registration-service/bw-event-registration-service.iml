@@ -34,7 +34,6 @@
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.apache.httpcomponents:httpclient:4.5.3" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: com.fasterxml.jackson.core:jackson-annotations:2.9.6" level="project" />
     <orderEntry type="module" module-name="bw-access" scope="PROVIDED" />
-    <orderEntry type="library" scope="TEST" name="Maven: junit:junit:4.8.2" level="project" />
     <orderEntry type="module" module-name="bw-xml-synchws" scope="PROVIDED" />
     <orderEntry type="module" module-name="bw-xml-calws-soap" scope="PROVIDED" />
     <orderEntry type="module" module-name="bw-xml-icalendar" scope="PROVIDED" />
@@ -136,5 +135,6 @@
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.jboss.naming:jnp-client:5.0.1.GA" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.jboss.security:jbosssx-client:2.0.3.SP1" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.jboss.security:jboss-security-spi:2.0.3.SP1" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: junit:junit:4.8.2" level="project" />
   </component>
 </module>

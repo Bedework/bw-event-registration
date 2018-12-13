@@ -30,6 +30,7 @@
         </exclusion>
       </exclusions>
 		</dependency>
+
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>bw-event-registration-common</artifactId>
@@ -72,6 +73,11 @@
     <dependency>
       <groupId>org.bedework</groupId>
       <artifactId>bw-util-jmx</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.bedework</groupId>
+      <artifactId>bw-util-logging</artifactId>
     </dependency>
 
     <dependency>
