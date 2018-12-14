@@ -19,6 +19,7 @@ under the License.
 package org.bedework.eventreg.bus;
 
 import org.bedework.eventreg.db.FieldDef;
+import org.bedework.util.logging.BwLogger;
 import org.bedework.util.logging.Logged;
 
 import java.util.ArrayList;
@@ -154,5 +155,20 @@ public class FormFields
   @Override
   public Iterator<FieldDef> iterator() {
     return this;
+  }
+
+  /* ====================================================================
+   *                   Logged methods
+   * ==================================================================== */
+
+  private BwLogger logger = new BwLogger();
+
+  @Override
+  public BwLogger getLogger() {
+    if ((logger.getLoggedClass() == null) && (logger.getLoggedName() == null)) {
+      logger.setLoggedClass(getClass());
+    }
+
+    return logger;
   }
 }

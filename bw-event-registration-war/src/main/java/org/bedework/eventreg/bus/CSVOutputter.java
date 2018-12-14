@@ -22,6 +22,7 @@ import org.bedework.eventreg.db.Event;
 import org.bedework.eventreg.db.FieldDef;
 import org.bedework.eventreg.db.FormDef;
 import org.bedework.eventreg.db.Registration;
+import org.bedework.util.logging.BwLogger;
 import org.bedework.util.logging.Logged;
 
 import org.apache.commons.csv.CSVFormat;
@@ -166,5 +167,20 @@ public class CSVOutputter
   @Override
   public Iterator<String> iterator() {
     return this;
+  }
+
+  /* ====================================================================
+   *                   Logged methods
+   * ==================================================================== */
+
+  private BwLogger logger = new BwLogger();
+
+  @Override
+  public BwLogger getLogger() {
+    if ((logger.getLoggedClass() == null) && (logger.getLoggedName() == null)) {
+      logger.setLoggedClass(getClass());
+    }
+
+    return logger;
   }
 }

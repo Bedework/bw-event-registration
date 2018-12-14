@@ -22,6 +22,7 @@ import org.bedework.eventreg.service.EventregSvcMBean;
 import org.bedework.eventreg.service.SvcRequestHandler;
 import org.bedework.util.http.service.HttpOut;
 import org.bedework.util.jmx.ConfBase;
+import org.bedework.util.logging.BwLogger;
 import org.bedework.util.logging.Logged;
 
 import javax.management.ObjectName;
@@ -122,5 +123,20 @@ public class ContextListener implements Logged, ServletContextListener {
 
   public static EventregSvcMBean getSysInfo() throws Throwable {
     return conf.sysInfo;
+  }
+
+  /* ====================================================================
+   *                   Logged methods
+   * ==================================================================== */
+
+  private BwLogger logger = new BwLogger();
+
+  @Override
+  public BwLogger getLogger() {
+    if ((logger.getLoggedClass() == null) && (logger.getLoggedName() == null)) {
+      logger.setLoggedClass(getClass());
+    }
+
+    return logger;
   }
 }

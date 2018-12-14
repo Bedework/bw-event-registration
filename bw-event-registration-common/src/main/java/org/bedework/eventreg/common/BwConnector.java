@@ -20,6 +20,7 @@ package org.bedework.eventreg.common;
 
 import org.bedework.eventreg.db.Event;
 import org.bedework.util.calendar.XcalUtil.TzGetter;
+import org.bedework.util.logging.BwLogger;
 import org.bedework.util.logging.Logged;
 
 import ietf.params.xml.ns.icalendar_2.ArrayOfComponents;
@@ -231,5 +232,20 @@ public class BwConnector implements Logged {
     }
 
     return jc;
+  }
+
+  /* ====================================================================
+   *                   Logged methods
+   * ==================================================================== */
+
+  private BwLogger logger = new BwLogger();
+
+  @Override
+  public BwLogger getLogger() {
+    if ((logger.getLoggedClass() == null) && (logger.getLoggedName() == null)) {
+      logger.setLoggedClass(getClass());
+    }
+
+    return logger;
   }
 }

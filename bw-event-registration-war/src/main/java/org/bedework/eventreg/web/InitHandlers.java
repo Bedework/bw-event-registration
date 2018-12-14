@@ -21,6 +21,7 @@ package org.bedework.eventreg.web;
 
 import org.bedework.eventreg.bus.Request;
 import org.bedework.eventreg.bus.SessionManager;
+import org.bedework.util.logging.BwLogger;
 import org.bedework.util.logging.Logged;
 
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
@@ -61,5 +62,20 @@ public class InitHandlers extends HandlerInterceptorAdapter
     }
 
     return true;
+  }
+
+  /* ====================================================================
+   *                   Logged methods
+   * ==================================================================== */
+
+  private BwLogger logger = new BwLogger();
+
+  @Override
+  public BwLogger getLogger() {
+    if ((logger.getLoggedClass() == null) && (logger.getLoggedName() == null)) {
+      logger.setLoggedClass(getClass());
+    }
+
+    return logger;
   }
 }

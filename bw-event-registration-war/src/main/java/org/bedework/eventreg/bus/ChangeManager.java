@@ -20,6 +20,7 @@ package org.bedework.eventreg.bus;
 
 import org.bedework.eventreg.db.Change;
 import org.bedework.eventreg.db.Registration;
+import org.bedework.util.logging.BwLogger;
 import org.bedework.util.logging.Logged;
 
 import java.util.List;
@@ -173,5 +174,20 @@ public class ChangeManager implements Logged {
    */
   public void deleteReg(final Registration reg) throws Throwable {
     addChange(reg, Change.typeDelReg);
+  }
+
+  /* ====================================================================
+   *                   Logged methods
+   * ==================================================================== */
+
+  private BwLogger logger = new BwLogger();
+
+  @Override
+  public BwLogger getLogger() {
+    if ((logger.getLoggedClass() == null) && (logger.getLoggedName() == null)) {
+      logger.setLoggedClass(getClass());
+    }
+
+    return logger;
   }
 }

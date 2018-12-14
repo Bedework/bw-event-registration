@@ -36,6 +36,7 @@ import org.bedework.util.jms.NotificationException;
 import org.bedework.util.jms.NotificationsHandler;
 import org.bedework.util.jms.events.SysEvent;
 import org.bedework.util.jms.listeners.JmsSysEventListener;
+import org.bedework.util.logging.BwLogger;
 import org.bedework.util.misc.AbstractProcessorThread;
 import org.bedework.util.misc.Util;
 import org.bedework.util.timezones.Timezones;
@@ -113,6 +114,21 @@ public class SvcRequestHandler extends JmsSysEventListener
     @Override
     public void close() {
       handler.close();
+    }
+
+  /* ====================================================================
+   *                   Logged methods - REMOVE after release
+   * ==================================================================== */
+
+    private BwLogger logger = new BwLogger();
+
+    @Override
+    public BwLogger getLogger() {
+      if ((logger.getLoggedClass() == null) && (logger.getLoggedName() == null)) {
+        logger.setLoggedClass(getClass());
+      }
+
+      return logger;
     }
   }
 
@@ -614,5 +630,20 @@ public class SvcRequestHandler extends JmsSysEventListener
     } catch (final Throwable t) {
       throw new EventregException(t);
     }
+  }
+
+  /* ====================================================================
+   *                   Logged methods - REMOVE afdter release
+   * ==================================================================== */
+
+  private BwLogger logger = new BwLogger();
+
+  @Override
+  public BwLogger getLogger() {
+    if ((logger.getLoggedClass() == null) && (logger.getLoggedName() == null)) {
+      logger.setLoggedClass(getClass());
+    }
+
+    return logger;
   }
 }

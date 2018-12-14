@@ -25,6 +25,7 @@ import org.bedework.util.jms.NotificationException;
 import org.bedework.util.jms.NotificationsHandler;
 import org.bedework.util.jms.events.SysEvent;
 import org.bedework.util.jms.listeners.JmsSysEventListener;
+import org.bedework.util.logging.BwLogger;
 import org.bedework.util.misc.AbstractProcessorThread;
 
 /** This just delays requests that appear to be having problems. They
@@ -70,6 +71,21 @@ public class SvcRequestDelayHandler extends JmsSysEventListener {
     @Override
     public void close() {
       handler.close();
+    }
+
+    /* ====================================================================
+     *                   Logged methods - Remove this after release
+     * ==================================================================== */
+
+    private BwLogger logger = new BwLogger();
+
+    @Override
+    public BwLogger getLogger() {
+      if ((logger.getLoggedClass() == null) && (logger.getLoggedName() == null)) {
+        logger.setLoggedClass(getClass());
+      }
+
+      return logger;
     }
   }
 
@@ -252,5 +268,20 @@ public class SvcRequestDelayHandler extends JmsSysEventListener {
     info("************************************************************");
     info(" * Event reg action delay processor terminated");
     info("************************************************************");
+  }
+
+  /* ====================================================================
+   *                   Logged methods - Remove this one after release
+   * ==================================================================== */
+
+  private BwLogger logger = new BwLogger();
+
+  @Override
+  public BwLogger getLogger() {
+    if ((logger.getLoggedClass() == null) && (logger.getLoggedName() == null)) {
+      logger.setLoggedClass(getClass());
+    }
+
+    return logger;
   }
 }
