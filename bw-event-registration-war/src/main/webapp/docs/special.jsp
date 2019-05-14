@@ -12,7 +12,7 @@
     <title>
      Invitee
     </title>
-    <link rel="stylesheet" href="/evreg/bweventreg.css" type="text/css" media="all"/>
+    <link rel="stylesheet" href="/approots/evreg/bweventreg.css" type="text/css" media="all"/>
   </head>
   <body>
     <div class="box" id="deadlinePassed">

@@ -9,7 +9,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"></meta>
     <title>Bedework Event Registration Logout</title>
-    <link rel="stylesheet" href="/evreg/bweventreg.css" type="text/css" media="all"/>
+    <link rel="stylesheet" href="/approots/evreg/bweventreg.css" type="text/css" media="all"/>
     <script type="text/javascript">
       window.history.forward();
       function stop() {

@@ -3,7 +3,7 @@
   <head>
     <title>Bedework Event Registration System</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <link rel="stylesheet" href="/evreg/bweventreg.css" type="text/css" media="all"/>
+    <link rel="stylesheet" href="/approots/evreg/bweventreg.css" type="text/css" media="all"/>
   </head>
   <body>
     <h1>Authenticated</h1>
