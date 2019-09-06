@@ -33,6 +33,7 @@ import org.bedework.util.calendar.XcalUtil.TzGetter;
 import org.bedework.util.logging.BwLogger;
 import org.bedework.util.logging.Logged;
 import org.bedework.util.misc.Util;
+import org.bedework.util.servlet.HttpServletUtils;
 import org.bedework.util.timezones.Timezones;
 
 import net.fortuna.ical4j.model.TimeZone;
@@ -628,7 +629,7 @@ public class SessionManager implements Logged {
     }
     req = val;
 
-    final String reqUser = req.getRequest().getRemoteUser();
+    final String reqUser = HttpServletUtils.remoteUser(req.getRequest());
 
     if (getCurrentUser() != null) {
       final boolean forceLogout =
