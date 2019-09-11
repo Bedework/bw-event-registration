@@ -30,7 +30,7 @@ import org.bedework.util.calendar.IcalDefs;
 import org.bedework.util.calendar.XcalUtil;
 import org.bedework.util.config.ConfigBase;
 import org.bedework.util.http.Headers;
-import org.bedework.util.http.HttpUtil;
+import org.bedework.util.http.PooledHttpClient;
 import org.bedework.util.jms.JmsNotificationsHandlerImpl;
 import org.bedework.util.jms.NotificationException;
 import org.bedework.util.jms.NotificationsHandler;
@@ -46,8 +46,7 @@ import org.bedework.util.xml.tagdefs.BedeworkServerTags;
 import org.bedework.util.xml.tagdefs.CaldavDefs;
 import org.bedework.util.xml.tagdefs.WebdavTags;
 
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.HttpException;
 
 import java.io.IOException;
 import java.io.StringWriter;
@@ -55,8 +54,6 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-
-import javax.servlet.http.HttpServletResponse;
 
 import static org.bedework.util.xml.tagdefs.WebdavTags.href;
 import static org.bedework.util.xml.tagdefs.WebdavTags.namespace;
@@ -77,7 +74,7 @@ public class SvcRequestHandler extends JmsSysEventListener
   protected StringWriter davXmlSw;
   protected XmlEmit davXml;
 
-  protected CloseableHttpClient client;
+  protected PooledHttpClient client;
 
   private final URI bwUri;
 
@@ -519,22 +516,12 @@ public class SvcRequestHandler extends JmsSysEventListener
 
   protected boolean postXml(final String xml) throws EventregException {
     try {
-      try (CloseableHttpResponse hresp =
-                   HttpUtil.doPost(getClient(),
-                                   bwUri,
-                                   getAuthHeaders(),
-                                   "application/xml",
-                                   xml)) {
-        final int rc = HttpUtil.getStatus(hresp);
+      final PooledHttpClient.ResponseHolder resp =
+              getClient().postXml("", xml);
 
-        if (debug()) {
-          debug("Status was " + rc);
-        }
-
-        return rc == HttpServletResponse.SC_OK;
-      }
-    } catch (final IOException ioe) {
-      throw new EventregException(ioe);
+      return !resp.failed;
+    } catch (final HttpException he) {
+      throw new EventregException(he);
     }
   }
 
@@ -550,14 +537,20 @@ public class SvcRequestHandler extends JmsSysEventListener
     return "/principals/users/" + id;
   }
 
-  protected CloseableHttpClient getClient() throws EventregException {
+  protected PooledHttpClient getClient() throws EventregException {
     if (client != null) {
       return client;
     }
 
-    client = HttpUtil.getClient(false);
+    try {
+      client = new PooledHttpClient(bwUri);
 
-    return client;
+      client.setHeadersFetcher(this::getAuthHeaders);
+
+      return client;
+    } catch (final Throwable t) {
+      throw new EventregException(t);
+    }
   }
 
   Headers getAuthHeaders() {
