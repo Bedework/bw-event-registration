@@ -3,7 +3,7 @@
 	<parent>
 		<groupId>org.bedework.evreg</groupId>
 		<artifactId>bw-event-registration</artifactId>
-		<version>4.0.8-SNAPSHOT</version>
+		<version>4.0.8</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 	<artifactId>bw-event-registration-ear</artifactId>
