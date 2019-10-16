@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.bedework.evreg</groupId>
 	<artifactId>bw-event-registration</artifactId>
-	<version>4.0.8</version>
+	<version>4.0.9-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>bw-event-registration</name>
   <description>An event registration servcie for bedework</description>
@@ -71,7 +71,7 @@
 		<connection>scm:git:git@github.com:Bedework/bw-event-registration.git</connection>
 		<developerConnection>scm:git:git@github.com:Bedework/bw-event-registration.git</developerConnection>
 		<url>https://github.com/Bedework/bw-event-registration</url>
-	  <tag>bw-event-registration-4.0.8</tag>
+	  <tag>HEAD</tag>
   </scm>
 
 	<issueManagement>
