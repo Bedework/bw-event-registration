@@ -22,6 +22,7 @@
     <bw-util-deploy.version>4.0.25</bw-util-deploy.version>
     <bw-util-hibernate.version>4.0.22</bw-util-hibernate.version>
     <bw-util-logging.version>4.0.4</bw-util-logging.version>
+    <bw-util-tz.version>4.1.0-SNAPSHOT</bw-util-tz.version>
     <bw-util2.version>4.0.5</bw-util2.version>
 
 		<!-- Third Party Library Versions -->
@@ -180,9 +181,10 @@
 
       <dependency>
         <groupId>org.bedework</groupId>
-        <artifactId>bw-util-timezones</artifactId>
-        <version>${bw-util.version}</version>
+        <artifactId>bw-util-tz</artifactId>
+        <version>${bw-util-tz.version}</version>
       </dependency>
+
       <dependency>
         <groupId>org.bedework</groupId>
         <artifactId>bw-util-xml</artifactId>

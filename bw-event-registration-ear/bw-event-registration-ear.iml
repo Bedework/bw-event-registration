@@ -27,7 +27,6 @@
     <orderEntry type="library" name="Maven: org.bedework:bw-util2-calendar:4.0.5" level="project" />
     <orderEntry type="library" name="Maven: org.bedework:bw-util-xml:4.0.26" level="project" />
     <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-databind:2.9.6" level="project" />
-    <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-core:2.9.6" level="project" />
     <orderEntry type="library" name="Maven: org.bedework:bw-util-config:4.0.26" level="project" />
     <orderEntry type="library" name="Maven: org.bedework:bw-util-hibernate:4.0.22" level="project" />
     <orderEntry type="library" name="Maven: org.apache.derby:derbynet:10.8.2.2" level="project" />
@@ -42,9 +41,10 @@
     <orderEntry type="library" name="Maven: org.bedework:bw-util-logging:4.0.4" level="project" />
     <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-annotations:2.9.8" level="project" />
     <orderEntry type="library" name="Maven: org.bedework:bw-util-misc:4.0.26" level="project" />
-    <orderEntry type="library" name="Maven: org.bedework:bw-util-timezones:4.0.26" level="project" />
-    <orderEntry type="library" name="Maven: org.bedework:bw-util-caching:4.0.26" level="project" />
+    <orderEntry type="module" module-name="bw-util-tz" />
+    <orderEntry type="module" module-name="bw-util-caching" />
     <orderEntry type="library" name="Maven: org.bedework:bw-util-http:4.0.26" level="project" />
+    <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-core:2.10.0" level="project" />
     <orderEntry type="library" name="Maven: org.bedework:bw-xml-calws-soap:4.0.9" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Maven: org.glassfish.jaxb:jaxb-runtime:2.3.2" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Maven: jakarta.xml.bind:jakarta.xml.bind-api:2.3.2" level="project" />
