@@ -160,7 +160,7 @@
       <dependency>
         <groupId>org.bedework</groupId>
         <artifactId>bw-util-jmx</artifactId>
-        <version>${bw-util-config.version}</version>
+        <version>${bw-util-conf.version}</version>
       </dependency>
 
       <dependency>
