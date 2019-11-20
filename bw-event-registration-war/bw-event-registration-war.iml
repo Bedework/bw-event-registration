@@ -38,7 +38,7 @@
     <orderEntry type="library" name="Maven: javax.activation:activation:1.1" level="project" />
     <orderEntry type="library" name="Maven: org.bedework:bw-util-jms:4.0.26" level="project" />
     <orderEntry type="library" name="Maven: javax.jms:javax.jms-api:2.0" level="project" />
-    <orderEntry type="library" name="Maven: org.bedework:bw-util-jmx:${bw-util-config.version}" level="project" />
+    <orderEntry type="module" module-name="bw-util-jmx" />
     <orderEntry type="library" name="Maven: org.bedework:bw-util-misc:4.0.26" level="project" />
     <orderEntry type="module" module-name="bw-util-tz" />
     <orderEntry type="module" module-name="bw-util-caching" />
