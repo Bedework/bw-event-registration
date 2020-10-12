@@ -36,7 +36,7 @@ public abstract class AuthAbstractController extends AbstractController {
 
   @Override
   protected ModelAndView setup() throws Throwable {
-    ModelAndView mv = super.setup();
+    final ModelAndView mv = super.setup();
 
     if (mv != null) {
       return mv;
@@ -50,7 +50,7 @@ public abstract class AuthAbstractController extends AbstractController {
   }
 
   protected ModelAndView updateRegistration() throws Throwable {
-    Long regId = req.getRegistrationId();
+    final Long regId = req.getRegistrationId();
     if (regId == null) {
       return errorReturn("No registration id supplied");
     }
@@ -59,7 +59,7 @@ public abstract class AuthAbstractController extends AbstractController {
       debug("updating registration " + regId);
     }
 
-    Registration reg = sessMan.getRegistrationById(regId);
+    final Registration reg = sessMan.getRegistrationById(regId);
 
     if (reg == null) {
       return errorReturn("No registration found.");
@@ -86,7 +86,7 @@ public abstract class AuthAbstractController extends AbstractController {
   }
 
   protected ModelAndView removeRegistration(final boolean admin) throws Throwable {
-    Long regId = req.getRegistrationId();
+    final Long regId = req.getRegistrationId();
     if (regId == null) {
       return errorReturn("No registration id supplied");
     }
@@ -96,7 +96,7 @@ public abstract class AuthAbstractController extends AbstractController {
                     ", user: " + sessMan.getCurrentUser());
     }
 
-    Registration reg = sessMan.getRegistrationById(regId);
+    final Registration reg = sessMan.getRegistrationById(regId);
 
     if (reg == null) {
       return errorReturn("No registration found.");
@@ -179,7 +179,7 @@ public abstract class AuthAbstractController extends AbstractController {
                                              waitListLimitVal.length() - 1);
         }
         
-        int waitListLimit = Integer.valueOf(waitListLimitVal);
+        int waitListLimit = Integer.parseInt(waitListLimitVal.trim());
         if (percentage) {
           waitListLimit = total * waitListLimit / 100;
         }
