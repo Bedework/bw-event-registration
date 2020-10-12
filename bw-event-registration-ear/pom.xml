@@ -63,6 +63,12 @@
     <dependency>
       <groupId>org.bedework</groupId>
       <artifactId>bw-util-hibernate</artifactId>
+      <exclusions>
+        <exclusion>
+          <groupId>*</groupId>
+          <artifactId>*</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
 
     <dependency>
@@ -88,6 +94,11 @@
     <dependency>
       <groupId>org.bedework</groupId>
       <artifactId>bw-util-tz</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.bedework</groupId>
+      <artifactId>bw-util-xml</artifactId>
     </dependency>
 
 		<!-- Third Party Dependencies (needed by the above) -->
@@ -121,6 +132,11 @@
       <groupId>org.jasig.cas.client</groupId>
       <artifactId>cas-client-core</artifactId>
       <version>3.4.1</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-collections4</artifactId>
     </dependency>
 
     <dependency>
