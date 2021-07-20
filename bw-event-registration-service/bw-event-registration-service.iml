@@ -62,12 +62,12 @@
     <orderEntry type="library" scope="PROVIDED" name="Maven: xpp3:xpp3_min:1.1.4c" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.apache.geronimo.framework:geronimo-crypto:2.2.1" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.slf4j:slf4j-api:1.5.5" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: org.springframework:spring-core:5.2.3.RELEASE" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: org.springframework:spring-jcl:5.2.3.RELEASE" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: org.springframework:spring-context:5.2.3.RELEASE" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: org.springframework:spring-aop:5.2.3.RELEASE" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: org.springframework:spring-expression:5.2.3.RELEASE" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: org.springframework:spring-beans:5.2.3.RELEASE" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: org.springframework:spring-core:5.2.4.RELEASE" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: org.springframework:spring-jcl:5.2.4.RELEASE" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: org.springframework:spring-context:5.2.4.RELEASE" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: org.springframework:spring-aop:5.2.4.RELEASE" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: org.springframework:spring-expression:5.2.4.RELEASE" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: org.springframework:spring-beans:5.2.4.RELEASE" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.bedework.ical4j:ical4j:3.0.14" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: commons-codec:commons-codec:1.15" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.apache.commons:commons-collections4:4.1" level="project" />
