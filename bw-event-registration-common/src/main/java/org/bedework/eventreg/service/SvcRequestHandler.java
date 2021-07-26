@@ -48,7 +48,6 @@ import org.bedework.util.xml.tagdefs.WebdavTags;
 
 import org.apache.http.HttpException;
 
-import java.io.IOException;
 import java.io.StringWriter;
 import java.net.URI;
 import java.util.ArrayList;
@@ -82,18 +81,18 @@ public class SvcRequestHandler extends JmsSysEventListener
 
   private final SvcRequestDelayHandler delayHandler;
 
-  private final static XcalUtil.TzGetter tzs = id -> Timezones.getTz(id);
+  private final static XcalUtil.TzGetter tzs = Timezones::getTz;
 
   private final BwConnector cnctr;
 
-  private class Processor extends AbstractProcessorThread {
+  private static class Processor extends AbstractProcessorThread {
     private final SvcRequestHandler handler;
 
     /**
      * @param name for the thread
      */
     public Processor(final String name,
-                     final SvcRequestHandler handler) throws Throwable {
+                     final SvcRequestHandler handler) {
       super(name);
       this.handler = handler;
     }
@@ -103,8 +102,12 @@ public class SvcRequestHandler extends JmsSysEventListener
     }
 
     @Override
-    public void runProcess() throws Throwable {
+    public void runProcess() {
       handler.listen();
+    }
+
+    @Override
+    public void end(final String msg) {
     }
 
     @Override
@@ -196,7 +199,7 @@ public class SvcRequestHandler extends JmsSysEventListener
     super.close();
   }
 
-  AbstractProcessorThread getProcessor() throws Throwable {
+  AbstractProcessorThread getProcessor() {
     return new Processor("EventregAction", this);
   }
 
@@ -318,8 +321,7 @@ public class SvcRequestHandler extends JmsSysEventListener
     }
 
     /* For the time being we'll only handle events that are canceled */
-    if ((status == null) ||
-            !IcalDefs.statusCancelled.equalsIgnoreCase(status)) {
+    if (!IcalDefs.statusCancelled.equalsIgnoreCase(status)) {
       return true; // Nothing to do
     }
 
@@ -427,7 +429,7 @@ public class SvcRequestHandler extends JmsSysEventListener
   }
 
   private void doXmlPrUrl(final XmlEmit xml,
-                          final String pr) throws IOException {
+                          final String pr) {
     xml.openTag(principalURL);
 
     if (pr.startsWith("/")) {

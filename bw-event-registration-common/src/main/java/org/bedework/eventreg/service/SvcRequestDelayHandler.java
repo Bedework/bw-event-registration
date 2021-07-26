@@ -46,14 +46,14 @@ public class SvcRequestDelayHandler extends JmsSysEventListener {
 
   private final NotificationsHandler sender;
 
-  private class Processor extends AbstractProcessorThread {
+  private static class Processor extends AbstractProcessorThread {
     private final SvcRequestDelayHandler handler;
 
     /**
      * @param name for the thread
      */
     public Processor(final String name,
-                     final SvcRequestDelayHandler handler) throws Throwable {
+                     final SvcRequestDelayHandler handler) {
       super(name);
       this.handler = handler;
     }
@@ -63,8 +63,12 @@ public class SvcRequestDelayHandler extends JmsSysEventListener {
     }
 
     @Override
-    public void runProcess() throws Throwable {
+    public void runProcess() {
       handler.listen();
+    }
+
+    @Override
+    public void end(final String msg) {
     }
 
     @Override
@@ -174,7 +178,7 @@ public class SvcRequestDelayHandler extends JmsSysEventListener {
     }
   }
 
-  AbstractProcessorThread getProcessor() throws Throwable {
+  AbstractProcessorThread getProcessor() {
     return new Processor("EventregActionDelay", this);
   }
 

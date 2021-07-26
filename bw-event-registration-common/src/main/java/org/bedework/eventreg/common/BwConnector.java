@@ -33,6 +33,7 @@ import org.oasis_open.docs.ws_calendar.ns.soap.ObjectFactory;
 import org.w3c.dom.Document;
 
 import java.io.OutputStream;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -87,9 +88,8 @@ public class BwConnector implements Logged {
   /**
    * @param href of event
    * @return cached event or event retrieved from service
-   * @throws Throwable
    */
-  public Event getEvent(final String href) throws Throwable {
+  public Event getEvent(final String href) {
     Event ev = events.get(href);
 
     if (ev != null) {
@@ -140,9 +140,8 @@ public class BwConnector implements Logged {
   /**
    * @param href of item to fetch
    * @return FetchItemResponseType
-   * @throws Throwable
    */
-  public FetchItemResponseType fetchItem(final String href) throws Throwable {
+  public FetchItemResponseType fetchItem(final String href) {
     //ObjectFactory of = getIcalObjectFactory();
 
     final FetchItemType fi = new FetchItemType();
@@ -156,18 +155,23 @@ public class BwConnector implements Logged {
     return icalOf;
   }
 
-  protected CalWsServicePortType getPort() throws Throwable {
+  protected CalWsServicePortType getPort() {
     return getPort(wsdlUri);
   }
 
-  protected CalWsServicePortType getPort(final String uri) throws Throwable {
-    URL wsURL = new URL(uri);
+  protected CalWsServicePortType getPort(final String uri) {
+    final URL wsURL;
+    try {
+      wsURL = new URL(uri);
+    } catch (final MalformedURLException e) {
+      throw new RuntimeException(e);
+    }
 
-    CalWsService svc =
+    final CalWsService svc =
         new CalWsService(wsURL,
                          new QName("http://docs.oasis-open.org/ws-calendar/ns/soap",
                                    "CalWsService"));
-    CalWsServicePortType port = svc.getCalWsPort();
+    final CalWsServicePortType port = svc.getCalWsPort();
 
 //    Map requestContext = ((BindingProvider)port).getRequestContext();
 //    requestContext.put(BindingProvider.USERNAME_PROPERTY, userName);
@@ -178,12 +182,13 @@ public class BwConnector implements Logged {
 
   @SuppressWarnings("rawtypes")
   protected Object unmarshalBody(final HttpServletRequest req) throws Throwable {
-    SOAPMessage msg = getSoapMsgFactory().createMessage(null, // headers
-                                                        req.getInputStream());
+    final SOAPMessage msg = getSoapMsgFactory()
+            .createMessage(null,// headers
+                           req.getInputStream());
 
-    SOAPBody body = msg.getSOAPBody();
+    final SOAPBody body = msg.getSOAPBody();
 
-    Unmarshaller u = getSynchJAXBContext().createUnmarshaller();
+    final Unmarshaller u = getSynchJAXBContext().createUnmarshaller();
 
     Object o = u.unmarshal(body.getFirstChild());
 
@@ -197,14 +202,14 @@ public class BwConnector implements Logged {
 
   protected void marshal(final Object o,
                          final OutputStream out) throws Throwable {
-    Marshaller marshaller = jc.createMarshaller();
+    final Marshaller marshaller = jc.createMarshaller();
     marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
 
-    DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+    final DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
     dbf.setNamespaceAware(true);
-    Document doc = dbf.newDocumentBuilder().newDocument();
+    final Document doc = dbf.newDocumentBuilder().newDocument();
 
-    SOAPMessage msg = soapMsgFactory.createMessage();
+    final SOAPMessage msg = soapMsgFactory.createMessage();
     msg.getSOAPBody().addDocument(doc);
 
     marshaller.marshal(o,
@@ -238,7 +243,7 @@ public class BwConnector implements Logged {
    *                   Logged methods
    * ==================================================================== */
 
-  private BwLogger logger = new BwLogger();
+  private final BwLogger logger = new BwLogger();
 
   @Override
   public BwLogger getLogger() {

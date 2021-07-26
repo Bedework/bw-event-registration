@@ -270,11 +270,13 @@
     </dependency>
 
     <!-- The provider for soap services -->
+    <!--
     <dependency>
       <groupId>com.sun.xml.ws</groupId>
       <artifactId>rt</artifactId>
       <version>2.3.1</version>
     </dependency>
+    -->
 
     <dependency>
       <groupId>com.sun.mail</groupId>
