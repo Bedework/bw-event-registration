@@ -173,7 +173,12 @@ public class SvcRequestDelayHandler extends JmsSysEventListener {
         debug("Eventregdelay returned from process");
       }
     } catch (final Throwable t) {
-      error(t);
+      if (t.getCause().getClass().getCanonicalName().equals(
+              InterruptedException.class.getCanonicalName())) {
+        warn("Received interrupted exception");
+      } else {
+        error(t);
+      }
       throw new RuntimeException(t);
     }
   }
