@@ -20,6 +20,14 @@
 		</dependency>
 		-->
 		<dependency>
+      <groupId>${project.groupId}</groupId>
+			<artifactId>bw-event-registration-war</artifactId>
+			<version>${project.version}</version>
+			<type>war</type>
+		</dependency>
+
+    <!-- wfmodules
+		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>bw-event-registration-service</artifactId>
 			<version>${project.version}</version>
@@ -45,9 +53,8 @@
 
 		<dependency>
       <groupId>${project.groupId}</groupId>
-			<artifactId>bw-event-registration-war</artifactId>
+			<artifactId>bw-event-registration-web</artifactId>
 			<version>${project.version}</version>
-			<type>war</type>
 		</dependency>
 
     <dependency>
@@ -101,7 +108,7 @@
       <artifactId>bw-util-xml</artifactId>
     </dependency>
 
-		<!-- Third Party Dependencies (needed by the above) -->
+		< ! - - Third Party Dependencies (needed by the above) - - >
     <dependency>
       <groupId>org.bedework</groupId>
       <artifactId>bw-xml-calws-soap</artifactId>
@@ -269,15 +276,6 @@
       <artifactId>javax.xml.soap-api</artifactId>
     </dependency>
 
-    <!-- The provider for soap services -->
-    <!--
-    <dependency>
-      <groupId>com.sun.xml.ws</groupId>
-      <artifactId>rt</artifactId>
-      <version>2.3.1</version>
-    </dependency>
-    -->
-
     <dependency>
       <groupId>com.sun.mail</groupId>
       <artifactId>javax.mail</artifactId>
@@ -287,6 +285,7 @@
       <groupId>javax.mail</groupId>
       <artifactId>javax.mail-api</artifactId>
     </dependency>
+    -->
 	</dependencies>
 
 	<build>
@@ -310,6 +309,7 @@
 							<artifactId>bw-event-registration-war</artifactId>
 							<contextRoot>/eventreg</contextRoot>
 						</webModule>
+            <!-- wfmodules
 						<jarModule>
 							<groupId>${project.groupId}</groupId>
 							<artifactId>bw-event-registration-common</artifactId>
@@ -318,6 +318,11 @@
 							<groupId>${project.groupId}</groupId>
 							<artifactId>bw-event-registration-service</artifactId>
 						</jarModule>
+						<jarModule>
+							<groupId>${project.groupId}</groupId>
+							<artifactId>bw-event-registration-web</artifactId>
+						</jarModule>
+						-->
 					</modules>
 				</configuration>
 			</plugin>

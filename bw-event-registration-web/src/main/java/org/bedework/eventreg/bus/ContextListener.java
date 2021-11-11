@@ -49,7 +49,7 @@ public class ContextListener implements Logged, ServletContextListener {
     @Override
     public void start() {
       try {
-        getManagementContext().start();
+        ConfBase.getManagementContext().start();
 
         final ConfBase conf = loadInstance("org.bedework.eventreg.service.EventregSvc");
         register(new ObjectName(conf.getServiceName()),
@@ -76,7 +76,7 @@ public class ContextListener implements Logged, ServletContextListener {
     @Override
     public void stop() {
       try {
-        getManagementContext().stop();
+        ConfBase.getManagementContext().stop();
       } catch (final Throwable t){
         t.printStackTrace();
       }
