@@ -26,6 +26,7 @@ import org.bedework.util.jms.NotificationsHandler;
 import org.bedework.util.jms.events.SysEvent;
 import org.bedework.util.jms.listeners.JmsSysEventListener;
 import org.bedework.util.misc.AbstractProcessorThread;
+import org.bedework.util.misc.Util;
 
 /** This just delays requests that appear to be having problems. They
  * get requeued after a period of time.
@@ -173,14 +174,7 @@ public class SvcRequestDelayHandler extends JmsSysEventListener {
         debug("Eventregdelay returned from process");
       }
     } catch (final Throwable t) {
-      final Throwable exc;
-      if (t.getCause() == null) {
-        exc = t;
-      } else {
-        exc = t.getCause();
-      }
-      if (exc.getClass().getCanonicalName().equals(
-              InterruptedException.class.getCanonicalName())) {
+      if (Util.causeIs(t, InterruptedException.class)) {
         warn("Received interrupted exception");
       } else {
         error(t);
