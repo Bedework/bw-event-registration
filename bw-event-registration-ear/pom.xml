@@ -1,14 +1,15 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
+
 	<parent>
 		<groupId>org.bedework.evreg</groupId>
 		<artifactId>bw-event-registration</artifactId>
-		<version>4.0.10-SNAPSHOT</version>
-		<relativePath>../pom.xml</relativePath>
+		<version>5.0.0-SNAPSHOT</version>
 	</parent>
+
 	<artifactId>bw-event-registration-ear</artifactId>
 	<packaging>ear</packaging>
-	<name>bw-event-registration-ear</name>
+	<name>Bedework Event Registration ear</name>
 
 	<dependencies>
 		<!-- Project Dependencies -->
@@ -292,22 +293,15 @@
 		<finalName>bw-event-registration-${project.version}</finalName>
 		<plugins>
 			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-ear-plugin</artifactId>
-        <version>2.10</version>
+
 				<configuration>
-					<!-- Exclude eclipse generated application.xml during mvn package -->
-					<earSourceExcludes>**/application.xml</earSourceExcludes>
-					<defaultLibBundleDir>lib</defaultLibBundleDir>
-          <skinnyWars>true</skinnyWars>
-					<!-- use maven generated application.xml instead -->
-					<generateApplicationXml>true</generateApplicationXml>
-          <unpackTypes>sar,rar,war</unpackTypes>
 					<modules>
 						<webModule>
 							<groupId>${project.groupId}</groupId>
 							<artifactId>bw-event-registration-war</artifactId>
 							<contextRoot>/eventreg</contextRoot>
+							<bundleFileName>bw-event-registration-${project.version}.war</bundleFileName>
 						</webModule>
             <!-- wfmodules
 						<jarModule>
@@ -330,19 +324,8 @@
       <plugin>
         <groupId>org.bedework</groupId>
         <artifactId>bw-util-maven-deploy</artifactId>
-        <version>${bw-util-deploy.version}</version>
-        <executions>
-          <execution>
-            <phase>install</phase>
-            <goals>
-              <goal>bw-deploy</goal>
-            </goals>
-          </execution>
-        </executions>
+
         <configuration>
-          <checkonly>${org.bedework.deploy.checkonly}</checkonly>
-          <noversion>true</noversion>
-          <delete>true</delete>
           <earName>bw-event-registration</earName>
           <baseDirPath>${project.basedir}/../..</baseDirPath>
           <propsPath>${org.bedework.deployment.properties}</propsPath>

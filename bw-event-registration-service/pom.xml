@@ -3,12 +3,11 @@
 	<parent>
 		<groupId>org.bedework.evreg</groupId>
 		<artifactId>bw-event-registration</artifactId>
-		<version>4.0.10-SNAPSHOT</version>
-		<relativePath>../pom.xml</relativePath>
+		<version>5.0.0-SNAPSHOT</version>
 	</parent>
   
 	<artifactId>bw-event-registration-service</artifactId>
-	<name>bw-event-registration-service</name>
+	<name>Bedework Event Registration config service</name>
 
 	<dependencies>
 		<!-- Internal Project Dependencies -->
@@ -29,22 +28,5 @@
       <groupId>org.bedework</groupId>
       <artifactId>bw-util-jmx</artifactId>
     </dependency>
-
-		<!-- Third Party Libraries -->
-		<!--
-		<dependency>
-			<groupId>org.jboss.jbossas</groupId>
-			<artifactId>jboss-as-system</artifactId>
-			<version>5.1.0.GA</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.jboss.jbossas</groupId>
-			<artifactId>jboss-as-system-jmx</artifactId>
-			<version>5.1.0.GA</version>
-			<scope>provided</scope>
-		</dependency>
-		-->
 	</dependencies>
-
 </project>

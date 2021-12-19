@@ -3,30 +3,10 @@
 	<parent>
 		<groupId>org.bedework.evreg</groupId>
 		<artifactId>bw-event-registration</artifactId>
-		<version>4.0.10-SNAPSHOT</version>
-		<relativePath>../pom.xml</relativePath>
+		<version>5.0.0-SNAPSHOT</version>
 	</parent>
   
 	<artifactId>bw-event-registration-war</artifactId>
 	<packaging>war</packaging>
-	<name>bw-event-registration-war</name>
-
-  <build>
-    <plugins>
-      <plugin>
-        <artifactId>maven-war-plugin</artifactId>
-        <version>3.2.3</version>
-        <configuration>
-          <!-- In version 2.1-alpha-1, this was incorrectly named warSourceExcludes -->
-          <packagingExcludes>WEB-INF/lib/*.jar</packagingExcludes>
-          <archive>
-            <manifest>
-              <addClasspath>true</addClasspath>
-              <classpathPrefix>lib/</classpathPrefix>
-            </manifest>
-          </archive>
-        </configuration>
-      </plugin>
-    </plugins>
-  </build>
+  <name>Bedework Event Registration war</name>
 </project>
