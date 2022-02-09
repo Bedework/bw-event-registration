@@ -1,8 +1,8 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
-  <head>
-    <title>Bedework eventreg server Login</title>
-    <script language="JavaScript" type="text/javascript">
+<!DOCTYPE html>
+<html xml:lang="en" lang="en">
+<head>
+    <title>Bedework event registration: Login</title>
+    <script type="text/javascript">
       <!--
       // places the cursor in the first available form element when the page is loaded
       // (if a form exists on the page)
@@ -13,7 +13,7 @@
       }
       // -->
     </script>
-    <style type="text/css">
+    <style>
     <!--
       body {
         font-family: Arial, Helvetica, Verdana, sans-serif;
@@ -57,24 +57,38 @@
         margin: 0 0 0.5em 0;
         padding: 0;
       }
-      a:link,
-      a:active,
-      a:visited  {
-        color: #900;
-        background-color: transparent;
-        text-decoration: underline;
-      }
-      a:hover  {
-        color: #900;
-        background-color: #fc0;
-        text-decoration: none;
-      }
     -->
     </style>
   </head>
 
   <body bgcolor="white" onLoad="javascript:focusFirstElement()">
-    <h3>Logged Out</h3>
-    <p><a href="init.do">Login</a></p>
+    <form method="post" action="j_security_check" >
+      <h3>Register for this event</h3>
+      <p>Please sign in to register for events:</p>
+      <table border="0" id="loginBox">
+        <tr>
+          <td>
+            UserID:
+          </td>
+          <td>
+            <input type="text" name="j_username" size="20"/>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            Password:
+          </td>
+          <td>
+            <input type="password" name="j_password" size="20"/>
+          </td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>
+            <input type="submit" class="submit" name="j_security_check" value="login">
+          </td>
+        </tr>
+      </table>
+    </form>
   </body>
 </html>

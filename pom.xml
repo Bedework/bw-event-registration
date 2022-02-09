@@ -29,5 +29,6 @@
     <module>bw-event-registration-web</module>
 		<module>bw-event-registration-war</module>
 		<module>bw-event-registration-ear</module>
+    <module>bw-wf-event-registration-feature-pack</module>
   </modules>
 </project>
