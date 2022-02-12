@@ -4,12 +4,12 @@
   <parent>
     <groupId>org.bedework</groupId>
     <artifactId>bedework-parent</artifactId>
-    <version>1-SNAPSHOT</version>
+    <version>7</version>
   </parent>
 
   <groupId>org.bedework.evreg</groupId>
 	<artifactId>bw-event-registration</artifactId>
-	<version>5.0.0-SNAPSHOT</version>
+	<version>5.0.0</version>
 	<packaging>pom</packaging>
 
 	<name>Bedework Event Registration</name>
@@ -29,6 +29,5 @@
     <module>bw-event-registration-web</module>
 		<module>bw-event-registration-war</module>
 		<module>bw-event-registration-ear</module>
-    <module>bw-wf-event-registration-feature-pack</module>
   </modules>
 </project>
