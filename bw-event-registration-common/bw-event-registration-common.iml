@@ -30,11 +30,6 @@
     <orderEntry type="module" module-name="bw-util-hibernate" />
     <orderEntry type="module" module-name="bw-util-config" />
     <orderEntry type="module" module-name="bw-util-logging" />
-    <orderEntry type="library" name="Maven: org.apache.derby:derbynet:10.15.2.0" level="project" />
-    <orderEntry type="library" name="Maven: org.apache.derby:derby:10.15.2.0" level="project" />
-    <orderEntry type="library" name="Maven: org.apache.derby:derbyshared:10.15.2.0" level="project" />
-    <orderEntry type="library" name="Maven: org.apache.derby:derbytools:10.15.2.0" level="project" />
-    <orderEntry type="library" name="Maven: com.h2database:h2:1.4.190" level="project" />
     <orderEntry type="module" module-name="bw-util-jms" />
     <orderEntry type="library" name="Maven: javax.jms:javax.jms-api:2.0" level="project" />
     <orderEntry type="module" module-name="bw-util-jmx" />
