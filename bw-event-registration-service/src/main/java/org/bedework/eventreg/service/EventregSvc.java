@@ -35,8 +35,8 @@ import java.util.UUID;
  */
 public class EventregSvc extends ConfBase<EventregPropertiesImpl>
         implements EventregSvcMBean {
-  /* Name of the property holding the location of the config data */
-  public static final String confuriPname = "org.bedework.eventreg.confuri";
+  /* Name of the directory holding the config data */
+  private static final String confDirName = "eventreg";
 
 
   /* Be safe - default to false */
@@ -77,11 +77,9 @@ public class EventregSvc extends ConfBase<EventregPropertiesImpl>
    */
   @SuppressWarnings("unused")
   public EventregSvc() {
-    super(getServiceName(nm));
-
-    setConfigName(nm);
-
-    setConfigPname(confuriPname);
+    super(getServiceName(nm),
+          confDirName,
+          nm);
   }
 
   /**

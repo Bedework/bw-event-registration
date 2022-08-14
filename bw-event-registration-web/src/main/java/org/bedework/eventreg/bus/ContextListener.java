@@ -38,7 +38,9 @@ public class ContextListener implements Logged, ServletContextListener {
     EventregSvcMBean sysInfo;
 
     public Configurator() {
-      super("org.bedework.eventreg:service=EventRegContext");
+      super("org.bedework.eventreg:service=EventRegContext",
+            (String)null,
+            null);
     }
 
     @Override
@@ -62,8 +64,7 @@ public class ContextListener implements Logged, ServletContextListener {
 
 
       /* ------------- Http properties -------------------- */
-        final HttpOut ho = new HttpOut("org.bedework.eventreg.confuri",
-                                       "org.bedework.eventreg",
+        final HttpOut ho = new HttpOut("org.bedework.eventreg",
                                        "httpConfig");
         register(new ObjectName(ho.getServiceName()), ho);
         ho.loadConfig();
