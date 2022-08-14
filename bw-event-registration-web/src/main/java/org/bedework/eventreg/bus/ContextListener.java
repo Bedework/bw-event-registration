@@ -64,7 +64,7 @@ public class ContextListener implements Logged, ServletContextListener {
 
 
       /* ------------- Http properties -------------------- */
-        final HttpOut ho = new HttpOut("org.bedework.eventreg",
+        final HttpOut ho = new HttpOut("eventreg",
                                        "httpConfig");
         register(new ObjectName(ho.getServiceName()), ho);
         ho.loadConfig();
