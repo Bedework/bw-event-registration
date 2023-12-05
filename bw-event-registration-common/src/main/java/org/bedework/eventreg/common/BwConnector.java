@@ -30,9 +30,7 @@ import org.oasis_open.docs.ws_calendar.ns.soap.CalWsServicePortType;
 import org.oasis_open.docs.ws_calendar.ns.soap.FetchItemResponseType;
 import org.oasis_open.docs.ws_calendar.ns.soap.FetchItemType;
 import org.oasis_open.docs.ws_calendar.ns.soap.ObjectFactory;
-import org.w3c.dom.Document;
 
-import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -40,16 +38,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
-import javax.xml.bind.Marshaller;
-import javax.xml.bind.Unmarshaller;
 import javax.xml.namespace.QName;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.soap.MessageFactory;
-import javax.xml.soap.SOAPBody;
-import javax.xml.soap.SOAPMessage;
 
 /** Implements the client end of a SOAP connection for a single eventreg session.
  *
@@ -57,15 +48,11 @@ import javax.xml.soap.SOAPMessage;
 public class BwConnector implements Logged {
   private final TzGetter tzs;
 
-  private final static ietf.params.xml.ns.icalendar_2.ObjectFactory icalOf =
-      new ietf.params.xml.ns.icalendar_2.ObjectFactory();
-
   private final String wsdlUri;
 
   private final Map<String, Event> events = new HashMap<>();
 
   protected ObjectFactory of = new ObjectFactory();
-  protected MessageFactory soapMsgFactory;
   protected JAXBContext jc;
 
   /**
@@ -151,10 +138,6 @@ public class BwConnector implements Logged {
     return getPort().fetchItem(fi);
   }
 
-  protected ietf.params.xml.ns.icalendar_2.ObjectFactory getIcalObjectFactory() {
-    return icalOf;
-  }
-
   protected CalWsServicePortType getPort() {
     return getPort(wsdlUri);
   }
@@ -178,65 +161,6 @@ public class BwConnector implements Logged {
 //    requestContext.put(BindingProvider.PASSWORD_PROPERTY, password);
 
     return port;
-  }
-
-  @SuppressWarnings("rawtypes")
-  protected Object unmarshalBody(final HttpServletRequest req) throws Throwable {
-    final SOAPMessage msg = getSoapMsgFactory()
-            .createMessage(null,// headers
-                           req.getInputStream());
-
-    final SOAPBody body = msg.getSOAPBody();
-
-    final Unmarshaller u = getSynchJAXBContext().createUnmarshaller();
-
-    Object o = u.unmarshal(body.getFirstChild());
-
-    if (o instanceof JAXBElement) {
-      // Some of them get wrapped.
-      o = ((JAXBElement)o).getValue();
-    }
-
-    return o;
-  }
-
-  protected void marshal(final Object o,
-                         final OutputStream out) throws Throwable {
-    final Marshaller marshaller = jc.createMarshaller();
-    marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-
-    final DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-    dbf.setNamespaceAware(true);
-    final Document doc = dbf.newDocumentBuilder().newDocument();
-
-    final SOAPMessage msg = soapMsgFactory.createMessage();
-    msg.getSOAPBody().addDocument(doc);
-
-    marshaller.marshal(o,
-                       msg.getSOAPBody());
-
-    msg.writeTo(out);
-  }
-
-  protected MessageFactory getSoapMsgFactory() throws Throwable {
-    if (soapMsgFactory == null) {
-      soapMsgFactory = MessageFactory.newInstance();
-    }
-
-    return soapMsgFactory;
-  }
-
-  /* ====================================================================
-   *                         Package methods
-   * ==================================================================== */
-
-  JAXBContext getSynchJAXBContext() throws Throwable {
-    if (jc == null) {
-      jc = JAXBContext.newInstance("org.bedework.synch.wsmessages:" +
-          "ietf.params.xml.ns.icalendar_2");
-    }
-
-    return jc;
   }
 
   /* ====================================================================

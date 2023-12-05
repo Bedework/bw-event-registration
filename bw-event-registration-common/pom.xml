@@ -49,10 +49,6 @@
 		</dependency>
 
 		<!-- Bedework: Web Services -->
-		<dependency>
-			<groupId>org.bedework</groupId>
-			<artifactId>bw-xml-synchws</artifactId>
-		</dependency>
 
     <dependency>
       <groupId>org.bedework</groupId>
