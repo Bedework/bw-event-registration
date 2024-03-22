@@ -5,7 +5,7 @@ This project provides an event registration service for
 
 ### Requirements
 
-1. JDK 8
+1. JDK 17
 2. Maven 3
 
 ### Building Locally
@@ -21,18 +21,61 @@ To create a release, you must have:
 1. Permissions to publish to the `org.bedework` groupId.
 2. `gpg` installed with a published key (release artifacts are signed).
 
-To perform a new release:
+To perform a new release use the release script:
 
-> mvn release:clean release:prepare
+> ./bedework/build/quickstart/linux/util-scripts/release.sh <module-name> "<release-version>" "<new-version>-SNAPSHOT"
 
-When prompted, select the desired version; accept the defaults for scm tag and next development version.
-When the build completes, and the changes are committed and pushed successfully, execute:
-
-> mvn release:perform
+When prompted, indicate all updates are committed
 
 For full details, see [Sonatype's documentation for using Maven to publish releases](http://central.sonatype.org/pages/apache-maven.html).
 
 ### Release Notes
 #### 4.0.0
   * First github/maven release
-  
+  * Use SOAP for event retrieval
+  * Much refactoring
+  * Very many other changes in UI and processing. 
+
+#### 4.0.1
+  * Issues after problems with release of 4.0.0
+
+#### 4.0.2
+* Update library versions
+* Try to fix the comparison for properties. They are supposed to be in a fixed order by name - however the name of wrapped x-properties is a parameter. Use that parameter for the comparison.
+
+#### 4.0.3
+* Update library versions
+* Logging changes
+
+#### 4.0.4
+* Update library versions
+* Logging changes
+
+#### 4.0.5
+* Update library versions
+
+#### 4.0.6
+* Update library versions
+
+#### 4.0.7
+* Update library versions
+
+#### 4.0.8
+* Update library versions
+* Lowercase account unless mixed case environment variable BEDEWORK_MIXEDCASE_ACCOUNTS is set to true
+
+#### 4.0.9
+* Update library versions
+* Refactor of bedework project
+
+#### 5.0.0
+* Use bedework-parent for builds.
+* Update library versions
+
+#### 5.0.1
+* Redo release
+
+#### 5.0.2
+* Update library versions
+* Simplify the configuration utilities.
+* Remove dependency on bw-xml
