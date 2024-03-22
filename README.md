@@ -79,3 +79,6 @@ For full details, see [Sonatype's documentation for using Maven to publish relea
 * Update library versions
 * Simplify the configuration utilities.
 * Remove dependency on bw-xml
+
+#### 5.0.3
+* Omitted to remove bw-xml as a dependency
