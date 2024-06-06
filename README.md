@@ -82,3 +82,7 @@ For full details, see [Sonatype's documentation for using Maven to publish relea
 
 #### 5.0.3
 * Omitted to remove bw-xml as a dependency
+
+#### 5.0.4
+* Upgrade library versions
+* Fix needed to deal with util.hibernate bug relating to static sessionFactory variable.
