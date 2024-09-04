@@ -43,7 +43,7 @@ public class Ticket extends DbItem<Ticket> {
   }
 
   /**
-   * @param val
+   * @param val ticket id
    */
   public void setRegistrationId(final Long val) {
     registrationId = val;
@@ -57,7 +57,7 @@ public class Ticket extends DbItem<Ticket> {
   }
 
   /**
-   * @param val
+   * @param val authid
    */
   public void setAuthid(final String val) {
     authid = val;
@@ -71,7 +71,7 @@ public class Ticket extends DbItem<Ticket> {
   }
 
   /**
-   * @param val
+   * @param val eventHref
    */
   public void setHref(final String val) {
     href = val;
@@ -86,7 +86,7 @@ public class Ticket extends DbItem<Ticket> {
 
   /** Unique id for ticket verification
    *
-   * @param val
+   * @param val uuid
    */
   public void setUuid(final String val) {
     uuid = val;
@@ -100,7 +100,7 @@ public class Ticket extends DbItem<Ticket> {
   }
 
   /**
-   * @param val
+   * @param val created
    */
   public void setCreated(final String val) {
     created = val;
@@ -113,12 +113,12 @@ public class Ticket extends DbItem<Ticket> {
     return created;
   }
 
-  /* ====================================================================
+  /* ======================================================
    *                   Non db fields
-   * ==================================================================== */
+   * ====================================================== */
 
   /**
-   * @param val
+   * @param val event
    */
   public void setEvent(final Event val) {
     event = val;
@@ -131,9 +131,9 @@ public class Ticket extends DbItem<Ticket> {
     return event;
   }
 
-  /* ====================================================================
+  /* =======================================================
    *                   Convenience methods
-   * ==================================================================== */
+   * ======================================================= */
 
   /** Add our stuff to the StringBuilder
    *
@@ -149,10 +149,10 @@ public class Ticket extends DbItem<Ticket> {
     ts.append("created", getCreated());
   }
 
-  /* ====================================================================
+  /* ======================================================
    *                   Object methods
    * The following are required for a db object.
-   * ==================================================================== */
+   * ====================================================== */
 
   @Override
   public int compareTo(final Ticket that) {
@@ -166,7 +166,7 @@ public class Ticket extends DbItem<Ticket> {
 
   @Override
   public String toString() {
-    ToString ts = new ToString(this);
+    final ToString ts = new ToString(this);
 
     toStringSegment(ts);
 

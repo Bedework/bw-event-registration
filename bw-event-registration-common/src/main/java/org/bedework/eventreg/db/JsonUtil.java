@@ -30,8 +30,8 @@ import java.util.Map;
  */
 public class JsonUtil {
   public static String must(final String name,
-                            final Map theVals) throws EventregException {
-    Object val = theVals.get(name);
+                            final Map<?, ?> theVals) {
+    final Object val = theVals.get(name);
 
     if (val == null) {
       throw new EventregException("missing value: " + name);
@@ -44,12 +44,13 @@ public class JsonUtil {
   }
 
   public static String may(final String name,
-                           final Map theVals) throws EventregException {
-    Object val = theVals.get(name);
+                           final Map<?, ?> theVals) {
+    final Object val = theVals.get(name);
 
     if (val == null) {
       return null;
     }
+
     try {
       return (String)val;
     } catch (final Throwable t) {
@@ -57,29 +58,29 @@ public class JsonUtil {
     }
   }
 
-  public static List mustList(final String name,
-                              final Map theVals) throws EventregException {
-    Object val = theVals.get(name);
+  public static List<?> mustList(final String name,
+                                 final Map<?, ?> theVals) {
+    final Object val = theVals.get(name);
 
     if (val == null) {
       throw new EventregException("missing value: " + name);
     }
     try {
-      return (List)val;
+      return (List<?>)val;
     } catch (final Throwable t) {
       throw new EventregException(t);
     }
   }
 
-  public static List mayList(final String name,
-                             final Map theVals) throws EventregException {
-    Object val = theVals.get(name);
+  public static List<?> mayList(final String name,
+                             final Map<?, ?> theVals) throws EventregException {
+    final Object val = theVals.get(name);
 
     if (val == null) {
       return null;
     }
     try {
-      return (List)val;
+      return (List<?>)val;
     } catch (final Throwable t) {
       throw new EventregException(t);
     }

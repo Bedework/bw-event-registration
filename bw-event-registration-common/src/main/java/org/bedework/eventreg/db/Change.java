@@ -62,7 +62,7 @@ public class Change extends DbItem<Change> {
   }
 
   /**
-   * @param val
+   * @param val registrationId
    */
   public void setRegistrationId(final Long val) {
     registrationId = val;
@@ -76,7 +76,7 @@ public class Change extends DbItem<Change> {
   }
 
   /**
-   * @param val
+   * @param val authid
    */
   public void setAuthid(final String val) {
     authid = val;
@@ -90,7 +90,7 @@ public class Change extends DbItem<Change> {
   }
 
   /**
-   * @param val
+   * @param val lastmod
    */
   public void setLastmod(final String val) {
     lastmod = val;
@@ -104,7 +104,7 @@ public class Change extends DbItem<Change> {
   }
 
   /**
-   * @param val
+   * @param val type of change
    */
   public void setType(final String val) {
     type = val;
@@ -118,7 +118,7 @@ public class Change extends DbItem<Change> {
   }
 
   /**
-   * @param val
+   * @param val name of changed value
    */
   public void setName(final String val) {
     name = val;
@@ -132,7 +132,7 @@ public class Change extends DbItem<Change> {
   }
 
   /**
-   * @param val
+   * @param val name of changed value
    */
   public void setValue(final String val) {
     value = val;
@@ -145,12 +145,12 @@ public class Change extends DbItem<Change> {
     return value;
   }
 
-  /* ====================================================================
+  /* ====================================================
    *                   Non db fields
-   * ==================================================================== */
+   * ==================================================== */
 
   /**
-   * @param val
+   * @param val event
    */
   public void setRegistration(final Registration val) {
     registration = val;
@@ -163,10 +163,10 @@ public class Change extends DbItem<Change> {
     return registration;
   }
 
-  /* ====================================================================
+  /* ====================================================
    *                   Object methods
    * The following are required for a db object.
-   * ==================================================================== */
+   * ==================================================== */
 
   @Override
   public int compareTo(final Change that) {

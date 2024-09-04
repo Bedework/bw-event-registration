@@ -18,6 +18,7 @@
 */
 package org.bedework.eventreg.db;
 
+import org.bedework.eventreg.common.EventregException;
 import org.bedework.util.misc.ToString;
 
 import java.io.Serializable;
@@ -92,10 +93,10 @@ public class DbItem<T> extends SerializableProperties
     ts.append("seq", getSeq());
   }
 
-  /* ====================================================================
+  /* ====================================================
    *                   Object methods
    * The following are required for a db object.
-   * ==================================================================== */
+   * ==================================================== */
 
   /** Make visible
    * @return Object of class T
@@ -105,9 +106,6 @@ public class DbItem<T> extends SerializableProperties
     return null;
   }
 
-  /* (non-Javadoc)
-   * @see java.lang.Comparable#compareTo(java.lang.Object)
-   */
   @Override
   public int compareTo(final T o) {
     throw new RuntimeException("compareTo must be implemented for a db object");
@@ -115,12 +113,16 @@ public class DbItem<T> extends SerializableProperties
 
   @Override
   public int hashCode() {
-    throw new RuntimeException("hashcode must be implemented for a db object");
+    throw new EventregException("hashcode must be implemented for a db object");
   }
 
   @SuppressWarnings("unchecked")
   @Override
   public boolean equals(final Object o) {
+    if (!(o instanceof DbItem)) {
+      return false;
+    }
+
     if (this == o) {
       return true;
     }

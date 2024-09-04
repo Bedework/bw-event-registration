@@ -317,9 +317,9 @@ public class Registration extends DbItem<Registration> {
           final String notificationTimestamp) {
     this.notificationTimestamp = notificationTimestamp;
   }
-/* ====================================================================
+/* =========================================================
    *                   Property fields
-   * ==================================================================== */
+   * ======================================================= */
 
   /**
    * @param val flag to say we sent a cancel message
@@ -371,11 +371,11 @@ public class Registration extends DbItem<Registration> {
     return event;
   }
 
-  /* ====================================================================
+  /* =======================================================
    *                   Convenience methods
-   * ==================================================================== */
+   * ======================================================= */
 
-  public void saveFormValues(final Map vals) throws EventregException {
+  public void saveFormValues(final Map<String, ?> vals) {
     final SerializableProperties sp = new SerializableProperties();
 
     sp.init(vals);
@@ -383,7 +383,7 @@ public class Registration extends DbItem<Registration> {
     setFormValues(sp.asString());
   }
 
-  public Map restoreFormValues() throws EventregException {
+  public Map<?, ?> restoreFormValues() {
     final SerializableProperties sp = new SerializableProperties();
 
     return sp.asMap(getFormValues());
@@ -477,7 +477,7 @@ public class Registration extends DbItem<Registration> {
   }
 
   /**
-   * @param numTickets
+   * @param numTickets to add
    */
   public void addTickets(final int numTickets) {
     for (int i = 0; i < numTickets; i++) {
@@ -486,10 +486,10 @@ public class Registration extends DbItem<Registration> {
   }
 
   /**
-   * @param val
+   * @param val Ticket
    */
   public void removeTicket(final Ticket val) {
-    Set<Ticket> ts = getTickets();
+    final Set<Ticket> ts = getTickets();
 
     if (ts == null) {
       return;
@@ -499,7 +499,7 @@ public class Registration extends DbItem<Registration> {
   }
 
   /**
-   * @param numTickets
+   * @param numTickets to remove
    */
   public void removeTickets(final int numTickets) {
     if (getTickets() == null) {
@@ -507,7 +507,7 @@ public class Registration extends DbItem<Registration> {
     }
 
     for (int i = 0; i < numTickets; i++) {
-      Ticket t = getTickets().iterator().next();
+      final Ticket t = getTickets().iterator().next();
 
       getTickets().remove(t);
     }
@@ -517,7 +517,7 @@ public class Registration extends DbItem<Registration> {
    * @return numTickets
    */
   public int getNumTickets() {
-    Set<Ticket> ts = getTickets();
+    final Set<Ticket> ts = getTickets();
 
     if (ts == null) {
       return 0;
@@ -526,10 +526,10 @@ public class Registration extends DbItem<Registration> {
     return ts.size();
   }
 
-  /* ====================================================================
+  /* =======================================================
    *                   Object methods
    * The following are required for a db object.
-   * ==================================================================== */
+   * ======================================================= */
 
   @Override
   public int compareTo(final Registration that) {

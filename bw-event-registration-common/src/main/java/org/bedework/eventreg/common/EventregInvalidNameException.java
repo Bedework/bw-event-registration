@@ -20,9 +20,9 @@ package org.bedework.eventreg.common;
 
 import javax.servlet.http.HttpServletResponse;
 
-/** Base exception thrown by exchange synch classes
+/** Exception thrown by event registration classes
  *
- *   @author Mike Douglass   douglm@bedework.edu
+ *   @author Mike Douglass   douglm@bedework.com
  */
 public class EventregInvalidNameException extends EventregException {
   /** Constructor

@@ -85,16 +85,16 @@ public class BwProperty extends DbItem<BwProperty> {
     return value;
   }
 
-  /* ====================================================================
-   *                        Convenience methods
-   * ==================================================================== */
+  /* ======================================================
+   *                Convenience methods                   *
+   ======================================================== */
 
   /** Search the collection for a string that matches the given name.
    *
    * <p>We return the first one we found.
    *
-   * @param name
-   * @param c
+   * @param name expected name
+   * @param c collection of properties
    * @return BwProperty or null if no strings.
    */
   public static BwProperty findName(final String name, final Collection<BwProperty> c) {
@@ -106,8 +106,8 @@ public class BwProperty extends DbItem<BwProperty> {
       return null;
     }
 
-    for (BwProperty p: c) {
-      String pname = p.getName();
+    for (final BwProperty p: c) {
+      final String pname = p.getName();
 
       if (Util.cmpObjval(name, pname) == 0) {
         return p;
@@ -120,7 +120,7 @@ public class BwProperty extends DbItem<BwProperty> {
   /** Figure out what's different and update it. This should reduce the number
    * of spurious changes to the db.
    *
-   * @param from
+   * @param from property to check
    * @return true if we changed something.
    */
   public boolean update(final BwProperty from) {
@@ -158,9 +158,9 @@ public class BwProperty extends DbItem<BwProperty> {
     return changed;
   }
 
-  /* ====================================================================
-   *                        Object methods
-   * ==================================================================== */
+  /* ======================================================
+   *                    Object methods
+   * ====================================================== */
 
   @Override
   public int compareTo(final BwProperty that) {
@@ -172,7 +172,7 @@ public class BwProperty extends DbItem<BwProperty> {
       return -1;
     }
 
-    int res = Util.cmpObjval(getName(), that.getName());
+    final int res = Util.cmpObjval(getName(), that.getName());
 
     if (res != 0) {
       return res;
@@ -205,7 +205,7 @@ public class BwProperty extends DbItem<BwProperty> {
 
   @Override
   public String toString() {
-    ToString ts = new ToString(this);
+    final ToString ts = new ToString(this);
 
     toStringSegment(ts);
 

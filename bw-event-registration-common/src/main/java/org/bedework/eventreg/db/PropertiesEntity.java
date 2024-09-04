@@ -27,7 +27,7 @@ import java.util.Set;
 public interface PropertiesEntity {
 
   /**
-   * @param val
+   * @param val set of properties
    */
   public void setProperties(Set<BwProperty> val);
 
@@ -37,14 +37,14 @@ public interface PropertiesEntity {
   public Set<BwProperty> getProperties();
 
   /**
-   * @param name
+   * @param name of property
    * @return properties with given name
    */
   public Set<BwProperty> getProperties(String name);
 
   /** Remove all with given name
    *
-   * @param name
+   * @param name of property
    */
   public void removeProperties(String name);
 
@@ -54,18 +54,18 @@ public interface PropertiesEntity {
   public int getNumProperties();
 
   /**
-   * @param name
+   * @param name of property
    * @return property or null
    */
   public BwProperty findProperty(String name);
 
   /**
-   * @param val
+   * @param val property
    */
   public void addProperty(BwProperty val);
 
   /**
-   * @param val
+   * @param val property
    * @return boolean
    */
   public boolean removeProperty(BwProperty val);

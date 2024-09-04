@@ -18,6 +18,7 @@
 */
 package org.bedework.eventreg.db;
 
+import org.bedework.eventreg.common.EventregException;
 import org.bedework.eventreg.service.EventregProperties;
 import org.bedework.util.hibernate.HibException;
 import org.bedework.util.hibernate.HibSession;
@@ -74,9 +75,8 @@ public class EventregDb implements Logged, Serializable {
 
   /**
    * @return next id
-   * @throws Throwable
    */
-  public Long getNextRegistrationId() throws Throwable {
+  public Long getNextRegistrationId() {
     synchronized (nextRegid) {
       int attempts = 0;
 
@@ -101,7 +101,7 @@ public class EventregDb implements Logged, Serializable {
         warn("Error trying to get regid batch after " +
                      attempts + " tries.");
         attempts++;
-        final long wait = attempts * 500;
+        final long wait = attempts * 500L;
         warn("Retrying in " + wait + " millisecs");
         try {
           this.wait(wait);
@@ -120,9 +120,8 @@ public class EventregDb implements Logged, Serializable {
 
   /**
    * @return true if we had to open it. False if already open
-   * @throws Throwable
    */
-  public boolean open() throws Throwable {
+  public boolean open() {
     if (isOpen()) {
       return false;
     }
@@ -141,9 +140,8 @@ public class EventregDb implements Logged, Serializable {
 
   /**
    * @return true if we had did rollback.
-   * @throws Throwable
    */
-  public boolean rollback() throws Throwable {
+  public boolean rollback() {
     if (!isOpen()) {
       return false;
     }
@@ -160,16 +158,16 @@ public class EventregDb implements Logged, Serializable {
 
     try {
       endTransaction();
-    } catch (Throwable t) {
+    } catch (final Throwable t) {
       ok = false;
       try {
         rollbackTransaction();
-      } catch (Throwable t1) {}
+      } catch (final Throwable ignored) {}
       error(t);
     } finally {
       try {
         closeSession();
-      } catch (Exception wde1) {
+      } catch (final Exception wde1) {
         ok = false;
       }
       open = false;
@@ -179,7 +177,7 @@ public class EventregDb implements Logged, Serializable {
   }
 
   /**
-   * @param ignoreErrors
+   * @param ignoreErrors flag
    * @return false if error occurred
    */
   public boolean close(final boolean ignoreErrors) {
@@ -208,240 +206,190 @@ public class EventregDb implements Logged, Serializable {
     return ok;
   }
 
-  /* ====================================================================
+  /* =====================================================
    *                   Changes methods
-   * ==================================================================== */
+   * ===================================================== */
 
   /**
-   * @param c
-   * @throws Throwable
+   * @param c Change
    */
-  public void addChange(final Change c) throws Throwable {
+  public void addChange(final Change c) {
     try {
       sess.save(c);
-    } catch (HibException he) {
-      throw new Exception(he);
+    } catch (final HibException he) {
+      throw new EventregException(he);
     }
   }
 
   /**
    * @param ts - timestamp value - get changes after this
    * @return - list of changes since ts
-   * @throws Throwable
    */
   @SuppressWarnings("unchecked")
-  public List<Change> getChanges(final String ts) throws Throwable {
-    try {
-      StringBuilder sb = new StringBuilder();
+  public List<Change> getChanges(final String ts) {
+    final StringBuilder sb = new StringBuilder();
 
-      sb.append("from ");
-      sb.append(Change.class.getName());
-      sb.append(" chg");
-      if (ts != null) {
-        sb.append(" where chg.lastmod>:lm");
-      }
-      sb.append(" order by chg.lastmod");
-
-      sess.createQuery(sb.toString());
-      if (ts != null) {
-        sess.setString("lm", ts);
-      }
-
-      return sess.getList();
-    } catch (HibException he) {
-      throw new Exception(he);
+    sb.append("from ");
+    sb.append(Change.class.getName());
+    sb.append(" chg");
+    if (ts != null) {
+      sb.append(" where chg.lastmod>:lm");
     }
+    sb.append(" order by chg.lastmod");
+
+    createQuery(sb.toString());
+    if (ts != null) {
+      setString("lm", ts);
+    }
+
+    return (List<Change>)getList();
   }
 
-  /* ====================================================================
+  /* =======================================================
    *                   Registrations Object methods
-   * ==================================================================== */
+   * ====================================================== */
 
   /**
    * @return list of registrations
-   * @throws Throwable
    */
   @SuppressWarnings("unchecked")
-  public List<Registration> getAllRegistrations() throws Throwable {
-    StringBuilder sb = new StringBuilder();
+  public List<Registration> getAllRegistrations() {
+    final StringBuilder sb = new StringBuilder();
 
     sb.append("from ");
     sb.append(Registration.class.getName());
 
-    try {
-      sess.createQuery(sb.toString());
+    createQuery(sb.toString());
 
-      return sess.getList();
-    } catch (HibException he) {
-      throw new Exception(he);
-    }
+    return (List<Registration>)getList();
   }
+
+  private final static String getByIdQuery =
+          "from " + Registration.class.getName() +
+                  " reg where reg.registrationId=:id";
 
   /** Registrations for a user.
    *
-   * @param id
+   * @param id Long
    * @return a matching registration
-   * @throws Throwable
    */
-  public Registration getByid(final Long id) throws Throwable {
-    try {
-      StringBuilder sb = new StringBuilder();
+  public Registration getByid(final Long id) {
+    createQuery(regIdQuery);
+    setLong("id", id);
 
-      sb.append("from ");
-      sb.append(Registration.class.getName());
-      sb.append(" reg where reg.registrationId=:id");
-
-      sess.createQuery(sb.toString());
-      sess.setLong("id", id);
-
-      return (Registration)sess.getUnique();
-    } catch (HibException he) {
-      throw new Exception(he);
-    }
+    return (Registration)getUnique();
   }
+
+  private final static String getByUserQuery =
+          "from " + Registration.class.getName() +
+                  " reg where reg.authid=:user" +
+                  " and reg.type=:type";
 
   /** Registrations for a user.
    *
-   * @param user
+   * @param user to match
    * @return a matching registrations
-   * @throws Throwable
    */
   @SuppressWarnings("unchecked")
-  public List<Registration> getByUser(final String user) throws Throwable {
-    try {
-      StringBuilder sb = new StringBuilder();
+  public List<Registration> getByUser(final String user) {
+    createQuery(getByUserQuery);
+    setString("user", user);
+    setString("type", Registration.typeRegistered);
 
-      sb.append("from ");
-      sb.append(Registration.class.getName());
-      sb.append(" reg where reg.authid=:user");
-      sb.append(" and reg.type=:type");
-
-      sess.createQuery(sb.toString());
-      sess.setString("user", user);
-      sess.setString("type", Registration.typeRegistered);
-
-      return sess.getList();
-    } catch (HibException he) {
-      throw new Exception(he);
-    }
+    return (List<Registration>)getList();
   }
+
+  private final static String getUserRegistrationQuery =
+          "from " + Registration.class.getName() +
+                  " reg where reg.href=:href" +
+                  " and reg.authid=:user" +
+                  " and reg.type=:type";
 
   /**
-   * @param eventHref
-   * @param user
+   * @param eventHref to identify event
+   * @param user to identify user
    * @return registration or null
-   * @throws Throwable
    */
   public Registration getUserRegistration(final String eventHref,
-                                          final String user) throws Throwable {
-    try {
-      StringBuilder sb = new StringBuilder();
+                                          final String user) {
+    createQuery(getUserRegistrationQuery);
+    setString("href", eventHref);
+    setString("user", user);
+    setString("type", Registration.typeRegistered);
 
-      sb.append("from ");
-      sb.append(Registration.class.getName());
-      sb.append(" reg where reg.href=:href");
-      sb.append(" and reg.authid=:user");
-      sb.append(" and reg.type=:type");
-
-      sess.createQuery(sb.toString());
-      sess.setString("href", eventHref);
-      sess.setString("user", user);
-      sess.setString("type", Registration.typeRegistered);
-
-      return (Registration)sess.getUnique();
-    } catch (HibException he) {
-      throw new Exception(he);
-    }
+    return (Registration)getUnique();
   }
+
+  private final static String getByEventQuery =
+          "from " + Registration.class.getName() +
+                  " reg where reg.href=:href";
 
   /** Registrations for an event.
    *
-   * @param href
-   * @return a matching registrations
-   * @throws Throwable
+   * @param href to identify event
+   * @return matching registrations
    */
   @SuppressWarnings("unchecked")
-  public List<Registration> getByEvent(final String href) throws Throwable {
-    try {
-      StringBuilder sb = new StringBuilder();
+  public List<Registration> getByEvent(final String href) {
+    createQuery(getByEventQuery);
+    setString("href", href);
 
-      sb.append("from ");
-      sb.append(Registration.class.getName());
-      sb.append(" reg where reg.href=:href");
-
-      sess.createQuery(sb.toString());
-      sess.setString("href", href);
-
-      return sess.getList();
-    } catch (HibException he) {
-      throw new Exception(he);
-    }
+    return (List<Registration>)getList();
   }
 
+  private final static String getRegistrantCountQuery =
+          "select count(*) from " +
+                  Registration.class.getName() +
+                  " reg where reg.href=:href" +
+                  " and reg.type=:type";
+
   /**
-   * @param eventHref
+   * @param eventHref to identify event
    * @return number of registration entries for that event
-   * @throws Throwable
    */
-  public long getRegistrantCount(final String eventHref) throws Throwable {
-    try {
-      StringBuilder sb = new StringBuilder();
+  public long getRegistrantCount(final String eventHref) {
+    createQuery(getRegistrantCountQuery);
+    setString("href", eventHref);
+    setString("type", Registration.typeRegistered);
 
-      sb.append("select count(*) from ");
-      sb.append(Registration.class.getName());
-      sb.append(" reg where reg.href=:href");
-      sb.append(" and reg.type=:type");
+    @SuppressWarnings("unchecked")
+    final Collection<Long> counts = (Collection<Long>)getList();
 
-      sess.createQuery(sb.toString());
-      sess.setString("href", eventHref);
-      sess.setString("type", Registration.typeRegistered);
+    long total = 0;
 
-      @SuppressWarnings("unchecked")
-      Collection<Long> counts = sess.getList();
-
-      long total = 0;
-
-      for (Long l: counts) {
-        total += l;
-      }
-
-      return total;
-    } catch (HibException he) {
-      throw new Exception(he);
+    for (final Long l: counts) {
+      total += l;
     }
+
+    return total;
   }
 
+  private final static String getRegTicketCountQuery =
+          "select size(reg.tickets) from " +
+                  Registration.class.getName() +
+                  " reg where reg.href=:href";
+
   /**
-   * @param eventHref
+   * @param eventHref to identify event
    * @return number of registrations not on the waiting list for the event
-   * @throws Throwable
    */
-  public long getRegTicketCount(final String eventHref) throws Throwable {
-    try {
-      StringBuilder sb = new StringBuilder();
+  public long getRegTicketCount(final String eventHref) {
+    createQuery(getRegTicketCountQuery);
+    setString("href", eventHref);
 
-      sb.append("select size(reg.tickets) from ");
-      sb.append(Registration.class.getName());
-      sb.append(" reg where reg.href=:href");
+    @SuppressWarnings("unchecked")
+    final List<Integer> cts = (List<Integer>)getList();
 
-      sess.createQuery(sb.toString());
-      sess.setString("href", eventHref);
-
-      List<Integer> cts = sess.getList();
-
-      if (cts == null) {
-        return 0;
-      }
-
-      Long ct = (long)0;
-      for (Integer i: cts) {
-        ct += i;
-      }
-
-      return ct;
-    } catch (HibException he) {
-      throw new Exception(he);
+    if (cts == null) {
+      return 0;
     }
+
+    Long ct = (long)0;
+    for (final Integer i: cts) {
+      ct += i;
+    }
+
+    return ct;
   }
 
   private final static String getWaitingTicketCountQuery =
@@ -452,25 +400,20 @@ public class EventregDb implements Logged, Serializable {
   /**
    * @param eventHref href of event
    * @return number of tickets requested on the waiting list for the event
-   * @throws Throwable on fatal error
    */
-  public long getWaitingTicketCount(final String eventHref) throws Throwable {
-    try {
-      sess.createQuery(getWaitingTicketCountQuery);
-      sess.setString("href", eventHref);
+  public long getWaitingTicketCount(final String eventHref) {
+    createQuery(getWaitingTicketCountQuery);
+    setString("href", eventHref);
 
-      final Long ct = (Long)sess.getUnique();
-      if (debug()) {
-        debug("Count returned " + ct);
-      }
-      if (ct == null) {
-        return 0;
-      }
-
-      return Math.max(0, ct - getTicketCount(eventHref));
-    } catch (final HibException he) {
-      throw new Exception(he);
+    final Long ct = (Long)getUnique();
+    if (debug()) {
+      debug("Count returned " + ct);
     }
+    if (ct == null) {
+      return 0;
+    }
+
+    return Math.max(0, ct - getTicketCount(eventHref));
   }
 
   private final String getWaitingQuery =
@@ -481,19 +424,14 @@ public class EventregDb implements Logged, Serializable {
                   " order by reg.waitqDate";
 
   /**
-   * @param eventHref
+   * @param eventHref to identify event
    * @return registrations on the waiting list for the event
-   * @throws Throwable
    */
-  public List<Registration> getWaiting(final String eventHref) throws Throwable {
-    try {
-      sess.createQuery(getWaitingQuery);
-      sess.setString("href", eventHref);
+  public List<Registration> getWaiting(final String eventHref) {
+    createQuery(getWaitingQuery);
+    setString("href", eventHref);
 
-      return sess.getList();
-    } catch (final HibException he) {
-      throw new Exception(he);
-    }
+    return (List<Registration>)getList();
   }
 
   private final String getTicketCountQuery =
@@ -502,27 +440,22 @@ public class EventregDb implements Logged, Serializable {
                   " tkt where tkt.href=:href";
 
   /**
-   * @param eventHref
+   * @param eventHref to identify event
    * @return total number of registration entries for that event, including waiting list
-   * @throws Throwable
    */
-  public long getTicketCount(final String eventHref) throws Throwable {
-    try {
-      sess.createQuery(getTicketCountQuery);
-      sess.setString("href", eventHref);
+  public long getTicketCount(final String eventHref) {
+    createQuery(getTicketCountQuery);
+    setString("href", eventHref);
 
-      Long ct = (Long)sess.getUnique();
-      if (debug()) {
-        debug("Count returned " + ct);
-      }
-      if (ct == null) {
-        return 0;
-      }
-
-      return ct;
-    } catch (HibException he) {
-      throw new Exception(he);
+    final Long ct = (Long)getUnique();
+    if (debug()) {
+      debug("Count returned " + ct);
     }
+    if (ct == null) {
+      return 0;
+    }
+
+    return ct;
   }
 
   private final static String getUserTicketCountQuery =
@@ -532,45 +465,40 @@ public class EventregDb implements Logged, Serializable {
                   " and tkt.authid=:user";
 
   /**
-   * @param eventHref
-   * @param user
+   * @param eventHref to identify event
+   * @param user to identify user
    * @return number of registration entries for that event and user
-   * @throws Throwable
    */
   public long getUserTicketCount(final String eventHref,
-                                 final String user) throws Throwable {
-    try {
-      sess.createQuery(getUserTicketCountQuery);
-      sess.setString("href", eventHref);
-      sess.setString("user", user);
-      @SuppressWarnings("unchecked")
-      Collection<Long> counts = sess.getList();
+                                 final String user) {
+    createQuery(getUserTicketCountQuery);
+    setString("href", eventHref);
+    setString("user", user);
+    @SuppressWarnings("unchecked")
+    final Collection<Long> counts = (Collection<Long>)getList();
 
-      long total = 0;
+    long total = 0;
 
-      for (final Long l: counts) {
-        total += l;
-      }
-
-      return total;
-    } catch (final HibException he) {
-      throw new Exception(he);
+    for (final Long l: counts) {
+      total += l;
     }
+
+    return total;
   }
 
-  /* ====================================================================
+  /* ========================================================
    *                   Form definition methods
-   * ==================================================================== */
+   * ======================================================== */
 
   private final static String getCalSuiteFormsQuery =
           "from " + FormDef.class.getName() +
                   " form where form.owner=:owner";
 
-  public List<FormDef> getCalSuiteForms(final String calsuite) throws Throwable {
-    sess.createQuery(getCalSuiteFormsQuery);
-    sess.setString("owner", calsuite);
+  public List<FormDef> getCalSuiteForms(final String calsuite) {
+    createQuery(getCalSuiteFormsQuery);
+    setString("owner", calsuite);
 
-    return sess.getList();
+    return (List<FormDef>)getList();
   }
 
   private final static String getCalSuiteFormQuery =
@@ -579,56 +507,53 @@ public class EventregDb implements Logged, Serializable {
                   " form.formName=:formName";
 
   public FormDef getCalSuiteForm(final String formName,
-                                       final String calsuite) throws Throwable {
-    sess.createQuery(getCalSuiteFormQuery);
-    sess.setString("formName", formName);
-    sess.setString("owner", calsuite);
+                                 final String calsuite) {
+    createQuery(getCalSuiteFormQuery);
+    setString("formName", formName);
+    setString("owner", calsuite);
 
-    return (FormDef)sess.getUnique();
+    return (FormDef)getUnique();
   }
 
-  /* ====================================================================
+  /* =========================================================
    *                   Dbitem methods
-   * ==================================================================== */
+   * ========================================================= */
 
   /** Add the item.
    *
    * @param val the dbitem
-   * @throws Exception
    */
-  public void add(final DbItem val) throws Exception {
+  public void add(final DbItem<?> val) {
     try {
       sess.save(val);
     } catch (final HibException he) {
-      throw new Exception(he);
+      throw new EventregException(he);
     }
   }
 
   /** Update the persisted state of the item.
    *
    * @param val the dbitem
-   * @throws Exception
    */
-  public void update(final DbItem val) throws Exception {
+  public void update(final DbItem<?> val) {
     try {
       sess.update(val);
     } catch (final HibException he) {
-      throw new Exception(he);
+      throw new EventregException(he);
     }
   }
 
   /** Delete the dbitem.
    *
    * @param val the dbitem
-   * @throws Throwable
    */
-  public void delete(final DbItem val) throws Throwable {
+  public void delete(final DbItem<?> val) {
     final boolean opened = open();
 
     try {
       sess.delete(val);
     } catch (final HibException he) {
-      throw new Exception(he);
+      throw new EventregException(he);
     } finally {
       if (opened) {
         close();
@@ -636,19 +561,19 @@ public class EventregDb implements Logged, Serializable {
     }
   }
 
-  /* ====================================================================
+  /* =========================================================
    *                   Session methods
-   * ==================================================================== */
+   * ========================================================= */
 
-  protected void checkOpen() throws Throwable {
+  protected void checkOpen() {
     if (!isOpen()) {
-      throw new Exception("Session call when closed");
+      throw new EventregException("Session call when closed");
     }
   }
 
-  protected synchronized void openSession() throws Throwable {
+  protected synchronized void openSession() {
     if (isOpen()) {
-      throw new Exception("Already open");
+      throw new EventregException("Already open");
     }
 
     try {
@@ -678,13 +603,13 @@ public class EventregDb implements Logged, Serializable {
         }
       }
     } catch (final HibException he) {
-      throw new Exception(he);
+      throw new EventregException(he);
     }
 
     beginTransaction();
   }
 
-  protected synchronized void closeSession() throws Exception {
+  protected synchronized void closeSession() {
     if (!isOpen()) {
       if (debug()) {
         debug("Close for " + objTimestamp + " closed session");
@@ -708,19 +633,21 @@ public class EventregDb implements Logged, Serializable {
         }
 //        sess.disconnect();
         sess.close();
-        sess = null;
       }
-    } catch (Throwable t) {
+    } catch (final Throwable t) {
+      try {
+        sess.rollback();
+      } catch (final Throwable ignored) {}
       try {
         sess.close();
-      } catch (Throwable t1) {}
-      sess = null; // Discard on error
+      } catch (final Throwable ignored) {}
     } finally {
+      sess = null;
       open = false;
     }
   }
 
-  protected void beginTransaction() throws Throwable {
+  protected void beginTransaction() {
     checkOpen();
 
     if (debug()) {
@@ -728,12 +655,12 @@ public class EventregDb implements Logged, Serializable {
     }
     try {
       sess.beginTransaction();
-    } catch (HibException he) {
-      throw new Exception(he);
+    } catch (final HibException he) {
+      throw new EventregException(he);
     }
   }
 
-  protected void endTransaction() throws Throwable {
+  protected void endTransaction() {
     checkOpen();
 
     if (debug()) {
@@ -744,42 +671,82 @@ public class EventregDb implements Logged, Serializable {
       if (!sess.rolledback()) {
         sess.commit();
       }
-    } catch (HibException he) {
-      sess.rollback();
-      throw new Exception(he);
+    } catch (final HibException he) {
+      try {
+        sess.rollback();
+      } catch (final HibException ignored) {
+      }
+      throw new EventregException(he);
     }
   }
 
-  protected void rollbackTransaction() throws Throwable {
+  protected void rollbackTransaction() {
     try {
       checkOpen();
       sess.rollback();
-    } catch (HibException he) {
-      throw new Exception(he);
+    } catch (final HibException he) {
+      throw new EventregException(he);
     } finally {
     }
   }
 
-  /* ====================================================================
+  /* =====================================================
    *                   private methods
-   * ==================================================================== */
+   * ===================================================== */
 
   private static final String maxRegistrationIdQuery =
           "select max(registrationId) from " +
                   Registration.class.getName() + " reg";
 
+  private void createQuery(final String query) {
+    try {
+      sess.createQuery(query);
+    } catch (final HibException he) {
+      throw new EventregException(he);
+    }
+  }
+
+  private void setString(final String name,
+                         final String value) {
+    try {
+      sess.setString(name, value);
+    } catch (final HibException he) {
+      throw new EventregException(he);
+    }
+  }
+
+  private void setLong(final String name,
+                       final Long value) {
+    try {
+      sess.setLong(name, value);
+    } catch (final HibException he) {
+      throw new EventregException(he);
+    }
+  }
+
+  private Object getUnique() {
+    try {
+      return sess.getUnique();
+    } catch (final HibException he) {
+      throw new EventregException(he);
+    }
+  }
+
+  private List<?> getList() {
+    try {
+      return sess.getList();
+    } catch (final HibException he) {
+      throw new EventregException(he);
+    }
+  }
+
   /**
    * @return max registrationid
-   * @throws Throwable
    */
-  private Long getMaxRegistrationId() throws Throwable {
-    try {
-      sess.createQuery(maxRegistrationIdQuery);
+  private Long getMaxRegistrationId() {
+    createQuery(maxRegistrationIdQuery);
 
-      return (Long)sess.getUnique();
-    } catch (final HibException he) {
-      throw new Exception(he);
-    }
+    return (Long)getUnique();
   }
 
   private static final String regIdQuery =
@@ -788,24 +755,19 @@ public class EventregDb implements Logged, Serializable {
 
   /**
    * @return max registrationid
-   * @throws Throwable
    */
-  private RegId getRegId() throws Throwable {
-    try {
-      sess.createQuery(regIdQuery);
+  private RegId getRegId() {
+    createQuery(regIdQuery);
 
-      return (RegId)sess.getUnique();
-    } catch (final HibException he) {
-      throw new Exception(he);
-    }
+    return (RegId)getUnique();
   }
 
-  private static class IdBatch {
+  public final static class IdBatch {
     Long start;
     Long end;
   }
 
-  public static IdBatch getIdBatch(final EventregProperties sysInfo) throws Throwable {
+  public static IdBatch getIdBatch(final EventregProperties sysInfo) {
     /* This may take a few tries and we need to discard the db.
      */
 
@@ -876,11 +838,11 @@ public class EventregDb implements Logged, Serializable {
     }
   }
 
-  /* ====================================================================
+  /* ====================================================
    *                   Logged methods
-   * ==================================================================== */
+   * ==================================================== */
 
-  private BwLogger logger = new BwLogger();
+  private final BwLogger logger = new BwLogger();
 
   @Override
   public BwLogger getLogger() {

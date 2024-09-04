@@ -19,10 +19,12 @@ under the License.
 
 package org.bedework.eventreg.db;
 
+import org.bedework.eventreg.common.EventregException;
 import org.bedework.util.calendar.XcalUtil;
 import org.bedework.util.calendar.XcalUtil.TzGetter;
 import org.bedework.util.timezones.DateTimeUtil;
 import org.bedework.util.timezones.Timezones;
+import org.bedework.util.timezones.TimezonesException;
 
 import ietf.params.xml.ns.icalendar_2.ArrayOfProperties;
 import ietf.params.xml.ns.icalendar_2.BaseComponentType;
@@ -74,7 +76,7 @@ public class Event implements Comparable<Event> {
 
     List<T> getProps() {
       if (props == null) {
-        props = new ArrayList<T>();
+        props = new ArrayList<>();
       }
 
       return props;
@@ -92,7 +94,7 @@ public class Event implements Comparable<Event> {
       return getProps().get(0);
     }
 
-    abstract String getValue() throws Throwable;
+    abstract String getValue();
   }
 
   private static class TextPinfo extends Pinfo<TextPropertyType> {
@@ -134,7 +136,7 @@ public class Event implements Comparable<Event> {
     private XcalUtil.DtTzid dt;
 
     @Override
-    String getValue() throws Throwable {
+    String getValue() {
       if (utc != null) {
         return utc;
       }
@@ -153,12 +155,12 @@ public class Event implements Comparable<Event> {
       return utc;
     }
 
-    XcalUtil.DtTzid getDt() throws Throwable {
+    XcalUtil.DtTzid getDt() {
       if (dt != null) {
         return dt;
       }
 
-      DateDatetimePropertyType p = getProp();
+      final DateDatetimePropertyType p = getProp();
       if (p == null) {
         return null;
       }
@@ -208,9 +210,8 @@ public class Event implements Comparable<Event> {
 
   /**
    * @return the uid
-   * @throws Throwable
    */
-  public String getUid() throws Throwable {
+  public String getUid() {
     if (uid == null) {
       uid = new TextPinfo();
       uid.addProperty((UidPropType)findProperty(UidPropType.class));
@@ -221,9 +222,8 @@ public class Event implements Comparable<Event> {
 
   /**
    * @return recurrence id or null
-   * @throws Throwable on fatal error
    */
-  public String getRecurrenceId() throws Throwable {
+  public String getRecurrenceId() {
     if (recurrenceId == null) {
       recurrenceId = new DateDatetimePinfo();
       recurrenceId.addProperty((RecurrenceIdPropType)findProperty(RecurrenceIdPropType.class));
@@ -280,9 +280,8 @@ public class Event implements Comparable<Event> {
 
   /**
    * @return the end of registration
-   * @throws Throwable on fatal error
    */
-  public String getRegistrationEnd() throws Throwable {
+  public String getRegistrationEnd() {
     if (regEnd == null) {
       regEnd = new DateDatetimePinfo();
       regEnd.addProperty((XBedeworkRegistrationEndPropType)findProperty(XBedeworkRegistrationEndPropType.class));
@@ -299,9 +298,8 @@ public class Event implements Comparable<Event> {
 
   /**
    * @return the tzid for the end of registration
-   * @throws Throwable on fatal error
    */
-  public String getRegistrationEndTzid() throws Throwable {
+  public String getRegistrationEndTzid() {
     if (regEnd == null) {
       regEnd = new DateDatetimePinfo();
       regEnd.addProperty((XBedeworkRegistrationEndPropType)findProperty(XBedeworkRegistrationEndPropType.class));
@@ -318,9 +316,8 @@ public class Event implements Comparable<Event> {
 
   /**
    * @return the start of registration
-   * @throws Throwable
    */
-  public String getRegistrationStart() throws Throwable {
+  public String getRegistrationStart() {
     if (regStart == null) {
       regStart = new DateDatetimePinfo();
       regStart.addProperty((XBedeworkRegistrationStartPropType)findProperty(XBedeworkRegistrationStartPropType.class));
@@ -337,9 +334,8 @@ public class Event implements Comparable<Event> {
 
   /**
    * @return the tzid for the start of registration
-   * @throws Throwable
    */
-  public String getRegistrationStartTzid() throws Throwable {
+  public String getRegistrationStartTzid() {
     if (regStart == null) {
       regStart = new DateDatetimePinfo();
       regStart.addProperty((XBedeworkRegistrationStartPropType)findProperty(XBedeworkRegistrationStartPropType.class));
@@ -392,9 +388,8 @@ public class Event implements Comparable<Event> {
 
   /**
    * @return recurrence id or null
-   * @throws Throwable
    */
-  public DtstartPropType getDtStartProp() throws Throwable {
+  public DtstartPropType getDtStartProp() {
     if (dtStart == null) {
       dtStart = new DateDatetimePinfo();
       dtStart.addProperty((DtstartPropType)findProperty(DtstartPropType.class));
@@ -405,12 +400,11 @@ public class Event implements Comparable<Event> {
 
   /**
    * @return date part
-   * @throws Throwable
    */
-  public String getDate() throws Throwable {
+  public String getDate() {
     getDtStartProp();
 
-    XcalUtil.DtTzid dt = dtStart.getDt();
+    final XcalUtil.DtTzid dt = dtStart.getDt();
 
     if (dt == null) {
       return null;
@@ -421,18 +415,18 @@ public class Event implements Comparable<Event> {
 
   /**
    * @return date or date - time with possible tzid
-   * @throws Throwable
    */
-  public String getDateTime() throws Throwable {
+  public String getDateTime() {
     getDtStartProp();
 
-    XcalUtil.DtTzid dt = dtStart.getDt();
+    final XcalUtil.DtTzid dt = dtStart.getDt();
 
     if (dt == null) {
       return null;
     }
 
-    StringBuilder sb = new StringBuilder(dt.dt.substring(0, 8));
+    final StringBuilder sb =
+            new StringBuilder(dt.dt.substring(0, 8));
 
     if (!dt.dateOnly) {
       sb.append(" - ");
@@ -449,12 +443,11 @@ public class Event implements Comparable<Event> {
 
   /**
    * @return time part
-   * @throws Throwable
    */
-  public String getTime() throws Throwable {
+  public String getTime() {
     getDtStartProp();
 
-    XcalUtil.DtTzid dt = dtStart.getDt();
+    final XcalUtil.DtTzid dt = dtStart.getDt();
 
     if ((dt == null) || dt.dateOnly) {
       return null;
@@ -465,12 +458,11 @@ public class Event implements Comparable<Event> {
 
   /**
    * @return tzid
-   * @throws Throwable
    */
-  public String getTzid() throws Throwable {
+  public String getTzid() {
     getDtStartProp();
 
-    XcalUtil.DtTzid dt = dtStart.getDt();
+    final XcalUtil.DtTzid dt = dtStart.getDt();
 
     if ((dt == null) || dt.dateOnly) {
       return null;
@@ -481,9 +473,8 @@ public class Event implements Comparable<Event> {
 
   /**
    * @return utc form of time
-   * @throws Throwable
    */
-  public String getUtc() throws Throwable {
+  public String getUtc() {
     getDtStartProp();
 
     return dtStart.getValue();
@@ -493,9 +484,8 @@ public class Event implements Comparable<Event> {
    * @param dt - YYYY-MM-DD or YYYY-MM-DDThh:mm:ss[Z]
    * @param tz - null for floating or UTC
    * @return Date
-   * @throws Throwable
    */
-  public Date getDate(final String dt, final String tz) throws Throwable {
+  public Date getDate(final String dt, final String tz) {
     if (dt == null) {
       return null;
     }
@@ -512,14 +502,17 @@ public class Event implements Comparable<Event> {
       return DateTimeUtil.fromISODateTime(dt);
     }
 
-    return DateTimeUtil.fromISODateTime(dt, Timezones.getTz(tz));
+    try {
+      return DateTimeUtil.fromISODateTime(dt, Timezones.getTz(tz));
+    } catch (final TimezonesException e) {
+      throw new EventregException(e);
+    }
   }
 
   /**
    * @return Date
-   * @throws Throwable
    */
-  public Date getRegistrationEndDate() throws Throwable {
+  public Date getRegistrationEndDate() {
     if (regEnd == null) {
       regEnd = new DateDatetimePinfo();
       regEnd.addProperty((XBedeworkRegistrationEndPropType)findProperty(XBedeworkRegistrationEndPropType.class));
@@ -529,16 +522,18 @@ public class Event implements Comparable<Event> {
       return null;
     }
 
-    XcalUtil.DtTzid dt = regEnd.getDt();
+    final XcalUtil.DtTzid dt = regEnd.getDt();
+    if (dt == null) {
+      return null;
+    }
 
     return getDate(dt.dt, dt.tzid);
   }
 
   /**
    * @return Date
-   * @throws Throwable
    */
-  public Date getRegistrationStartDate() throws Throwable {
+  public Date getRegistrationStartDate() {
     if (regStart == null) {
       regStart = new DateDatetimePinfo();
       regStart.addProperty((XBedeworkRegistrationStartPropType)findProperty(XBedeworkRegistrationStartPropType.class));
@@ -548,17 +543,20 @@ public class Event implements Comparable<Event> {
       return null;
     }
 
-    XcalUtil.DtTzid dt = regStart.getDt();
+    final XcalUtil.DtTzid dt = regStart.getDt();
+    if (dt == null) {
+      return null;
+    }
 
     return getDate(dt.dt, dt.tzid);
   }
 
-  /* ====================================================================
+  /* ==================================================
    *                   private methods
-   * ==================================================================== */
+   * ================================================== */
 
   private BasePropertyType findProperty(final Class<? extends BasePropertyType> cl) {
-    for (JAXBElement<? extends BasePropertyType> p: properties.getBasePropertyOrTzid()) {
+    for (final JAXBElement<? extends BasePropertyType> p: properties.getBasePropertyOrTzid()) {
       if (p.getValue().getClass().equals(cl)) {
         return p.getValue();
       }
@@ -567,23 +565,19 @@ public class Event implements Comparable<Event> {
     return null;
   }
 
-  /* ====================================================================
+  /* ==================================================
    *                   Object methods
-   * ==================================================================== */
+   * ================================================== */
 
   @Override
   public int compareTo(final Event that) {
-    try {
-      int c = getUtc().compareTo(that.getUtc());
+    final int c = getUtc().compareTo(that.getUtc());
 
-      if (c != 0) {
-        return c;
-      }
-
-      return getHref().compareTo(that.getHref());
-    } catch (Throwable t) {
-      throw new RuntimeException(t);
+    if (c != 0) {
+      return c;
     }
+
+    return getHref().compareTo(that.getHref());
   }
 
   @Override
@@ -593,6 +587,9 @@ public class Event implements Comparable<Event> {
 
   @Override
   public boolean equals(final Object o) {
+    if (!(o instanceof Event)) {
+      return false;
+    }
     return ((Event)o).getHref().equals(getHref());
   }
 

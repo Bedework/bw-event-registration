@@ -163,7 +163,6 @@ public class FormDef extends DbItem<FormDef> {
     }
     
     try {
-      //noinspection ResultOfMethodCallIgnored
       Integer.valueOf(checkVal);
     } catch (final Throwable ignored) {
       throw new EventregException("invalid wait list limit" + val);
@@ -178,7 +177,7 @@ public class FormDef extends DbItem<FormDef> {
     return may("waitListLimit");
   }
 
-  /**
+  /*  *
    * @param val flag to say we sent a cancel message
    * /
   public void setCancelSent(final boolean val) {
@@ -216,7 +215,7 @@ public class FormDef extends DbItem<FormDef> {
   }
 
   /**
-   * @param val
+   * @param val FieldDef
    */
   public void removeField(final FieldDef val) {
     final Set<FieldDef> ts = getFields();
@@ -268,14 +267,14 @@ public class FormDef extends DbItem<FormDef> {
     }
   }
 
-  /* ====================================================================
+  /* =======================================================
    *                   Object methods
    * The following are required for a db object.
-   * ==================================================================== */
+   * ======================================================= */
 
   @Override
   public int compareTo(final FormDef that) {
-    int cmp = getFormName().compareTo(that.getFormName());
+    final int cmp = getFormName().compareTo(that.getFormName());
     if (cmp != 0) {
       return cmp;
     }

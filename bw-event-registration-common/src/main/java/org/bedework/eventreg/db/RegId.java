@@ -35,7 +35,7 @@ public class RegId extends DbItem<RegId> {
   }
 
   /**
-   * @param val
+   * @param val Long id
    */
   public void setNextRegistrationId(final Long val) {
     nextRegistrationId = val;

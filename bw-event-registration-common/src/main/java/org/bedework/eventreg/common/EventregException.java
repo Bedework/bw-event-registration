@@ -25,7 +25,7 @@ import javax.xml.namespace.QName;
  *
  *   @author Mike Douglass   douglm@bedework.edu
  */
-public class EventregException extends Throwable {
+public class EventregException extends RuntimeException {
   /** > 0 if set
    */
   int statusCode = -1;
@@ -55,7 +55,7 @@ public class EventregException extends Throwable {
 
   /** Constructor
    *
-   * @param st
+   * @param st status code
    */
   public EventregException(final int st) {
     statusCode = st;
@@ -63,8 +63,8 @@ public class EventregException extends Throwable {
 
   /** Constructor
    *
-   * @param st
-   * @param msg
+   * @param st status code
+   * @param msg message
    */
   public EventregException(final int st,
                            final String msg) {
@@ -74,7 +74,7 @@ public class EventregException extends Throwable {
 
   /** Constructor
    *
-   * @param errorTag
+   * @param errorTag to identify cause
    */
   public EventregException(final QName errorTag) {
     statusCode = HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
@@ -83,8 +83,8 @@ public class EventregException extends Throwable {
 
   /** Constructor
    *
-   * @param st
-   * @param errorTag
+   * @param st status code
+   * @param errorTag to identify cause
    */
   public EventregException(final int st,
                            final QName errorTag) {
@@ -94,9 +94,9 @@ public class EventregException extends Throwable {
 
   /** Constructor
    *
-   * @param st
-   * @param errorTag
-   * @param msg
+   * @param st status code
+   * @param errorTag to identify cause
+   * @param msg message
    */
   public EventregException(final int st,
                            final QName errorTag,
