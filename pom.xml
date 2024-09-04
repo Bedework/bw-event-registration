@@ -27,6 +27,7 @@
 		<module>bw-event-registration-common</module>
 		<module>bw-event-registration-service</module>
     <module>bw-event-registration-web</module>
+    <module>bw-event-registration-web-common</module>
 		<module>bw-event-registration-war</module>
 		<module>bw-event-registration-ear</module>
   </modules>

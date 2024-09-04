@@ -1,0 +1,27 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.bedework.evreg</groupId>
+		<artifactId>bw-event-registration</artifactId>
+		<version>5.0.5-SNAPSHOT</version>
+	</parent>
+  
+	<artifactId>bw-event-registration-web-common</artifactId>
+	<packaging>war</packaging>
+  <name>Bedework Event Registration web common resources</name>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.bedework</groupId>
+				<artifactId>bw-util-maven-deploy</artifactId>
+
+				<configuration>
+					<warName>${project.artifactId}</warName>
+					<baseDirPath>${project.basedir}/../..</baseDirPath>
+					<propsPath>${project.basedir}/src/main/resources/wildfly.deploy.properties</propsPath>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+</project>

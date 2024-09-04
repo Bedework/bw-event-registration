@@ -1,0 +1,224 @@
+.fullpage {
+  min-width: auto; /* override bweventreg.css */
+}
+.calsuiteName {
+  margin: -1em 0 1em 0;
+}
+.actionButtons {
+  float: right;
+}
+.actionButtons .button {
+  margin-left: 0.5em;
+}
+#showDisabledSwitchHolder {
+  float: right;
+}
+h2.formName {
+  margin-bottom: 0;
+}
+#formDesc {
+  width: 75%;
+}
+#formDescContainer {
+  margin-top: 0;
+}
+.commonTable {
+  border-collapse: collapse;
+  border: 1px solid #ddd;
+  border-right: none;
+  font-family: arial;
+  font-size: 8pt;
+  margin: 10px 0 15px;
+  text-align: left;
+  width: 100%;
+}
+.commonTable th {
+  background-color: #e6eeee;
+  border-right: 1px solid #ddd;
+  font-size: 8pt;
+  padding: 4px;
+}
+.commonTable td {
+  background-color: #fbfbfb;
+  color: #3d3d3d;
+  border-top: 1px solid #ddd;
+  border-right: 1px solid #ddd;
+  padding: 4px;
+  vertical-align: top;
+}
+.commonTable tr:nth-child(even) td {
+  background-color: #f8f8f8;
+}
+.commonTable .ui-icon {
+  float: left;
+}
+.button {
+  font-size: 0.9em;
+  font-family: Arial,Helvetica,sans-serif;
+}
+.bwPopup {
+  position: relative;
+  background: #fff;
+  padding: 20px;
+  width: auto;
+  max-width: 440px;
+  margin: 20px auto;
+}
+.bwPopup h2 {
+  margin-top: 0;
+}
+.bwPopupWide {
+  max-width: 600px;
+}
+.mfp-close {
+  font-size: 20px;
+  height: 20px;
+  line-height: 24px;
+  width: 20px;
+}
+.note {
+  font-size: 0.9em;
+  font-style: italic;
+  margin-top: 0.5em;
+}
+.descriptor {
+  font-size: 0.8em;
+}
+h2 .descriptor {
+  font-weight: normal;
+  font-size: 0.6em;
+}
+#addNewFieldType {
+  padding: 4px;
+}
+#bwPublishAndLock {
+  float: right;
+}
+#bwPublishAndLock .ui-button-text {
+  background-color: #9e9;
+}
+/* Add / Modify Field Form */
+#modFieldForm label,
+#modFieldForm li.submit button {
+  display: inline-block;
+  width: 30%;
+  vertical-align: top;
+  cursor: pointer;
+}
+#modFieldForm .field {
+  clear: both;
+}
+#modFieldForm .fieldVal {
+  display: inline-block;
+  width: 60%;
+}
+#modFieldForm .fieldVal p {
+  margin: 1em 0 0.5em;
+}
+#modFieldForm input[type=text] {
+  width: 100%;
+}
+#modFieldForm ul {
+  margin: 0 0 1em 0;
+  padding: 0;
+}
+#modFieldForm li {
+  list-style: none;
+  margin: 0;
+  padding: 1em;
+}
+#modFieldForm li:nth-child(odd) {
+  background-color: #f5f5f5;
+}
+#modFieldForm li.submit {
+  background-color: white;
+}
+#modFieldForm li.submit .note {
+  text-align: right;
+}
+.invalid {
+  background-color: #fdd;
+}
+.validationError {
+  color: #c00;
+}
+#modFieldForm #optionsContainer {
+}
+#modFieldForm #optionsContainer .note {
+  display: block;
+  margin: 0.5em 0;
+}
+#modFieldForm #optionsContainer .note label {
+  display: inline;
+  line-height: 2em;
+  width: auto;
+  margin-left: 0.5em;
+}
+#modFieldForm #optionsContainer .note input {
+  margin-top: 0.5em;
+}
+#modFieldForm textarea {
+  width: 100%;
+  height: 100px;
+}
+#modFieldForm #fieldTypeCheckboxValueSetter ul {
+  margin: 0;
+  padding: 0;
+}
+#modFieldForm #fieldTypeCheckboxValueSetter li {
+  background-color: transparent;
+  margin: 0 0 0.5em 0;
+  padding: 0;
+}
+#modFieldForm #fieldTypeCheckboxValueSetter label {
+  width: 110px;
+}
+#modFieldForm #fieldTypeCheckboxValueSetter input {
+  margin: 0 1em 0 0;
+}
+.clickFieldRequired {
+  cursor: pointer;
+}
+.commonTable .optionsDisplay table {
+  width: 100%;
+  margin: 0;
+  border: none;
+  border-collapse: collapse;
+}
+.commonTable .optionsDisplay th,
+.commonTable .optionsDisplay td {
+  border: none;
+  padding: 2px 4px;
+  font-weight: normal;
+  width: 50%;
+}
+.commonTable .optionsDisplay th {
+  background-color: #eee;
+}
+.commonTable .optionsDisplay td {
+  background-color: transparent
+}
+.commonTable td.optionsList {
+  padding: 0 0 0.5em 0;
+}
+/* Custom field collections (forms) listing */
+#customFields td {
+  width: 25%;
+}
+tr.committed-true td.publishStatus {
+  background-color: #efe;
+}
+tr.disabled-true {
+  display: none;
+}
+tr.disabled-true td {
+  background-color: #fee !important;
+}
+td.actions, th.actions {
+  text-align: center;
+}
+td.actions a {
+  display: inline-block;
+  margin-right: 1em;
+  width: 50px;
+}

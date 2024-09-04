@@ -1,0 +1,302 @@
+body {
+  font-family: Verdana, Arial, Helvetica, sans-serif;
+  font-size: 12px;
+  padding: 0;
+  margin: 0;
+  color: #555;
+  background-color: white;
+}
+h1 {
+  font-size: 1.5em; 
+  margin: 0 0 1em 0;
+}
+h3 {
+  white-space: nowrap;
+  font-size: 1.1em;
+  margin: 0;
+  padding: 0;
+}
+h4 {
+  margin: 0 0 1em 0;
+}
+p {
+  margin: 0 0 1em 0;
+}
+.box {
+  margin: 0;
+  padding: 1em;
+  color: #555;
+  border: 2px solid #eee;
+}
+#regheadBox {
+   background-color: #f5f5f5;
+   margin: -1em -1em 1em;
+   padding: 1em;
+}
+.fullpage {
+  margin: 0;
+  padding: 14px;
+  color: #333;
+  background-color: white;
+  min-width: 830px;
+}
+.wide1 {
+ width: 400px;
+}
+.wide2 {
+  width: 900px;
+  margin: 2em auto;
+  background-color: white;
+  color: black;
+}
+.rightLinks {
+  font-size: 0.8em;
+  float: right;
+  text-align: right;
+  margin: 0 0 1em 1em;
+}
+.ticketVals {
+	margin: 0;
+	white-space: nowrap;
+}
+#bwNumtickets {
+  font-size: 1.5em;
+}
+tr.hold td {
+	background-color: #fee !important; /* override other settings */
+}
+tr.waitList td {
+ font-style: italic;
+ background-image: url('tentativeLinesA.gif');
+}
+tr.odd.waitList td {
+ background-image: url('tentativeLinesB.gif');
+}
+tr.waitList td.state,
+tr.odd.waitList td.state {
+  background-color: #fee;
+  background-image: url('tentativeLinesB.gif');
+}
+td.regComment {
+	width: 200px;
+}
+td.regRequestedTickets,
+td.regRequestedTickets input,
+td.regNumTickets,
+td.regCreated {
+	text-align: right;
+}
+td.regControls {
+	text-align: center;
+}
+.eventDateTime {
+  margin: -1em 0 1em 0;
+}
+#regInfo p {
+	white-space: nowrap;
+}
+#agenda select,
+#agenda option,
+#adminAgenda select,
+#adminAgenda option {
+  font-size: 1em;
+}
+#adminAgenda input {
+	font-size: 0.9em;
+}
+#adminHoldTickets {
+	float: right;
+	text-align: right;
+}
+table {
+  width: 100%; 
+  font-size: 0.9em; 
+  margin: 0 0 1em 0;
+}
+th {
+  text-align: left;
+  white-space: nowrap;
+}
+td {
+  vertical-align: top;
+  padding: 8px;
+}
+.thText {
+	margin-right: 14px;
+}
+td.controls,
+td.regControls {
+  white-space: nowrap;
+}
+
+form,
+p.superuserForm {
+  clear: both;
+}
+form .focus {
+  background: #ffc;
+}
+form .hover {
+  background: #ffc;
+}
+input {
+	font-size: 1em;
+}
+form#signin input {
+  width: 100px;
+}
+form#signin input.submit {
+  width: auto;
+}
+.commonForm {
+  margin: 0.5em 0 0 0;
+}
+#message {
+  font-size: 0.8em;
+  color: black;
+  background-color: #ff3;
+  padding: 4px;
+  margin: 0 0 0.5em 0;
+}
+#userReg {
+  width: 400px;
+  margin: 2em auto;
+  padding: 2em;
+  color: black;
+  background-color: #ababab;
+}
+#userReg input {
+  width: 260px;
+}
+#userReg #rpi {
+  width: 20px;
+}
+#userReg #submit {
+  width: 120px;
+}
+ul.errors {
+  width: 260px;
+  color: black;
+  background-color: #fdd;
+  padding: 2px;
+  margin: 0;
+}
+ul.errors li {
+  width: 260px;
+  white-space: normal;
+  list-style: none;
+  margin: 0;
+  padding: 2px;
+}
+#userInfo {
+  margin: 1em 0;
+}
+.ticketInfo {
+}
+#deadlinePassed,
+#registrationFull {
+  font-size: 0.9em;
+}
+.msgUpdated {
+  text-align: right;
+  font-size: 0.8em;
+  margin-top: 1em;
+}
+.tentative { 
+	color: red; 
+}
+.explanation { 
+	font-style: italic; 
+	margin-top: 0.5em; 
+	font-size: 0.9em; 
+}
+.checkmark { 
+	font-size: 2em;
+  font-family: "Doulos SIL","Quivira","Arial Unicode MS";
+	display: block;
+  float: left;
+  margin: 0 0.25em 0 0;
+}
+.registered { 
+	color: green;
+	margin: 0;
+  line-height: 2.5em;
+}
+.waiting { 
+	color: #b00;
+	margin: 0;
+  line-height: 2.5em;
+}
+.unregister { 
+	font-size: 0.8em;
+  margin-left: 3em;
+}
+.details {
+	clear: both;
+  font-size: 0.8em;
+  margin: 1em 0 1em 2.25em;
+}
+.overallocationNotice {
+	font-style: italic;
+	color: red;
+}
+.left {
+	float: left;
+	margin: 0 2em 2em 0;
+}
+.indent {
+  margin-left: 2em;
+}
+.strong {
+  font-weight: bold;
+}
+a {
+  color: #555;
+}
+/* Custom Fields */
+#bwCustomFields {
+  padding: 0;
+  display: table;
+  width: 100%;
+}
+#bwCustomFields li {
+  list-style: none;
+  display: table-row;
+  background-color: #fff;
+}
+#bwCustomFields label,
+#bwCustomFields .checkboxLeftCell {
+  display: table-cell;
+  padding: 0 1em 1em 1.75em;
+  white-space: nowrap;
+}
+#bwCustomFields li.row-checkbox .fieldVal label {
+  display: inline;
+  padding: 0;
+}
+#bwCustomFields .fieldVal input[type=text] {
+  min-width: 250px;
+  padding: 0 0.5em 0.5em 0.5em;
+}
+#bwCustomFields label.required-true {
+  padding-left: 0.75em; /* allows us to align the labels with or without an * indicator */
+}
+#bwCustomFields .fieldVal {
+  display: table-cell;
+  width: 100%;
+  padding: 0.5em;
+}
+#bwCustomFields .row-textinput .fieldVal {
+  padding: 0.25;
+}
+#bwCustomFields .fieldVal label {
+  display: inline;
+  width: auto;
+  margin: 0 0.5em 0 0;
+  padding: 0;
+  border: none !important;
+}
+#bwCustomFields .fieldVal input {
+  margin: 0;
+  padding: 0;
+}
