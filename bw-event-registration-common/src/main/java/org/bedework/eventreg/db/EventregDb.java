@@ -420,7 +420,7 @@ public class EventregDb implements Logged, Serializable {
     try {
       StringBuilder sb = new StringBuilder();
 
-      sb.append("select size(tickets) from ");
+      sb.append("select size(reg.tickets) from ");
       sb.append(Registration.class.getName());
       sb.append(" reg where reg.href=:href");
 
