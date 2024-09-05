@@ -32,7 +32,7 @@ import java.util.Date;
  */
 public class InitController extends AuthAbstractController {
   @Override
-  public ModelAndView doRequest() throws Throwable {
+  public ModelAndView doRequest() {
     sessMan.flushCurrEvent();
     final Event ev = sessMan.getCurrEvent();
 

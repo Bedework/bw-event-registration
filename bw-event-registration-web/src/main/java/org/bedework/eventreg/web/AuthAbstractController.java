@@ -35,7 +35,7 @@ public abstract class AuthAbstractController extends AbstractController {
   protected boolean admin;
 
   @Override
-  protected ModelAndView setup() throws Throwable {
+  protected ModelAndView setup() {
     final ModelAndView mv = super.setup();
 
     if (mv != null) {
@@ -49,7 +49,7 @@ public abstract class AuthAbstractController extends AbstractController {
     return null;
   }
 
-  protected ModelAndView updateRegistration() throws Throwable {
+  protected ModelAndView updateRegistration() {
     final Long regId = req.getRegistrationId();
     if (regId == null) {
       return errorReturn("No registration id supplied");
@@ -85,7 +85,7 @@ public abstract class AuthAbstractController extends AbstractController {
     return null;
   }
 
-  protected ModelAndView removeRegistration(final boolean admin) throws Throwable {
+  protected ModelAndView removeRegistration(final boolean admin) {
     final Long regId = req.getRegistrationId();
     if (regId == null) {
       return errorReturn("No registration id supplied");
@@ -116,9 +116,8 @@ public abstract class AuthAbstractController extends AbstractController {
 
   /** Adjust tickets for the current event - perhaps as a result of increasing
    * seats.
-   * @throws Throwable on fatal error
    */
-  protected void adjustTickets() throws Throwable {
+  protected void adjustTickets() {
     final Event currEvent = sessMan.getCurrEvent();
 
     final long allocated = sessMan.getRegTicketCount();
@@ -140,7 +139,7 @@ public abstract class AuthAbstractController extends AbstractController {
     waitListFull  // Wait list is full
   }
   
-  protected AdjustResult adjustTickets(final Registration reg) throws Throwable {
+  protected AdjustResult adjustTickets(final Registration reg) {
     final Event currEvent = sessMan.getCurrEvent();
 
     final int numTickets = req.getTicketsRequested();

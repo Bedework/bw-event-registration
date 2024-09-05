@@ -26,7 +26,7 @@ import org.springframework.web.servlet.ModelAndView;
  */
 public class AdminRemoveRegController extends AdminAuthAbstractController {
   @Override
-  public ModelAndView doRequest() throws Throwable {
+  public ModelAndView doRequest() {
     ModelAndView mv = removeRegistration(true);
 
     if (mv != null) {

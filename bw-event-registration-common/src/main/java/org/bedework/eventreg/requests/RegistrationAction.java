@@ -21,6 +21,8 @@ package org.bedework.eventreg.requests;
 import org.bedework.eventreg.db.Registration;
 import org.bedework.util.misc.ToString;
 
+import java.io.Serial;
+
 /** Requests coming in to the Bedework event registration service.
  * These are the ones that need to be handled asynchronously, for
  * example, notifications of event changes.
@@ -29,6 +31,7 @@ import org.bedework.util.misc.ToString;
  * @author douglm
  */
 public class RegistrationAction extends EventregRequest {
+  @Serial
   private static final long serialVersionUID = 1L;
 
   public static final String syseventEventregRegistration =

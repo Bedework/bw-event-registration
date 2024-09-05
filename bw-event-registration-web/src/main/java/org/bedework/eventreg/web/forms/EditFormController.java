@@ -30,7 +30,7 @@ import org.springframework.web.servlet.ModelAndView;
  */
 public class EditFormController extends AuthAbstractController {
   @Override
-  public ModelAndView doRequest() throws Throwable {
+  public ModelAndView doRequest() {
     if (sessMan.getCurrentCalsuite() == null) {
       return errorReturn("No calsuite");
     }

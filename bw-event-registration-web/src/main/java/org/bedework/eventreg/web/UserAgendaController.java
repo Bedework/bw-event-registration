@@ -31,7 +31,7 @@ import java.util.TreeSet;
  */
 public class UserAgendaController extends AuthAbstractController {
   @Override
-  public ModelAndView doRequest() throws Throwable {
+  public ModelAndView doRequest() {
     final TreeSet<Registration> regs = new TreeSet<>();
 
     for (final Registration reg:

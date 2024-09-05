@@ -26,7 +26,7 @@ import org.springframework.web.servlet.ModelAndView;
  */
 public class AdminAdjustTktsController extends AdminAuthAbstractController {
   @Override
-  public ModelAndView doRequest() throws Throwable {
+  public ModelAndView doRequest() {
     adjustTickets();
 
     return sessModel(getForwardTo());

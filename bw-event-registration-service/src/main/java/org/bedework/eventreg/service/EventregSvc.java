@@ -42,9 +42,9 @@ public class EventregSvc extends ConfBase<EventregPropertiesImpl>
   /* Be safe - default to false */
   private boolean export;
 
-  /* ==============================================================
+  /* =======================================================
    * Dump/restore
-   * ============================================================== */
+   * ======================================================= */
 
   private class SchemaBuilder extends SchemaThread {
 
@@ -99,9 +99,9 @@ public class EventregSvc extends ConfBase<EventregPropertiesImpl>
     hdlr = val;
   }
 
-  /* ========================================================================
+  /* =======================================================
    * System properties
-   * ======================================================================== */
+   * ======================================================= */
 
   @Override
   public void setEventregAdminToken(final String val) {
@@ -173,9 +173,9 @@ public class EventregSvc extends ConfBase<EventregPropertiesImpl>
     return getConfig().getRegidBatchSize();
   }
 
-  /* ========================================================================
+  /* =======================================================
    * Hibernate properties
-   * ======================================================================== */
+   * ======================================================= */
 
   @Override
   public void setHibernateProperties(final List<String> val) {
@@ -219,9 +219,9 @@ public class EventregSvc extends ConfBase<EventregPropertiesImpl>
     getConfig().setHibernateProperty(name, value);
   }
 
-  /* ========================================================================
+  /* =======================================================
    * Dump/restore
-   * ======================================================================== */
+   * ======================================================= */
 
   @Override
   public void setSchemaOutFile(final String val) {
@@ -345,9 +345,9 @@ public class EventregSvc extends ConfBase<EventregPropertiesImpl>
     getConfig().setSyseventsProperty(name, val);
   }
 
-  /* ========================================================================
+  /* =======================================================
    * Mbean attributes
-   * ======================================================================== */
+   * ======================================================= */
 
   @Override
   public void setExport(final boolean val) {
@@ -360,9 +360,9 @@ public class EventregSvc extends ConfBase<EventregPropertiesImpl>
     return export;
   }
 
-  /* ========================================================================
+  /* =======================================================
    * Operations
-   * ======================================================================== */
+   * ======================================================= */
 
   @Override
   public String generateAdminToken() {
@@ -599,8 +599,4 @@ public class EventregSvc extends ConfBase<EventregPropertiesImpl>
   public synchronized void stop() {
     hdlr.stop();
   }
-
-  /* ====================================================================
-   *                   Private methods
-   * ==================================================================== */
 }

@@ -26,7 +26,7 @@ import org.springframework.web.servlet.ModelAndView;
  */
 public class NoopController extends AdminAuthAbstractController {
   @Override
-  public ModelAndView doRequest() throws Throwable {
+  public ModelAndView doRequest() {
     return sessModel(getForwardSuccess());
   }
 }

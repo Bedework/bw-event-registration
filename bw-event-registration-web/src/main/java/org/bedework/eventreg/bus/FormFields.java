@@ -23,7 +23,6 @@ import org.bedework.util.logging.BwLogger;
 import org.bedework.util.logging.Logged;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
@@ -54,7 +53,7 @@ public class FormFields
       formEls.add(fd);
     }
 
-    Collections.sort(formEls, orderComparator);
+    formEls.sort(orderComparator);
 
     formElsIt = formEls.iterator();
   }
@@ -103,14 +102,8 @@ public class FormFields
     return formEls;
   }
 
-  private static Comparator<FieldDef> orderComparator =
-          new Comparator<FieldDef>() {
-            public int compare(final FieldDef f1,
-                               final FieldDef f2) {
-              return new Integer(f1.getOrder()).compareTo(
-                      new Integer(f2.getOrder()));
-    }
-  };
+  private static final Comparator<FieldDef> orderComparator =
+          Comparator.comparingInt(FieldDef::getOrder);
 
   public List<FieldDef> getOptions() {
     final List<FieldDef> options = new ArrayList<>();
@@ -131,7 +124,7 @@ public class FormFields
       options.add(fd);
     }
 
-    Collections.sort(options, orderComparator);
+    options.sort(orderComparator);
 
     return options;
   }
@@ -148,20 +141,16 @@ public class FormFields
     return lastFieldDef;
   }
 
-  public void remove() {
-    throw new UnsupportedOperationException("remove");
-  }
-
   @Override
   public Iterator<FieldDef> iterator() {
     return this;
   }
 
-  /* ====================================================================
+  /* =======================================================
    *                   Logged methods
-   * ==================================================================== */
+   * ======================================================= */
 
-  private BwLogger logger = new BwLogger();
+  private final BwLogger logger = new BwLogger();
 
   @Override
   public BwLogger getLogger() {

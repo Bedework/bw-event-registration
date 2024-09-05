@@ -26,14 +26,14 @@ import org.springframework.web.servlet.ModelAndView;
  */
 public abstract class AdminAuthAbstractController extends AuthAbstractController {
   @Override
-  protected ModelAndView setup() throws Throwable {
-    ModelAndView mv = super.setup();
+  protected ModelAndView setup() {
+    final ModelAndView mv = super.setup();
 
     if (mv != null) {
       return mv;
     }
 
-    String adminToken = sessMan.getSysInfo().getEventregAdminToken();
+    final String adminToken = sessMan.getSysInfo().getEventregAdminToken();
 
     if (adminToken == null) {
       return errorReturn("No admin token set in system properties");

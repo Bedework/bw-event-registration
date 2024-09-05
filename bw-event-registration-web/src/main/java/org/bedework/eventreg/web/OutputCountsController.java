@@ -26,7 +26,7 @@ import org.springframework.web.servlet.ModelAndView;
  */
 public class OutputCountsController extends AbstractController {
   @Override
-  public ModelAndView doRequest() throws Throwable {
+  public ModelAndView doRequest() {
     return sessModel("counts");
   }
 }

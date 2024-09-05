@@ -32,7 +32,7 @@ import java.util.TreeSet;
  */
 public class OutputCSVController extends AdminAuthAbstractController {
   @Override
-  public ModelAndView doRequest() throws Throwable {
+  public ModelAndView doRequest() {
     if (sessMan.getCurrentCalsuite() == null) {
       return errorReturn("No calsuite");
     }

@@ -32,7 +32,7 @@ import java.util.List;
  */
 public class CommitFormController extends AuthAbstractController {
   @Override
-  public ModelAndView doRequest() throws Throwable {
+  public ModelAndView doRequest() {
     if (sessMan.getCurrentCalsuite() == null) {
       return errorReturn("No calsuite");
     }

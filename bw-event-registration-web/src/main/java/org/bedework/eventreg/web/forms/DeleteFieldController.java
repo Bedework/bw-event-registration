@@ -33,7 +33,7 @@ import java.util.Set;
  */
 public class DeleteFieldController extends AuthAbstractController {
   @Override
-  public ModelAndView doRequest() throws Throwable {
+  public ModelAndView doRequest() {
     if (sessMan.getCurrentCalsuite() == null) {
       return errorReturn("No calsuite");
     }

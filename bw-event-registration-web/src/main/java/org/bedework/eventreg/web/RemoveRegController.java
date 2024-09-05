@@ -26,8 +26,8 @@ import org.springframework.web.servlet.ModelAndView;
  */
 public class RemoveRegController extends AuthAbstractController {
   @Override
-  public ModelAndView doRequest() throws Throwable {
-    ModelAndView mv = removeRegistration(false);
+  public ModelAndView doRequest() {
+    final ModelAndView mv = removeRegistration(false);
 
     if (mv != null) {
       return mv;

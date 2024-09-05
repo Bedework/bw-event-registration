@@ -43,7 +43,7 @@ import java.util.Map;
  */
 public class EventregController extends AuthAbstractController {
   @Override
-  public ModelAndView doRequest() throws Throwable {
+  public ModelAndView doRequest() {
     final Event ev = sessMan.getCurrEvent();
 
     final int maxTicketsAllowed = ev.getMaxTickets();
@@ -80,9 +80,8 @@ public class EventregController extends AuthAbstractController {
 
   /**
    * @return false if event full
-   * @throws Throwable on fatal error
    */
-  private boolean registerUserInEvent(final Event ev) throws Throwable {
+  private boolean registerUserInEvent(final Event ev) {
     final String href = req.getHref();
 
     if (debug()) {
@@ -146,7 +145,7 @@ public class EventregController extends AuthAbstractController {
   }
 
   /* return null for ok - otherwise error message */
-  private String handleFormInfo(final Registration reg) throws Throwable {
+  private String handleFormInfo(final Registration reg) {
     final String calsuite = sessMan.getCurrentCalsuite();
     if (calsuite == null) {
       return "No calsuite";
@@ -167,12 +166,12 @@ public class EventregController extends AuthAbstractController {
 
     final List<FieldDef> required = ffs.getRequiredFormEls();
 
-    final Enumeration params = req.getRequest().getParameterNames();
+    final Enumeration<String> params = req.getRequest().getParameterNames();
 
     final Map<String, Object> vals = new HashMap<>();
 
     while (params.hasMoreElements()) {
-      final String param = (String)params.nextElement();
+      final String param = params.nextElement();
 
       final FieldDef fd = ffs.getField(param);
 

@@ -31,9 +31,9 @@ import java.util.List;
           type = "org.bedework.eventreg.service.EventregProperties")
 public class EventregPropertiesImpl extends HibernateConfigBase<EventregPropertiesImpl>
         implements EventregProperties {
-  /* ========================================================================
+  /* =========================================================
    * Attributes
-   * ======================================================================== */
+   * ========================================================= */
 
   private String eventregAdminToken;
 
@@ -59,9 +59,9 @@ public class EventregPropertiesImpl extends HibernateConfigBase<EventregProperti
 
   private List<String> syseventsProperties;
 
-  /* ========================================================================
+  /* =========================================================
    * Dump/restore
-   * ======================================================================== */
+   * ========================================================= */
 
   private String schemaOutFile;
 
@@ -73,9 +73,9 @@ public class EventregPropertiesImpl extends HibernateConfigBase<EventregProperti
 
   private String defaultEmailDomain;
 
-  /* ========================================================================
+  /* =========================================================
    * Attributes
-   * ======================================================================== */
+   * ========================================================= */
 
   @Override
   public void setEventregAdminToken(final String val) {
@@ -147,9 +147,9 @@ public class EventregPropertiesImpl extends HibernateConfigBase<EventregProperti
     return regidBatchSize;
   }
 
-  /* ========================================================================
+  /* =========================================================
    * Dump/restore
-   * ======================================================================== */
+   * ========================================================= */
 
   @Override
   public void setSchemaOutFile(final String val) {

@@ -118,7 +118,7 @@ public class SvcRequestHandler extends JmsSysEventListener
 
   private AbstractProcessorThread processor;
 
-  public SvcRequestHandler(final EventregProperties props) throws Throwable {
+  public SvcRequestHandler(final EventregProperties props) {
     this.props = props;
 
     db = new EventregDb();
@@ -126,14 +126,20 @@ public class SvcRequestHandler extends JmsSysEventListener
 
     delayHandler = new SvcRequestDelayHandler(this, props);
 
-    Timezones.initTimezones(getSysInfo().getTzsUri());
+    try {
+      Timezones.initTimezones(getSysInfo().getTzsUri());
 
-    cnctr = new BwConnector(getSysInfo().getWsdlUri(), tzs);
+      cnctr = new BwConnector(getSysInfo().getWsdlUri(), tzs);
 
-    sender = new JmsNotificationsHandlerImpl(props.getActionQueueName(),
-                                             ConfigBase.toProperties(props.getSyseventsProperties()));
+      sender = new JmsNotificationsHandlerImpl(
+              props.getActionQueueName(),
+              ConfigBase.toProperties(
+                      props.getSyseventsProperties()));
 
-    bwUri = new URI(getSysInfo().getBwUrl());
+      bwUri = new URI(getSysInfo().getBwUrl());
+    } catch (final Throwable t) {
+      throw new EventregException(t);
+    }
   }
 
   @Override
@@ -147,11 +153,10 @@ public class SvcRequestHandler extends JmsSysEventListener
         debug("handling request: " + ev);
       }
 
-      if (!(ev instanceof EventregRequest)) {
+      if (!(ev instanceof final EventregRequest req)) {
         return;
       }
 
-      final EventregRequest req = (EventregRequest)ev;
       boolean ok = false;
 
       try {
@@ -185,13 +190,17 @@ public class SvcRequestHandler extends JmsSysEventListener
       process(false);
     } catch (final Throwable t) {
       error(t);
-      throw new RuntimeException(t);
+      throw new EventregException(t);
     }
   }
 
   @Override
-  public void addRequest(final EventregRequest val) throws Throwable {
-    sender.post(val);
+  public void addRequest(final EventregRequest val) {
+    try {
+      sender.post(val);
+    } catch (final NotificationException e) {
+      throw new EventregException(e);
+    }
   }
 
   public void close() {

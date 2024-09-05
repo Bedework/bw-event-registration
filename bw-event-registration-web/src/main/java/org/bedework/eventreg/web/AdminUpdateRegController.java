@@ -25,8 +25,8 @@ import org.springframework.web.servlet.ModelAndView;
  */
 public class AdminUpdateRegController extends AdminAuthAbstractController {
   @Override
-  public ModelAndView doRequest() throws Throwable {
-    ModelAndView mv = updateRegistration();
+  public ModelAndView doRequest() {
+    final ModelAndView mv = updateRegistration();
 
     if (mv != null) {
       return mv;

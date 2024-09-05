@@ -21,6 +21,8 @@ package org.bedework.eventreg.requests;
 import org.bedework.util.jms.events.SysEvent;
 import org.bedework.util.misc.ToString;
 
+import java.io.Serial;
+
 /** Requests coming in to the Bedework event registration service or
  * generated internally as a result of changes.
  * These are handled asynchronously by the service module.
@@ -29,6 +31,7 @@ import org.bedework.util.misc.ToString;
  * @author douglm
  */
 public class EventregRequest extends SysEvent {
+  @Serial
   private static final long serialVersionUID = 1L;
 
   /* millisecs time to retry */

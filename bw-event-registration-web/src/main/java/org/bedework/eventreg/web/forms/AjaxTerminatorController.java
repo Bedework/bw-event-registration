@@ -28,7 +28,7 @@ import org.springframework.web.servlet.ModelAndView;
  */
 public class AjaxTerminatorController extends AdminAuthAbstractController {
   @Override
-  public ModelAndView doRequest() throws Throwable {
+  public ModelAndView doRequest() {
     return sessModel("forms/ajaxTerminator");
   }
 }

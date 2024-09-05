@@ -19,6 +19,7 @@ under the License.
 package org.bedework.eventreg.web.forms;
 
 import org.bedework.eventreg.bus.FormFields;
+import org.bedework.eventreg.common.EventregException;
 import org.bedework.eventreg.common.EventregInvalidNameException;
 import org.bedework.eventreg.db.FieldDef;
 import org.bedework.eventreg.db.FormDef;
@@ -28,6 +29,7 @@ import org.bedework.util.misc.Util;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.StringReader;
 
 /**
@@ -36,7 +38,7 @@ import java.io.StringReader;
  */
 public class AddFieldController extends AuthAbstractController {
   @Override
-  public ModelAndView doRequest() throws Throwable {
+  public ModelAndView doRequest() {
     try {
       if (sessMan.getCurrentCalsuite() == null) {
         return errorReturn("No calsuite");
@@ -130,57 +132,61 @@ public class AddFieldController extends AuthAbstractController {
 
   private boolean createOptions(final FormDef form,
                                 final FieldDef field,
-                                final String options) throws Throwable {
+                                final String options) {
     final BufferedReader rdr = new BufferedReader(new StringReader(options));
     int i = 100;
 
-    for (String line = rdr.readLine();
-         line != null;
-         line = rdr.readLine()) {
-      final FieldDef opt = new FieldDef();
+    try {
+      for (String line = rdr.readLine();
+           line != null;
+           line = rdr.readLine()) {
+        final FieldDef opt = new FieldDef();
 
-      final String[] valLabel = line.split("\\|");
+        final String[] valLabel = line.split("\\|");
 
-      if (valLabel.length < 1) {
-        return false;
-      }
-
-      final String value = Util.checkNull(valLabel[0]);
-
-      if (value == null) {
-        if (debug()) {
-          // ....
+        if (valLabel.length < 1) {
+          return false;
         }
-        return false;
+
+        final String value = Util.checkNull(valLabel[0]);
+
+        if (value == null) {
+          if (debug()) {
+            // ....
+          }
+          return false;
+        }
+
+        String label = null;
+
+        if (valLabel.length == 2) {
+          label = valLabel[1];
+        } else if (valLabel.length > 2) {
+          return false;
+        }
+
+        opt.setFormName(field.getFormName());
+        opt.setOwner(field.getOwner());
+        opt.setName(field.getName() + "-" + i);
+        opt.setType(FieldDef.fieldTypeOption);
+        opt.setGroup(field.getName());
+        opt.setLabel(label);
+        opt.setValue(value);
+        //opt.setGroup(req.getDescription());
+        //opt.setRequired(req.getRequired());
+        opt.setOrder(i);
+        opt.setDefaultValue(req.getDefault());
+        //opt.setMultivalued(req.getMulti());
+        //opt.setWidth(req.getWidth());
+        //opt.setHeight(req.getHeight());
+
+        i += 100;
+        form.addField(opt);
       }
-
-      String label = null;
-
-      if (valLabel.length == 2) {
-        label = valLabel[1];
-      } else if (valLabel.length > 2) {
-        return false;
-      }
-
-      opt.setFormName(field.getFormName());
-      opt.setOwner(field.getOwner());
-      opt.setName(field.getName() + "-" + i);
-      opt.setType(FieldDef.fieldTypeOption);
-      opt.setGroup(field.getName());
-      opt.setLabel(label);
-      opt.setValue(value);
-      //opt.setGroup(req.getDescription());
-      //opt.setRequired(req.getRequired());
-      opt.setOrder(i);
-      opt.setDefaultValue(req.getDefault());
-      //opt.setMultivalued(req.getMulti());
-      //opt.setWidth(req.getWidth());
-      //opt.setHeight(req.getHeight());
-
-      i+= 100;
-      form.addField(opt);
+      rdr.close();
+    } catch (final IOException ioe) {
+      throw new EventregException(ioe);
     }
-    rdr.close();
 
     return true;
   }

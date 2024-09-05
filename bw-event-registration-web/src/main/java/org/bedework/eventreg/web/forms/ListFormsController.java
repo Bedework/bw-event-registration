@@ -31,7 +31,7 @@ import java.util.List;
  */
 public class ListFormsController extends AdminAuthAbstractController {
   @Override
-  public ModelAndView doRequest() throws Throwable {
+  public ModelAndView doRequest() {
     final List<FormDef> forms = sessMan.getFormDefs();
 
     return objModel(getForwardSuccess(),

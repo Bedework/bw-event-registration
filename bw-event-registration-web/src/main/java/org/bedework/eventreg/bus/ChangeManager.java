@@ -40,7 +40,7 @@ public class ChangeManager implements Logged {
     private String value;
 
     /**
-     * @param val
+     * @param val name of changed value
      */
     public void setName(final String val) {
       name = val;
@@ -54,22 +54,22 @@ public class ChangeManager implements Logged {
     }
 
     /**
-     * @param val
+     * @param val changed value
      */
     public void setValue(final String val) {
       value = val;
     }
 
     /**
-     * @return name of changed value
+     * @return changed value
      */
     public String getValue() {
       return value;
     }
 
     /**
-     * @param name
-     * @param value
+     * @param name of changed value
+     * @param value changed value
      */
     public ChangeItem(final String name,
                       final String value) {
@@ -78,7 +78,7 @@ public class ChangeManager implements Logged {
     }
 
     /**
-     * @param value
+     * @param value int new value
      * @return new change item
      */
     public static ChangeItem makeUpdNumTickets(final int value) {
@@ -88,7 +88,7 @@ public class ChangeManager implements Logged {
   }
 
   /**
-   * @param sessMan
+   * @param sessMan SessionManager
    */
   public ChangeManager(final SessionManager sessMan) {
     this.sessMan = sessMan;
@@ -96,29 +96,26 @@ public class ChangeManager implements Logged {
 
   /**
    * @param c
-   * @throws Throwable
    */
-  public void addChange(final Change c) throws Throwable {
+  public void addChange(final Change c) {
     sessMan.addChange(c);
   }
 
   /**
-   * @param ts
+   * @param lastmod - changes after this
    * @return changes
-   * @throws Throwable
    */
-  public List<Change> getChanges(final String ts) throws Throwable {
-    return sessMan.getChanges(ts);
+  public List<Change> getChanges(final String lastmod) {
+    return sessMan.getChanges(lastmod);
   }
 
   /**
-   * @param reg
-   * @param type
-   * @throws Throwable
+   * @param reg changed Registration
+   * @param type of change
    */
   public void addChange(final Registration reg,
-                        final String type) throws Throwable {
-    Change c = new Change();
+                        final String type) {
+    final Change c = new Change();
 
     c.setAuthid(sessMan.getCurrentUser());
     c.setRegistrationId(reg.getRegistrationId());
@@ -129,15 +126,14 @@ public class ChangeManager implements Logged {
   }
 
   /**
-   * @param reg
+   * @param reg changed Registration
    * @param type
    * @param ci
-   * @throws Throwable
    */
   public void addChange(final Registration reg,
                         final String type,
-                        final ChangeItem ci) throws Throwable {
-    Change c = new Change();
+                        final ChangeItem ci) {
+    final Change c = new Change();
 
     c.setAuthid(sessMan.getCurrentUser());
     c.setRegistrationId(reg.getRegistrationId());
@@ -150,37 +146,34 @@ public class ChangeManager implements Logged {
   }
 
   /**
-   * @param reg
-   * @param numTickets
-   * @throws Throwable
+   * @param reg changed Registration
+   * @param numTickets added
    */
   public void addTicketsAdded(final Registration reg,
-                              final int numTickets) throws Throwable {
+                              final int numTickets) {
     addChange(reg, Change.typeTktAdded,
               ChangeItem.makeUpdNumTickets(reg.getNumTickets()));
   }
 
   /**
-   * @param reg
-   * @throws Throwable
+   * @param reg changed Registration
    */
-  public void addRegFulfilled(final Registration reg) throws Throwable {
+  public void addRegFulfilled(final Registration reg) {
     addChange(reg, Change.typeRegFulfilled);
   }
 
   /**
-   * @param reg
-   * @throws Throwable
+   * @param reg to mark as deleted
    */
-  public void deleteReg(final Registration reg) throws Throwable {
+  public void deleteReg(final Registration reg) {
     addChange(reg, Change.typeDelReg);
   }
 
-  /* ====================================================================
+  /* =========================================================
    *                   Logged methods
-   * ==================================================================== */
+   * ========================================================= */
 
-  private BwLogger logger = new BwLogger();
+  private final BwLogger logger = new BwLogger();
 
   @Override
   public BwLogger getLogger() {

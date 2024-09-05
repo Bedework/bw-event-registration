@@ -31,7 +31,7 @@ import java.util.TreeSet;
  */
 public class AdminAgendaController extends AdminAuthAbstractController {
   @Override
-  public ModelAndView doRequest() throws Throwable {
+  public ModelAndView doRequest() {
     sessMan.flushCurrEvent();
     final Event ev = sessMan.getCurrEvent();
 

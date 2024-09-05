@@ -75,7 +75,7 @@ public class Request extends ReqUtil {
    */
   public static final String reqparLastmod = "lastmod";
 
-  /* ==============================================================
+  /* =====================================================
    *                form fields
    */
 
@@ -120,9 +120,8 @@ public class Request extends ReqUtil {
 
   /**
    * @return number of tickets or -1 for no parameter
-   * @throws Throwable
    */
-  public int getTicketsRequested() throws Throwable {
+  public int getTicketsRequested() {
     return getIntReqPar(reqparNumtickets, -1);
   }
 
@@ -143,17 +142,15 @@ public class Request extends ReqUtil {
 
   /**
    * @return ticket id or null for no parameter
-   * @throws Throwable
    */
-  public Long getRegistrationId() throws Throwable {
+  public Long getRegistrationId() {
     return getLongReqPar(reqparRegId, -1);
   }
 
   /**
    * @return true if header required
-   * @throws Throwable
    */
-  public boolean getCsvHeader() throws Throwable {
+  public boolean getCsvHeader() {
     return getBooleanReqPar(reqparCSVHeader, true);
   }
 
@@ -192,14 +189,14 @@ public class Request extends ReqUtil {
     return getReqPar(reqparHref);
   }
 
-  /* ==============================================================
+  /* =====================================================
    *                form fields
    */
 
   /**
    * @return par or null for no parameter
    */
-  public boolean getDefault() throws Throwable {
+  public boolean getDefault() {
     return getBooleanReqPar(reqparDefault, false);
   }
 
@@ -262,28 +259,28 @@ public class Request extends ReqUtil {
   /**
    * @return par or null for no parameter
    */
-  public boolean getDisable() throws Throwable {
+  public boolean getDisable() {
     return getBooleanReqPar(reqparDisable, false);
   }
 
   /**
    * @return par or null for no parameter
    */
-  public boolean getMulti() throws Throwable {
+  public boolean getMulti() {
     return getBooleanReqPar(reqparMulti, false);
   }
 
   /**
    * @return par or null for no parameter
    */
-  public int getOrder() throws Throwable {
+  public int getOrder() {
     return getIntReqPar(reqparOrder, 0);
   }
 
   /**
    * @return par or null for no parameter
    */
-  public boolean getRequired() throws Throwable {
+  public boolean getRequired() {
     return getBooleanReqPar(reqparRequired, false);
   }
 
@@ -319,7 +316,7 @@ public class Request extends ReqUtil {
      valid json names.
    */
   public static String validName(final String name) throws EventregException {
-    if ((name == null) || (name.length() == 0)) {
+    if ((name == null) || (name.isEmpty())) {
       throw new EventregInvalidNameException(name);
     }
 

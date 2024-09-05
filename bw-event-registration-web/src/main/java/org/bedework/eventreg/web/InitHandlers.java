@@ -64,11 +64,11 @@ public class InitHandlers extends HandlerInterceptorAdapter
     return true;
   }
 
-  /* ====================================================================
+  /* ==========================================================
    *                   Logged methods
-   * ==================================================================== */
+   * ========================================================== */
 
-  private BwLogger logger = new BwLogger();
+  private final BwLogger logger = new BwLogger();
 
   @Override
   public BwLogger getLogger() {

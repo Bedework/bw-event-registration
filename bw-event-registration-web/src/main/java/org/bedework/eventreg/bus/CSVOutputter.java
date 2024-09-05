@@ -31,7 +31,7 @@ import org.apache.commons.csv.CSVPrinter;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 /** Handle CSV output of data
@@ -44,7 +44,7 @@ public class CSVOutputter
   private final Set<Registration> regs;
   private final FormDef form;
 
-  private Iterator<Registration> regit;
+  private final Iterator<Registration> regit;
 
   private final String fixedHeader =
             "event," +
@@ -63,7 +63,7 @@ public class CSVOutputter
 
   public CSVOutputter(final Event ev,
                       final FormDef form,
-                      final Set<Registration> regs) throws Throwable {
+                      final Set<Registration> regs) {
     this.ev = ev;
     this.regs = regs;
     this.form = form;
@@ -103,7 +103,7 @@ public class CSVOutputter
     ><c:forEach var="reg" items="${regs}" varStatus="loopStatus"><%--
             </c:forEach>
     */
-    final List flds = new ArrayList();
+    final List<Object> flds = new ArrayList<>();
 
     final Registration reg = regit.next();
 
@@ -134,16 +134,11 @@ public class CSVOutputter
       final FormFields ff = new FormFields(form.getFields());
 
       try {
-        final Map vals = reg.restoreFormValues();
+        final var vals = reg.restoreFormValues();
 
         for (final FieldDef fd: ff) {
-          final Object val = vals.get(fd.getName());
-
-          if (val == null) {
-            flds.add("");
-          } else {
-            flds.add(val);
-          }
+          flds.add(Objects.requireNonNullElse(
+                  vals.get(fd.getName()), ""));
         }
       } catch (final Throwable t) {
         out.append("Exception restoring form values");
@@ -169,11 +164,11 @@ public class CSVOutputter
     return this;
   }
 
-  /* ====================================================================
+  /* ========================================================
    *                   Logged methods
-   * ==================================================================== */
+   * ======================================================== */
 
-  private BwLogger logger = new BwLogger();
+  private final BwLogger logger = new BwLogger();
 
   @Override
   public BwLogger getLogger() {

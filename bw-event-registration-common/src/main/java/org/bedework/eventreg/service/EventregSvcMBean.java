@@ -41,9 +41,9 @@ public interface EventregSvcMBean extends ConfBaseMBean, EventregProperties {
   @MBeanInfo("Export (write) schema to database?")
   public boolean getExport();
 
-  /* ========================================================================
+  /* =========================================================
    * Operations
-   * ======================================================================== */
+   * ======================================================== */
 
   /** Create or dump new schema. If export and drop set will try to drop tables.
    * Export and create will create a schema in the db and export, drop, create

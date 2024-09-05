@@ -18,6 +18,7 @@ under the License.
  */
 package org.bedework.eventreg.service;
 
+import org.bedework.eventreg.common.EventregException;
 import org.bedework.eventreg.requests.EventregRequest;
 import org.bedework.util.config.ConfigBase;
 import org.bedework.util.jms.JmsNotificationsHandlerImpl;
@@ -81,7 +82,7 @@ public class SvcRequestDelayHandler extends JmsSysEventListener {
   private AbstractProcessorThread processor;
 
   public SvcRequestDelayHandler(final SvcRequestHandler handler,
-                                final EventregProperties props) throws Throwable {
+                                final EventregProperties props) {
     this.props = props;
     this.handler = handler;
 
@@ -90,8 +91,13 @@ public class SvcRequestDelayHandler extends JmsSysEventListener {
       props.setDelayMillis(30 * 1000);
     }
 
-    sender = new JmsNotificationsHandlerImpl(props.getActionDelayQueueName(),
-                                             ConfigBase.toProperties(props.getSyseventsProperties()));
+    try {
+      sender = new JmsNotificationsHandlerImpl(
+              props.getActionDelayQueueName(),
+              ConfigBase.toProperties(props.getSyseventsProperties()));
+    } catch (final NotificationException e) {
+      throw new EventregException(e);
+    }
   }
 
   @Override
@@ -105,11 +111,9 @@ public class SvcRequestDelayHandler extends JmsSysEventListener {
         debug("handling delayed request: " + ev);
       }
 
-      if (!(ev instanceof EventregRequest)) {
+      if (!(ev instanceof final EventregRequest req)) {
         return;
       }
-
-      final EventregRequest req = (EventregRequest)ev;
 
       try {
         final long waitTime = req.getWaitUntil() -

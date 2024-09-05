@@ -26,7 +26,7 @@ import org.springframework.web.servlet.ModelAndView;
  */
 public abstract class WSAbstractController extends AbstractController {
   @Override
-  protected ModelAndView setup() throws Throwable {
+  protected ModelAndView setup() {
     final ModelAndView mv = super.setup();
 
     if (mv != null) {

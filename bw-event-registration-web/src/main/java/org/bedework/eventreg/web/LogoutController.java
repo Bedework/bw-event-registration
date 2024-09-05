@@ -27,7 +27,7 @@ import org.springframework.web.servlet.ModelAndView;
  */
 public class LogoutController extends AuthAbstractController {
   @Override
-  public ModelAndView doRequest() throws Throwable {
+  public ModelAndView doRequest() {
     sessMan.logout();
 
     return sessModel(getForwardSuccess());

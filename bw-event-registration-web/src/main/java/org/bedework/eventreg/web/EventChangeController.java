@@ -29,7 +29,7 @@ import org.springframework.web.servlet.ModelAndView;
  */
 public class EventChangeController extends WSAbstractController {
   @Override
-  public ModelAndView doRequest() throws Throwable {
+  public ModelAndView doRequest() {
     final String href = req.getHref();
 
     if (debug()) {

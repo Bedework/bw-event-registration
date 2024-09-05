@@ -28,11 +28,11 @@ import org.springframework.web.servlet.ModelAndView;
  */
 public class AdminHoldController extends AdminAuthAbstractController {
   @Override
-  public ModelAndView doRequest() throws Throwable {
-    Event ev = sessMan.getCurrEvent();
-    int numTickets = req.getTicketsRequested();
+  public ModelAndView doRequest() {
+    final Event ev = sessMan.getCurrEvent();
+    final int numTickets = req.getTicketsRequested();
 
-    Registration reg = new Registration();
+    final Registration reg = new Registration();
 
     reg.setRegistrationId(sessMan.getNextRegistrationId());
     reg.setAuthid(sessMan.getCurrentUser());

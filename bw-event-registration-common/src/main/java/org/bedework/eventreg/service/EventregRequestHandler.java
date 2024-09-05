@@ -55,9 +55,8 @@ public interface EventregRequestHandler {
   /**
    *
    * @param val a request for processing
-   * @throws Throwable
    */
-  void addRequest(final EventregRequest val) throws Throwable;
+  void addRequest(final EventregRequest val);
 
   /**
    * Shut down the process

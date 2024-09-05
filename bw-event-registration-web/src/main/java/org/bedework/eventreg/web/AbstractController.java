@@ -53,13 +53,13 @@ public abstract class AbstractController
 
   /**
    * @return ModelAndView
-   * @throws Throwable
    */
-  public abstract ModelAndView doRequest() throws Throwable;
+  public abstract ModelAndView doRequest();
 
   @Override
-  public ModelAndView handleRequest(final HttpServletRequest request,
-                                    final HttpServletResponse response) throws Exception {
+  public ModelAndView handleRequest(
+          final HttpServletRequest request,
+          final HttpServletResponse response) {
     try {
       final ModelAndView mv = setup();
 
@@ -68,10 +68,6 @@ public abstract class AbstractController
       }
 
       return doRequest();
-    } catch (final Exception e) {
-      error(e);
-
-      return errorReturn(e);
     } catch (final Throwable t) {
       error(t);
 
@@ -83,7 +79,7 @@ public abstract class AbstractController
     }
   }
 
-  protected ModelAndView setup() throws Throwable {
+  protected ModelAndView setup() {
     req = sessMan.getReq();
     sessMan.setMessage("");
 
@@ -200,7 +196,6 @@ public abstract class AbstractController
    */
   public void dumpRequest(final HttpServletRequest req) {
     try {
-      @SuppressWarnings("unchecked")
       final Enumeration<String> names = req.getParameterNames();
 
       final String title = "Request parameters";
@@ -233,10 +228,9 @@ public abstract class AbstractController
    *
    * @param numTickets number of tickets
    * @param href of event
-   * @throws Throwable
    */
   protected void reallocate(final int numTickets,
-                            final String href) throws Throwable {
+                            final String href) {
     final List<Registration> regs = sessMan.getWaiting(href);
 
     int remaining = numTickets;
@@ -266,11 +260,11 @@ public abstract class AbstractController
     }
   }
 
-  /* ====================================================================
+  /* =========================================================
    *                   Logged methods
-   * ==================================================================== */
+   * ========================================================= */
 
-  private BwLogger logger = new BwLogger();
+  private final BwLogger logger = new BwLogger();
 
   @Override
   public BwLogger getLogger() {
