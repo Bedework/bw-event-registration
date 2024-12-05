@@ -19,7 +19,6 @@
 				<configuration>
 					<warName>${project.artifactId}</warName>
 					<baseDirPath>${project.basedir}/../..</baseDirPath>
-					<propsPath>${project.basedir}/src/main/resources/wildfly.deploy.properties</propsPath>
 				</configuration>
 			</plugin>
 		</plugins>
