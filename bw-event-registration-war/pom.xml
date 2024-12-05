@@ -11,7 +11,7 @@
   <name>Bedework Event Registration war</name>
 
 	<properties>
-		<org.bedework.war.dependency>org.bedework.eventreg.web</org.bedework.war.dependency>
+		<org.bedework.war.dependency>org.bedework.eventreg.web meta-inf</org.bedework.war.dependency>
 	</properties>
 
 	<build>
