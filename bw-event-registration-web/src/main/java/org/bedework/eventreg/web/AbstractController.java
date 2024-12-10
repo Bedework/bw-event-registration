@@ -41,7 +41,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 public abstract class AbstractController
         implements Logged, Controller {
-  protected SessionManager sessMan;
+  private SessionManager sessMan;
 
   protected Request req;
 
@@ -73,15 +73,15 @@ public abstract class AbstractController
 
       return errorReturn(t);
     } finally {
-      if (!sessMan.closeDb()) {
+      if (!getSessMan().closeDb()) {
         errorReturn("Error during close");
       }
     }
   }
 
   protected ModelAndView setup() {
-    req = sessMan.getReq();
-    sessMan.setMessage("");
+    req = getSessMan().getReq();
+    getSessMan().setMessage("");
 
     if (debug()) {
       debug("Entry: " + getClass().getSimpleName());
@@ -93,7 +93,7 @@ public abstract class AbstractController
 
   protected ModelAndView sessModel(final String view) {
     final Map<String, Object> myModel = new HashMap<>();
-    myModel.put("sessMan", sessMan);
+    myModel.put("sessMan", getSessMan());
     myModel.put("req", req);
 
     return new ModelAndView(view, myModel);
@@ -103,7 +103,7 @@ public abstract class AbstractController
                                   final String name,
                                   final Object m) {
     final Map<String, Object> myModel = new HashMap<>();
-    myModel.put("sessMan", sessMan);
+    myModel.put("sessMan", getSessMan());
     myModel.put("req", req);
     myModel.put(name, m);
 
@@ -116,7 +116,7 @@ public abstract class AbstractController
                                   final String name2,
                                   final Object m2) {
     final Map<String, Object> myModel = new HashMap<>();
-    myModel.put("sessMan", sessMan);
+    myModel.put("sessMan", getSessMan());
     myModel.put("req", req);
     myModel.put(name, m);
     myModel.put(name2, m2);
@@ -134,9 +134,9 @@ public abstract class AbstractController
 
   protected ModelAndView errorReturn(final String forward,
                                      final String msg) {
-    sessMan.setMessage(msg);
+    getSessMan().setMessage(msg);
     final Map<String, Object> myModel = new HashMap<>();
-    myModel.put("sessMan", sessMan);
+    myModel.put("sessMan", getSessMan());
     myModel.put("req", req);
 
     return new ModelAndView(forward, myModel);
@@ -147,6 +147,10 @@ public abstract class AbstractController
    */
   public void setSessionManager(final SessionManager sm) {
     sessMan = sm;
+  }
+
+  public SessionManager getSessMan() {
+    return sessMan;
   }
 
   /** Set by Spring
@@ -231,7 +235,7 @@ public abstract class AbstractController
    */
   protected void reallocate(final int numTickets,
                             final String href) {
-    final List<Registration> regs = sessMan.getWaiting(href);
+    final List<Registration> regs = getSessMan().getWaiting(href);
 
     int remaining = numTickets;
 
@@ -245,11 +249,11 @@ public abstract class AbstractController
       required = Math.min(required, remaining);
 
       reg.addTickets(required);
-      sessMan.updateRegistration(reg);
-      sessMan.getChangeManager().addTicketsAdded(reg, required);
+      getSessMan().updateRegistration(reg);
+      getSessMan().getChangeManager().addTicketsAdded(reg, required);
 
       if (reg.getTicketsRequested() == reg.getNumTickets()) {
-        sessMan.getChangeManager().addRegFulfilled(reg);
+        getSessMan().getChangeManager().addRegFulfilled(reg);
       }
 
       remaining -= required;

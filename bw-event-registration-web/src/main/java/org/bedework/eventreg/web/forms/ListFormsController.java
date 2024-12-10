@@ -32,7 +32,7 @@ import java.util.List;
 public class ListFormsController extends AdminAuthAbstractController {
   @Override
   public ModelAndView doRequest() {
-    final List<FormDef> forms = sessMan.getFormDefs();
+    final List<FormDef> forms = getSessMan().getFormDefs();
 
     return objModel(getForwardSuccess(),
                     "forms", forms);

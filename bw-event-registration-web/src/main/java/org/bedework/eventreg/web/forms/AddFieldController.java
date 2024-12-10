@@ -40,13 +40,13 @@ public class AddFieldController extends AuthAbstractController {
   @Override
   public ModelAndView doRequest() {
     try {
-      if (sessMan.getCurrentCalsuite() == null) {
+      if (getSessMan().getCurrentCalsuite() == null) {
         return errorReturn("No calsuite");
       }
 
       final String formName = req.getFormName();
 
-      final FormDef form = sessMan.getFormDef(formName);
+      final FormDef form = getSessMan().getFormDef(formName);
 
       if (form == null) {
         return errorReturn("No current form");
@@ -105,7 +105,7 @@ public class AddFieldController extends AuthAbstractController {
 
       form.addField(field);
 
-      sessMan.updateFormDef(form);
+      getSessMan().updateFormDef(form);
 
       if (fieldType.equals(FieldDef.fieldTypeSelect) ||
               fieldType.equals(FieldDef.fieldTypeRadio)) {
@@ -120,9 +120,9 @@ public class AddFieldController extends AuthAbstractController {
         }
       }
 
-      sessMan.setCurrentFormName(formName);
+      getSessMan().setCurrentFormName(formName);
 
-      sessMan.setMessage("ok");
+      getSessMan().setMessage("ok");
       return objModel(getForwardSuccess(), "form", form,
                       "fields", ff);
     } catch (final EventregInvalidNameException eine) {

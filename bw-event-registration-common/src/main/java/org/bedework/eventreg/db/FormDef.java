@@ -153,7 +153,7 @@ public class FormDef extends DbItem<FormDef> {
   /**
    * @param val a wait list limit - as an integer or an integer followed by "%"
    */
-  public void setWaitListLimit(final String val) throws EventregException {
+  public void setWaitListLimit(final String val) {
     // validate
     final String checkVal;
     if (val.endsWith("%")) {
@@ -173,7 +173,7 @@ public class FormDef extends DbItem<FormDef> {
   /**
    * @return a wait list limit - as an integer or an integer followed by "%"
    */
-  public String getWaitListLimit() throws EventregException {
+  public String getWaitListLimit() {
     return may("waitListLimit");
   }
 
@@ -187,7 +187,7 @@ public class FormDef extends DbItem<FormDef> {
   /**
    * @return flag to say we sent a cancel message
    * /
-  public boolean getCancelSent() throws EventregException {
+  public boolean getCancelSent() {
     return mayBool("cancelSent");
   }
 */

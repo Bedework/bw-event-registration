@@ -18,7 +18,6 @@ under the License.
  */
 package org.bedework.eventreg.bus;
 
-import org.bedework.eventreg.common.EventregException;
 import org.bedework.eventreg.common.EventregInvalidNameException;
 import org.bedework.util.misc.Util;
 import org.bedework.util.servlet.ReqUtil;
@@ -203,35 +202,35 @@ public class Request extends ReqUtil {
   /**
    * @return par or null for no parameter
    */
-  public boolean formNamePresent() throws EventregException {
+  public boolean formNamePresent() {
     return Util.checkNull(getReqPar(reqparFormName)) != null;
   }
 
   /**
    * @return par or null for no parameter
    */
-  public String getFormName() throws EventregException {
+  public String getFormName() {
     return validName(getReqPar(reqparFormName));
   }
 
   /**
    * @return par or null for no parameter
    */
-  public String getName()throws EventregException {
+  public String getName() {
     return validName(getReqPar(reqparName));
   }
 
   /**
    * @return par or null for no parameter
    */
-  public boolean groupPresent() throws EventregException {
+  public boolean groupPresent() {
     return getReqPar(reqparGroup) != null;
   }
 
   /**
    * @return par or null for no parameter
    */
-  public String getGroup() throws EventregException {
+  public String getGroup() {
     return validName(getReqPar(reqparGroup));
   }
 
@@ -315,7 +314,7 @@ public class Request extends ReqUtil {
   /* name validation. form, field and group names must all be
      valid json names.
    */
-  public static String validName(final String name) throws EventregException {
+  public static String validName(final String name) {
     if ((name == null) || (name.isEmpty())) {
       throw new EventregInvalidNameException(name);
     }

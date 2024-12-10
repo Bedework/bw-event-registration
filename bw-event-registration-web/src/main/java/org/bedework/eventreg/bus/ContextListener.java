@@ -122,7 +122,7 @@ public class ContextListener implements Logged, ServletContextListener {
     conf.stop();
   }
 
-  public static EventregSvcMBean getSysInfo() throws Throwable {
+  public static EventregSvcMBean getSysInfo() {
     return conf.sysInfo;
   }
 

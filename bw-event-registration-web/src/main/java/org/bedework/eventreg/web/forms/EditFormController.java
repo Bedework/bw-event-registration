@@ -31,17 +31,17 @@ import org.springframework.web.servlet.ModelAndView;
 public class EditFormController extends AuthAbstractController {
   @Override
   public ModelAndView doRequest() {
-    if (sessMan.getCurrentCalsuite() == null) {
+    if (getSessMan().getCurrentCalsuite() == null) {
       return errorReturn("No calsuite");
     }
 
-    final String formName = sessMan.getCurrentFormName();
+    final String formName = getSessMan().getCurrentFormName();
 
     if (formName == null) {
       return errorReturn("No current form name");
     }
 
-    final FormDef form = sessMan.getFormDef(formName);
+    final FormDef form = getSessMan().getFormDef(formName);
 
     if (form == null) {
       return errorReturn("No current form");

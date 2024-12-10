@@ -33,21 +33,21 @@ import java.util.List;
 public class DeleteFormController extends AuthAbstractController {
   @Override
   public ModelAndView doRequest() {
-    if (sessMan.getCurrentCalsuite() == null) {
+    if (getSessMan().getCurrentCalsuite() == null) {
       return errorReturn("No calsuite");
     }
 
     final String formName = req.getFormName();
 
-    final FormDef form = sessMan.getFormDef(formName);
+    final FormDef form = getSessMan().getFormDef(formName);
 
     if (form == null) {
       return errorReturn("Form " + formName + " does not exist");
     }
 
-    sessMan.removeFormDef(form);
+    getSessMan().removeFormDef(form);
 
-    final List<FormDef> forms = sessMan.getFormDefs();
+    final List<FormDef> forms = getSessMan().getFormDefs();
 
     return objModel(getForwardSuccess(),
                     "forms", forms);

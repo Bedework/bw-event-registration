@@ -35,8 +35,8 @@ public class UserAgendaController extends AuthAbstractController {
     final TreeSet<Registration> regs = new TreeSet<>();
 
     for (final Registration reg:
-            sessMan.getRegistrationsByUser(sessMan.getCurrentUser())) {
-      final Event ev = sessMan.retrieveEvent(reg);
+            getSessMan().getRegistrationsByUser(getSessMan().getCurrentUser())) {
+      final Event ev = getSessMan().retrieveEvent(reg);
 
       if ((ev == null) ||  // TODO Event deleted - should delete registration?
           (ev.getMaxTickets() < 0)) {

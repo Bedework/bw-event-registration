@@ -73,7 +73,7 @@ public class JsonUtil {
   }
 
   public static List<?> mayList(final String name,
-                             final Map<?, ?> theVals) throws EventregException {
+                             final Map<?, ?> theVals) {
     final Object val = theVals.get(name);
 
     if (val == null) {

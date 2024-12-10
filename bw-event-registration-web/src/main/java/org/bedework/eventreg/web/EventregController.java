@@ -44,7 +44,7 @@ import java.util.Map;
 public class EventregController extends AuthAbstractController {
   @Override
   public ModelAndView doRequest() {
-    final Event ev = sessMan.getCurrEvent();
+    final Event ev = getSessMan().getCurrEvent();
 
     final int maxTicketsAllowed = ev.getMaxTickets();
     if (maxTicketsAllowed < 0) {
@@ -57,9 +57,9 @@ public class EventregController extends AuthAbstractController {
       return errorReturn("Application register: missing end date.");
     }
 
-    sessMan.setDeadlinePassed(new Date().after(end));
+    getSessMan().setDeadlinePassed(new Date().after(end));
 
-    if (sessMan.getDeadlinePassed()) {
+    if (getSessMan().getDeadlinePassed()) {
       if (debug()) {
         debug("event registration stop - deadline has passed");
       }
@@ -85,20 +85,20 @@ public class EventregController extends AuthAbstractController {
     final String href = req.getHref();
 
     if (debug()) {
-      debug("Event details: " + sessMan.getCurrentUser() + " " +
+      debug("Event details: " + getSessMan().getCurrentUser() + " " +
                     href);
     }
 
     /* we let adminUsers register over and over, but not regular users */
 
-    Registration reg = sessMan.getRegistration();
+    Registration reg = getSessMan().getRegistration();
 
     if (reg != null) {
       reg.setLastmod();
       adjustTickets(reg);
       reg.setComment(req.getComment());
 
-      sessMan.updateRegistration(reg);
+      getSessMan().updateRegistration(reg);
 
       return true;
     }
@@ -107,16 +107,16 @@ public class EventregController extends AuthAbstractController {
 
     reg = new Registration();
 
-    reg.setAuthid(sessMan.getCurrentUser());
+    reg.setAuthid(getSessMan().getCurrentUser());
     reg.setComment(req.getComment());
     reg.setType(Registration.typeRegistered);
     reg.setHref(href);
-    reg.setRegistrationId(sessMan.getNextRegistrationId());
+    reg.setRegistrationId(getSessMan().getNextRegistrationId());
 
     String email = req.getEmail();
 
     if (email == null) {
-      email = sessMan.getCurrEmail();
+      email = getSessMan().getCurrEmail();
     }
 
     if (debug()) {
@@ -137,23 +137,23 @@ public class EventregController extends AuthAbstractController {
 
     handleFormInfo(reg);
 
-    sessMan.addRegistration(reg);
+    getSessMan().addRegistration(reg);
 
-    sessMan.getChangeManager().addChange(reg, Change.typeNewReg);
+    getSessMan().getChangeManager().addChange(reg, Change.typeNewReg);
 
     return true;
   }
 
   /* return null for ok - otherwise error message */
   private String handleFormInfo(final Registration reg) {
-    final String calsuite = sessMan.getCurrentCalsuite();
+    final String calsuite = getSessMan().getCurrentCalsuite();
     if (calsuite == null) {
       return "No calsuite";
     }
 
-    final String formName = sessMan.getCurrentFormName();
+    final String formName = getSessMan().getCurrentFormName();
 
-    final FormDef form = sessMan.getFormDef(formName);
+    final FormDef form = getSessMan().getFormDef(formName);
 
     if (form == null) {
       return "Form " + formName + " does not exist";

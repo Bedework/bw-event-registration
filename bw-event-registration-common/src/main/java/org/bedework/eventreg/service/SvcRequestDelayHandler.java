@@ -101,7 +101,7 @@ public class SvcRequestDelayHandler extends JmsSysEventListener {
   }
 
   @Override
-  public void action(final SysEvent ev) throws NotificationException {
+  public void action(final SysEvent ev) {
     if (ev == null) {
       return;
     }
@@ -146,7 +146,7 @@ public class SvcRequestDelayHandler extends JmsSysEventListener {
   }
 
   @SuppressWarnings("UnusedReturnValue")
-  public boolean delay(final EventregRequest req) throws Throwable {
+  public boolean delay(final EventregRequest req) {
     if (req.getDiscard()) {
       warn("Discarding: " + req);
       return false;

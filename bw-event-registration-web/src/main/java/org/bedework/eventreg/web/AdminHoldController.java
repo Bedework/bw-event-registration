@@ -29,13 +29,13 @@ import org.springframework.web.servlet.ModelAndView;
 public class AdminHoldController extends AdminAuthAbstractController {
   @Override
   public ModelAndView doRequest() {
-    final Event ev = sessMan.getCurrEvent();
+    final Event ev = getSessMan().getCurrEvent();
     final int numTickets = req.getTicketsRequested();
 
     final Registration reg = new Registration();
 
-    reg.setRegistrationId(sessMan.getNextRegistrationId());
-    reg.setAuthid(sessMan.getCurrentUser());
+    reg.setRegistrationId(getSessMan().getNextRegistrationId());
+    reg.setAuthid(getSessMan().getCurrentUser());
     reg.setHref(ev.getHref());
     reg.setTicketsRequested(numTickets);
     reg.addTickets(numTickets);
@@ -43,7 +43,7 @@ public class AdminHoldController extends AdminAuthAbstractController {
     reg.setComment(req.getComment());
     reg.setTimestamps();
 
-    sessMan.addRegistration(reg);
+    getSessMan().addRegistration(reg);
 
     return sessModel(getForwardTo());
   }

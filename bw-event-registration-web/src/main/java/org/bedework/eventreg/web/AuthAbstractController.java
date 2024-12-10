@@ -42,7 +42,7 @@ public abstract class AuthAbstractController extends AbstractController {
       return mv;
     }
 
-    if (sessMan.getCurrentUser() == null) {
+    if (getSessMan().getCurrentUser() == null) {
       return errorReturn("Not authenticated");
     }
 
@@ -59,14 +59,14 @@ public abstract class AuthAbstractController extends AbstractController {
       debug("updating registration " + regId);
     }
 
-    final Registration reg = sessMan.getRegistrationById(regId);
+    final Registration reg = getSessMan().getRegistrationById(regId);
 
     if (reg == null) {
       return errorReturn("No registration found.");
     }
 
     if (!admin &&
-        !reg.getAuthid().equals(sessMan.getCurrentUser())) {
+        !reg.getAuthid().equals(getSessMan().getCurrentUser())) {
       return errorReturn("You are not authorized to update that registration.");
     }
 
@@ -76,11 +76,11 @@ public abstract class AuthAbstractController extends AbstractController {
       reg.setComment(req.getComment());
     }
 
-    sessMan.updateRegistration(reg);
+    getSessMan().updateRegistration(reg);
 
-    sessMan.setMessage("Registration number " + regId +
+    getSessMan().setMessage("Registration number " + regId +
                        " updated: " + "admin: " + admin +
-                       " user: " + sessMan.getCurrentUser());
+                       " user: " + getSessMan().getCurrentUser());
 
     return null;
   }
@@ -93,23 +93,23 @@ public abstract class AuthAbstractController extends AbstractController {
 
     if (debug()) {
       debug("remove reg id: " + regId +
-                    ", user: " + sessMan.getCurrentUser());
+                    ", user: " + getSessMan().getCurrentUser());
     }
 
-    final Registration reg = sessMan.getRegistrationById(regId);
+    final Registration reg = getSessMan().getRegistrationById(regId);
 
     if (reg == null) {
       return errorReturn("No registration found.");
     }
 
     if (!admin &&
-        !reg.getAuthid().equals(sessMan.getCurrentUser())) {
+        !reg.getAuthid().equals(getSessMan().getCurrentUser())) {
       return errorReturn("You are not authorized to remove that registration.");
     }
 
     reallocate(reg.getNumTickets(), reg.getHref());
-    sessMan.removeRegistration(reg);
-    sessMan.getChangeManager().deleteReg(reg);
+    getSessMan().removeRegistration(reg);
+    getSessMan().getChangeManager().deleteReg(reg);
 
     return null;
   }
@@ -118,9 +118,9 @@ public abstract class AuthAbstractController extends AbstractController {
    * seats.
    */
   protected void adjustTickets() {
-    final Event currEvent = sessMan.getCurrEvent();
+    final Event currEvent = getSessMan().getCurrEvent();
 
-    final long allocated = sessMan.getRegTicketCount();
+    final long allocated = getSessMan().getRegTicketCount();
     final int total = currEvent.getMaxTickets();
     final int available = (int)(total - allocated);
 
@@ -140,7 +140,7 @@ public abstract class AuthAbstractController extends AbstractController {
   }
   
   protected AdjustResult adjustTickets(final Registration reg) {
-    final Event currEvent = sessMan.getCurrEvent();
+    final Event currEvent = getSessMan().getCurrEvent();
 
     final int numTickets = req.getTicketsRequested();
     if (numTickets < 0) {
@@ -165,7 +165,7 @@ public abstract class AuthAbstractController extends AbstractController {
       String waitListLimitVal = currEvent.getWaitListLimit();
       final int total = currEvent.getMaxTickets();
 
-      final long allocated = sessMan.getRegTicketCount();
+      final long allocated = getSessMan().getRegTicketCount();
 
       /* Total number of available tickets - may be negative for over-allocated */
       final long available = Math.max(0, total - allocated);
@@ -183,7 +183,7 @@ public abstract class AuthAbstractController extends AbstractController {
           waitListLimit = total * waitListLimit / 100;
         }
         
-        final long waiting = sessMan.getWaitingTicketCount();
+        final long waiting = getSessMan().getWaitingTicketCount();
         if ((available < change) && ((waiting + change - available) > waitListLimit)) {
           return AdjustResult.waitListFull;
         }
@@ -211,7 +211,7 @@ public abstract class AuthAbstractController extends AbstractController {
 
     reg.setTicketsRequested(numTickets);
 
-    final ChangeManager chgMan = sessMan.getChangeManager();
+    final ChangeManager chgMan = getSessMan().getChangeManager();
 
     if (change < 0) {
       reg.removeTickets(-change);

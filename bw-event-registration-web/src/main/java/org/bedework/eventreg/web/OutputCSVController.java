@@ -33,24 +33,24 @@ import java.util.TreeSet;
 public class OutputCSVController extends AdminAuthAbstractController {
   @Override
   public ModelAndView doRequest() {
-    if (sessMan.getCurrentCalsuite() == null) {
+    if (getSessMan().getCurrentCalsuite() == null) {
       return errorReturn("No calsuite");
     }
 
-    final String formName = sessMan.getCurrentFormName();
+    final String formName = getSessMan().getCurrentFormName();
 
-    final FormDef form = sessMan.getFormDef(formName);
+    final FormDef form = getSessMan().getFormDef(formName);
 
     final TreeSet<Registration> regs = new TreeSet<>();
 
     for (final Registration reg:
-            sessMan.getRegistrationsByHref(req.getHref())) {
-      reg.setEvent(sessMan.retrieveEvent(reg));
+            getSessMan().getRegistrationsByHref(req.getHref())) {
+      reg.setEvent(getSessMan().retrieveEvent(reg));
 
       regs.add(reg);
     }
 
-    final CSVOutputter csv = new CSVOutputter(sessMan.getCurrEvent(),
+    final CSVOutputter csv = new CSVOutputter(getSessMan().getCurrEvent(),
                                               form, regs);
 
     req.getResponse().setHeader("Content-Disposition",

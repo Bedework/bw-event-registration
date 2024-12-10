@@ -33,7 +33,7 @@ public abstract class WSAbstractController extends AbstractController {
       return mv;
     }
 
-    final String adminToken = sessMan.getSysInfo().getEventregAdminToken();
+    final String adminToken = getSessMan().getSysInfo().getEventregAdminToken();
 
     if (adminToken == null) {
       return errorReturn("No admin token set in system properties");

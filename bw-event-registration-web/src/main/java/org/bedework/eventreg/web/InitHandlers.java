@@ -47,19 +47,15 @@ public class InitHandlers extends HandlerInterceptorAdapter
   @Override
   public boolean preHandle(final HttpServletRequest request,
                            final HttpServletResponse response,
-                           final Object handler) throws Exception {
+                           final Object handler) {
     if (debug()) {
       debug("init handler Intercepter");
     }
 
-    try {
-      if (!sessMan.setReq(new Request(request, response))) {
-        return false;
-      }
-      sessMan.openDb();
-    } catch (final Throwable e) {
-      throw new Exception(e);
+    if (!sessMan.setReq(new Request(request, response))) {
+      return false;
     }
+    sessMan.openDb();
 
     return true;
   }

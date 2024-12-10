@@ -143,43 +143,39 @@ public class SvcRequestHandler extends JmsSysEventListener
   }
 
   @Override
-  public void action(final SysEvent ev) throws NotificationException {
+  public void action(final SysEvent ev) {
     if (ev == null) {
       return;
     }
 
-    try {
-      if (debug()) {
-        debug("handling request: " + ev);
-      }
-
-      if (!(ev instanceof final EventregRequest req)) {
-        return;
-      }
-
-      boolean ok = false;
-
-      try {
-        ok = handle(req);
-      } catch (final Throwable t) {
-        error("Error handling request: " + req);
-        error(t);
-      }
-
-      if (ok) {
-        if (debug()) {
-          debug("Sucess processing message.");
-        }
-        return;
-      }
-
-      if (debug()) {
-        debug("Failed to process message. Adding to delay handler queue");
-      }
-      delayHandler.delay(req);
-    } catch (final Throwable t) {
-      throw new NotificationException(t);
+    if (debug()) {
+      debug("handling request: " + ev);
     }
+
+    if (!(ev instanceof final EventregRequest req)) {
+      return;
+    }
+
+    boolean ok = false;
+
+    try {
+      ok = handle(req);
+    } catch (final Throwable t) {
+      error("Error handling request: " + req);
+      error(t);
+    }
+
+    if (ok) {
+      if (debug()) {
+        debug("Sucess processing message.");
+      }
+      return;
+    }
+
+    if (debug()) {
+      debug("Failed to process message. Adding to delay handler queue");
+    }
+    delayHandler.delay(req);
   }
 
   public void listen() {
@@ -296,7 +292,7 @@ public class SvcRequestHandler extends JmsSysEventListener
     info("************************************************************");
   }
 
-  private boolean handle(final EventregRequest request) throws Throwable {
+  private boolean handle(final EventregRequest request) {
     try {
       openDb();
 
@@ -315,7 +311,7 @@ public class SvcRequestHandler extends JmsSysEventListener
     }
   }
 
-  private boolean handleChange(final EventChangeRequest request) throws Throwable {
+  private boolean handleChange(final EventChangeRequest request) {
       /* We need to fetch the event, possibly adjust tickets and
          maybe notify people.
        */
@@ -390,7 +386,7 @@ public class SvcRequestHandler extends JmsSysEventListener
     return postXml(endDavEmit());
   }
 
-  private boolean handleNewReg(final RegistrationAction nr) throws Throwable {
+  private boolean handleNewReg(final RegistrationAction nr) {
       /* We need to fetch the event and notify the registered individual.
        */
     final Registration reg = nr.getReg();
@@ -456,9 +452,8 @@ public class SvcRequestHandler extends JmsSysEventListener
   }
 
   /**
-   * @throws Throwable on error
    */
-  public synchronized void openDb() throws Throwable {
+  public synchronized void openDb() {
     if (db == null) {
       return;
     }
@@ -483,8 +478,7 @@ public class SvcRequestHandler extends JmsSysEventListener
     return db.close();
   }
 
-  protected boolean subscribeNotifications(final Registration reg)
-          throws Throwable {
+  protected boolean subscribeNotifications(final Registration reg) {
     final String email = reg.getEmail();
 
     if (email == null) {
@@ -525,7 +519,7 @@ public class SvcRequestHandler extends JmsSysEventListener
     return postXml(endDavEmit());
   }
 
-  protected boolean postXml(final String xml) throws EventregException {
+  protected boolean postXml(final String xml) {
     try {
       final PooledHttpClient.ResponseHolder resp =
               getClient().postXml("", xml);
@@ -548,7 +542,7 @@ public class SvcRequestHandler extends JmsSysEventListener
     return "/principals/users/" + id;
   }
 
-  protected PooledHttpClient getClient() throws EventregException {
+  protected PooledHttpClient getClient() {
     if (client != null) {
       return client;
     }
@@ -579,7 +573,7 @@ public class SvcRequestHandler extends JmsSysEventListener
     return authheaders;
   }
 
-  protected XmlEmit startDavEmit() throws EventregException {
+  protected XmlEmit startDavEmit() {
     try {
       davXmlSw = new StringWriter();
       davXml = new XmlEmit();
@@ -593,7 +587,7 @@ public class SvcRequestHandler extends JmsSysEventListener
     }
   }
 
-  protected String endDavEmit() throws EventregException {
+  protected String endDavEmit() {
     try {
       davXml.flush();
       return davXmlSw.toString();
@@ -602,7 +596,7 @@ public class SvcRequestHandler extends JmsSysEventListener
     }
   }
 
-  public void addNamespace(final XmlEmit xml) throws EventregException {
+  public void addNamespace(final XmlEmit xml) {
     try {
       xml.addNs(new XmlEmit.NameSpace(namespace, "DAV"), true);
 

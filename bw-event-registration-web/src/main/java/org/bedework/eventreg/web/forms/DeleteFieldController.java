@@ -34,13 +34,13 @@ import java.util.Set;
 public class DeleteFieldController extends AuthAbstractController {
   @Override
   public ModelAndView doRequest() {
-    if (sessMan.getCurrentCalsuite() == null) {
+    if (getSessMan().getCurrentCalsuite() == null) {
       return errorReturn("No calsuite");
     }
 
     final String formName = req.getFormName();
 
-    final FormDef form = sessMan.getFormDef(formName);
+    final FormDef form = getSessMan().getFormDef(formName);
 
     if (form == null) {
       return errorReturn("No current form");
@@ -67,11 +67,11 @@ public class DeleteFieldController extends AuthAbstractController {
     }
 
     flds.remove(fld);
-    sessMan.updateFormDef(form);
+    getSessMan().updateFormDef(form);
 
-    sessMan.setCurrentFormName(formName);
+    getSessMan().setCurrentFormName(formName);
 
-    sessMan.setMessage("ok");
+    getSessMan().setMessage("ok");
     return objModel(getForwardSuccess(), "form", form,
                     "fields", new FormFields(flds));
   }

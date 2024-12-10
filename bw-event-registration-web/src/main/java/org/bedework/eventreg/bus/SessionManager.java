@@ -54,7 +54,7 @@ import javax.sql.DataSource;
  *
  */
 public class SessionManager implements Logged {
-  private ChangeManager chgMan;
+  private final ChangeManager chgMan;
 
   private final Timestamp ts =
           new Timestamp(System.currentTimeMillis());
@@ -92,11 +92,11 @@ public class SessionManager implements Logged {
   /**
    *
    */
-  public SessionManager() throws EventregException {
+  public SessionManager() {
     chgMan = new ChangeManager(this);
   }
 
-  public EventregSvcMBean getSysInfo() throws EventregException {
+  public EventregSvcMBean getSysInfo() {
     try {
       return ContextListener.getSysInfo();
     } catch (final Throwable t) {
@@ -740,7 +740,7 @@ public class SessionManager implements Logged {
     }
   }
 
-  private String getEmail() throws EventregException {
+  private String getEmail() {
     if (currentUser == null) {
       return null;
     }
@@ -782,7 +782,7 @@ public class SessionManager implements Logged {
   }
 
 
-  private String getSelfregEmail() throws EventregException {
+  private String getSelfregEmail() {
     Connection con = null;
     ResultSet rs = null;
     PreparedStatement pstmt = null;
@@ -792,6 +792,7 @@ public class SessionManager implements Logged {
 
       con = ds.getConnection();
       con.setAutoCommit(false);
+      //noinspection SqlResolve
       pstmt = con.prepareStatement(
               "select bw_email from bw_accounts " +
                       "WHERE bw_account = ?");

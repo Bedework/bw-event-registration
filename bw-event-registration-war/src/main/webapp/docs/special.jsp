@@ -1,10 +1,6 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <%@ page contentType="text/html;charset=ISO-8859-1"%>
-<%@ taglib uri="http://java.sun.com/jstl/core" prefix="c"%>
-<%@ taglib uri="http://java.sun.com/jstl/fmt" prefix="fmt"%>
-<%@ taglib prefix="spring" uri="/spring" %>
-<%@ taglib uri="http://displaytag.sf.net" prefix="display" %>
 
 <html>
   <head>

@@ -588,7 +588,7 @@ public class EventregDb implements Logged, Serializable {
         warn("Session is not null. Will close");
         try {
           close();
-        } finally {
+        } catch (final Throwable ignored) {
         }
       }
 
@@ -686,7 +686,6 @@ public class EventregDb implements Logged, Serializable {
       sess.rollback();
     } catch (final HibException he) {
       throw new EventregException(he);
-    } finally {
     }
   }
 

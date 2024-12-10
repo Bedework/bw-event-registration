@@ -31,7 +31,7 @@ import java.util.List;
 public class OutputChangesController extends AdminAuthAbstractController {
   @Override
   public ModelAndView doRequest() {
-    final List<Change> cs = sessMan.getChanges(req.getLastmod());
+    final List<Change> cs = getSessMan().getChanges(req.getLastmod());
 
     req.getResponse().setHeader("Content-Disposition",
                        "Attachment; Filename=\"" +

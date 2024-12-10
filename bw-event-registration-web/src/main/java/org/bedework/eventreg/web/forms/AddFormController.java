@@ -30,13 +30,13 @@ import org.springframework.web.servlet.ModelAndView;
 public class AddFormController extends AuthAbstractController {
   @Override
   public ModelAndView doRequest() {
-    if (sessMan.getCurrentCalsuite() == null) {
+    if (getSessMan().getCurrentCalsuite() == null) {
       return errorReturn("No calsuite");
     }
 
     final String formName = req.getFormName();
 
-    FormDef form = sessMan.getFormDef(formName);
+    FormDef form = getSessMan().getFormDef(formName);
 
     if (form != null) {
       return errorReturn("Form " + formName + " already exists");
@@ -45,13 +45,13 @@ public class AddFormController extends AuthAbstractController {
     form = new FormDef();
 
     form.setFormName(formName);
-    form.setOwner(sessMan.getCurrentCalsuite());
+    form.setOwner(getSessMan().getCurrentCalsuite());
     form.setComment(req.getComment());
     form.setDisabled(false);
 
     form.setTimestamps();
 
-    sessMan.addFormDef(form);
+    getSessMan().addFormDef(form);
 
     return objModel(getForwardSuccess(), "form", form);
   }

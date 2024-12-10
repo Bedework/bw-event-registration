@@ -33,8 +33,8 @@ import java.util.Date;
 public class InitController extends AuthAbstractController {
   @Override
   public ModelAndView doRequest() {
-    sessMan.flushCurrEvent();
-    final Event ev = sessMan.getCurrEvent();
+    getSessMan().flushCurrEvent();
+    final Event ev = getSessMan().getCurrEvent();
 
     if (ev == null) {
       return errorReturn("Cannot retrieve the event.");
@@ -46,13 +46,13 @@ public class InitController extends AuthAbstractController {
       return errorReturn("Cannot register for this event.");
     }
 
-    final long curTickets = sessMan.getRegTicketCount();
+    final long curTickets = getSessMan().getRegTicketCount();
     if (debug()) {
       debug("maxTickets: " + maxTickets);
       debug("curTickets: " + curTickets);
     }
 
-    sessMan.setRegistrationFull(curTickets >= maxTickets);
+    getSessMan().setRegistrationFull(curTickets >= maxTickets);
 
     final Date end = ev.getRegistrationEndDate();
 
@@ -60,7 +60,7 @@ public class InitController extends AuthAbstractController {
       return errorReturn("Application register: missing end date.");
     }
 
-    sessMan.setDeadlinePassed(new Date().after(end));
+    getSessMan().setDeadlinePassed(new Date().after(end));
 
     if (!req.formNamePresent()) {
       if (debug()) {
@@ -70,9 +70,9 @@ public class InitController extends AuthAbstractController {
     }
 
     final String formName = req.getFormName();
-    final FormDef form = sessMan.getFormDef(formName);
+    final FormDef form = getSessMan().getFormDef(formName);
 
-    if (sessMan.getCurrentCalsuite() == null) {
+    if (getSessMan().getCurrentCalsuite() == null) {
       return errorReturn("No calsuite");
     }
 
@@ -82,7 +82,7 @@ public class InitController extends AuthAbstractController {
       return sessModel("init");
     }
 
-    sessMan.setCurrentFormName(formName);
+    getSessMan().setCurrentFormName(formName);
     if (debug()) {
       debug("Set form name " + formName +
                     " for form with " + form.getFields().size() +

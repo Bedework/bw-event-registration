@@ -331,7 +331,7 @@ public class Registration extends DbItem<Registration> {
   /**
    * @return flag to say we sent a cancel message
    */
-  public boolean getCancelSent() throws EventregException {
+  public boolean getCancelSent() {
     return mayBool("cancelSent");
   }
 
@@ -349,7 +349,7 @@ public class Registration extends DbItem<Registration> {
   /**
    * @return Saved form fields as a serialized json string
    */
-  public String getFormValues() throws EventregException {
+  public String getFormValues() {
     return may("formValues");
   }
 
