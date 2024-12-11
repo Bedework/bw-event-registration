@@ -24,6 +24,9 @@ import org.bedework.util.servlet.MethodBase;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 /** Base class for all webdav servlet methods.
  */
 public abstract class EvregwsMethodBase extends MethodBase {
@@ -34,6 +37,22 @@ public abstract class EvregwsMethodBase extends MethodBase {
   @Override
   public void init() {
     
+  }
+
+  @Override
+  public boolean beforeMethod(final HttpServletRequest req,
+                              final HttpServletResponse resp) {
+    if (!super.beforeMethod(req, resp)) {
+      return false;
+    }
+
+    final var token = rutil.getReqPar("atkn");
+    if ((token == null) || !token.equals(config.getBwToken())) {
+      resp.setStatus(HttpServletResponse.SC_FORBIDDEN);
+      return false;
+    }
+
+    return true;
   }
 
   /** Called at each request

@@ -43,7 +43,7 @@ public class GetMethod extends EvregwsMethodBase {
 
       final String resName = resourceUri.get(0);
 
-      if (resName.equals("forms")) {
+      if (resName.equals("listForms")) {
         processForms(resourceUri, req, resp);
         return;
       }
