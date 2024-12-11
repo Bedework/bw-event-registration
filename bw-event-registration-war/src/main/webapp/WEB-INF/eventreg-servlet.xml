@@ -305,17 +305,6 @@ http://www.springframework.org/schema/aop https://www.springframework.org/schema
     <property name="forwardSuccess" value="forward:/docs/forms/listForms.jsp" />
   </bean>
 
-  <bean id="selectFormsController"
-        class="org.bedework.eventreg.web.forms.ListFormsController"
-        scope="session">
-    <aop:scoped-proxy/>
-    <property name="sessionManager">
-      <ref bean="sessMan"/>
-    </property>
-    <property name="forwardFail" value="forward:/docs/error.jsp" />
-    <property name="forwardSuccess" value="forward:/docs/forms/ajaxSelectForms.jsp" />
-  </bean>
-
   <bean id="authenticatedUrlMapping"
         class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
     <property name="interceptors">

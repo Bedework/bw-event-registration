@@ -47,7 +47,8 @@ public abstract class EvregwsMethodBase extends MethodBase {
     }
 
     final var token = rutil.getReqPar("atkn");
-    if ((token == null) || !token.equals(config.getBwToken())) {
+    if ((token == null) ||
+            !token.equals(config.getEventregAdminToken())) {
       resp.setStatus(HttpServletResponse.SC_FORBIDDEN);
       return false;
     }

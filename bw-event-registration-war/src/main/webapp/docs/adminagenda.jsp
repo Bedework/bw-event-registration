@@ -15,7 +15,7 @@
         <h1><c:out value="${sessMan.currEvent.summary}"/></h1>
         <div class="eventDateTime">
           <c:set var="eventDate" scope="page" value="${sessMan.currEvent.dateTime}"/>
-          ${fn:substring(eventDate,-1,4)}-${fn:substring(eventDate,4,6)}-${fn:substring(eventDate,6,8)}
+          Start: ${fn:substring(eventDate,-1,4)}-${fn:substring(eventDate,4,6)}-${fn:substring(eventDate,6,8)}
           ${fn:substring(eventDate,11,13)}:${fn:substring(eventDate,13,15)}
           (${fn:substring(eventDate,18,-1)})
         </div>

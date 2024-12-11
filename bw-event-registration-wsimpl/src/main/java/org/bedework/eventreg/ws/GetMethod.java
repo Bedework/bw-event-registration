@@ -18,6 +18,8 @@
 */
 package org.bedework.eventreg.ws;
 
+import org.bedework.eventreg.ws.getHelpers.ProcessListForms;
+import org.bedework.eventreg.ws.getHelpers.ProcessSelectForms;
 import org.bedework.util.logging.BwLogger;
 import org.bedework.util.misc.Util;
 
@@ -30,6 +32,12 @@ import javax.servlet.http.HttpServletResponse;
 /** Handle POST for categories servlet.
  */
 public class GetMethod extends EvregwsMethodBase {
+  static {
+    registerHelper("listForms",
+                   ProcessListForms.class);
+    registerHelper("selectForms",
+                   ProcessSelectForms.class);
+  }
   @SuppressWarnings({"unchecked"})
   @Override
   public void doMethod(final HttpServletRequest req,
@@ -42,37 +50,18 @@ public class GetMethod extends EvregwsMethodBase {
       }
 
       final String resName = resourceUri.get(0);
-
-      if (resName.equals("listForms")) {
-        processForms(resourceUri, req, resp);
+      final var helper = getMethodHelper(resName);
+      if (helper == null) {
+        resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         return;
       }
 
-      resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+      helper.process(resourceUri, req, resp, this);
     } catch (final ServletException se) {
       throw se;
     } catch(final Throwable t) {
       throw new ServletException(t);
     }
-  }
-
-  private void processForms(final List<String> resourceUri,
-                            final HttpServletRequest req,
-                            final HttpServletResponse resp) throws ServletException {
-    try (final var db = getEventregDb()) {
-      final String calsuite = rutil.getReqPar("calsuite");
-      if (calsuite == null) {
-        sendJsonError(resp, "CalSuite not supplied");
-        return;
-      }
-
-      db.open();
-
-      final var forms = db.getCalSuiteForms(calsuite);
-
-      outputJson(resp, null, null, forms);
-    }
-
   }
 
   /* ==============================================================
