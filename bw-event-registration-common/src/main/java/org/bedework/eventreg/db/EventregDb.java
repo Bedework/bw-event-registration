@@ -39,7 +39,7 @@ import java.util.concurrent.atomic.AtomicLong;
  *
  * @author Mike Douglass
  */
-public class EventregDb implements Logged, Serializable {
+public class EventregDb implements AutoCloseable, Logged, Serializable {
   /* Value used to create a registration. Each running jvm has its
      own batch of these which it renews when empty.
    */
@@ -150,10 +150,8 @@ public class EventregDb implements Logged, Serializable {
     return true;
   }
 
-  /**
-   * @return false if error occurred
-   */
-  public boolean close() {
+  @Override
+  public void close() {
     boolean ok = true;
 
     try {
@@ -173,7 +171,9 @@ public class EventregDb implements Logged, Serializable {
       open = false;
     }
 
-    return ok;
+    if (!ok) {
+      throw new EventregException("Failed to close db session");
+    }
   }
 
   /**

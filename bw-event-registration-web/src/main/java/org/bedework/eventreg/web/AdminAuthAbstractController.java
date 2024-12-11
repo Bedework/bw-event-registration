@@ -33,7 +33,7 @@ public abstract class AdminAuthAbstractController extends AuthAbstractController
       return mv;
     }
 
-    final String adminToken = getSessMangetSysInfo().getEventregAdminToken();
+    final String adminToken = getSessMan().getSysInfo().getEventregAdminToken();
 
     if (adminToken == null) {
       return errorReturn("No admin token set in system properties");

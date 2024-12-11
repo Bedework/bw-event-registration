@@ -32,13 +32,13 @@ import java.util.TreeSet;
 public class AdminAgendaController extends AdminAuthAbstractController {
   @Override
   public ModelAndView doRequest() {
-    getSessManflushCurrEvent();
-    final Event ev = getSessMangetCurrEvent();
+    getSessMan().flushCurrEvent();
+    final Event ev = getSessMan().getCurrEvent();
 
     final TreeSet<Registration> regs = new TreeSet<>();
 
     for (final Registration reg:
-            getSessMangetRegistrationsByHref(ev.getHref())) {
+            getSessMan().getRegistrationsByHref(ev.getHref())) {
       reg.setEvent(ev);
 
       regs.add(reg);

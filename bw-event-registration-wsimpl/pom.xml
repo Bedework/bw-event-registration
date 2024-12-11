@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>org.bedework.evreg</groupId>
+    <artifactId>bw-event-registration</artifactId>
+    <version>5.0.6-SNAPSHOT</version>
+  </parent>
+
+  <artifactId>bw-event-registration-wsimpl</artifactId>
+  <name>Bedework Event Registration web service implementation</name>
+
+  <dependencies>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>bw-event-registration-common</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>bw-event-registration-service</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+
+    <!-- Bedework: Util -->
+    <dependency>
+      <groupId>org.bedework</groupId>
+      <artifactId>bw-util-servlet</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>javax.servlet-api</artifactId>
+      <scope>provided</scope>
+    </dependency>
+  </dependencies>
+</project>

@@ -101,7 +101,8 @@ public class SvcRequestDelayHandler extends JmsSysEventListener {
   }
 
   @Override
-  public void action(final SysEvent ev) {
+  public void action(final SysEvent ev)
+          throws NotificationException {
     if (ev == null) {
       return;
     }
@@ -136,7 +137,7 @@ public class SvcRequestDelayHandler extends JmsSysEventListener {
         error(t);
       }
     } catch (final Throwable t) {
-      throw new NotificationException(t);
+      throw new EventregException(t);
     }
   }
 
@@ -163,7 +164,11 @@ public class SvcRequestDelayHandler extends JmsSysEventListener {
 
     req.setWaitUntil(System.currentTimeMillis() + props.getDelayMillis());
 
-    sender.post(req);
+    try {
+      sender.post(req);
+    } catch (final NotificationException ne) {
+      throw new EventregException(ne);
+    }
     return true;
   }
 

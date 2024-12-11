@@ -16,10 +16,8 @@ KIND, either express or implied. See the License for the
 specific language governing permissions and limitations
 under the License.
  */
-package org.bedework.eventreg.bus;
+package org.bedework.eventreg.service;
 
-import org.bedework.eventreg.service.EventregSvcMBean;
-import org.bedework.eventreg.service.SvcRequestHandler;
 import org.bedework.util.http.service.HttpOut;
 import org.bedework.util.jmx.ConfBase;
 import org.bedework.util.logging.BwLogger;
@@ -34,13 +32,17 @@ import javax.servlet.ServletContextListener;
  *
  */
 public class ContextListener implements Logged, ServletContextListener {
-  static class Configurator extends ConfBase {
-    EventregSvcMBean sysInfo;
+  public static class Configurator extends ConfBase {
+    private EventregSvcMBean sysInfo;
 
     public Configurator() {
       super("org.bedework.eventreg:service=EventRegContext",
             (String)null,
             null);
+    }
+
+    public EventregSvcMBean getSysInfo() {
+      return sysInfo;
     }
 
     @Override

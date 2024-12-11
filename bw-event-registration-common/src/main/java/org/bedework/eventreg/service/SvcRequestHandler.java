@@ -474,8 +474,8 @@ public class SvcRequestHandler extends JmsSysEventListener
       return true;
     }
 
-    open = false;
-    return db.close();
+    db.close();
+    return true;
   }
 
   protected boolean subscribeNotifications(final Registration reg) {

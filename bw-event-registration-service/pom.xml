@@ -15,9 +15,8 @@
 			<groupId>${project.groupId}</groupId>
 			<artifactId>bw-event-registration-common</artifactId>
 			<version>${project.version}</version>
-			<scope>provided</scope>
 		</dependency>
-    
+
     <!-- Bedework: Util -->
     <dependency>
       <groupId>org.bedework</groupId>
