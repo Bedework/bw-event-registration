@@ -20,7 +20,7 @@ package org.bedework.eventreg.web;
 
 import org.bedework.eventreg.bus.Request;
 import org.bedework.eventreg.bus.SessionManager;
-import org.bedework.eventreg.db.Registration;
+import org.bedework.eventreg.db.RegistrationImpl;
 import org.bedework.util.logging.BwLogger;
 import org.bedework.util.logging.Logged;
 
@@ -235,11 +235,11 @@ public abstract class AbstractController
    */
   protected void reallocate(final int numTickets,
                             final String href) {
-    final List<Registration> regs = getSessMan().getWaiting(href);
+    final var regs = getSessMan().getWaiting(href);
 
     int remaining = numTickets;
 
-    for (final Registration reg: regs) {
+    for (final var reg: regs) {
       int required = reg.getTicketsRequested() - reg.getNumTickets();
 
       if (required <= 0) {

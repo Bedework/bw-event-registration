@@ -19,7 +19,7 @@ under the License.
 
 package org.bedework.eventreg.db;
 
-
+import org.bedework.eventreg.common.Registration;
 
 /**
  * Change log entry

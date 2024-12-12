@@ -19,7 +19,7 @@ under the License.
 package org.bedework.eventreg.web;
 
 import org.bedework.eventreg.common.Event;
-import org.bedework.eventreg.db.Registration;
+import org.bedework.eventreg.common.Registration;
 
 import org.springframework.web.servlet.ModelAndView;
 
@@ -34,7 +34,7 @@ public class UserAgendaController extends AuthAbstractController {
   public ModelAndView doRequest() {
     final TreeSet<Registration> regs = new TreeSet<>();
 
-    for (final Registration reg:
+    for (final var reg:
             getSessMan().getRegistrationsByUser(getSessMan().getCurrentUser())) {
       final Event ev = getSessMan().retrieveEvent(reg);
 

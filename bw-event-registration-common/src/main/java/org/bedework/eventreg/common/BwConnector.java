@@ -18,7 +18,6 @@ under the License.
  */
 package org.bedework.eventreg.common;
 
-import org.bedework.eventreg.db.EventImpl;
 import org.bedework.util.calendar.XcalUtil.TzGetter;
 import org.bedework.util.logging.BwLogger;
 import org.bedework.util.logging.Logged;

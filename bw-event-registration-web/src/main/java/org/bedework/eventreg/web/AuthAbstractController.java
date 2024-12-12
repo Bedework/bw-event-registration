@@ -21,8 +21,8 @@ package org.bedework.eventreg.web;
 import org.bedework.eventreg.bus.ChangeManager;
 import org.bedework.eventreg.bus.ChangeManager.ChangeItem;
 import org.bedework.eventreg.common.Event;
+import org.bedework.eventreg.common.Registration;
 import org.bedework.eventreg.db.Change;
-import org.bedework.eventreg.db.Registration;
 
 import org.springframework.web.servlet.ModelAndView;
 
@@ -59,7 +59,7 @@ public abstract class AuthAbstractController extends AbstractController {
       debug("updating registration " + regId);
     }
 
-    final Registration reg = getSessMan().getRegistrationById(regId);
+    final var reg = getSessMan().getRegistrationById(regId);
 
     if (reg == null) {
       return errorReturn("No registration found.");
@@ -96,7 +96,7 @@ public abstract class AuthAbstractController extends AbstractController {
                     ", user: " + getSessMan().getCurrentUser());
     }
 
-    final Registration reg = getSessMan().getRegistrationById(regId);
+    final var reg = getSessMan().getRegistrationById(regId);
 
     if (reg == null) {
       return errorReturn("No registration found.");

@@ -18,7 +18,7 @@
 */
 package org.bedework.eventreg.requests;
 
-import org.bedework.eventreg.db.Registration;
+import org.bedework.eventreg.common.Registration;
 import org.bedework.util.misc.ToString;
 
 import java.io.Serial;

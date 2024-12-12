@@ -19,8 +19,8 @@ under the License.
 package org.bedework.eventreg.web;
 
 import org.bedework.eventreg.bus.CSVOutputter;
+import org.bedework.eventreg.common.Registration;
 import org.bedework.eventreg.db.FormDef;
-import org.bedework.eventreg.db.Registration;
 
 import org.springframework.web.servlet.ModelAndView;
 
@@ -43,7 +43,7 @@ public class OutputCSVController extends AdminAuthAbstractController {
 
     final TreeSet<Registration> regs = new TreeSet<>();
 
-    for (final Registration reg:
+    for (final var reg:
             getSessMan().getRegistrationsByHref(req.getHref())) {
       reg.setEvent(getSessMan().retrieveEvent(reg));
 

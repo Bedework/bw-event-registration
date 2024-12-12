@@ -19,7 +19,7 @@
 package org.bedework.eventreg.ws;
 
 import org.bedework.eventreg.db.EventregDb;
-import org.bedework.eventreg.service.EventregProperties;
+import org.bedework.eventreg.common.EventregProperties;
 import org.bedework.util.servlet.MethodBase;
 
 import com.fasterxml.jackson.databind.ObjectMapper;

@@ -18,8 +18,9 @@ under the License.
  */
 package org.bedework.eventreg.bus;
 
+import org.bedework.eventreg.common.Registration;
 import org.bedework.eventreg.db.Change;
-import org.bedework.eventreg.db.Registration;
+import org.bedework.eventreg.db.RegistrationImpl;
 import org.bedework.util.logging.BwLogger;
 import org.bedework.util.logging.Logged;
 

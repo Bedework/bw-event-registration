@@ -19,7 +19,7 @@ under the License.
 package org.bedework.eventreg.web;
 
 import org.bedework.eventreg.common.Event;
-import org.bedework.eventreg.db.Registration;
+import org.bedework.eventreg.common.Registration;
 
 import org.springframework.web.servlet.ModelAndView;
 
@@ -37,8 +37,8 @@ public class AdminAgendaController extends AdminAuthAbstractController {
 
     final TreeSet<Registration> regs = new TreeSet<>();
 
-    for (final Registration reg:
-            getSessMan().getRegistrationsByHref(ev.getHref())) {
+    for (final var reg: getSessMan()
+            .getRegistrationsByHref(ev.getHref())) {
       reg.setEvent(ev);
 
       regs.add(reg);

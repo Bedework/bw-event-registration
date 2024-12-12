@@ -18,8 +18,12 @@
 */
 package org.bedework.eventreg.db;
 
+import org.bedework.eventreg.common.Event;
 import org.bedework.eventreg.common.EventregException;
-import org.bedework.eventreg.service.EventregProperties;
+import org.bedework.eventreg.common.EventregProperties;
+import org.bedework.eventreg.common.Registration;
+import org.bedework.eventreg.common.RegistrationInfo;
+import org.bedework.util.calendar.XcalUtil;
 import org.bedework.util.hibernate.HibException;
 import org.bedework.util.hibernate.HibSession;
 import org.bedework.util.hibernate.HibSessionFactory;
@@ -249,6 +253,10 @@ public class EventregDb implements AutoCloseable, Logged, Serializable {
    *                   Registrations Object methods
    * ====================================================== */
 
+  public Registration getNewRegistration() {
+    return new RegistrationImpl();
+  }
+
   /**
    * @return list of registrations
    */
@@ -257,7 +265,7 @@ public class EventregDb implements AutoCloseable, Logged, Serializable {
     final StringBuilder sb = new StringBuilder();
 
     sb.append("from ");
-    sb.append(Registration.class.getName());
+    sb.append(RegistrationImpl.class.getName());
 
     createQuery(sb.toString());
 
@@ -265,7 +273,7 @@ public class EventregDb implements AutoCloseable, Logged, Serializable {
   }
 
   private final static String getByIdQuery =
-          "from " + Registration.class.getName() +
+          "from " + RegistrationImpl.class.getName() +
                   " reg where reg.registrationId=:id";
 
   /** Registrations for a user.
@@ -281,7 +289,7 @@ public class EventregDb implements AutoCloseable, Logged, Serializable {
   }
 
   private final static String getByUserQuery =
-          "from " + Registration.class.getName() +
+          "from " + RegistrationImpl.class.getName() +
                   " reg where reg.authid=:user" +
                   " and reg.type=:type";
 
@@ -300,7 +308,7 @@ public class EventregDb implements AutoCloseable, Logged, Serializable {
   }
 
   private final static String getUserRegistrationQuery =
-          "from " + Registration.class.getName() +
+          "from " + RegistrationImpl.class.getName() +
                   " reg where reg.href=:href" +
                   " and reg.authid=:user" +
                   " and reg.type=:type";
@@ -315,13 +323,13 @@ public class EventregDb implements AutoCloseable, Logged, Serializable {
     createQuery(getUserRegistrationQuery);
     setString("href", eventHref);
     setString("user", user);
-    setString("type", Registration.typeRegistered);
+    setString("type", RegistrationImpl.typeRegistered);
 
     return (Registration)getUnique();
   }
 
   private final static String getByEventQuery =
-          "from " + Registration.class.getName() +
+          "from " + RegistrationImpl.class.getName() +
                   " reg where reg.href=:href";
 
   /** Registrations for an event.
@@ -339,7 +347,7 @@ public class EventregDb implements AutoCloseable, Logged, Serializable {
 
   private final static String getRegistrantCountQuery =
           "select count(*) from " +
-                  Registration.class.getName() +
+                  RegistrationImpl.class.getName() +
                   " reg where reg.href=:href" +
                   " and reg.type=:type";
 
@@ -364,9 +372,39 @@ public class EventregDb implements AutoCloseable, Logged, Serializable {
     return total;
   }
 
+  public RegistrationInfo getRegistrationInfo(final Event event,
+                                              final String eventHref) {
+    final var rinfo = new RegistrationInfoImpl();
+
+    rinfo.setTicketCount(getRegTicketCount(eventHref));
+    rinfo.setMaxTicketCount(event.getMaxTickets());
+    rinfo.setMaxTicketsPerUser(event.getMaxTicketsPerUser());
+    rinfo.setWaitingTicketCount(getWaitingTicketCount(eventHref));
+    rinfo.setWaitListLimit(event.getWaitListLimit());
+    rinfo.setRegistrantCount(getRegistrantCount(eventHref));
+    rinfo.setRegistrationStart(
+            fixDt(event.getRegistrationStart()));
+    rinfo.setRegistrationEnd(
+            fixDt(event.getRegistrationEnd()));
+
+    return rinfo;
+  }
+
+  private String fixDt(final String dt) {
+    final var xdt = XcalUtil.getXmlFormatDateTime(dt);
+
+    final var xdatePart = xdt.substring(0, 10);
+    final var xtimepart = xdt.substring(11);
+    if (!"00:00".equals(xtimepart)) {
+      return xdatePart + " " + xtimepart;
+    } else {
+      return xdatePart;
+    }
+  }
+
   private final static String getRegTicketCountQuery =
           "select size(reg.tickets) from " +
-                  Registration.class.getName() +
+                  RegistrationImpl.class.getName() +
                   " reg where reg.href=:href";
 
   /**
@@ -394,7 +432,7 @@ public class EventregDb implements AutoCloseable, Logged, Serializable {
 
   private final static String getWaitingTicketCountQuery =
           "select sum(ticketsRequested) from " +
-                  Registration.class.getName() +
+                  RegistrationImpl.class.getName() +
                   " reg where reg.href=:href";
 
   /**
@@ -418,7 +456,7 @@ public class EventregDb implements AutoCloseable, Logged, Serializable {
 
   private final String getWaitingQuery =
           "from " +
-                  Registration.class.getName() +
+                  RegistrationImpl.class.getName() +
                   " reg where reg.href=:href" +
                   " and size(reg.tickets) < reg.ticketsRequested" +
                   " order by reg.waitqDate";
@@ -523,7 +561,10 @@ public class EventregDb implements AutoCloseable, Logged, Serializable {
    *
    * @param val the dbitem
    */
-  public void add(final DbItem<?> val) {
+  public void add(final Object val) {
+    if (!(val instanceof DbItem<?>)) {
+      throw new EventregException("Not a dbitem: " + val.getClass());
+    }
     try {
       sess.save(val);
     } catch (final HibException he) {
@@ -535,7 +576,10 @@ public class EventregDb implements AutoCloseable, Logged, Serializable {
    *
    * @param val the dbitem
    */
-  public void update(final DbItem<?> val) {
+  public void update(final Object val) {
+    if (!(val instanceof DbItem<?>)) {
+      throw new EventregException("Not a dbitem: " + val.getClass());
+    }
     try {
       sess.update(val);
     } catch (final HibException he) {
@@ -547,7 +591,10 @@ public class EventregDb implements AutoCloseable, Logged, Serializable {
    *
    * @param val the dbitem
    */
-  public void delete(final DbItem<?> val) {
+  public void delete(final Object val) {
+    if (!(val instanceof DbItem<?>)) {
+      throw new EventregException("Not a dbitem: " + val.getClass());
+    }
     final boolean opened = open();
 
     try {
@@ -695,7 +742,7 @@ public class EventregDb implements AutoCloseable, Logged, Serializable {
 
   private static final String maxRegistrationIdQuery =
           "select max(registrationId) from " +
-                  Registration.class.getName() + " reg";
+                  RegistrationImpl.class.getName() + " reg";
 
   private void createQuery(final String query) {
     try {

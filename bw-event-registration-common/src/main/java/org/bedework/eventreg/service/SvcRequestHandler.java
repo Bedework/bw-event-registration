@@ -21,8 +21,9 @@ package org.bedework.eventreg.service;
 import org.bedework.eventreg.common.BwConnector;
 import org.bedework.eventreg.common.Event;
 import org.bedework.eventreg.common.EventregException;
+import org.bedework.eventreg.common.EventregProperties;
+import org.bedework.eventreg.common.Registration;
 import org.bedework.eventreg.db.EventregDb;
-import org.bedework.eventreg.db.Registration;
 import org.bedework.eventreg.requests.EventChangeRequest;
 import org.bedework.eventreg.requests.EventregRequest;
 import org.bedework.eventreg.requests.RegistrationAction;
@@ -331,7 +332,7 @@ public class SvcRequestHandler extends JmsSysEventListener
     }
 
     // Have we seen this already?
-    final List<Registration> regs = db.getByEvent(href);
+    final var regs = db.getByEvent(href);
 
     if (Util.isEmpty(regs)) {
       // No registrations
@@ -341,7 +342,7 @@ public class SvcRequestHandler extends JmsSysEventListener
     final List<String> principals = new ArrayList<>();
     final List<Registration> update = new ArrayList<>();
 
-    for (final Registration reg: regs) {
+    for (final var reg: regs) {
       if (reg.getCancelSent()) {
         continue;
       }
@@ -389,7 +390,7 @@ public class SvcRequestHandler extends JmsSysEventListener
   private boolean handleNewReg(final RegistrationAction nr) {
       /* We need to fetch the event and notify the registered individual.
        */
-    final Registration reg = nr.getReg();
+    final var reg = nr.getReg();
     final String href = reg.getHref();
     final Event ev = cnctr.getEvent(href);
 

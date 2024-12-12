@@ -17,10 +17,8 @@ specific language governing permissions and limitations
 under the License.
  */
 
-package org.bedework.eventreg.db;
+package org.bedework.eventreg.common;
 
-import org.bedework.eventreg.common.Event;
-import org.bedework.eventreg.common.EventregException;
 import org.bedework.util.calendar.XcalUtil;
 import org.bedework.util.calendar.XcalUtil.TzGetter;
 import org.bedework.util.timezones.DateTimeUtil;

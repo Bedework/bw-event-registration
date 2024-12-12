@@ -19,6 +19,7 @@ under the License.
 package org.bedework.eventreg.db;
 
 import org.bedework.eventreg.common.Event;
+import org.bedework.eventreg.common.Registration;
 import org.bedework.util.misc.ToString;
 
 import java.sql.Timestamp;
@@ -32,7 +33,9 @@ import java.util.UUID;
  * @author douglm
  *
  */
-public class Registration extends DbItem<Registration> {
+public class RegistrationImpl
+        extends DbItem<RegistrationImpl>
+        implements Registration {
   private Long registrationId;
   private String authid;
   private String email;
@@ -70,7 +73,7 @@ public class Registration extends DbItem<Registration> {
   /**
    *
    */
-  public Registration() {
+  public RegistrationImpl() {
 
   }
 
@@ -454,7 +457,7 @@ public class Registration extends DbItem<Registration> {
     Set<Ticket> ts = getTickets();
 
     if (ts == null) {
-      ts = new TreeSet<Ticket>();
+      ts = new TreeSet<>();
       setTickets(ts);
     }
 
@@ -532,7 +535,7 @@ public class Registration extends DbItem<Registration> {
    * ======================================================= */
 
   @Override
-  public int compareTo(final Registration that) {
+  public int compareTo(final RegistrationImpl that) {
     return getRegistrationId().compareTo(that.getRegistrationId());
   }
 

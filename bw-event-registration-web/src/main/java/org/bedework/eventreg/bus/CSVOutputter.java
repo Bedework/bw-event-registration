@@ -19,9 +19,9 @@ under the License.
 package org.bedework.eventreg.bus;
 
 import org.bedework.eventreg.common.Event;
+import org.bedework.eventreg.common.Registration;
 import org.bedework.eventreg.db.FieldDef;
 import org.bedework.eventreg.db.FormDef;
-import org.bedework.eventreg.db.Registration;
 import org.bedework.util.logging.BwLogger;
 import org.bedework.util.logging.Logged;
 
@@ -105,7 +105,7 @@ public class CSVOutputter
     */
     final List<Object> flds = new ArrayList<>();
 
-    final Registration reg = regit.next();
+    final var reg = regit.next();
 
     final StringBuilder out = new StringBuilder();
 

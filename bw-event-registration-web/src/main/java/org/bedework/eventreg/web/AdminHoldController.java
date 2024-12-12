@@ -19,7 +19,8 @@ under the License.
 package org.bedework.eventreg.web;
 
 import org.bedework.eventreg.common.Event;
-import org.bedework.eventreg.db.Registration;
+import org.bedework.eventreg.common.Registration;
+import org.bedework.eventreg.db.RegistrationImpl;
 
 import org.springframework.web.servlet.ModelAndView;
 
@@ -32,14 +33,14 @@ public class AdminHoldController extends AdminAuthAbstractController {
     final Event ev = getSessMan().getCurrEvent();
     final int numTickets = req.getTicketsRequested();
 
-    final Registration reg = new Registration();
+    final Registration reg = getSessMan().getNewRegistration();
 
     reg.setRegistrationId(getSessMan().getNextRegistrationId());
     reg.setAuthid(getSessMan().getCurrentUser());
     reg.setHref(ev.getHref());
     reg.setTicketsRequested(numTickets);
     reg.addTickets(numTickets);
-    reg.setType(Registration.typeHold);
+    reg.setType(RegistrationImpl.typeHold);
     reg.setComment(req.getComment());
     reg.setTimestamps();
 

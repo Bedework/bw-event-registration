@@ -20,10 +20,11 @@ package org.bedework.eventreg.web;
 
 import org.bedework.eventreg.bus.FormFields;
 import org.bedework.eventreg.common.Event;
+import org.bedework.eventreg.common.Registration;
 import org.bedework.eventreg.db.Change;
 import org.bedework.eventreg.db.FieldDef;
 import org.bedework.eventreg.db.FormDef;
-import org.bedework.eventreg.db.Registration;
+import org.bedework.eventreg.db.RegistrationImpl;
 
 import org.springframework.web.servlet.ModelAndView;
 
@@ -105,11 +106,11 @@ public class EventregController extends AuthAbstractController {
 
     /* Create new entry */
 
-    reg = new Registration();
+    reg = getSessMan().getNewRegistration();
 
     reg.setAuthid(getSessMan().getCurrentUser());
     reg.setComment(req.getComment());
-    reg.setType(Registration.typeRegistered);
+    reg.setType(RegistrationImpl.typeRegistered);
     reg.setHref(href);
     reg.setRegistrationId(getSessMan().getNextRegistrationId());
 

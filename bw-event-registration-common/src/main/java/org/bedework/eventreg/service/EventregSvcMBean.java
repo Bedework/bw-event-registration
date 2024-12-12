@@ -18,6 +18,7 @@
 */
 package org.bedework.eventreg.service;
 
+import org.bedework.eventreg.common.EventregProperties;
 import org.bedework.eventreg.requests.EventregRequest;
 import org.bedework.util.jmx.ConfBaseMBean;
 import org.bedework.util.jmx.MBeanInfo;
@@ -28,7 +29,8 @@ import java.util.List;
  *
  * @author douglm
  */
-public interface EventregSvcMBean extends ConfBaseMBean, EventregProperties {
+public interface EventregSvcMBean extends ConfBaseMBean,
+        EventregProperties {
   /** Export schema to database?
    *
    * @param val

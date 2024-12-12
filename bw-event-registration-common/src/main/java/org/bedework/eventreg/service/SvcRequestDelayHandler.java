@@ -19,6 +19,7 @@ under the License.
 package org.bedework.eventreg.service;
 
 import org.bedework.eventreg.common.EventregException;
+import org.bedework.eventreg.common.EventregProperties;
 import org.bedework.eventreg.requests.EventregRequest;
 import org.bedework.util.config.ConfigBase;
 import org.bedework.util.jms.JmsNotificationsHandlerImpl;

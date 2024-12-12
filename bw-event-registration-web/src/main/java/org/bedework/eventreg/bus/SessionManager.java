@@ -22,10 +22,10 @@ package org.bedework.eventreg.bus;
 import org.bedework.eventreg.common.BwConnector;
 import org.bedework.eventreg.common.Event;
 import org.bedework.eventreg.common.EventregException;
+import org.bedework.eventreg.common.Registration;
 import org.bedework.eventreg.db.Change;
 import org.bedework.eventreg.db.EventregDb;
 import org.bedework.eventreg.db.FormDef;
-import org.bedework.eventreg.db.Registration;
 import org.bedework.eventreg.requests.EventregRequest;
 import org.bedework.eventreg.requests.RegistrationAction;
 import org.bedework.eventreg.service.ContextListener;
@@ -121,18 +121,12 @@ public class SessionManager implements Logged {
 
       db.setSysInfo(getSysInfo());
 
-      db.open();
-
       Timezones.initTimezones(getSysInfo().getTzsUri());
 
       cnctr = new BwConnector(getSysInfo().getWsdlUri(), tzs);
     } catch (final Throwable t) {
       error(t);
       throw new EventregException(t);
-    } finally {
-      if (db != null) {
-        db.close();
-      }
     }
   }
 
@@ -311,6 +305,10 @@ public class SessionManager implements Logged {
     return db.getChanges(lastmod);
   }
 
+  public Registration getNewRegistration() {
+    return db.getNewRegistration();
+  }
+
   /**
    * @param r Registration
    */
@@ -399,7 +397,7 @@ public class SessionManager implements Logged {
    * @return true if current user is registered for current event
    */
   public boolean getIsRegistered() {
-    final Registration reg = getRegistration();
+    final var reg = getRegistration();
     return reg != null;
   }
 
@@ -407,7 +405,7 @@ public class SessionManager implements Logged {
    * @return true if current user is on waiting list for current event
    */
   public boolean getIsWaiting() {
-    final Registration reg = getRegistration();
+    final var reg = getRegistration();
 
     if (reg == null) {
       return false;

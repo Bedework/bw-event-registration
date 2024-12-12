@@ -8,7 +8,7 @@
      =================================================================== -->
 
 <hibernate-mapping>
-  <class name="org.bedework.eventreg.db.Registration"
+  <class name="org.bedework.eventreg.db.RegistrationImpl"
          table="bwevreg_regs" >
     <cache usage="read-write"/>
 
