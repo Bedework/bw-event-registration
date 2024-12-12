@@ -18,7 +18,7 @@ under the License.
  */
 package org.bedework.eventreg.common;
 
-import org.bedework.eventreg.db.Event;
+import org.bedework.eventreg.db.EventImpl;
 import org.bedework.util.calendar.XcalUtil.TzGetter;
 import org.bedework.util.logging.BwLogger;
 import org.bedework.util.logging.Logged;
@@ -117,7 +117,7 @@ public class BwConnector implements Logged {
       return null;
     }
 
-    ev = new Event(comps.get(0), href, tzs);
+    ev = new EventImpl(comps.get(0), href, tzs);
 
     events.put(href, ev);
 

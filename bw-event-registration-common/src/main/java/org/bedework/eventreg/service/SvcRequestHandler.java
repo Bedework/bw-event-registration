@@ -19,8 +19,8 @@ under the License.
 package org.bedework.eventreg.service;
 
 import org.bedework.eventreg.common.BwConnector;
+import org.bedework.eventreg.common.Event;
 import org.bedework.eventreg.common.EventregException;
-import org.bedework.eventreg.db.Event;
 import org.bedework.eventreg.db.EventregDb;
 import org.bedework.eventreg.db.Registration;
 import org.bedework.eventreg.requests.EventChangeRequest;

@@ -18,6 +18,7 @@ under the License.
  */
 package org.bedework.eventreg.db;
 
+import org.bedework.eventreg.common.Event;
 import org.bedework.util.misc.ToString;
 
 /** Concrete representation of a ticket. Will allow validation of tickets

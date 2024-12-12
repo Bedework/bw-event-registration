@@ -19,6 +19,7 @@ under the License.
 
 package org.bedework.eventreg.db;
 
+import org.bedework.eventreg.common.Event;
 import org.bedework.eventreg.common.EventregException;
 import org.bedework.util.calendar.XcalUtil;
 import org.bedework.util.calendar.XcalUtil.TzGetter;
@@ -54,7 +55,7 @@ import javax.xml.bind.JAXBElement;
  * @author douglm
  *
  */
-public class Event implements Comparable<Event> {
+public class EventImpl implements Event {
   private final BaseComponentType comp;
   private final String href;
 
@@ -191,9 +192,9 @@ public class Event implements Comparable<Event> {
    * @param href of event
    * @param tzs for timezones
    */
-  public Event(final BaseComponentType comp,
-               final String href,
-               final TzGetter tzs) {
+  public EventImpl(final BaseComponentType comp,
+                   final String href,
+                   final TzGetter tzs) {
     this.comp = comp;
     this.href = href;
     this.tzs = tzs;

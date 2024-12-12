@@ -348,7 +348,6 @@ http://www.springframework.org/schema/aop https://www.springframework.org/schema
         <prop key="commitForm.do">commitFormController</prop>
         <prop key="editForm.do">editFormController</prop>
         <prop key="listForms.do">listFormsController</prop>
-        <prop key="selectForms.do">selectFormsController</prop>
       </props>
     </property>
   </bean>

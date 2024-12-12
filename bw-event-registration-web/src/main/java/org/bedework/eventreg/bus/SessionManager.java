@@ -20,9 +20,9 @@ under the License.
 package org.bedework.eventreg.bus;
 
 import org.bedework.eventreg.common.BwConnector;
+import org.bedework.eventreg.common.Event;
 import org.bedework.eventreg.common.EventregException;
 import org.bedework.eventreg.db.Change;
-import org.bedework.eventreg.db.Event;
 import org.bedework.eventreg.db.EventregDb;
 import org.bedework.eventreg.db.FormDef;
 import org.bedework.eventreg.db.Registration;

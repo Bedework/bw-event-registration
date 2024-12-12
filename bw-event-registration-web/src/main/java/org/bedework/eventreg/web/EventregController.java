@@ -19,8 +19,8 @@ under the License.
 package org.bedework.eventreg.web;
 
 import org.bedework.eventreg.bus.FormFields;
+import org.bedework.eventreg.common.Event;
 import org.bedework.eventreg.db.Change;
-import org.bedework.eventreg.db.Event;
 import org.bedework.eventreg.db.FieldDef;
 import org.bedework.eventreg.db.FormDef;
 import org.bedework.eventreg.db.Registration;

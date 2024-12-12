@@ -18,7 +18,7 @@ under the License.
  */
 package org.bedework.eventreg.db;
 
-import org.bedework.eventreg.common.EventregException;
+import org.bedework.eventreg.common.Event;
 import org.bedework.util.misc.ToString;
 
 import java.sql.Timestamp;

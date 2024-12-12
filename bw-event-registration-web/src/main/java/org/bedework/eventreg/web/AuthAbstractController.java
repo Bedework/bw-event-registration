@@ -20,8 +20,8 @@ package org.bedework.eventreg.web;
 
 import org.bedework.eventreg.bus.ChangeManager;
 import org.bedework.eventreg.bus.ChangeManager.ChangeItem;
+import org.bedework.eventreg.common.Event;
 import org.bedework.eventreg.db.Change;
-import org.bedework.eventreg.db.Event;
 import org.bedework.eventreg.db.Registration;
 
 import org.springframework.web.servlet.ModelAndView;
