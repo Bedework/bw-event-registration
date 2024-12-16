@@ -17,7 +17,7 @@
     <listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>
   </listener>
   <listener>
-    <listener-class>org.bedework.eventreg.service.ContextListener</listener-class>
+    <listener-class>org.bedework.eventreg.bus.ContextListener</listener-class>
   </listener>
 
   <servlet>

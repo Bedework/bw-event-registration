@@ -474,7 +474,7 @@ public class EventregDb implements AutoCloseable, Logged, Serializable {
 
   private final String getTicketCountQuery =
           "select count(*) from " +
-                  Ticket.class.getName() +
+                  TicketImpl.class.getName() +
                   " tkt where tkt.href=:href";
 
   /**
@@ -498,7 +498,7 @@ public class EventregDb implements AutoCloseable, Logged, Serializable {
 
   private final static String getUserTicketCountQuery =
           "select count(*) from " +
-                  Ticket.class.getName() +
+                  TicketImpl.class.getName() +
                   " tkt where tkt.href=:href" +
                   " and tkt.authid=:user";
 

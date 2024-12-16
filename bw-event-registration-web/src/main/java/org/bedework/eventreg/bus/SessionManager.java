@@ -28,7 +28,6 @@ import org.bedework.eventreg.db.EventregDb;
 import org.bedework.eventreg.db.FormDef;
 import org.bedework.eventreg.requests.EventregRequest;
 import org.bedework.eventreg.requests.RegistrationAction;
-import org.bedework.eventreg.service.ContextListener;
 import org.bedework.eventreg.service.EventregSvcMBean;
 import org.bedework.util.calendar.XcalUtil.TzGetter;
 import org.bedework.util.logging.BwLogger;

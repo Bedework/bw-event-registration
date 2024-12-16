@@ -8,7 +8,7 @@
      =================================================================== -->
 
 <hibernate-mapping>
-  <class name="org.bedework.eventreg.db.Ticket"
+  <class name="org.bedework.eventreg.db.TicketImpl"
          table="bwevreg_tkts" >
     <cache usage="read-write"/>
     

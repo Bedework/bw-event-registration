@@ -27,7 +27,10 @@ public class ProcessRegInfo implements MethodHelper {
     try (final var db = emb.getEventregDb()) {
       db.open();
 
-      final var rinfo = db.getRegistrationInfo(null, href);
+      final var rinfo =
+              db.getRegistrationInfo(
+                      emb.getConnector().getEvent(href),
+                      href);
 
       mb.outputJson(resp, null, null, rinfo);
     }

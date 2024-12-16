@@ -16,12 +16,12 @@
     specific language governing permissions and limitations
     under the License.
 */
-package org.bedework.eventreg.ws;
+package org.bedework.eventreg.webadmin;
 
 import org.bedework.eventreg.common.BwConnector;
 import org.bedework.eventreg.common.EventregException;
-import org.bedework.eventreg.db.EventregDb;
 import org.bedework.eventreg.common.EventregProperties;
+import org.bedework.eventreg.db.EventregDb;
 import org.bedework.util.calendar.XcalUtil;
 import org.bedework.util.servlet.MethodBase;
 import org.bedework.util.timezones.Timezones;
@@ -33,7 +33,7 @@ import javax.servlet.http.HttpServletResponse;
 
 /** Base class for all webdav servlet methods.
  */
-public abstract class EvregwsMethodBase extends MethodBase {
+public abstract class EvregAdminMethodBase extends MethodBase {
   private ObjectMapper objectMapper;
   private EventregProperties config;
   private EventregDb db;

@@ -6,9 +6,9 @@
 		<version>5.0.6-SNAPSHOT</version>
 	</parent>
   
-	<artifactId>bw-event-registration-web-common</artifactId>
+	<artifactId>bw-event-registration-war-common</artifactId>
 	<packaging>war</packaging>
-  <name>Bedework Event Registration web common resources</name>
+  <name>Bedework Event Registration common resources for wars</name>
 
 	<build>
 		<plugins>

@@ -19,6 +19,7 @@ under the License.
 package org.bedework.eventreg.db;
 
 import org.bedework.eventreg.common.Event;
+import org.bedework.eventreg.common.Ticket;
 import org.bedework.util.misc.ToString;
 
 /** Concrete representation of a ticket. Will allow validation of tickets
@@ -26,7 +27,8 @@ import org.bedework.util.misc.ToString;
  *
  * @author douglm
  */
-public class Ticket extends DbItem<Ticket> {
+public class TicketImpl extends DbItem<Ticket>
+        implements Ticket {
   private Long registrationId;
   private String authid;
   private String href;
@@ -40,7 +42,7 @@ public class Ticket extends DbItem<Ticket> {
   /**
    *
    */
-  public Ticket() {
+  public TicketImpl() {
   }
 
   /**

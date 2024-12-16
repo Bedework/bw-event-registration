@@ -73,7 +73,7 @@
          lazy="false">
       <cache usage="read-write"/>
       <key column="bwregid" foreign-key="bw_regtkt_regid_fk" />
-      <many-to-many class="org.bedework.eventreg.db.Ticket"
+      <many-to-many class="org.bedework.eventreg.db.TicketImpl"
                     unique="true"
                     column="bw_tktid"
                     foreign-key="bwevreg_tkt_fk" />

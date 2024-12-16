@@ -20,6 +20,7 @@ package org.bedework.eventreg.db;
 
 import org.bedework.eventreg.common.Event;
 import org.bedework.eventreg.common.Registration;
+import org.bedework.eventreg.common.Ticket;
 import org.bedework.util.misc.ToString;
 
 import java.sql.Timestamp;
@@ -468,7 +469,7 @@ public class RegistrationImpl
    *
    */
   public void addTicket() {
-    final Ticket t = new Ticket();
+    final Ticket t = new TicketImpl();
 
     t.setRegistrationId(getRegistrationId());
     t.setAuthid(getAuthid());
