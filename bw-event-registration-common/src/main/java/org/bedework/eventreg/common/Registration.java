@@ -18,8 +18,6 @@ under the License.
  */
 package org.bedework.eventreg.common;
 
-import org.bedework.eventreg.db.Ticket;
-
 import java.util.Map;
 import java.util.Set;
 

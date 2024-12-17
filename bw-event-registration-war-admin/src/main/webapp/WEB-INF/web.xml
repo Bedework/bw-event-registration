@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<web-app xmlns="http://java.sun.com/xml/ns/j2ee"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee
+                        http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"
+    version="2.4">
+  <display-name>Bedework event registration admin application</display-name>
+
+  <!-- Context params here -->
+
+  <!-- filter here -->
+
+  <!-- filter mapping here -->
+
+  <servlet>
+    <servlet-name>eventregadmin</servlet-name>
+    <servlet-class>org.bedework.eventreg.webadmin.EvregAdminServlet</servlet-class>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>default</servlet-name>
+    <url-pattern>*.html</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>eventregadmin</servlet-name>
+    <url-pattern>/</url-pattern>
+  </servlet-mapping>
+
+  <session-config>
+    <session-timeout>20</session-timeout>
+  </session-config>
+
+  <welcome-file-list>
+    <welcome-file>index.jsp</welcome-file>
+  </welcome-file-list>
+
+  <!-- JDBC DataSources (java:comp/env/jdbc) -->
+  <resource-ref>
+    <description>The event reg DS</description>
+    <res-ref-name>jdbc/EventregDB</res-ref-name>
+    <res-type>javax.sql.DataSource</res-type>
+    <res-auth>Container</res-auth>
+  </resource-ref>
+
+  <resource-ref>
+    <description>The self reg DS</description>
+    <res-ref-name>jdbc/selfregDS</res-ref-name>
+    <res-type>javax.sql.DataSource</res-type>
+    <res-auth>Container</res-auth>
+  </resource-ref>
+
+  <!-- JMS DataSources (java:comp/env/jms) -->
+  <resource-ref>
+    <res-ref-name>jms/BedeworkConnectionFactory</res-ref-name>
+    <res-type>javax.jms.ConnectionFactory</res-type>
+    <res-auth>Container</res-auth>
+  </resource-ref>
+
+  <!-- security constraints will be inserted here -->
+
+  <security-constraint>
+    <!-- The role name of * below means all roles defined in this web.xml -->
+    <web-resource-collection>
+      <web-resource-name>BedeworkEvreg</web-resource-name>
+      <description>Bedework event registration</description>
+      <url-pattern>/*</url-pattern>
+    </web-resource-collection>
+    <auth-constraint>
+      <role-name>*</role-name>
+    </auth-constraint>
+    <user-data-constraint>
+      <description>no description</description>
+      <transport-guarantee>NONE</transport-guarantee>
+    </user-data-constraint>
+  </security-constraint>
+
+  <security-constraint>
+    <web-resource-collection>
+      <web-resource-name>Prevent access to JSP pages </web-resource-name>
+      <url-pattern>*.jsp</url-pattern>
+    </web-resource-collection>
+    <auth-constraint>
+      <description>No roles, no access</description>
+    </auth-constraint>
+  </security-constraint>
+
+  <security-constraint>
+    <web-resource-collection>
+      <web-resource-name>Prevent access to JSP fragment pages </web-resource-name>
+      <url-pattern>*.jspf</url-pattern>
+    </web-resource-collection>
+    <auth-constraint>
+      <description>No roles, no access</description>
+    </auth-constraint>
+  </security-constraint>
+
+  <login-config>
+    <auth-method>FORM</auth-method>
+    <realm-name>bedework</realm-name>
+    <form-login-config>
+      <form-login-page>/login/login.html</form-login-page>
+      <form-error-page>/login/error.html</form-error-page>
+    </form-login-config>
+  </login-config>
+
+  <!-- Roles are not used -->
+  <security-role>
+    <role-name>*</role-name>
+  </security-role>
+</web-app>

@@ -1,12 +1,11 @@
-package org.bedework.eventreg.ws.getHelpers;
+package org.bedework.eventreg.webadmin.gethelpers;
 
-import org.bedework.eventreg.ws.EvregwsMethodBase;
+import org.bedework.eventreg.webadmin.EvregAdminMethodBase;
 import org.bedework.util.servlet.MethodBase;
 import org.bedework.util.servlet.MethodHelper;
 
 import java.util.List;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -15,10 +14,11 @@ public class ProcessListForms implements MethodHelper {
   public void process(final List<String> resourceUri,
                       final HttpServletRequest req,
                       final HttpServletResponse resp,
-                      final MethodBase mb)
-          throws ServletException {
-    final String calsuite = mb.getReqUtil().getReqPar("calsuite");
-    final var emb = (EvregwsMethodBase)mb;
+                      final MethodBase mb) {
+    final var emb = (EvregAdminMethodBase)mb;
+
+    final var calsuite = emb.getWebGlobals().getCalsuite();
+
     if (calsuite == null) {
       mb.sendJsonError(resp, "CalSuite not supplied");
       return;
@@ -28,8 +28,8 @@ public class ProcessListForms implements MethodHelper {
       db.open();
 
       final var forms = db.getCalSuiteForms(calsuite);
-
-      mb.outputJson(resp, null, null, forms);
+      mb.getReqUtil().setSessionAttr("forms", forms);
+      mb.forward("/docs/forms/listForms.jsp");
     }
   }
 }

@@ -114,6 +114,16 @@ public class EventregSvc extends ConfBase<EventregPropertiesImpl>
   }
 
   @Override
+  public void setAdminUsers(final String val) {
+    getConfig().setAdminUsers(val);
+  }
+
+  @Override
+  public String getAdminUsers() {
+    return getConfig().getAdminUsers();
+  }
+
+  @Override
   public void setTzsUri(final String val) {
     getConfig().setTzsUri(val);
   }

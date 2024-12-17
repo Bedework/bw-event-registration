@@ -16,7 +16,7 @@
     specific language governing permissions and limitations
     under the License.
 */
-package org.bedework.eventreg.ws;
+package org.bedework.eventreg.webadmin;
 
 import org.bedework.eventreg.webcommon.EvregServlet;
 
@@ -27,7 +27,7 @@ import static org.bedework.util.servlet.MethodBase.MethodInfo;
  * @author Mike Douglass   bedework.com
  * @version 1.0
  */
-public class EvregwsServlet extends EvregServlet {
+public class EvregAdminServlet extends EvregServlet {
   @Override
   protected void addMethods() {
     /* addMethod("POST",

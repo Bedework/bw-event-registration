@@ -18,34 +18,16 @@
 */
 package org.bedework.eventreg.webadmin;
 
-import org.bedework.eventreg.common.BwConnector;
-import org.bedework.eventreg.common.EventregException;
-import org.bedework.eventreg.common.EventregProperties;
-import org.bedework.eventreg.db.EventregDb;
-import org.bedework.util.calendar.XcalUtil;
-import org.bedework.util.servlet.MethodBase;
-import org.bedework.util.timezones.Timezones;
+import org.bedework.eventreg.webcommon.EvregMethodBase;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.Arrays;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /** Base class for all webdav servlet methods.
  */
-public abstract class EvregAdminMethodBase extends MethodBase {
-  private ObjectMapper objectMapper;
-  private EventregProperties config;
-  private EventregDb db;
-  private BwConnector connector;
-
-  private final static XcalUtil.TzGetter tzs = Timezones::getTz;
-
-  @Override
-  public void init() {
-    
-  }
-
+public abstract class EvregAdminMethodBase extends EvregMethodBase {
   @Override
   public boolean beforeMethod(final HttpServletRequest req,
                               final HttpServletResponse resp) {
@@ -53,74 +35,24 @@ public abstract class EvregAdminMethodBase extends MethodBase {
       return false;
     }
 
-    final var token = rutil.getReqPar("atkn");
-    if ((token == null) ||
-            !token.equals(config.getEventregAdminToken())) {
+    if (getWebGlobals().userChanged(getRequest())) {
+      return false;
+    }
+
+    final String[] adminUsers = getConfig().getAdminUsers()
+                                           .split(",");
+    if (adminUsers.length == 0) {
+      warn("No admin users defined");
+      resp.setStatus(HttpServletResponse.SC_FORBIDDEN);
+      return false;
+    }
+
+    if (!Arrays.asList(adminUsers).contains(getWebGlobals().getCurrentUser())) {
       resp.setStatus(HttpServletResponse.SC_FORBIDDEN);
       return false;
     }
 
     return true;
-  }
-
-  /** Called at each request
-   *
-   * @param config configuration
-   * @param dumpContent true to wrap and dump content for debugging
-   */
-  public void init(final EventregProperties config,
-                   final boolean dumpContent) {
-    this.config = config;
-    this.dumpContent = dumpContent;
-
-    init();
-  }
-  
-  public ObjectMapper getMapper() {
-    if (objectMapper != null) {
-      return objectMapper;
-    }
-
-    objectMapper = new ObjectMapper();
-    return objectMapper;
-  }
-
-  public EventregDb getEventregDb() {
-    if (db != null) {
-      return db;
-    }
-
-    synchronized (this) {
-      if (db != null) {
-        return db;
-      }
-      db = new EventregDb();
-      db.setSysInfo(config);
-    }
-
-    return db;
-  }
-
-  public BwConnector getConnector() {
-    if (connector != null) {
-      return connector;
-    }
-
-    synchronized (this) {
-      if (connector != null) {
-        return connector;
-      }
-
-      try {
-        Timezones.initTimezones(config.getTzsUri());
-
-        connector = new BwConnector(config.getWsdlUri(), tzs);
-      } catch (final Throwable t) {
-        throw new EventregException(t);
-      }
-    }
-
-    return connector;
   }
 }
 

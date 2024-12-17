@@ -47,6 +47,21 @@ public interface EventregProperties extends HibernateConfigI {
   @MBeanInfo("The token for event reg admins")
   String getEventregAdminToken();
 
+  /** Set the admin users list. This is a comma separated list of accounts that
+   * have event registration admin status.
+   *
+   * @param val    String list of accounts
+   */
+  void setAdminUsers(String val);
+
+  /** Get the root users
+   *
+   * @return String   root users
+   */
+  @MBeanInfo("admin users list. This is a comma separated list of accounts that" +
+          " have event registration admin status")
+  String getAdminUsers();
+
   /**
    * @param val uri
    */

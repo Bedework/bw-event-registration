@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<jboss-web>
+  <!-- Virtual host -->
+
+  <context-root>/eventregadmin</context-root>
+
+  <security-domain>java:/jaas/bedework</security-domain>
+
+  <resource-ref>
+    <res-ref-name>jdbc/EventregDB</res-ref-name>
+    <res-type>javax.sql.DataSource</res-type>
+    <jndi-name>java:/EventregDS</jndi-name>
+  </resource-ref>
+
+  <resource-ref>
+    <res-ref-name>jdbc/selfregDS</res-ref-name>
+    <res-type>javax.sql.DataSource</res-type>
+    <jndi-name>java:/selfregDS</jndi-name>
+  </resource-ref>
+
+  <resource-ref>
+    <res-ref-name>jms/BedeworkConnectionFactory</res-ref-name>
+    <res-type>javax.jms.ConnectionFactory</res-type>
+    <jndi-name>java:/jms/BedeworkConnectionFactory</jndi-name>
+  </resource-ref>
+</jboss-web>

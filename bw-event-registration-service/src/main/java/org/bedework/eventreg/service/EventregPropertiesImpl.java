@@ -38,6 +38,8 @@ public class EventregPropertiesImpl extends HibernateConfigBase<EventregProperti
 
   private String eventregAdminToken;
 
+  private String adminUsers;
+
   private String tzsUri;
 
   private String wsdlUri;
@@ -86,6 +88,16 @@ public class EventregPropertiesImpl extends HibernateConfigBase<EventregProperti
   @Override
   public String getEventregAdminToken() {
     return eventregAdminToken;
+  }
+
+  @Override
+  public void setAdminUsers(final String val) {
+    adminUsers = val;
+  }
+
+  @Override
+  public String getAdminUsers() {
+    return adminUsers;
   }
 
   @Override

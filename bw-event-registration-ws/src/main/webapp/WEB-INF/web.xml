@@ -13,10 +13,6 @@
 
   <!-- filter mapping here -->
 
-  <listener>
-    <listener-class>org.bedework.eventreg.service.ContextListener</listener-class>
-  </listener>
-
   <servlet>
     <servlet-name>eventregws</servlet-name>
     <servlet-class>org.bedework.eventreg.ws.EvregwsServlet</servlet-class>

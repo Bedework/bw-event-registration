@@ -18,65 +18,17 @@
 */
 package org.bedework.eventreg.ws;
 
-import org.bedework.eventreg.ws.getHelpers.ProcessListForms;
+import org.bedework.eventreg.ws.getHelpers.ProcessRegInfo;
 import org.bedework.eventreg.ws.getHelpers.ProcessSelectForms;
-import org.bedework.util.logging.BwLogger;
-import org.bedework.util.misc.Util;
 
-import java.util.List;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-/** Handle POST for categories servlet.
+/** Handle GET for eventreg web services servlet.
  */
 public class GetMethod extends EvregwsMethodBase {
   static {
-    registerHelper("listForms",
-                   ProcessListForms.class);
+    registerHelper("reginfo",
+                   ProcessRegInfo.class);
     registerHelper("selectForms",
                    ProcessSelectForms.class);
-  }
-  @SuppressWarnings({"unchecked"})
-  @Override
-  public void doMethod(final HttpServletRequest req,
-                       final HttpServletResponse resp) throws ServletException {
-    try {
-      final List<String> resourceUri = getResourceUri(req);
-
-      if (Util.isEmpty(resourceUri)) {
-        throw new ServletException("Bad resource url - no path specified");
-      }
-
-      final String resName = resourceUri.get(0);
-      final var helper = getMethodHelper(resName);
-      if (helper == null) {
-        resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-        return;
-      }
-
-      helper.process(resourceUri, req, resp, this);
-    } catch (final ServletException se) {
-      throw se;
-    } catch(final Throwable t) {
-      throw new ServletException(t);
-    }
-  }
-
-  /* ==============================================================
-   *                   Logged methods
-   * ============================================================== */
-
-  private final BwLogger logger = new BwLogger();
-
-  @Override
-  public BwLogger getLogger() {
-    if ((logger.getLoggedClass() == null) && (logger.getLoggedName() == null)) {
-      logger.setLoggedClass(getClass());
-    }
-
-    return logger;
   }
 }
 

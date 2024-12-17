@@ -9,8 +9,8 @@
     <version>5.0.6-SNAPSHOT</version>
   </parent>
 
-  <artifactId>bw-event-registration-webadmin</artifactId>
-  <name>Bedework Event Registration web admin implementation</name>
+  <artifactId>bw-event-registration-webcommon</artifactId>
+  <name>Bedework Event Registration common classes</name>
 
   <dependencies>
     <dependency>
@@ -26,9 +26,8 @@
     </dependency>
 
     <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>bw-event-registration-webcommon</artifactId>
-      <version>${project.version}</version>
+      <groupId>org.bedework</groupId>
+      <artifactId>bw-util-logging</artifactId>
     </dependency>
 
     <dependency>
