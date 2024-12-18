@@ -58,8 +58,8 @@ under the License.
         </c:choose>
       </p>
 
-      <c:if test="${not empty sessMan.message}">
+      <c:if test="${not empty globals.message}">
         <div id="message">
-          <c:out value="${sessMan.message}"/>
+          <c:out value="${globals.message}"/>
         </div>
       </c:if>

@@ -26,6 +26,8 @@ public class WebGlobals implements Logged, Serializable {
 
   protected Locale currentLocale;
 
+  private String message;
+
   public void reset(final Request req) {
     if (getCurrentUser() == null) {
       currentUser = HttpServletUtils.remoteUser(req.getRequest());
@@ -74,6 +76,14 @@ public class WebGlobals implements Logged, Serializable {
       return Locale.getDefault();
     }
     return currentLocale;
+  }
+
+  public void setMessage(final String msg) {
+    message = msg;
+  }
+
+  public String getMessage() {
+    return message;
   }
 
   /* ==============================================================
