@@ -101,7 +101,7 @@ public abstract class EvregMethodBase extends MethodBase {
         return;
       }
 
-      helper.process(resourceUri, req, resp, this);
+      helper.execute(resourceUri, req, resp, this);
     } catch (final ServletException se) {
       throw se;
     } catch(final Throwable t) {

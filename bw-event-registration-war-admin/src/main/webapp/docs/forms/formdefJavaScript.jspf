@@ -1,0 +1,203 @@
+<%--******************************************************
+Licensed to Jasig under one or more contributor license
+agreements. See the NOTICE file distributed with this work
+for additional information regarding copyright ownership.
+Jasig licenses this file to you under the Apache License,
+Version 2.0 (the "License"); you may not use this file
+except in compliance with the License. You may obtain a
+copy of the License at:
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on
+an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied. See the License for the
+specific language governing permissions and limitations
+under the License.
+
+/**
+ * Custom field collection javascript
+ */
+--%>
+
+    <script type="text/javascript">
+      var fieldTypeLabel = "Text Input";
+      var fieldType = "textinput";
+      var addingField = false;
+      var fieldNames = new Array();
+      <c:if test="${not empty fields}">
+        <c:forEach var="fld" items="${fields.formEls}" varStatus="loopStatus">
+          fieldNames.push("${fld.name}");
+        </c:forEach>
+      </c:if>
+
+      $(function() {
+        $("#addNewFieldButton").magnificPopup({
+          type: 'inline',
+          midClick: true,
+          focus: '#fieldName',
+          callbacks: {
+            beforeOpen: function() {
+              setupNewFieldForm();
+            }
+          }
+        });
+
+        $("#fieldRequired").click(function() {
+          if ($(this).is(':checked')) {
+            $("#req").val("true");
+          } else {
+            $("#req").val("false");
+          }
+        });
+        $(".clickFieldRequired").click(function() {
+          $("#fieldRequired").click();
+        });
+
+        $(".deleteLink").click(function(event) {
+          event.preventDefault();
+          var url = $(this).attr("href");
+          var fieldName = $(this).attr("data-fldName");
+          if (confirm('Are you certain you wish to remove "' + fieldName + '" from this field collection?')) {
+            $.ajax({
+              method: "GET",
+              url: url,
+              dataType: 'json'
+            })
+            .done(function (data) {
+              if (data.message == "ok") {
+                $("#" + fieldName).remove(); // remove row (tr) from the dom
+                // also remove from the validation array:
+                var nameIndex = $.inArray(fieldName, fieldNames);
+                if (nameIndex > -1) {
+                  fieldNames.splice(nameIndex,1);
+                }
+              } else {
+                alert("There was a problem: " + data.message);
+              }
+            })
+            .error(function (msg) {
+              alert("There was an error");
+            });
+          }
+        });
+
+        $("#modFieldForm input[type=text]").blur(function() {
+          $(this).val($.trim($(this).val()));
+        });
+        $("#modFieldForm textarea").blur(function() {
+          $(this).val($.trim($(this).val()));
+        });
+      });
+
+      function setupNewFieldForm() {
+        // set up default state
+        addingField = true;
+        fieldType = $("#addNewFieldType").val();
+        $(".bwPopup").removeClass("bwPopupWide");
+        $(".optionsListComponent").hide();
+        $(".hiddenForCheckbox").show();
+        $("#fieldTypeCheckboxValueSetter").hide();
+
+        // manage type specific settings
+        switch (fieldType) {
+          case "radio":
+            fieldTypeLabel = "Options List";
+            $(".optionsListComponent").show();
+            $(".bwPopup").addClass("bwPopupWide");
+            break;
+          case "checkbox":
+            fieldTypeLabel = "Checkbox";
+            $(".hiddenForCheckbox").hide();
+            $("#fieldTypeCheckboxValueSetter").show();
+            break;
+          case "textinput":
+            fieldTypeLabel = "Text Input";
+            break;
+        }
+        $("#modFieldForm input[type=text]").val("");
+        $("#modFieldForm textarea").val("");
+        $("#modFieldForm input.removeClass").each(function() {
+          $(this).removeClass("invalid");
+        });
+        $("#modFieldForm .validationError").each(function() {
+          $(this).text("");
+        });
+        $("#fieldTypeLabelHolder").text(fieldTypeLabel);
+        $("#fieldType").val(fieldType);
+      }
+
+      function doUpdateField() {
+
+        // some basic validation first
+        if (!isValid($("#fieldLabel").val())) {
+          $("#fieldLabel").closest(".fieldVal").find(".validationError").text('Please enter a valid label.');
+          $("#fieldLabel").addClass("invalid");
+          $("#fieldLabel").focus();
+          return false;
+        }
+        if (!isUnique($("#fieldName").val(),fieldNames)) {
+          $("#fieldName").closest(".fieldVal").find(".validationError").text('This name is already in use. Please enter a unique name.');
+          $("#fieldName").addClass("invalid");
+          $("#fieldName").focus();
+          return false;
+        }
+        if (!isValid($("#fieldName").val(),'alphanumeric')) {
+          $("#fieldName").closest(".fieldVal").find(".validationError").text('Please enter a valid name.');
+          $("#fieldName").addClass("invalid");
+          $("#fieldName").focus();
+          return false;
+        }
+        if (fieldType == "radio") {
+          if ($.trim($("#fieldOptions").val()) == "") {
+            $("#fieldOptions").closest(".fieldVal").find(".validationError").text('Please enter options.');
+            $("#fieldOptions").addClass("invalid");
+            $("#fieldOptions").focus();
+            return false;
+          }
+
+          var optionsArray = $('#fieldOptions').val().split("\n");
+          var regxTest = /^[^\|]+\|[^\|]+$/; // match just one pipe in the middle
+          var valid = true;
+          $(optionsArray).each(function(index,value){
+            if (!regxTest.test(value)) {
+              valid = false;
+            }
+          });
+          if (!valid) {$(
+            "#fieldOptions").closest(".fieldVal").find(".validationError").text('You must enter value|label pairs.');
+            $("#fieldOptions").addClass("invalid");
+            $("#fieldOptions").focus();
+            return false;
+          }
+        }
+        // Establish URLs and data
+        var fieldFormData = $("#modFieldForm").serialize();
+        var updateUrl = "editField.do";
+        if (addingField) {
+          updateUrl = 'addField.do';
+        }
+
+        $.ajax({
+          method: "POST",
+          url: updateUrl,
+          data: fieldFormData,
+          dataType: 'json'
+        })
+        .done(function(data) {
+          if (data.message == "ok") {
+             // XXX for now just request the page again; next: build dom object and insert it without refresh
+            location.href = "editForm.do?calsuite=${globals.calsuite}&formName=${form.formName}";
+          } else {
+            alert("There was a problem saving the field: " + data.message);
+          }
+        })
+        .error(function(msg) {
+          alert("There was an error");
+        });
+
+        return false;
+      }
+
+    </script>

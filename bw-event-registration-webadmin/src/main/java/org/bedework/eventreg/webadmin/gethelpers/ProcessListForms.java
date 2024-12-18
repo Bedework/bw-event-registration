@@ -1,35 +1,28 @@
 package org.bedework.eventreg.webadmin.gethelpers;
 
-import org.bedework.eventreg.webadmin.EvregAdminMethodBase;
-import org.bedework.util.servlet.MethodBase;
-import org.bedework.util.servlet.MethodHelper;
-
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public class ProcessListForms implements MethodHelper {
+public class ProcessListForms extends EvregAdminMethodHelper {
   @Override
-  public void process(final List<String> resourceUri,
+  public void evProcess(final List<String> resourceUri,
                       final HttpServletRequest req,
-                      final HttpServletResponse resp,
-                      final MethodBase mb) {
-    final var emb = (EvregAdminMethodBase)mb;
-
-    final var calsuite = emb.getWebGlobals().getCalsuite();
+                      final HttpServletResponse resp) {
+    final var calsuite = globals.getCalsuite();
 
     if (calsuite == null) {
-      mb.sendJsonError(resp, "CalSuite not supplied");
+      errorReturn("CalSuite not supplied");
       return;
     }
 
-    try (final var db = emb.getEventregDb()) {
+    try (final var db = getEventregDb()) {
       db.open();
 
       final var forms = db.getCalSuiteForms(calsuite);
-      mb.getReqUtil().setSessionAttr("forms", forms);
-      mb.forward("/docs/forms/listForms.jsp");
+      setSessionAttr("forms", forms);
+      forward("/docs/forms/listForms.jsp");
     }
   }
 }

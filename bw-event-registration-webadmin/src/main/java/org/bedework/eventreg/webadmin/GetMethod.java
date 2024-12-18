@@ -18,14 +18,20 @@
 */
 package org.bedework.eventreg.webadmin;
 
+import org.bedework.eventreg.webadmin.gethelpers.ProcessEditForm;
 import org.bedework.eventreg.webadmin.gethelpers.ProcessListForms;
+import org.bedework.eventreg.webadmin.gethelpers.ProcessLogout;
 
 /** Handle GET for eventreg web services servlet.
  */
 public class GetMethod extends EvregAdminMethodBase {
   static {
+    registerHelper("editForm.do",
+                   ProcessEditForm.class);
     registerHelper("listForms.do",
                    ProcessListForms.class);
+    registerHelper("logout.do",
+                   ProcessLogout.class);
   }
 }
 

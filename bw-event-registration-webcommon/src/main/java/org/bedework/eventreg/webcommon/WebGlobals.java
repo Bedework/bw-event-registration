@@ -26,6 +26,8 @@ public class WebGlobals implements Logged, Serializable {
 
   protected Locale currentLocale;
 
+  private String formName;
+
   private String message;
 
   public void reset(final Request req) {
@@ -49,6 +51,10 @@ public class WebGlobals implements Logged, Serializable {
       return true;
     }
     return false;
+  }
+
+  public void logout(final Request req) {
+    req.getRequest().getSession().invalidate();
   }
 
   /**
@@ -76,6 +82,14 @@ public class WebGlobals implements Logged, Serializable {
       return Locale.getDefault();
     }
     return currentLocale;
+  }
+
+  public void setFormName(final String val) {
+    formName = val;
+  }
+
+  public String getFormName() {
+    return formName;
   }
 
   public void setMessage(final String msg) {

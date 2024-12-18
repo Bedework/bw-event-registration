@@ -1,31 +1,25 @@
 package org.bedework.eventreg.ws.getHelpers;
 
-import org.bedework.eventreg.ws.EvregwsMethodBase;
+import org.bedework.eventreg.webcommon.EvregMethodHelper;
 import org.bedework.eventreg.ws.SelectFormsInfo;
-import org.bedework.util.servlet.MethodBase;
-import org.bedework.util.servlet.MethodHelper;
 
 import java.util.List;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public class ProcessSelectForms implements MethodHelper {
+public class ProcessSelectForms extends EvregMethodHelper {
   @Override
-  public void process(final List<String> resourceUri,
-                      final HttpServletRequest req,
-                      final HttpServletResponse resp,
-                      final MethodBase mb)
-          throws ServletException {
-    final var emb = (EvregwsMethodBase)mb;
-    final String calsuite = mb.getReqUtil().getReqPar("calsuite");
+  public void evProcess(final List<String> resourceUri,
+                        final HttpServletRequest req,
+                        final HttpServletResponse resp) {
+    final String calsuite = getReqUtil().getReqPar("calsuite");
     if (calsuite == null) {
-      mb.sendJsonError(resp, "CalSuite not supplied");
+      sendJsonError(resp, "CalSuite not supplied");
       return;
     }
 
-    try (final var db = emb.getEventregDb()) {
+    try (final var db = getEventregDb()) {
       db.open();
 
       final var forms = db.getCalSuiteForms(calsuite);
@@ -43,7 +37,7 @@ public class ProcessSelectForms implements MethodHelper {
         finfo.addForm(form.getFormName(), status);
       }
 
-      mb.outputJson(resp, null, null, finfo);
+      outputJson(resp, null, null, finfo);
     }
   }
 }
