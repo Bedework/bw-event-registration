@@ -20,6 +20,7 @@ package org.bedework.eventreg.webcommon;
 
 import org.bedework.eventreg.common.BwConnector;
 import org.bedework.eventreg.common.EventregException;
+import org.bedework.eventreg.common.EventregInvalidNameException;
 import org.bedework.eventreg.common.EventregProperties;
 import org.bedework.eventreg.db.EventregDb;
 import org.bedework.util.calendar.XcalUtil;
@@ -79,6 +80,10 @@ public abstract class EvregMethodBase extends MethodBase {
 
     // commonly needed
     webGlobals.setCalsuite(rutil.getReqPar("calsuite"));
+    final var formName = rutil.getReqPar("formName");
+    if (formName != null) {
+      webGlobals.setFormName(validName(formName));
+    }
 
     return true;
   }
@@ -156,6 +161,35 @@ public abstract class EvregMethodBase extends MethodBase {
     return objectMapper;
   }
 
+  /* name validation. form, field and group names must all be
+     valid json names.
+   */
+  public static String validName(final String name) {
+    if ((name == null) || (name.isEmpty())) {
+      throw new EventregInvalidNameException(name);
+    }
+
+    if (!Character.isLetter(name.charAt(0))) {
+      throw new EventregInvalidNameException(name);
+    }
+
+    for (int i = 1; i < name.length(); i++) {
+      final char ch = name.charAt(i);
+
+      if (Character.isLetterOrDigit(ch)) {
+        continue;
+      }
+
+      if ((ch == '-') || (ch == '_')) {
+        continue;
+      }
+
+      throw new EventregInvalidNameException(name);
+    }
+
+    return name;
+  }
+
   public EventregDb getEventregDb() {
     if (db != null) {
       return db;
@@ -192,6 +226,20 @@ public abstract class EvregMethodBase extends MethodBase {
     }
 
     return connector;
+  }
+
+  protected void errorReturn(final Throwable t) {
+    errorReturn(t.getLocalizedMessage());
+  }
+
+  protected void errorReturn(final String msg) {
+    errorReturn("/docs/error.jsp", msg);
+  }
+
+  protected void errorReturn(final String forward,
+                             final String msg) {
+    getWebGlobals().setMessage(msg);
+    forward(forward);
   }
 }
 

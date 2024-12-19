@@ -18,6 +18,7 @@
 */
 package org.bedework.eventreg.webadmin;
 
+import org.bedework.eventreg.webadmin.gethelpers.ProcessDisableForm;
 import org.bedework.eventreg.webadmin.gethelpers.ProcessEditForm;
 import org.bedework.eventreg.webadmin.gethelpers.ProcessListForms;
 import org.bedework.eventreg.webadmin.gethelpers.ProcessLogout;
@@ -26,6 +27,8 @@ import org.bedework.eventreg.webadmin.gethelpers.ProcessLogout;
  */
 public class GetMethod extends EvregAdminMethodBase {
   static {
+    registerHelper("disableForm.do",
+                   ProcessDisableForm.class);
     registerHelper("editForm.do",
                    ProcessEditForm.class);
     registerHelper("listForms.do",

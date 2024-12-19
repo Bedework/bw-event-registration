@@ -18,18 +18,17 @@ under the License.
  */
 package org.bedework.eventreg.webadmin.gethelpers;
 
-import org.bedework.eventreg.db.FormFields;
-
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-/**
+/** Needs formName and calSuite to fetch
+ *
  * @author douglm
  *
  */
-public class ProcessEditForm extends EvregAdminMethodHelper {
+public class ProcessDisableForm extends EvregAdminMethodHelper {
   @Override
   public void evProcess(final List<String> resourceUri,
                         final HttpServletRequest req,
@@ -50,9 +49,15 @@ public class ProcessEditForm extends EvregAdminMethodHelper {
         return;
       }
 
-      setSessionAttr("form", form);
-      setSessionAttr("fields", new FormFields(form.getFields()));
-      forward("/docs/forms/formdef.jsp");
+      checkFormOwner(form);
+
+      form.setDisabled(getRequest().getDisable());
+
+      db.update(form);
+
+      final var forms = db.getCalSuiteForms(calsuite);
+      setSessionAttr("forms", forms);
+      forward("/docs/forms/listForms.jsp");
     }
   }
 }

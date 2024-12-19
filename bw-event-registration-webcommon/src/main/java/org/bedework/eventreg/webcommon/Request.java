@@ -28,6 +28,13 @@ public class Request extends ReqUtil implements Logged {
     return globals;
   }
 
+  /**
+   * @return par or null for no parameter
+   */
+  public boolean getDisable() {
+    return getBooleanReqPar("disable", false);
+  }
+
   /* ============================================================
    *                   Logged methods
    * ============================================================ */
