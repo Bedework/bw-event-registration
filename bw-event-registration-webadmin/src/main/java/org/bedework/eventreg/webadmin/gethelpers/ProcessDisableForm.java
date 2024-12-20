@@ -37,14 +37,10 @@ public class ProcessDisableForm extends EvregAdminMethodHelper {
       return;
     }
 
-    final var calsuite = globals.getCalsuite();
-    final var formName = globals.getFormName();
-
     try (final var db = getEventregDb()) {
       db.open();
 
       final var form = getCalSuiteForm();
-
       if (form == null) {
         return;
       }
@@ -55,7 +51,8 @@ public class ProcessDisableForm extends EvregAdminMethodHelper {
 
       db.update(form);
 
-      final var forms = db.getCalSuiteForms(calsuite);
+      final var forms =
+              db.getCalSuiteForms(globals.getCalsuite());
       setSessionAttr("forms", forms);
       forward("/docs/forms/listForms.jsp");
     }

@@ -18,7 +18,7 @@ under the License.
  */
 package org.bedework.eventreg.webadmin.gethelpers;
 
-import org.bedework.eventreg.db.FormFields;
+import org.bedework.eventreg.db.FieldDef;
 
 import java.util.List;
 
@@ -29,7 +29,7 @@ import javax.servlet.http.HttpServletResponse;
  * @author douglm
  *
  */
-public class ProcessEditForm extends EvregAdminMethodHelper {
+public class ProcessDeleteField extends EvregAdminMethodHelper {
   @Override
   public void evProcess(final List<String> resourceUri,
                         final HttpServletRequest req,
@@ -38,18 +38,42 @@ public class ProcessEditForm extends EvregAdminMethodHelper {
       return;
     }
 
+    final String fieldName = reqName();
+    if (fieldName == null) {
+      errorReturn("No field name");
+      return;
+    }
+
     try (final var db = getEventregDb()) {
       db.open();
 
       final var form = getCalSuiteForm();
-
       if (form == null) {
         return;
       }
 
+      FieldDef fld = null;
+      final var flds = form.getFields();
+
+      for (final FieldDef f: flds) {
+        if (f.getName().equals(fieldName)) {
+          fld = f;
+          break;
+        }
+      }
+
+      if (fld == null) {
+        errorReturn("Field not found " + fieldName);
+        return;
+      }
+
+      flds.remove(fld);
+      db.update(form);
+
+      globals.setMessage("ok");
       setSessionAttr("form", form);
-      setSessionAttr("fields", new FormFields(form.getFields()));
-      forward("/docs/forms/formdef.jsp");
+      setSessionAttr("fields", new org.bedework.eventreg.db.FormFields(form.getFields()));
+      forward("/docs/forms/ajaxTerminator.jsp");
     }
   }
 }

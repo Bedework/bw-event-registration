@@ -16,16 +16,18 @@
     specific language governing permissions and limitations
     under the License.
 */
-package org.bedework.eventreg.ws;
+package org.bedework.eventreg.webadmin;
 
 import org.bedework.eventreg.webcommon.EvregMethodBase;
+
+import java.util.Arrays;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /** Base class for all webdav servlet methods.
  */
-public abstract class EvregwsMethodBase extends EvregMethodBase {
+public class EvregAdminMethod extends EvregMethodBase {
   @Override
   public boolean beforeMethod(final HttpServletRequest req,
                               final HttpServletResponse resp) {
@@ -33,9 +35,19 @@ public abstract class EvregwsMethodBase extends EvregMethodBase {
       return false;
     }
 
-    final var token = rutil.getReqPar("atkn");
-    if ((token == null) ||
-            !token.equals(getConfig().getEventregAdminToken())) {
+    if (getWebGlobals().userChanged(getRequest())) {
+      return false;
+    }
+
+    final String[] adminUsers = getConfig().getAdminUsers()
+                                           .split(",");
+    if (adminUsers.length == 0) {
+      warn("No admin users defined");
+      resp.setStatus(HttpServletResponse.SC_FORBIDDEN);
+      return false;
+    }
+
+    if (!Arrays.asList(adminUsers).contains(getWebGlobals().getCurrentUser())) {
       resp.setStatus(HttpServletResponse.SC_FORBIDDEN);
       return false;
     }

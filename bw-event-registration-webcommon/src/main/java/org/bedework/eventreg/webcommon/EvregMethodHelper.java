@@ -19,7 +19,17 @@ public abstract class EvregMethodHelper extends MethodHelper {
    *                form fields
    */
 
+  /** Request parameter - comment
+   */
+  public static final String reqparComment = "comment";
+
   public static final String reqparDefault = "default";
+
+  /** Request parameter - comment
+   */
+  public static final String reqparDescription = "description";
+
+  public static final String reqparDisable = "disable";
 
   /** Request parameter - form name
    */
@@ -27,21 +37,19 @@ public abstract class EvregMethodHelper extends MethodHelper {
 
   private static final String reqparGroup = "group";
 
-  private static final String reqparName = "name";
-
-  public static final String reqparDisable = "disable";
-
   public static final String reqparHeight = "height";
 
   public static final String reqparLabel = "label";
 
   public static final String reqparMulti = "multi";
 
+  private static final String reqparName = "name";
+
+  public static final String reqparOptions = "options";
+
   public static final String reqparOrder = "order";
 
   public static final String reqparRequired = "req";
-
-  public static final String reqparOptions = "options";
 
   public static final String reqparType = "type";
 
@@ -110,10 +118,17 @@ public abstract class EvregMethodHelper extends MethodHelper {
   }
 
   /**
+   * @return comment or null for no parameter
+   */
+  public String reqComment() {
+    return getReqUtil().getReqPar(reqparComment);
+  }
+
+  /**
    * @return par or null for no parameter
    */
   public String reqDescription() {
-    return getReqUtil().getReqPar("description");
+    return getReqUtil().getReqPar(reqparDescription);
   }
 
   /**

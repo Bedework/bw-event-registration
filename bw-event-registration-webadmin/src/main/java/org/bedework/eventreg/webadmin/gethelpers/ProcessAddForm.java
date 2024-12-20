@@ -18,18 +18,20 @@ under the License.
  */
 package org.bedework.eventreg.webadmin.gethelpers;
 
-import org.bedework.eventreg.db.FormFields;
+import org.bedework.eventreg.db.FormDef;
 
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import static java.lang.String.format;
+
 /**
  * @author douglm
  *
  */
-public class ProcessEditForm extends EvregAdminMethodHelper {
+public class ProcessAddForm extends EvregAdminMethodHelper {
   @Override
   public void evProcess(final List<String> resourceUri,
                         final HttpServletRequest req,
@@ -38,18 +40,31 @@ public class ProcessEditForm extends EvregAdminMethodHelper {
       return;
     }
 
+    final var calsuite = globals.getCalsuite();
+    final var formName = globals.getFormName();
+
     try (final var db = getEventregDb()) {
       db.open();
 
-      final var form = getCalSuiteForm();
-
-      if (form == null) {
+      if (getCalSuiteForm() != null) {
+        errorReturn(format("Form %s already exists",
+                           formName));
         return;
       }
 
+      final var form = new FormDef();
+
+      form.setFormName(formName);
+      form.setOwner(calsuite);
+      form.setComment(reqComment());
+      form.setDisabled(false);
+
+      form.setTimestamps();
+
+      db.add(form);
+
       setSessionAttr("form", form);
-      setSessionAttr("fields", new FormFields(form.getFields()));
-      forward("/docs/forms/formdef.jsp");
+      forward("/editForm.do");
     }
   }
 }

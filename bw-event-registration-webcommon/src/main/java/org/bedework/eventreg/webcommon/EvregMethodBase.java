@@ -27,6 +27,7 @@ import org.bedework.util.calendar.XcalUtil;
 import org.bedework.util.misc.Util;
 import org.bedework.util.servlet.MethodBase;
 import org.bedework.util.servlet.ReqUtil;
+import org.bedework.util.servlet.config.AppInfo;
 import org.bedework.util.timezones.Timezones;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -143,8 +144,10 @@ public abstract class EvregMethodBase extends MethodBase {
    */
   public void init(final EventregProperties config,
                    final ServletContext context,
-                   final boolean dumpContent) {
-    init(context, dumpContent);
+                   final boolean dumpContent,
+                   final String methodName,
+                   final AppInfo appInfo) {
+    init(context, dumpContent, methodName, appInfo);
     this.config = config;
   }
 

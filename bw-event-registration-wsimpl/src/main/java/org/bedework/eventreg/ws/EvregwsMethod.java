@@ -16,25 +16,31 @@
     specific language governing permissions and limitations
     under the License.
 */
-package org.bedework.eventreg.webadmin;
+package org.bedework.eventreg.ws;
 
-import org.bedework.eventreg.webadmin.gethelpers.ProcessDisableForm;
-import org.bedework.eventreg.webadmin.gethelpers.ProcessEditForm;
-import org.bedework.eventreg.webadmin.gethelpers.ProcessListForms;
-import org.bedework.eventreg.webadmin.gethelpers.ProcessLogout;
+import org.bedework.eventreg.webcommon.EvregMethodBase;
 
-/** Handle GET for eventreg web services servlet.
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+/** Base class for all webdav servlet methods.
  */
-public class GetMethod extends EvregAdminMethodBase {
-  static {
-    registerHelper("disableForm.do",
-                   ProcessDisableForm.class);
-    registerHelper("editForm.do",
-                   ProcessEditForm.class);
-    registerHelper("listForms.do",
-                   ProcessListForms.class);
-    registerHelper("logout.do",
-                   ProcessLogout.class);
+public class EvregwsMethod extends EvregMethodBase {
+  @Override
+  public boolean beforeMethod(final HttpServletRequest req,
+                              final HttpServletResponse resp) {
+    if (!super.beforeMethod(req, resp)) {
+      return false;
+    }
+
+    final var token = rutil.getReqPar("atkn");
+    if ((token == null) ||
+            !token.equals(getConfig().getEventregAdminToken())) {
+      resp.setStatus(HttpServletResponse.SC_FORBIDDEN);
+      return false;
+    }
+
+    return true;
   }
 }
 

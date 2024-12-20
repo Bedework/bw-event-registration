@@ -1,0 +1,74 @@
+{
+  "defaultForwards": [
+    {
+      "name": "error",
+      "path": "/docs/error.jsp"
+    },
+    {
+      "name": "ajaxError",
+      "path": "/docs/ajaxTerminator.jsp"
+    }
+  ],
+  "helpers": [
+    {
+      "name": "addField.do",
+      "className": "org.bedework.eventreg.webadmin.gethelpers.ProcessAddField",
+      "forwards": [
+        {
+          "name": "success",
+          "path": "/docs/forms/ajaxTerminator.jsp"
+        }
+      ]
+    },
+    {
+      "name": "addForm.do",
+      "className": "org.bedework.eventreg.webadmin.gethelpers.ProcessAddForm",
+      "forwards": [
+        {
+          "name": "success",
+          "path": "/editForm.do"
+        }
+      ]
+    },
+    {
+      "name": "disableForm.do",
+      "className": "org.bedework.eventreg.webadmin.gethelpers.ProcessDisableForm",
+      "forwards": [
+        {
+          "name": "success",
+          "path": "/docs/forms/listForms.jsp"
+        }
+      ]
+    },
+    {
+      "name": "editForm.do",
+      "className": "org.bedework.eventreg.webadmin.gethelpers.ProcessEditForm",
+      "forwards": [
+        {
+          "name": "success",
+          "path": "/docs/forms/formdef.jsp"
+        }
+      ]
+    },
+    {
+      "name": "listForms.do",
+      "className": "org.bedework.eventreg.webadmin.gethelpers.ProcessListForms",
+      "forwards": [
+        {
+          "name": "success",
+          "path": "/docs/forms/listForms.jsp"
+        }
+      ]
+    },
+    {
+      "name": "logout.do",
+      "className": "org.bedework.eventreg.webadmin.gethelpers.ProcessLogout",
+      "forwards": [
+        {
+          "name": "success",
+          "path": "/login/logout.html"
+        }
+      ]
+    }
+  ]
+}

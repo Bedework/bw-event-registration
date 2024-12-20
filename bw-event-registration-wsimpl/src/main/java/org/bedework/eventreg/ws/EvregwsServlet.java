@@ -32,7 +32,7 @@ public class EvregwsServlet extends EvregServlet {
   protected void addMethods() {
     /* addMethod("POST",
               new MethodInfo(PostMethod.class, true)); */
-    methods.put("GET", new MethodInfo(GetMethod.class, false));
+    methods.put("GET", new MethodInfo(EvregwsMethod.class, false));
     /*
     methods.put("ACL", new MethodInfo(AclMethod.class, false));
     methods.put("COPY", new MethodInfo(CopyMethod.class, false));

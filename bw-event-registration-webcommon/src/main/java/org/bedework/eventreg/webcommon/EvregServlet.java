@@ -36,7 +36,8 @@ public abstract class EvregServlet extends ServletBase {
   protected void initMethodBase(final MethodBase mb,
                                 final ConfBase conf,
                                 final ServletContext context,
-                                final boolean dumpContent) throws ServletException {
+                                final boolean dumpContent,
+                                final String methodName) throws ServletException {
     final var cfg = (Configuration)conf;
     cfg.loadConfig();
     final EvregMethodBase emb = (EvregMethodBase)mb;
@@ -44,7 +45,9 @@ public abstract class EvregServlet extends ServletBase {
     try {
       emb.init(cfg.getConfig(),
                context,
-               dumpContent);
+               dumpContent,
+               methodName,
+               appInfo);
     } catch (final Throwable t) {
       throw new ServletException(t);
     }
