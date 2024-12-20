@@ -17,6 +17,40 @@
       ]
     },
     {
+      "name": "commitForm.do",
+      "className": "org.bedework.eventreg.webadmin.gethelpers.ProcessCommitForm",
+      "forwards": [
+        {
+          "name": "success",
+          "path": "/listForms.do"
+        }
+      ]
+    },
+    {
+      "name": "deleteField.do",
+      "className": "org.bedework.eventreg.webadmin.gethelpers.ProcessDeleteField",
+      "forwards": [
+        {
+          "name": "error",
+          "path": "/docs/forms/ajaxTerminator.jsp"
+        },
+        {
+          "name": "success",
+          "path": "/docs/forms/ajaxTerminator.jsp"
+        }
+      ]
+    },
+    {
+      "name": "deleteForm.do",
+      "className": "org.bedework.eventreg.webadmin.gethelpers.ProcessDeleteForm",
+      "forwards": [
+        {
+          "name": "success",
+          "path": "/listForms.do"
+        }
+      ]
+    },
+    {
       "name": "disableForm.do",
       "className": "org.bedework.eventreg.webadmin.gethelpers.ProcessDisableForm",
       "forwards": [
@@ -64,11 +98,11 @@
       "helpers": [
         {
           "name": "addField.do",
-          "className": "org.bedework.eventreg.webadmin.gethelpers.ProcessAddField",
+          "className": "org.bedework.eventreg.webadmin.posthelpers.ProcessAddField",
           "forwards": [
             {
               "name": "error",
-              "path": "/docs/ajaxTerminator.jsp"
+              "path": "/docs/forms/ajaxTerminator.jsp"
             },
             {
               "name": "success",

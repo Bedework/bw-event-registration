@@ -16,13 +16,14 @@ KIND, either express or implied. See the License for the
 specific language governing permissions and limitations
 under the License.
  */
-package org.bedework.eventreg.webadmin.gethelpers;
+package org.bedework.eventreg.webadmin.posthelpers;
 
 import org.bedework.eventreg.common.EventregException;
 import org.bedework.eventreg.common.EventregInvalidNameException;
 import org.bedework.eventreg.db.FieldDef;
 import org.bedework.eventreg.db.FormDef;
 import org.bedework.eventreg.db.FormFields;
+import org.bedework.eventreg.webadmin.gethelpers.EvregAdminMethodHelper;
 import org.bedework.util.misc.Util;
 
 import java.io.BufferedReader;

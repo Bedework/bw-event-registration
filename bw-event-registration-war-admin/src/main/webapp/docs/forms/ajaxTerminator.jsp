@@ -22,7 +22,7 @@ under the License.
  * jQuery prefers to have an actual response rather than
  * just status message and no-content.
  */
---%><%@ page session="false"%>
+--%>
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 

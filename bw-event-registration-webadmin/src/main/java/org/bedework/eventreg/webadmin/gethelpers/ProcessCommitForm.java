@@ -28,7 +28,7 @@ import javax.servlet.http.HttpServletResponse;
  * @author douglm
  *
  */
-public class ProcessDisableForm extends EvregAdminMethodHelper {
+public class ProcessCommitForm extends EvregAdminMethodHelper {
   @Override
   public void evProcess(final List<String> resourceUri,
                         final HttpServletRequest req,
@@ -41,9 +41,7 @@ public class ProcessDisableForm extends EvregAdminMethodHelper {
         return;
       }
 
-      checkFormOwner(form);
-
-      form.setDisabled(getRequest().getDisable());
+      form.setCommitted(true);
 
       db.update(form);
 

@@ -143,7 +143,7 @@ under the License.
               <c:if test="${not form.committed}">
                 <td class="actions">
                   <!--update -->
-                  <a href="deleteField.do?calsuite=${req.calsuite}&atkn=${req.adminToken}&formName=${form.formName}&name=${fld.name}" data-fldName="${fld.name}" class="deleteLink">
+                  <a href="deleteField.do?calsuite=${globals.calsuite}&formName=${form.formName}&name=${fld.name}" data-fldName="${fld.name}" class="deleteLink">
                     <span class="ui-icon ui-icon-close"></span>
                     delete
                   </a>

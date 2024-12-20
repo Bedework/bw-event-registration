@@ -28,7 +28,7 @@ import javax.servlet.http.HttpServletResponse;
  * @author douglm
  *
  */
-public class ProcessDisableForm extends EvregAdminMethodHelper {
+public class ProcessDeleteForm extends EvregAdminMethodHelper {
   @Override
   public void evProcess(final List<String> resourceUri,
                         final HttpServletRequest req,
@@ -42,10 +42,7 @@ public class ProcessDisableForm extends EvregAdminMethodHelper {
       }
 
       checkFormOwner(form);
-
-      form.setDisabled(getRequest().getDisable());
-
-      db.update(form);
+      db.delete(form);
 
       setSessionAttr("forms", getCalSuiteForms());
       forward("success");

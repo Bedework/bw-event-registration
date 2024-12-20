@@ -249,6 +249,16 @@ public abstract class EvregMethodHelper extends MethodHelper {
     return form;
   }
 
+  public List<FormDef> getCalSuiteForms() {
+    if (!requireCalsuite()) {
+      return null;
+    }
+
+    final var calsuite = globals.getCalsuite();
+
+    return emb.getEventregDb().getCalSuiteForms(calsuite);
+  }
+
   protected void checkFormOwner(final FormDef form) {
     if (!form.getOwner().equals(globals.getCalsuite())) {
       throw new EventregException("Owner not current calsuite");
