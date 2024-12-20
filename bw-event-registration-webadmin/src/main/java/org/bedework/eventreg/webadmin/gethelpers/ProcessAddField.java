@@ -42,18 +42,10 @@ public class ProcessAddField extends EvregAdminMethodHelper {
   public void evProcess(final List<String> resourceUri,
                         final HttpServletRequest req,
                         final HttpServletResponse resp) {
-    if (!requireCalsuite() || !requireFormName()) {
-      return;
-    }
-
-    final var calsuite = globals.getCalsuite();
-    final var formName = globals.getFormName();
-
     try (final var db = getEventregDb()) {
       db.open();
 
       final var form = getCalSuiteForm();
-
       if (form == null) {
         return;
       }
@@ -86,7 +78,7 @@ public class ProcessAddField extends EvregAdminMethodHelper {
         group = reqGroup();
       }
 
-      field.setFormName(formName);
+      field.setFormName(globals.getFormName());
       field.setOwner(form.getOwner());
       field.setName(fieldName);
       field.setType(fieldType);
@@ -137,7 +129,7 @@ public class ProcessAddField extends EvregAdminMethodHelper {
       globals.setMessage("ok");
       setSessionAttr("form", form);
       setSessionAttr("fields", ff);
-      forward("/docs/forms/ajaxTerminator.jsp");
+      forward("success");
     } catch (final EventregInvalidNameException eine) {
       errorReturn("Invalid name field");
     }

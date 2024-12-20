@@ -11,6 +11,6 @@ public class ProcessLogout extends EvregAdminMethodHelper {
                       final HttpServletRequest req,
                       final HttpServletResponse resp) {
     globals.logout(getRequest());
-    forward("/login/logout.html");
+    forward("success");
   }
 }

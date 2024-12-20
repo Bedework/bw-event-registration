@@ -25,8 +25,6 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import static java.lang.String.format;
-
 /**
  * @author douglm
  *
@@ -36,26 +34,19 @@ public class ProcessAddForm extends EvregAdminMethodHelper {
   public void evProcess(final List<String> resourceUri,
                         final HttpServletRequest req,
                         final HttpServletResponse resp) {
-    if (!requireCalsuite() || !requireFormName()) {
-      return;
-    }
-
-    final var calsuite = globals.getCalsuite();
     final var formName = globals.getFormName();
 
     try (final var db = getEventregDb()) {
       db.open();
 
-      if (getCalSuiteForm() != null) {
-        errorReturn(format("Form %s already exists",
-                           formName));
+      if (!ensureCalSuiteFormAbsent()) {
         return;
       }
 
       final var form = new FormDef();
 
       form.setFormName(formName);
-      form.setOwner(calsuite);
+      form.setOwner(globals.getCalsuite());
       form.setComment(reqComment());
       form.setDisabled(false);
 
@@ -63,8 +54,9 @@ public class ProcessAddForm extends EvregAdminMethodHelper {
 
       db.add(form);
 
+      globals.setMessage("ok");
       setSessionAttr("form", form);
-      forward("/editForm.do");
+      forward("success");
     }
   }
 }

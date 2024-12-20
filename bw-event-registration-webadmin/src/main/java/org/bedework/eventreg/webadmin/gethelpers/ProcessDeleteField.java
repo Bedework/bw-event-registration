@@ -34,10 +34,6 @@ public class ProcessDeleteField extends EvregAdminMethodHelper {
   public void evProcess(final List<String> resourceUri,
                         final HttpServletRequest req,
                         final HttpServletResponse resp) {
-    if (!requireCalsuite() || !requireFormName()) {
-      return;
-    }
-
     final String fieldName = reqName();
     if (fieldName == null) {
       errorReturn("No field name");
@@ -73,7 +69,7 @@ public class ProcessDeleteField extends EvregAdminMethodHelper {
       globals.setMessage("ok");
       setSessionAttr("form", form);
       setSessionAttr("fields", new org.bedework.eventreg.db.FormFields(form.getFields()));
-      forward("/docs/forms/ajaxTerminator.jsp");
+      forward("success");
     }
   }
 }

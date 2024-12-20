@@ -230,19 +230,5 @@ public abstract class EvregMethodBase extends MethodBase {
 
     return connector;
   }
-
-  protected void errorReturn(final Throwable t) {
-    errorReturn(t.getLocalizedMessage());
-  }
-
-  protected void errorReturn(final String msg) {
-    errorReturn("/docs/error.jsp", msg);
-  }
-
-  protected void errorReturn(final String forward,
-                             final String msg) {
-    getWebGlobals().setMessage(msg);
-    forward(forward);
-  }
 }
 

@@ -205,7 +205,33 @@ public abstract class EvregMethodHelper extends MethodHelper {
     return emb.getEventregDb();
   }
 
+  public boolean ensureCalSuiteFormAbsent() {
+    if (!requireCalsuite() || !requireFormName()) {
+      return false; // for failure???
+    }
+
+    final var calsuite = globals.getCalsuite();
+    final var formName = globals.getFormName();
+
+    final var form =
+            emb.getEventregDb().getCalSuiteForm(formName,
+                                                calsuite);
+
+    if (form != null) {
+      errorReturn(
+              format("Form %s already exists for calsuite %s",
+                     formName, calsuite));
+      return false;
+    }
+
+    return true;
+  }
+
   public FormDef getCalSuiteForm() {
+    if (!requireCalsuite() || !requireFormName()) {
+      return null;
+    }
+
     final var calsuite = globals.getCalsuite();
     final var formName = globals.getFormName();
 
@@ -234,15 +260,12 @@ public abstract class EvregMethodHelper extends MethodHelper {
   }
 
   protected void errorReturn(final Throwable t) {
-    emb.errorReturn(t.getLocalizedMessage());
+    globals.setMessage(t.getLocalizedMessage());
+    forward("error");
   }
 
   protected void errorReturn(final String msg) {
-    emb.errorReturn("/docs/error.jsp", msg);
-  }
-
-  protected void errorReturn(final String forward,
-                                     final String msg) {
-    emb.errorReturn(forward, msg);
+    globals.setMessage(msg);
+    forward("error");
   }
 }

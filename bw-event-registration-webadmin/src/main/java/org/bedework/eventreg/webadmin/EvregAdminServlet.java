@@ -18,15 +18,7 @@
 */
 package org.bedework.eventreg.webadmin;
 
-import org.bedework.eventreg.webadmin.gethelpers.ProcessAddField;
-import org.bedework.eventreg.webadmin.gethelpers.ProcessAddForm;
-import org.bedework.eventreg.webadmin.gethelpers.ProcessDisableForm;
-import org.bedework.eventreg.webadmin.gethelpers.ProcessEditForm;
-import org.bedework.eventreg.webadmin.gethelpers.ProcessListForms;
-import org.bedework.eventreg.webadmin.gethelpers.ProcessLogout;
 import org.bedework.eventreg.webcommon.EvregServlet;
-import org.bedework.util.servlet.config.AppInfo;
-import org.bedework.util.servlet.config.HelperInfo;
 
 import static org.bedework.util.servlet.MethodBase.MethodInfo;
 
@@ -38,9 +30,10 @@ import static org.bedework.util.servlet.MethodBase.MethodInfo;
 public class EvregAdminServlet extends EvregServlet {
   @Override
   protected void addMethods() {
-    /* addMethod("POST",
-              new MethodInfo(PostMethod.class, true)); */
-    methods.put("GET", new MethodInfo(EvregAdminMethod.class, false));
+    addMethod("POST",
+              new MethodInfo(EvregAdminMethod.class, true));
+    methods.put("GET",
+                new MethodInfo(EvregAdminMethod.class, false));
     /*
     methods.put("ACL", new MethodInfo(AclMethod.class, false));
     methods.put("COPY", new MethodInfo(CopyMethod.class, false));
@@ -58,53 +51,5 @@ public class EvregAdminServlet extends EvregServlet {
 
     //methods.put("LOCK", new MethodInfo(LockMethod.class, true));
     //methods.put("UNLOCK", new MethodInfo(UnlockMethod.class, true));
-  }
-
-  private static final AppInfo appInfo =
-          new AppInfo()
-                  .addDefaultForward("error",
-                                     "/docs/error.jsp")
-                  .addDefaultForward("ajaxError",
-                                     "/docs/ajaxTerminator.jsp")
-
-                  .addHelper(new HelperInfo(
-                          "addField.do",
-                          ProcessAddField.class.getName())
-                                     .addForward("success",
-                                                 "/docs/forms/ajaxTerminator.jsp"))
-
-                  .addHelper(new HelperInfo(
-                          "addForm.do",
-                          ProcessAddForm.class.getName())
-                                     .addForward("success",
-                                                 "/editForm.do"))
-
-                  .addHelper(new HelperInfo(
-                          "disableForm.do",
-                          ProcessDisableForm .class.getName())
-                                     .addForward("success",
-                                                 "/docs/forms/listForms.jsp"))
-
-                  .addHelper(new HelperInfo(
-                          "editForm.do",
-                          ProcessEditForm .class.getName())
-                                     .addForward("success",
-                                                 "/docs/forms/formdef.jsp"))
-
-                  .addHelper(new HelperInfo(
-                          "listForms.do",
-                          ProcessListForms .class.getName())
-                                     .addForward("success",
-                                                 "/docs/forms/listForms.jsp"))
-
-                  .addHelper(new HelperInfo(
-                          "logout.do",
-                          ProcessLogout .class.getName())
-                                     .addForward("success",
-                                                 "/login/logout.html"));
-
-  @Override
-  protected AppInfo getAppInfo() {
-    return appInfo;
   }
 }

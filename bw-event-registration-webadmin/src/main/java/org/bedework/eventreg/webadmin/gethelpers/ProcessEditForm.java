@@ -34,10 +34,6 @@ public class ProcessEditForm extends EvregAdminMethodHelper {
   public void evProcess(final List<String> resourceUri,
                         final HttpServletRequest req,
                         final HttpServletResponse resp) {
-    if (!requireCalsuite() || !requireFormName()) {
-      return;
-    }
-
     try (final var db = getEventregDb()) {
       db.open();
 
@@ -49,7 +45,7 @@ public class ProcessEditForm extends EvregAdminMethodHelper {
 
       setSessionAttr("form", form);
       setSessionAttr("fields", new FormFields(form.getFields()));
-      forward("/docs/forms/formdef.jsp");
+      forward("success");
     }
   }
 }

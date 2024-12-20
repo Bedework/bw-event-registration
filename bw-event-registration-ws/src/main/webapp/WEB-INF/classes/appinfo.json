@@ -1,14 +1,4 @@
 {
-  "defaultForwards": [
-    {
-      "name": "error",
-      "path": "/docs/error.jsp"
-    },
-    {
-      "name": "ajaxError",
-      "path": "/docs/ajaxTerminator.jsp"
-    }
-  ],
   "helpers": [
     {
       "name": "reginfo",

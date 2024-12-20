@@ -10,19 +10,16 @@ public class ProcessListForms extends EvregAdminMethodHelper {
   public void evProcess(final List<String> resourceUri,
                       final HttpServletRequest req,
                       final HttpServletResponse resp) {
-    final var calsuite = globals.getCalsuite();
-
-    if (calsuite == null) {
-      errorReturn("CalSuite not supplied");
+    if (!requireCalsuite()) {
       return;
     }
 
     try (final var db = getEventregDb()) {
       db.open();
 
-      final var forms = db.getCalSuiteForms(calsuite);
+      final var forms = db.getCalSuiteForms(globals.getCalsuite());
       setSessionAttr("forms", forms);
-      forward("/docs/forms/listForms.jsp");
+      forward("success");
     }
   }
 }

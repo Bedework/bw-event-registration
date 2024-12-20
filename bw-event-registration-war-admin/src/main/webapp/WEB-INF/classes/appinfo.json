@@ -3,23 +3,9 @@
     {
       "name": "error",
       "path": "/docs/error.jsp"
-    },
-    {
-      "name": "ajaxError",
-      "path": "/docs/ajaxTerminator.jsp"
     }
   ],
   "helpers": [
-    {
-      "name": "addField.do",
-      "className": "org.bedework.eventreg.webadmin.gethelpers.ProcessAddField",
-      "forwards": [
-        {
-          "name": "success",
-          "path": "/docs/forms/ajaxTerminator.jsp"
-        }
-      ]
-    },
     {
       "name": "addForm.do",
       "className": "org.bedework.eventreg.webadmin.gethelpers.ProcessAddForm",
@@ -67,6 +53,28 @@
         {
           "name": "success",
           "path": "/login/logout.html"
+        }
+      ]
+    }
+  ],
+
+  "methodHelpers": [
+    {
+      "method": "POST",
+      "helpers": [
+        {
+          "name": "addField.do",
+          "className": "org.bedework.eventreg.webadmin.gethelpers.ProcessAddField",
+          "forwards": [
+            {
+              "name": "error",
+              "path": "/docs/ajaxTerminator.jsp"
+            },
+            {
+              "name": "success",
+              "path": "/docs/forms/ajaxTerminator.jsp"
+            }
+          ]
         }
       ]
     }
