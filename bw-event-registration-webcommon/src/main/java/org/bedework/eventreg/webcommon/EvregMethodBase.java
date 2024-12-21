@@ -80,7 +80,11 @@ public abstract class EvregMethodBase extends MethodBase {
     webGlobals.reset(getRequest());
 
     // commonly needed
-    webGlobals.setCalsuite(rutil.getReqPar("calsuite"));
+    final var calsuite = rutil.getReqPar("calsuite");
+    if (calsuite != null) {
+      webGlobals.setCalsuite(calsuite);
+    }
+
     final var formName = rutil.getReqPar("formName");
     if (formName != null) {
       webGlobals.setFormName(validName(formName));

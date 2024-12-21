@@ -12,7 +12,8 @@
       "forwards": [
         {
           "name": "success",
-          "path": "/editForm.do"
+          "path": "/editForm.do",
+          "redirect": true
         }
       ]
     },
@@ -22,7 +23,8 @@
       "forwards": [
         {
           "name": "success",
-          "path": "/listForms.do"
+          "path": "/listForms.do",
+          "redirect": true
         }
       ]
     },
@@ -46,7 +48,8 @@
       "forwards": [
         {
           "name": "success",
-          "path": "/listForms.do"
+          "path": "/listForms.do",
+          "redirect": true
         }
       ]
     },
