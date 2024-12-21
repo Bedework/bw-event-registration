@@ -1,4 +1,4 @@
-package org.bedework.eventreg.ws.getHelpers;
+package org.bedework.eventreg.ws.gethelpers;
 
 import org.bedework.eventreg.webcommon.EvregMethodHelper;
 

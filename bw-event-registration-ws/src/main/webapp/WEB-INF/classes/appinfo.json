@@ -2,11 +2,11 @@
   "helpers": [
     {
       "name": "reginfo",
-      "className": "org.bedework.eventreg.webs.gethelpers.ProcessRegInfo"
+      "className": "org.bedework.eventreg.ws.gethelpers.ProcessRegInfo"
     },
     {
       "name": "selectForms",
-      "className": "org.bedework.eventreg.webs.gethelpers.ProcessSelectForms"
+      "className": "org.bedework.eventreg.ws.gethelpers.ProcessSelectForms"
     }
   ]
 }

@@ -20,7 +20,6 @@ package org.bedework.eventreg.webcommon;
 
 import org.bedework.eventreg.service.Configuration;
 import org.bedework.util.jmx.ConfBase;
-import org.bedework.util.logging.BwLogger;
 import org.bedework.util.servlet.MethodBase;
 import org.bedework.util.servlet.ServletBase;
 
@@ -61,20 +60,5 @@ public abstract class EvregServlet extends ServletBase {
 
   protected ConfBase<?> getConfigurator() {
     return conf;
-  }
-
-  /* ==============================================================
-   *                   Logged methods
-   * ============================================================== */
-
-  private final BwLogger logger = new BwLogger();
-
-  @Override
-  public BwLogger getLogger() {
-    if ((logger.getLoggedClass() == null) && (logger.getLoggedName() == null)) {
-      logger.setLoggedClass(getClass());
-    }
-
-    return logger;
   }
 }
