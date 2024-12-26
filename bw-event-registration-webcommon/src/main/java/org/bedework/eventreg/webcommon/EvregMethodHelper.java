@@ -90,7 +90,15 @@ public abstract class EvregMethodHelper extends MethodHelper {
 
   public boolean requireFormName() {
     if (globals.getFormName() == null) {
-      errorReturn("Bad resource url - no form namee specified");
+      errorReturn("Bad resource url - no form name specified");
+      return false;
+    }
+    return true;
+  }
+
+  public boolean requireHref() {
+    if (globals.getHref() == null) {
+      errorReturn("Bad resource url - no href specified");
       return false;
     }
     return true;

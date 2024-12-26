@@ -90,6 +90,8 @@ public abstract class EvregMethodBase extends MethodBase {
       webGlobals.setFormName(validName(formName));
     }
 
+    webGlobals.setHref(rutil.getReqPar("href"));
+
     return true;
   }
 

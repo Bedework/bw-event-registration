@@ -67,8 +67,17 @@ public class BwConnector implements Logged {
   /** Flush any trace of events.
    *
    */
-  public void flush() {
+  public BwConnector flush() {
     events.clear();
+    return this;
+  }
+
+  /** Purge current event.
+   *
+   */
+  public BwConnector flush(final String href) {
+    events.remove(href);
+    return this;
   }
 
   /**

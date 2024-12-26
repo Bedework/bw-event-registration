@@ -28,6 +28,8 @@ public class WebGlobals implements Logged, Serializable {
 
   private String formName;
 
+  private String href;
+
   private String message;
 
   public void reset(final Request req) {
@@ -90,6 +92,14 @@ public class WebGlobals implements Logged, Serializable {
 
   public String getFormName() {
     return formName;
+  }
+
+  public void setHref(final String val) {
+    href = val;
+  }
+
+  public String getHref() {
+    return href;
   }
 
   public void setMessage(final String msg) {

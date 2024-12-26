@@ -92,6 +92,16 @@
           "path": "/login/logout.html"
         }
       ]
+    },
+    {
+      "name": "showRegistrations.do",
+      "className": "org.bedework.eventreg.webadmin.gethelpers.ProcessShowReqistrations",
+      "forwards": [
+        {
+          "name": "success",
+          "path": "/reg/showRegistrations.jsp"
+        }
+      ]
     }
   ],
 
