@@ -13,13 +13,15 @@
 
   <!-- filter mapping here -->
 
-  <listener>
-    <listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>
-  </listener>
-
   <servlet>
     <servlet-name>eventreg</servlet-name>
-    <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+    <servlet-class>org.bedework.eventreg.web.EvregUserServlet</servlet-class>
+
+    <init-param>
+      <param-name>useAppInfo</param-name>
+      <param-value>true</param-value>
+    </init-param>
+
     <load-on-startup>1</load-on-startup>
   </servlet>
 

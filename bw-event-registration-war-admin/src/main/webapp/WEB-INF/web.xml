@@ -16,6 +16,12 @@
   <servlet>
     <servlet-name>eventregadmin</servlet-name>
     <servlet-class>org.bedework.eventreg.webadmin.EvregAdminServlet</servlet-class>
+
+    <init-param>
+      <param-name>useAppInfo</param-name>
+      <param-value>true</param-value>
+    </init-param>
+
     <load-on-startup>1</load-on-startup>
   </servlet>
 
