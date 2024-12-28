@@ -18,34 +18,10 @@ http://www.springframework.org/schema/aop https://www.springframework.org/schema
     </property>
   </bean>
 
-  <!-- =================== Events Registration general actions ========================== -->
-
-  <!-- allows user to authenticate with a simple "you're authenticated" message -->
-  <bean id="authController"
-        class="org.bedework.eventreg.web.NoopController"
-        scope="session">
-    <aop:scoped-proxy/>
-    <property name="sessionManager">
-      <ref bean="sessMan"/>
-    </property>
-    <property name="forwardFail" value="forward:/docs/error.jsp" />
-    <property name="forwardSuccess" value="forward:/docs/authenticated.jsp" />
-  </bean>
-
   <!-- =================== Events Registration User actions ========================== -->
 
   <bean id="initController"
         class="org.bedework.eventreg.web.InitController"
-        scope="session">
-    <aop:scoped-proxy/>
-    <property name="sessionManager">
-      <ref bean="sessMan"/>
-    </property>
-    <property name="forwardFail" value="forward:/docs/error.jsp" />
-  </bean>
-
-  <bean id="eventregController"
-        class="org.bedework.eventreg.web.EventregController"
         scope="session">
     <aop:scoped-proxy/>
     <property name="sessionManager">
@@ -75,17 +51,6 @@ http://www.springframework.org/schema/aop https://www.springframework.org/schema
     <property name="forwardTo" value="forward:agenda.do" />
   </bean>
 
-  <bean id="removeRegController"
-        class="org.bedework.eventreg.web.RemoveRegController"
-        scope="session">
-    <aop:scoped-proxy/>
-    <property name="sessionManager">
-      <ref bean="sessMan"/>
-    </property>
-    <property name="forwardFail" value="forward:/docs/error.jsp" />
-    <property name="forwardTo" value="forward:init.do" />
-  </bean>
-
   <bean id="updateRegController"
         class="org.bedework.eventreg.web.UpdateRegController"
         scope="session">
@@ -96,222 +61,7 @@ http://www.springframework.org/schema/aop https://www.springframework.org/schema
     <property name="forwardFail" value="forward:/docs/error.jsp" />
   </bean>
 
-  <bean id="userAgendaController"
-        class="org.bedework.eventreg.web.UserAgendaController"
-        scope="session">
-    <aop:scoped-proxy/>
-    <property name="sessionManager">
-      <ref bean="sessMan"/>
-    </property>
-    <property name="forwardFail" value="forward:/docs/error.jsp" />
-  </bean>
 
-  <!-- ================= Notification actions ===================== -->
-
-  <bean id="eventChangeController"
-        class="org.bedework.eventreg.web.EventChangeController"
-        scope="session">
-    <aop:scoped-proxy/>
-    <property name="sessionManager">
-      <ref bean="sessMan"/>
-    </property>
-    <property name="forwardFail" value="forward:/docs/error.jsp" />
-  </bean>
-
-  <!-- =================== Events Registration Admin actions ========================== -->
-
-  <bean id="adminAdjustTicketsController"
-        class="org.bedework.eventreg.web.AdminAdjustTktsController"
-        scope="session">
-    <aop:scoped-proxy/>
-    <property name="sessionManager">
-      <ref bean="sessMan"/>
-    </property>
-    <property name="forwardFail" value="forward:/docs/error.jsp" />
-    <property name="forwardTo" value="forward:adminAgenda.do" />
-  </bean>
-
-  <bean id="adminAgendaController"
-        class="org.bedework.eventreg.web.AdminAgendaController"
-        scope="session">
-    <aop:scoped-proxy/>
-    <property name="sessionManager">
-      <ref bean="sessMan"/>
-    </property>
-    <property name="forwardFail" value="forward:/docs/error.jsp" />
-  </bean>
-
-  <bean id="adminHoldController"
-        class="org.bedework.eventreg.web.AdminHoldController"
-        scope="session">
-    <aop:scoped-proxy/>
-    <property name="sessionManager">
-      <ref bean="sessMan"/>
-    </property>
-    <property name="forwardFail" value="forward:/docs/error.jsp" />
-    <property name="forwardTo" value="forward:adminAgenda.do" />
-  </bean>
-
-  <bean id="adminRemoveRegController"
-        class="org.bedework.eventreg.web.AdminRemoveRegController"
-        scope="session">
-    <aop:scoped-proxy/>
-    <property name="sessionManager">
-      <ref bean="sessMan"/>
-    </property>
-    <property name="forwardFail" value="forward:/docs/error.jsp" />
-    <property name="forwardTo" value="forward:adminAgenda.do" />
-  </bean>
-
-  <bean id="adminRemoveAgendaRegController"
-        class="org.bedework.eventreg.web.AdminRemoveRegController"
-        scope="session">
-    <aop:scoped-proxy/>
-    <property name="sessionManager">
-      <ref bean="sessMan"/>
-    </property>
-    <property name="forwardFail" value="forward:/docs/error.jsp" />
-    <property name="forwardTo" value="forward:adminAgenda.do" />
-  </bean>
-
-  <bean id="adminUpdateRegController"
-        class="org.bedework.eventreg.web.AdminUpdateRegController"
-        scope="session">
-    <aop:scoped-proxy/>
-    <property name="sessionManager">
-      <ref bean="sessMan"/>
-    </property>
-    <property name="forwardFail" value="forward:/docs/error.jsp" />
-    <property name="forwardTo" value="forward:adminAgenda.do" />
-  </bean>
-
-  <bean id="outputChangesController"
-        class="org.bedework.eventreg.web.OutputChangesController"
-        scope="session">
-    <aop:scoped-proxy/>
-    <property name="sessionManager">
-      <ref bean="sessMan"/>
-    </property>
-    <property name="forwardFail" value="forward:/docs/error.jsp" />
-  </bean>
-
-  <bean id="outputCSVController"
-        class="org.bedework.eventreg.web.OutputCSVController"
-        scope="session">
-    <aop:scoped-proxy/>
-    <property name="sessionManager">
-      <ref bean="sessMan"/>
-    </property>
-    <property name="forwardFail" value="forward:/docs/error.jsp" />
-    <property name="forwardSuccess" value="forward:/docs/csv.jsp" />
-  </bean>
-
-  <bean id="logoutController"
-        class="org.bedework.eventreg.web.LogoutController"
-        scope="session">
-    <aop:scoped-proxy/>
-    <property name="sessionManager">
-      <ref bean="sessMan"/>
-    </property>
-    <property name="forwardSuccess" value="forward:/docs/logout.jsp" />
-  </bean>
-
-  <!-- ================= Custom Form Fields Admin Actions ===================== -->
-
-  <bean id="addFieldController"
-        class="org.bedework.eventreg.web.forms.AddFieldController"
-        scope="session">
-    <aop:scoped-proxy/>
-    <property name="sessionManager">
-      <ref bean="sessMan"/>
-    </property>
-    <property name="forwardFail" value="forward:/docs/forms/ajaxTerminator.jsp" />
-    <property name="forwardSuccess" value="forward:/docs/forms/ajaxTerminator.jsp" />
-  </bean>
-
-  <bean id="deleteFieldController"
-        class="org.bedework.eventreg.web.forms.DeleteFieldController"
-        scope="session">
-    <aop:scoped-proxy/>
-    <property name="sessionManager">
-      <ref bean="sessMan"/>
-    </property>
-    <property name="forwardFail" value="forward:/docs/forms/ajaxTerminator.jsp" />
-    <property name="forwardSuccess" value="forward:/docs/forms/ajaxTerminator.jsp" />
-  </bean>
-
-  <bean id="addFormController"
-        class="org.bedework.eventreg.web.forms.AddFormController"
-        scope="session">
-    <aop:scoped-proxy/>
-    <property name="sessionManager">
-      <ref bean="sessMan"/>
-    </property>
-    <property name="forwardFail" value="forward:/docs/error.jsp" />
-    <property name="forwardSuccess" value="forward:/admin/editForm.do" />
-  </bean>
-
-  <bean id="deleteFormController"
-        class="org.bedework.eventreg.web.forms.DeleteFormController"
-        scope="session">
-    <aop:scoped-proxy/>
-    <property name="sessionManager">
-      <ref bean="sessMan"/>
-    </property>
-    <property name="forwardFail" value="forward:/docs/error.jsp" />
-    <property name="forwardSuccess" value="forward:/admin/listForms.do" />
-  </bean>
-
-  <bean id="commitFormController"
-        class="org.bedework.eventreg.web.forms.CommitFormController"
-        scope="session">
-    <aop:scoped-proxy/>
-    <property name="sessionManager">
-      <ref bean="sessMan"/>
-    </property>
-    <property name="forwardFail" value="forward:/docs/error.jsp" />
-    <property name="forwardSuccess" value="forward:/admin/listForms.do" />
-  </bean>
-
-  <bean id="disableFormController"
-        class="org.bedework.eventreg.web.forms.DisableFormController"
-        scope="session">
-    <aop:scoped-proxy/>
-    <property name="sessionManager">
-      <ref bean="sessMan"/>
-    </property>
-    <property name="forwardFail" value="forward:/docs/error.jsp" />
-    <property name="forwardSuccess" value="forward:/docs/forms/listForms.jsp" />
-  </bean>
-
-  <bean id="editFormController"
-        class="org.bedework.eventreg.web.forms.EditFormController"
-        scope="session">
-    <aop:scoped-proxy/>
-    <property name="sessionManager">
-      <ref bean="sessMan"/>
-    </property>
-    <property name="forwardFail" value="forward:/docs/error.jsp" />
-  </bean>
-
-  <bean id="listFormsController"
-        class="org.bedework.eventreg.web.forms.ListFormsController"
-        scope="session">
-    <aop:scoped-proxy/>
-    <property name="sessionManager">
-      <ref bean="sessMan"/>
-    </property>
-    <property name="forwardFail" value="forward:/docs/error.jsp" />
-    <property name="forwardSuccess" value="forward:/docs/forms/listForms.jsp" />
-  </bean>
-
-  <bean id="authenticatedUrlMapping"
-        class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
-    <property name="interceptors">
-      <list>
-        <ref bean="initHandlers"/>
-      </list>
-    </property>
     <property name="mappings">
       <props>
         <!-- Events Registration Actions -->
@@ -324,59 +74,10 @@ http://www.springframework.org/schema/aop https://www.springframework.org/schema
         <prop key="removeReg.do">removeRegController</prop>
         <prop key="removeAgendaReg.do">removeAgendaRegController</prop>
 
-        <prop key="eventChg.do">eventChangeController</prop>
-
-        <prop key="adminAgenda.do">adminAgendaController</prop>
-        <prop key="adminHold.do">adminHoldController</prop>
-        <prop key="updateAdminReg.do">adminUpdateRegController</prop>
-        <prop key="adminRemoveAgendaReg.do">adminRemoveAgendaRegController</prop>
-        <prop key="adminRemoveReg.do">adminRemoveRegController</prop>
-        <prop key="download.do">outputCSVController</prop>
-        <prop key="changes.do">outputChangesController</prop>
-
         <prop key="counts.do">outputCountsController</prop>
 
         <prop key="logout.do">logoutController</prop>
-
-
-        <!-- Custom Form Fields Admin Actions -->
-        <prop key="addField.do">addFieldController</prop>
-        <prop key="deleteField.do">deleteFieldController</prop>
-        <prop key="addForm.do">addFormController</prop>
-        <prop key="deleteForm.do">deleteFormController</prop>
-        <prop key="disableForm.do">disableFormController</prop>
-        <prop key="commitForm.do">commitFormController</prop>
-        <prop key="editForm.do">editFormController</prop>
-        <prop key="listForms.do">listFormsController</prop>
       </props>
-    </property>
-  </bean>
-
-  <bean id="viewResolver"
-        class="org.springframework.web.servlet.view.InternalResourceViewResolver">
-    <property name="viewClass">
-      <value>org.springframework.web.servlet.view.JstlView</value>
-    </property>
-    <property name="prefix">
-      <value>/docs/</value>
-    </property>
-    <property name="suffix">
-      <value>.jsp</value>
-    </property>
-  </bean>
-
-  <bean id="eventregDb"
-        class="org.bedework.eventreg.db.EventregDb"
-        scope="session">
-    <aop:scoped-proxy/>
-  </bean>
-
-  <bean id="initHandlers"
-        class="org.bedework.eventreg.web.InitHandlers"
-        scope="session">
-  <aop:scoped-proxy/>
-    <property name="sessionManager">
-      <ref bean="sessMan"/>
     </property>
   </bean>
 </beans>

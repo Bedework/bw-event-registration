@@ -12,10 +12,24 @@
       "forwards": [
         {
           "name": "success",
-          "path": "/editForm.do",
+          "path": "/docs/forms/editForm.do",
           "redirect": true
         }
       ]
+    },
+    {
+      "name": "adjustTkts.do",
+      "className": "org.bedework.eventreg.webadmin.gethelpers.ProcessAdjustTkts",
+      "forwards": [
+        {
+          "name": "success",
+          "path": "/docs/reg/showRegistrations.do"
+        }
+      ]
+    },
+    {
+      "name": "changes.do",
+      "className": "org.bedework.eventreg.webadmin.gethelpers.ProcessOutputChanges"
     },
     {
       "name": "commitForm.do",
@@ -23,7 +37,7 @@
       "forwards": [
         {
           "name": "success",
-          "path": "/listForms.do",
+          "path": "/docs/forms/listForms.do",
           "redirect": true
         }
       ]
@@ -48,7 +62,7 @@
       "forwards": [
         {
           "name": "success",
-          "path": "/listForms.do",
+          "path": "/docs/forms/listForms.do",
           "redirect": true
         }
       ]
@@ -62,6 +76,10 @@
           "path": "/docs/forms/listForms.jsp"
         }
       ]
+    },
+    {
+      "name": "download.do",
+      "className": "org.bedework.eventreg.webadmin.gethelpers.ProcessOutputCSV"
     },
     {
       "name": "editForm.do",
@@ -94,12 +112,32 @@
       ]
     },
     {
+      "name": "removeReg.do",
+      "className": "org.bedework.eventreg.webadmin.gethelpers.ProcessRemoveReq",
+      "forwards": [
+        {
+          "name": "success",
+          "path": "/docs/reg/showRegistrations.jsp"
+        }
+      ]
+    },
+    {
       "name": "showRegistrations.do",
       "className": "org.bedework.eventreg.webadmin.gethelpers.ProcessShowReqistrations",
       "forwards": [
         {
           "name": "success",
-          "path": "/reg/showRegistrations.jsp"
+          "path": "/docs/reg/showRegistrations.jsp"
+        }
+      ]
+    },
+    {
+      "name": "updateReg.do",
+      "className": "org.bedework.eventreg.webadmin.gethelpers.ProcessUpdateReg",
+      "forwards": [
+        {
+          "name": "success",
+          "path": "/docs/reg/showRegistrations.jsp"
         }
       ]
     }
@@ -120,6 +158,16 @@
             {
               "name": "success",
               "path": "/docs/forms/ajaxTerminator.jsp"
+            }
+          ]
+        },
+        {
+          "name": "hold.do",
+          "className": "org.bedework.eventreg.webadmin.posthelpers.ProcessHold",
+          "forwards": [
+            {
+              "name": "success",
+              "path": "/docs/reg/showRegistrations.jsp"
             }
           ]
         }

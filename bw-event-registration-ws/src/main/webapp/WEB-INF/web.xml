@@ -7,6 +7,10 @@
     version="2.4">
   <display-name>Bedework event registration web service</display-name>
 
+  <listener>
+    <listener-class>org.bedework.eventreg.ws.ContextListener</listener-class>
+  </listener>
+
   <!-- Context params here -->
 
   <!-- filter here -->

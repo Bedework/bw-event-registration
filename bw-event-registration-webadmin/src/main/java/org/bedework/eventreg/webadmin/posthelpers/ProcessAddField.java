@@ -23,7 +23,7 @@ import org.bedework.eventreg.common.EventregInvalidNameException;
 import org.bedework.eventreg.db.FieldDef;
 import org.bedework.eventreg.db.FormDef;
 import org.bedework.eventreg.db.FormFields;
-import org.bedework.eventreg.webadmin.gethelpers.EvregAdminMethodHelper;
+import org.bedework.eventreg.webadmin.EvregAdminMethodHelper;
 import org.bedework.util.misc.Util;
 
 import java.io.BufferedReader;

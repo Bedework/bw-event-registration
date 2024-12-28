@@ -22,7 +22,6 @@ import org.bedework.eventreg.common.BwConnector;
 import org.bedework.eventreg.common.EventregException;
 import org.bedework.eventreg.common.EventregInvalidNameException;
 import org.bedework.eventreg.common.EventregProperties;
-import org.bedework.eventreg.db.EventregDb;
 import org.bedework.util.calendar.XcalUtil;
 import org.bedework.util.misc.Util;
 import org.bedework.util.servlet.MethodBase;
@@ -57,7 +56,6 @@ import javax.servlet.http.HttpServletResponse;
 public abstract class EvregMethodBase extends MethodBase {
   private ObjectMapper objectMapper;
   private EventregProperties config;
-  private EventregDb db;
   private BwConnector connector;
   private WebGlobals webGlobals;
 
@@ -197,22 +195,6 @@ public abstract class EvregMethodBase extends MethodBase {
     }
 
     return name;
-  }
-
-  public EventregDb getEventregDb() {
-    if (db != null) {
-      return db;
-    }
-
-    synchronized (this) {
-      if (db != null) {
-        return db;
-      }
-      db = new EventregDb();
-      db.setSysInfo(config);
-    }
-
-    return db;
   }
 
   public BwConnector getConnector() {

@@ -47,7 +47,7 @@ function inputmout() {
 // .... to here
 
 function confirmRemoveTicket(eventTitle) {
-  return confirm("You have chosen to remove \"" + eventTitle + "\" from your agenda.\n\nProceed?");
+  return confirm("You have chosen to remove \"" + eventTitle + "\" from your registrations.\n\nProceed?");
 }
 function confirmRemoveAdminTicket(authid,type) {
   if (type == "hold") {
@@ -73,7 +73,7 @@ function doUpdateTicket(regId,eventHref) {
 function confirmUpdateAdminTicket() {
   return confirm("The ticket will be updated.\n\nProceed?");
 }
-function doUpdateAdminTicket(regId,eventHref,token,calsuite,formName) {
+function doUpdateAdminTicket(regId,eventHref,calsuite,formName) {
   var typeCssId = "type" + regId;
   var typeSelectBox = document.getElementById(typeCssId);
   //var type = typeSelectBox.options[typeSelectBox.selectedIndex].value;
@@ -81,7 +81,7 @@ function doUpdateAdminTicket(regId,eventHref,token,calsuite,formName) {
   //var comment = escape(document.getElementById("comment" + regId).value);
   var comment = $("#comment" + regId).val();
   var numtickets = escape(document.getElementById("numtickets" + regId).value);
-  location.replace("updateAdminReg.do?regid=" + regId + "&href=" + eventHref + "&numtickets=" + numtickets + "&comment=" + comment + "&calsuite=" + calsuite + "&atkn=" + token + "&formName=" + formName);
+  location.replace("updateReg.do?regid=" + regId + "&href=" + eventHref + "&numtickets=" + numtickets + "&comment=" + comment + "&calsuite=" + calsuite + "&formName=" + formName);
 }
 function validate(formObj) {
   if (!echeck(formObj.email.value)) {

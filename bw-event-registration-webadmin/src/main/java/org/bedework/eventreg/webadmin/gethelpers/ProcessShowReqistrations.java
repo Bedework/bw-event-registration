@@ -18,10 +18,8 @@ under the License.
  */
 package org.bedework.eventreg.webadmin.gethelpers;
 
-import org.bedework.eventreg.common.Event;
 import org.bedework.eventreg.common.Registration;
-
-import org.springframework.web.servlet.ModelAndView;
+import org.bedework.eventreg.webadmin.EvregAdminMethodHelper;
 
 import java.util.List;
 import java.util.TreeSet;
@@ -42,20 +40,28 @@ public class ProcessShowReqistrations extends EvregAdminMethodHelper {
       return;
     }
 
-    final Event ev = getConnector().flush(globals.getHref())
-                                   .getEvent(globals.getHref());
+    try (final var db = getEventregDb()) {
+      db.open();
 
-    final TreeSet<Registration> regs = new TreeSet<>();
+      final var href = globals.getHref();
+      final var ev = getConnector().flush(href)
+                                   .getEvent(href);
 
-    for (final var reg: getEventregDb().getByEvent(ev.getHref())) {
-      reg.setEvent(ev);
+      final TreeSet<Registration> regs = new TreeSet<>();
 
-      regs.add(reg);
+      for (final var reg: db.getByEvent(href)) {
+        reg.setEvent(ev);
+
+        regs.add(reg);
+      }
+
+      globals.setCurrentEvent(ev);
+
+      globals.setRegInfo(
+              db.getRegistrationInfo(ev, href));
+
+      setSessionAttr("regs", regs);
+      forward("success");
     }
-
-    setSessionAttr("regs", regs);
-    forward("success");
-
-    return objModel("adminagenda", "regs", regs);
   }
 }

@@ -19,6 +19,7 @@
 package org.bedework.eventreg.ws;
 
 import org.bedework.eventreg.webcommon.EvregServlet;
+import org.bedework.util.jmx.ConfBase;
 
 import static org.bedework.util.servlet.MethodBase.MethodInfo;
 
@@ -50,5 +51,11 @@ public class EvregwsServlet extends EvregServlet {
 
     //methods.put("LOCK", new MethodInfo(LockMethod.class, true));
     //methods.put("UNLOCK", new MethodInfo(UnlockMethod.class, true));
+  }
+
+  private final ContextListener.Configurator conf = new ContextListener.Configurator();
+
+  protected ConfBase<?> getConfigurator() {
+    return conf;
   }
 }

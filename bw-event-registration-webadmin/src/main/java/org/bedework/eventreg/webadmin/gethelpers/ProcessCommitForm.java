@@ -18,6 +18,8 @@ under the License.
  */
 package org.bedework.eventreg.webadmin.gethelpers;
 
+import org.bedework.eventreg.webadmin.EvregAdminMethodHelper;
+
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;

@@ -4,47 +4,46 @@
 
     <div class="fullpage">
       <div class="rightLinks">
-        Welcome <c:out value="${sessMan.currentUser}"/> | <a href="logout.do">logout</a><br/>
-        <c:set var="fileName" scope="page">EventReg-<c:out value="${fn:substring(fn:replace(sessMan.currEvent.summary, ' ',''),0,9)}"/>-<c:out value="${fn:substring(sessMan.currEvent.dateTime,0,7)}"/>.csv</c:set>
-        <a href="download.do?href=${req.href}&amp;atkn=${req.adminToken}&amp;fn=${fileName}&amp;calsuite=${sessMan.currentCalsuite}&amp;formName=${sessMan.currentFormName}">download registrations</a> |
-        <a href="listForms.do?calsuite=${req.calsuite}&atkn=${req.adminToken}">manage custom fields</a> |
+        Welcome <c:out value="${globals.currentUser}"/> | <a href="logout.do">logout</a><br/>
+        <c:set var="fileName" scope="page">EventReg-<c:out value="${fn:substring(fn:replace(globals.currentEvent.summary, ' ',''),0,9)}"/>-<c:out value="${fn:substring(globals.currentEvent.dateTime,0,7)}"/>.csv</c:set>
+        <a href="download.do?href=${req.href}&amp;fn=${fileName}&amp;calsuite=${globals.calsuite}&amp;formName=${globals.formName}">download registrations</a> |
+        <a href="listForms.do?calsuite=${globals.calsuite}">manage custom fields</a> |
         <a href="javascript:print();">print</a> |
-        <a href="adminAgenda.do?href=${req.href}&amp;atkn=${req.adminToken}">refresh</a>
+        <a href="showRegistrations.do?href=${globals.href}">refresh</a>
       </div>
-      <h1><c:out value="${sessMan.currEvent.summary}"/></h1>
+      <h1><c:out value="${globals.currentEvent.summary}"/></h1>
       <div class="eventDateTime">
-        <c:set var="eventDate" scope="page" value="${sessMan.currEvent.dateTime}"/>
+        <c:set var="eventDate" scope="page" value="${globals.currentEvent.dateTime}"/>
         Start: ${fn:substring(eventDate,-1,4)}-${fn:substring(eventDate,4,6)}-${fn:substring(eventDate,6,8)}
         ${fn:substring(eventDate,11,13)}:${fn:substring(eventDate,13,15)}
         (${fn:substring(eventDate,18,-1)})
       </div>
-      <form id="adminHoldTickets" action="adminHold.do">
+      <form id="holdTickets" action="hold.do">
         Hold tickets: <input name="numtickets" value="" size="2"/>
         <input type="submit" value="hold"/><br/>
         Comment: <input name="comment" placeholder='e.g. "reserved for VIP"' size="22"/>
         <input type="hidden" name="href" value="${req.href}"/>
-        <input type="hidden" name="atkn" value="${req.adminToken}"/>
       </form>
       <div id="regInfo">
         <p class="left">
-          Fulfilled tickets:  <c:out value="${sessMan.regTicketCount}"/><br/>
-          Waiting tickets: <c:out value="${sessMan.waitingTicketCount}"/><br/>
+          Fulfilled tickets:  <c:out value="${globals.regInfo.ticketCount}"/><br/>
+          Waiting tickets: <c:out value="${globals.regInfo.waitingTicketCount}"/><br/>
           Wait list limit:
           <c:choose>
-            <c:when test="${empty sessMan.currEvent.waitListLimit}"><br/>
+            <c:when test="${empty globals.currentEvent.waitListLimit}"><br/>
               <c:out value="unlimited"/>
             </c:when>
             <c:otherwise>
-              <c:out value="${sessMan.currEvent.waitListLimit}"/><br/>
+              <c:out value="${globals.currentEvent.waitListLimit}"/><br/>
             </c:otherwise>
           </c:choose>
-          Registrations: <c:out value="${sessMan.registrantCount}"/>
+          Registrations: <c:out value="${globals.regInfo.registrantCount}"/>
         </p>
         <p class="left">
-          Max tickets allowed for event: <c:out value="${sessMan.currEvent.maxTickets}"/><br/>
-          Max tickets allowed per user: <c:out value="${sessMan.currEvent.maxTicketsPerUser}"/><br/>
+          Max tickets allowed for event: <c:out value="${globals.currentEvent.maxTickets}"/><br/>
+          Max tickets allowed per user: <c:out value="${globals.currentEvent.maxTicketsPerUser}"/><br/>
           Available tickets:
-          <c:set var="availableTickets" scope="page" value="${sessMan.currEvent.maxTickets - sessMan.regTicketCount}"/>
+          <c:set var="availableTickets" scope="page" value="${globals.regInfo.availableTickets}"/>
           <c:choose>
             <c:when test="${availableTickets < 0}">
               0
@@ -56,35 +55,35 @@
         </p>
         <p>
           Registration starts:
-          <c:set var="regStarts" scope="page" value="${sessMan.currEvent.registrationStart}"/>
+          <c:set var="regStarts" scope="page" value="${globals.currentEvent.registrationStart}"/>
           ${fn:substring(regStarts,-1,4)}-${fn:substring(regStarts,4,6)}-${fn:substring(regStarts,6,8)}
           ${fn:substring(regStarts,9,11)}:${fn:substring(regStarts,12,14)}
           <br/>
           Registration ends:
-          <c:set var="regEnds" scope="page" value="${sessMan.currEvent.registrationEnd}"/>
+          <c:set var="regEnds" scope="page" value="${globals.currentEvent.registrationEnd}"/>
           ${fn:substring(regEnds,-1,4)}-${fn:substring(regEnds,4,6)}-${fn:substring(regEnds,6,8)}
           ${fn:substring(regEnds,9,11)}:${fn:substring(regEnds,12,14)}
           <c:if test="${availableTickets < 0}">
-            <c:set var="overallocation" scope="page" value="${sessMan.regTicketCount - sessMan.currEvent.maxTickets}"/>
+            <c:set var="overallocation" scope="page" value="${globals.regInfo.maxTicketCount - globals.currentEvent.maxTickets}"/>
             <br/>
             <span class="overallocationNotice">
               You are overallocated by <c:out value="${overallocation}"/>
               ticket<c:if test="${overallocation > 1}">s</c:if>
             </span>
           </c:if>
-          <c:if test="${not empty sessMan.currentFormName}">
+          <c:if test="${not empty globals.formName}">
             <br/>Custom fields:
-            <a href="editForm.do?calsuite=${sessMan.currentCalsuite}&atkn=${req.adminToken}&formName=${sessMan.currentFormName}">${sessMan.currentFormName}</a>
+            <a href="editForm.do?calsuite=${globals.calsuite}&formName=${globals.formName}">${globals.formName}</a>
           </c:if>
         </p>
       </div>
-      <form name="adminagenda" action="">
-        <c:if test="${not empty sessMan.message}">
+      <form name="registrationList" action="">
+        <c:if test="${not empty globals.message}">
           <div id="message">
-            <c:out value="${sessMan.message}"/>
+            <c:out value="${globals.message}"/>
           </div>
         </c:if>
-        <table id="adminAgenda" cellspacing="2" class="tablesorter">
+        <table id="registrationList" cellspacing="2" class="tablesorter">
         <thead>
           <tr>
             <%-- thText classes are needed to keep the table sorter
@@ -205,8 +204,8 @@
                       <input name="comment<c:out value="${reg.registrationId}"/>" id="comment<c:out value="${reg.registrationId}"/>" type="text" value="<c:out value="${reg.comment}"/>" size="45"/>
                     </td>
                     <td class="regControls">
-                      <a href="javascript:doUpdateAdminTicket('<c:out value="${reg.registrationId}"/>','<c:out value="${reg.event.href}"/>','${req.adminToken}','${sessMan.currentCalsuite}','${sessMan.currentFormName}')" onclick="return confirmUpdateAdminTicket()">update</a> |
-                      <a href='adminRemoveAgendaReg.do?regid=<c:out value="${reg.registrationId}"/>&amp;href=<c:out value="${reg.event.href}"/>&amp;atkn=<c:out value="${req.adminToken}"/>' onclick="return confirmRemoveAdminTicket('<c:out value="${reg.authid}"/>','<c:out value="${reg.type}"/>')">remove</a>
+                      <a href="javascript:doUpdateAdminTicket('<c:out value="${reg.registrationId}"/>','<c:out value="${reg.event.href}"/>','${globals.calsuite}','${globals.formName}')" onclick="return confirmUpdateAdminTicket()">update</a> |
+                      <a href='removeReg.do?regid=<c:out value="${reg.registrationId}"/>&amp;href=<c:out value="${reg.event.href}"/>"/>' onclick="return confirmRemoveAdminTicket('<c:out value="${reg.authid}"/>','<c:out value="${reg.type}"/>')">remove</a>
                     </td>
                   </tr>
                 </c:forEach>

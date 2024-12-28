@@ -5,6 +5,10 @@
       "className": "org.bedework.eventreg.ws.gethelpers.ProcessRegInfo"
     },
     {
+      "name": "eventChg",
+      "className": "org.bedework.eventreg.ws.gethelpers.ProcessEventChange"
+    },
+    {
       "name": "selectForms",
       "className": "org.bedework.eventreg.ws.gethelpers.ProcessSelectForms"
     }

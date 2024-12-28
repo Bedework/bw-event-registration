@@ -1,0 +1,93 @@
+{
+  "defaultForwards": [
+    {
+      "name": "error",
+      "path": "/docs/error.jsp"
+    }
+  ],
+  "helpers": [
+    {
+      "name": "init.do",
+      "className": "org.bedework.eventreg.web.gethelpers.ProcessInit",
+      "forwards": [
+        {
+          "name": "error",
+          "path": "/docs/init.jsp"
+        },
+        {
+          "name": "success",
+          "path": "/docs/init.jsp"
+        }
+      ]
+    },
+    {
+      "name": "logout.do",
+      "className": "org.bedework.eventreg.web.gethelpers.ProcessLogout",
+      "forwards": [
+        {
+          "name": "success",
+          "path": "/login/logout.html"
+        }
+      ]
+    },
+    {
+      "name": "counts.do",
+      "className": "org.bedework.eventreg.web.gethelpers.ProcessOutputCounts",
+      "forwards": [
+        {
+          "name": "success",
+          "path": "/docs/counts.jsp"
+        }
+      ]
+    },
+    {
+      "name": "removeReg.do",
+      "className": "org.bedework.eventreg.web.gethelpers.ProcessRemoveReq",
+      "forwards": [
+        {
+          "name": "success",
+          "path": "/docs/init.do",
+          "redirect": true
+        }
+      ]
+    },
+    {
+      "name": "showRegistrations.do",
+      "className": "org.bedework.eventreg.web.gethelpers.ProcessShowReqistrations",
+      "forwards": [
+        {
+          "name": "success",
+          "path": "/docs/showRegistrations.jsp"
+        }
+      ]
+    },
+    {
+      "name": "updateReg.do",
+      "className": "org.bedework.eventreg.web.gethelpers.ProcessUpdateReg",
+      "forwards": [
+        {
+          "name": "success",
+          "path": "/docs/showRegistrations.jsp"
+        }
+      ]
+    }
+  ],
+
+  "methodHelpers": [
+    {
+      "method": "POST",
+      "helpers": [
+        {
+          "name": "eventreg.do",
+          "className": "org.bedework.eventreg.web.posthelpers.ProcessEventReg",
+          "forwards": [
+            {
+              "name": "success",
+              "path": "/docs/eventreg.jsp"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

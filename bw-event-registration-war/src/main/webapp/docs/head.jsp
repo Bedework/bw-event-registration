@@ -12,25 +12,6 @@
       <link rel="stylesheet" href="/approots/evreg/tablesorter-2.0.5/style.css" type="text/css" media="all"/>
       <script type="text/javascript">
         $(document).ready(function() {
-          <c:if test="${pageContext.request.servletPath == '/docs/adminagenda.jsp'}">
-            // column 5 = dates: sort as text
-            $("#adminAgenda").tablesorter({
-              widgets: ['zebra'],
-              sortMultiSortKey: 'ctrlKey',
-              headers: { 
-                5: { sorter: 'text'},
-                7: { sorter: false }
-              }, 
-              textExtraction: function(node) {
-                if ($(node).find('option:selected').text() != "") {
-                  return $(node).find('option:selected').text();
-                } else if ($(node).find('input[type=text]').val() != undefined && $(node).find('input[type=text]').val() != "") {
-                  return $(node).find('input[type=text]').val();
-                }
-                return $(node).text();
-              }
-            });
-          </c:if>        
           <c:if test="${pageContext.request.servletPath == '/docs/agenda.jsp'}">
             // column 2 = dates: sort as text
             $("#userAgenda").tablesorter({

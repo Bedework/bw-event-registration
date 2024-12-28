@@ -114,6 +114,16 @@ public class EventregSvc extends ConfBase<EventregPropertiesImpl>
   }
 
   @Override
+  public void setEventregWSUrl(final String val) {
+    getConfig().setEventregWSUrl(val);
+  }
+
+  @Override
+  public String getEventregWSUrl() {
+    return getConfig().getEventregWSUrl();
+  }
+
+  @Override
   public void setAdminUsers(final String val) {
     getConfig().setAdminUsers(val);
   }

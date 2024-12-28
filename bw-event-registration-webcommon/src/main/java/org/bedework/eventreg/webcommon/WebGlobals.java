@@ -3,6 +3,9 @@
 */
 package org.bedework.eventreg.webcommon;
 
+import org.bedework.eventreg.common.Event;
+import org.bedework.eventreg.common.Registration;
+import org.bedework.eventreg.common.RegistrationInfo;
 import org.bedework.util.logging.BwLogger;
 import org.bedework.util.logging.Logged;
 import org.bedework.util.servlet.HttpServletUtils;
@@ -22,15 +25,29 @@ public class WebGlobals implements Logged, Serializable {
    */
   protected String currentUser;
 
+  protected Locale currentLocale;
+
   protected String calsuite;
 
-  protected Locale currentLocale;
+  private String currentEmail;
+
+  private Event currentEvent;
+
+  private boolean deadlinePassed;
+
+  private Registration reg;
+
+  private RegistrationInfo regInfo;
+
+  private boolean registrationFull;
 
   private String formName;
 
   private String href;
 
   private String message;
+
+  private boolean waiting;
 
   public void reset(final Request req) {
     if (getCurrentUser() == null) {
@@ -67,6 +84,13 @@ public class WebGlobals implements Logged, Serializable {
     return currentUser;
   }
 
+  public Locale getCurrentLocale() {
+    if (currentLocale == null) {
+      return Locale.getDefault();
+    }
+    return currentLocale;
+  }
+
   public void setCalsuite(final String val) {
     calsuite = val;
   }
@@ -79,11 +103,75 @@ public class WebGlobals implements Logged, Serializable {
     return calsuite;
   }
 
-  public Locale getCurrentLocale() {
-    if (currentLocale == null) {
-      return Locale.getDefault();
-    }
-    return currentLocale;
+  public void setCurrentEmail(final String val) {
+    currentEmail = val;
+  }
+
+  public String getCurrentEmail() {
+    return currentEmail;
+  }
+
+  public void setCurrentEvent(final Event val) {
+    currentEvent = val;
+  }
+
+  public Event getCurrentEvent() {
+    return currentEvent;
+  }
+
+  /**
+   * @return true if deadline passed
+   */
+  public boolean getDeadlinePassed() {
+    return deadlinePassed;
+  }
+
+  /**
+   * @param val true if passed deadline
+   */
+  public void setDeadlinePassed(final boolean val) {
+    deadlinePassed = val;
+  }
+
+  public void setWaiting(final boolean val) {
+    waiting = val;
+  }
+
+  /**
+   * @return true if current user is on waiting list for current event
+   */
+  public boolean getIsWaiting() {
+    return waiting;
+  }
+
+  public void setRegistration(final Registration val) {
+    reg = val;
+  }
+
+  public Registration getRegistration() {
+    return reg;
+  }
+
+  public void setRegInfo(final RegistrationInfo val) {
+    regInfo = val;
+  }
+
+  public RegistrationInfo getRegInfo() {
+    return regInfo;
+  }
+
+  /**
+   * @return true if current registration is full
+   */
+  public boolean getRegistrationFull() {
+    return registrationFull;
+  }
+
+  /**
+   * @param val true if current registration is full
+   */
+  public void setRegistrationFull(final boolean val) {
+    registrationFull = val;
   }
 
   public void setFormName(final String val) {

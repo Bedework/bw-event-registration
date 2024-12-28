@@ -14,7 +14,7 @@
         $(document).ready(function() {
           <c:if test="${pageContext.request.servletPath == '/docs/reg/showRegistrations.jsp'}">
             // column 5 = dates: sort as text
-            $("#adminAgenda").tablesorter({
+            $("#registrationList").tablesorter({
               widgets: ['zebra'],
               sortMultiSortKey: 'ctrlKey',
               headers: { 

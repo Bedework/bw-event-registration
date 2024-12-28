@@ -97,6 +97,7 @@ td.regControls {
 }
 #agenda select,
 #agenda option,
+/* delete all adminAgenda stuff */
 #adminAgenda select,
 #adminAgenda option {
   font-size: 1em;
@@ -104,7 +105,14 @@ td.regControls {
 #adminAgenda input {
 	font-size: 0.9em;
 }
-#adminHoldTickets {
+#registrationList select,
+#registrationList option {
+  font-size: 1em;
+}
+#registrationList input {
+	font-size: 0.9em;
+}
+#holdTickets {
 	float: right;
 	text-align: right;
 }

@@ -18,7 +18,9 @@
 */
 package org.bedework.eventreg.webadmin;
 
+import org.bedework.eventreg.service.Configuration;
 import org.bedework.eventreg.webcommon.EvregServlet;
+import org.bedework.util.jmx.ConfBase;
 
 import static org.bedework.util.servlet.MethodBase.MethodInfo;
 
@@ -51,5 +53,15 @@ public class EvregAdminServlet extends EvregServlet {
 
     //methods.put("LOCK", new MethodInfo(LockMethod.class, true));
     //methods.put("UNLOCK", new MethodInfo(UnlockMethod.class, true));
+  }
+
+  /* -------------------------------------------------------------
+   *                         JMX support
+   */
+
+  private static final Configuration conf = new Configuration("eventreg", "eventreg");
+
+  protected ConfBase<?> getConfigurator() {
+    return conf;
   }
 }

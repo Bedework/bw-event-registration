@@ -51,14 +51,4 @@ public abstract class EvregServlet extends ServletBase {
       throw new ServletException(t);
     }
   }
-
-  /* -------------------------------------------------------------
-   *                         JMX support
-   */
-
-  private static final Configuration conf = new Configuration("eventreg", "eventreg");
-
-  protected ConfBase<?> getConfigurator() {
-    return conf;
-  }
 }

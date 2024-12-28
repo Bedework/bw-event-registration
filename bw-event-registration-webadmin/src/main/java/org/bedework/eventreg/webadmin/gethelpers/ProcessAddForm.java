@@ -19,6 +19,7 @@ under the License.
 package org.bedework.eventreg.webadmin.gethelpers;
 
 import org.bedework.eventreg.db.FormDef;
+import org.bedework.eventreg.webadmin.EvregAdminMethodHelper;
 
 import java.util.List;
 

@@ -272,10 +272,6 @@ public class EventregDb implements AutoCloseable, Logged, Serializable {
     return (List<Registration>)getList();
   }
 
-  private final static String getByIdQuery =
-          "from " + RegistrationImpl.class.getName() +
-                  " reg where reg.registrationId=:id";
-
   /** Registrations for a user.
    *
    * @param id Long
@@ -737,14 +733,10 @@ public class EventregDb implements AutoCloseable, Logged, Serializable {
   }
 
   /* =====================================================
-   *                   private methods
+   *                   protected methods
    * ===================================================== */
 
-  private static final String maxRegistrationIdQuery =
-          "select max(registrationId) from " +
-                  RegistrationImpl.class.getName() + " reg";
-
-  private void createQuery(final String query) {
+  protected void createQuery(final String query) {
     try {
       sess.createQuery(query);
     } catch (final HibException he) {
@@ -752,7 +744,7 @@ public class EventregDb implements AutoCloseable, Logged, Serializable {
     }
   }
 
-  private void setString(final String name,
+  protected void setString(final String name,
                          final String value) {
     try {
       sess.setString(name, value);
@@ -761,7 +753,7 @@ public class EventregDb implements AutoCloseable, Logged, Serializable {
     }
   }
 
-  private void setLong(final String name,
+  protected void setLong(final String name,
                        final Long value) {
     try {
       sess.setLong(name, value);
@@ -770,7 +762,7 @@ public class EventregDb implements AutoCloseable, Logged, Serializable {
     }
   }
 
-  private Object getUnique() {
+  protected Object getUnique() {
     try {
       return sess.getUnique();
     } catch (final HibException he) {
@@ -778,7 +770,7 @@ public class EventregDb implements AutoCloseable, Logged, Serializable {
     }
   }
 
-  private List<?> getList() {
+  protected List<?> getList() {
     try {
       return sess.getList();
     } catch (final HibException he) {
@@ -786,10 +778,14 @@ public class EventregDb implements AutoCloseable, Logged, Serializable {
     }
   }
 
+  private static final String maxRegistrationIdQuery =
+          "select max(registrationId) from " +
+                  RegistrationImpl.class.getName() + " reg";
+
   /**
    * @return max registrationid
    */
-  private Long getMaxRegistrationId() {
+  protected Long getMaxRegistrationId() {
     createQuery(maxRegistrationIdQuery);
 
     return (Long)getUnique();
@@ -802,7 +798,7 @@ public class EventregDb implements AutoCloseable, Logged, Serializable {
   /**
    * @return max registrationid
    */
-  private RegId getRegId() {
+  protected RegId getRegId() {
     createQuery(regIdQuery);
 
     return (RegId)getUnique();

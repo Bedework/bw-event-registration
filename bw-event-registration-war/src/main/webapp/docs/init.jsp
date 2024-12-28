@@ -4,7 +4,7 @@
 
   <h3>Register for this event</h3>
   <c:choose>
-    <c:when test="${sessMan.isWaiting}">
+    <c:when test="${globals.isWaiting}">
       <div class="box" id="registered">
         <%@ include file="/docs/userNav.jsp" %>
         <p class="waiting">
@@ -14,42 +14,42 @@
           Your tickets will be allocated if space becomes available.
         </p>
         <p class="unregister">
-          <a href="removeReg.do?regid=<c:out value="${sessMan.registration.registrationId}"/>&amp;href=${req.href}&calsuite=${sessMan.currentCalsuite}&amp;name=${sessMann.formDef.formName}&amp;email=${sessMan.currEmail}" onclick="return confirmRemoveTicket('<c:out value="${sessMan.currEvent.summary}"/>')">remove me</a>
+          <a href="removeReg.do?regid=<c:out value="${globals.registration.registrationId}"/>&amp;href=${globals.href}&calsuite=${globals.calsuite}&amp;name=${globals.formDef.formName}&amp;email=${globals.currEmail}" onclick="return confirmRemoveTicket('<c:out value="${globals.currentEvent.summary}"/>')">remove me</a>
         </p>
       </div>
     </c:when>
-    <c:when test="${sessMan.isRegistered}">
+    <c:when test="${globals.isRegistered}">
       <div class="box" id="registered">
         <%@ include file="/docs/userNav.jsp" %>
         <p class="registered">
           <span class="checkmark">&#x2713;</span> You are registered for this event.
         </p>
         <p class="unregister">
-          <a href="removeReg.do?regid=<c:out value="${sessMan.registration.registrationId}"/>&amp;href=${req.href}&calsuite=${sessMan.currentCalsuite}&amp;name=${sessMann.formDef.formName}&amp;email=${sessMan.currEmail}" onclick="return confirmRemoveTicket('<c:out value="${sessMan.currEvent.summary}')"/>">unregister</a>
+          <a href="removeReg.do?regid=<c:out value="${globals.registration.registrationId}"/>&amp;href=${globals.href}&calsuite=${globals.calsuite}&amp;name=${globals.formDef.formName}&amp;email=${globals.currEmail}" onclick="return confirmRemoveTicket('<c:out value="${globals.currentEvent.summary}')"/>">unregister</a>
         </p>
       </div>
     </c:when>
-    <c:when test="${sessMan.deadlinePassed}">
+    <c:when test="${globals.deadlinePassed}">
       <div class="box" id="deadlinePassed">
         <%@ include file="/docs/userNav.jsp" %>
         Registration is closed.
       </div>
     </c:when>
-    <c:when test="${sessMan.registrationFull}">
+    <c:when test="${globals.registrationFull}">
       <div class="box" id="registrationFull">
         <%@ include file="/docs/userNav.jsp" %>
         Registration is full.<br/>
         <form action="eventreg.do" class="commonForm" method="POST">
-          <input type="hidden" name="href" value="${req.href}"/>
-          <input type="hidden" name="calsuite" value="${sessMann.currentCalsuite}"/>
-          <input type="hidden" name="name" value="${sessMann.formDef.formName}"/>
-          <input type="hidden" name="email" value="${sessMan.currEmail}"/>
+          <input type="hidden" name="href" value="${globals.href}"/>
+          <input type="hidden" name="calsuite" value="${globals.calsuite}"/>
+          <input type="hidden" name="name" value="${globals.formDef.formName}"/>
+          <input type="hidden" name="email" value="${globals.currEmail}"/>
           <c:choose>
-            <c:when test="${sessMan.currEvent.maxTicketsPerUser > 1}">
+            <c:when test="${globals.currentEvent.maxTicketsPerUser > 1}">
               <div id="bwNumtickets">
                 Tickets:
                 <select id="numtickets" name="numtickets">
-                  <c:forEach var="i" begin="1" end="${sessMan.currEvent.maxTicketsPerUser}">
+                  <c:forEach var="i" begin="1" end="${globals.currentEvent.maxTicketsPerUser}">
                      <option value="${i}">${i}</option>
                   </c:forEach>
                 </select>
@@ -72,21 +72,21 @@
           <%@ include file="/docs/userNav.jsp" %>
           <div class="ticketVals">
             <!-- em>Tickets</em><br/-->
-            Total: ${sessMan.currEvent.maxTickets}<br/>
-            Available: ${sessMan.currEvent.maxTickets - sessMan.regTicketCount}
+            Total: ${globals.currentEvent.maxTickets}<br/>
+            Available: ${globals.currentEvent.maxTickets - globals.regTicketCount}
           </div>
         </div>
         <form action="eventreg.do" class="commonForm" method="POST">
-          <input type="hidden" name="href" value="${req.href}"/>
-          <input type="hidden" name="calsuite" value="${sessMann.currentCalsuite}"/>
-          <input type="hidden" name="name" value="${sessMann.formDef.formName}"/>
-          <input type="hidden" name="email" value="${sessMan.currEmail}"/>
+          <input type="hidden" name="href" value="${globals.href}"/>
+          <input type="hidden" name="calsuite" value="${globals.calsuite}"/>
+          <input type="hidden" name="name" value="${globals.formDef.formName}"/>
+          <input type="hidden" name="email" value="${globals.currEmail}"/>
           <c:choose>
-            <c:when test="${sessMan.currEvent.maxTicketsPerUser > 1}">
+            <c:when test="${globals.currentEvent.maxTicketsPerUser > 1}">
               <div id="bwNumtickets">
                 Tickets:
                 <select id="numtickets" name="numtickets">
-                  <c:forEach var="i" begin="1" end="${sessMan.currEvent.maxTicketsPerUser}">
+                  <c:forEach var="i" begin="1" end="${globals.currentEvent.maxTicketsPerUser}">
                      <option value="${i}">${i}</option>
                   </c:forEach>
                 </select>

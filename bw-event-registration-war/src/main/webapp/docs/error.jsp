@@ -13,7 +13,7 @@
   <body>
     <div class="box">
       <h4>Event Registration Error:</h4>
-      <p>${sessMan.message}</p>
+      <p>${globals.message}</p>
       <p><a href="javascript:window.history.back();">Back</a></p>
       <!--p>
         <a class="quietLink" href="javascript:window.top.location = window.top.location;"> 
