@@ -24,15 +24,15 @@
   </scm>
 
   <modules>
+    <module>bw-event-registration-admin-war</module>
 		<module>bw-event-registration-common</module>
-		<module>bw-event-registration-service</module>
+    <module>bw-event-registration-common-war</module>
 		<module>bw-event-registration-war</module>
-    <module>bw-event-registration-war-common</module>
+		<module>bw-event-registration-service</module>
     <module>bw-event-registration-web</module>
     <module>bw-event-registration-webadmin</module>
     <module>bw-event-registration-webcommon</module>
 		<module>bw-event-registration-ws</module>
 		<module>bw-event-registration-wsimpl</module>
-    <module>bw-event-registration-war-admin</module>
   </modules>
 </project>
