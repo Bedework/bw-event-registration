@@ -64,6 +64,10 @@ public class WebGlobals implements Logged, Serializable {
    * @return true if a user change is detected; false otherwise
    */
   public boolean userChanged(final Request req) {
+    if (getCurrentUser() == null) {
+      return false; // Not a change
+    }
+
     if (!getCurrentUser().equals(
             HttpServletUtils.remoteUser(req.getRequest()))) {
       req.getRequest().getSession().invalidate();
