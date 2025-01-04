@@ -26,18 +26,13 @@
   </servlet>
 
   <servlet-mapping>
-    <servlet-name>eventreg</servlet-name>
-    <url-pattern>/ureg/*</url-pattern>
+    <servlet-name>default</servlet-name>
+    <url-pattern>*.html</url-pattern>
   </servlet-mapping>
 
   <servlet-mapping>
     <servlet-name>eventreg</servlet-name>
-    <url-pattern>/admin/*</url-pattern>
-  </servlet-mapping>
-
-  <servlet-mapping>
-    <servlet-name>eventreg</servlet-name>
-    <url-pattern>/info/*</url-pattern>
+    <url-pattern>/</url-pattern>
   </servlet-mapping>
 
   <session-config>
@@ -73,17 +68,6 @@
   <!-- security constraints will be inserted here -->
 
   <!-- All info path elements are (or can be) unauthenticated -->
-  <security-constraint>
-    <web-resource-collection>
-      <web-resource-name>Bedework</web-resource-name>
-      <description>Bedework user</description>
-      <url-pattern>/info/*</url-pattern>
-    </web-resource-collection>
-    <user-data-constraint>
-      <description>no description</description>
-      <transport-guarantee>NONE</transport-guarantee>
-    </user-data-constraint>
-  </security-constraint>
 
   <security-constraint>
     <!-- The role name of * below means all roles defined in this web.xml -->
