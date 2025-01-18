@@ -19,7 +19,7 @@
 package org.bedework.eventreg.db;
 
 import org.bedework.eventreg.common.EventregException;
-import org.bedework.util.misc.ToString;
+import org.bedework.base.ToString;
 
 import java.io.Serializable;
 

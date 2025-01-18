@@ -19,7 +19,7 @@
 package org.bedework.eventreg.requests;
 
 import org.bedework.eventreg.common.Registration;
-import org.bedework.util.misc.ToString;
+import org.bedework.base.ToString;
 
 import java.io.Serial;
 

@@ -20,7 +20,7 @@ package org.bedework.eventreg.db;
 
 import org.bedework.eventreg.common.Event;
 import org.bedework.eventreg.common.Ticket;
-import org.bedework.util.misc.ToString;
+import org.bedework.base.ToString;
 
 /** Concrete representation of a ticket. Will allow validation of tickets
  * presented by attendees.

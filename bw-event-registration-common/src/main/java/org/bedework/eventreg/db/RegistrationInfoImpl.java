@@ -1,7 +1,7 @@
 package org.bedework.eventreg.db;
 
 import org.bedework.eventreg.common.RegistrationInfo;
-import org.bedework.util.misc.ToString;
+import org.bedework.base.ToString;
 
 public class RegistrationInfoImpl implements RegistrationInfo {
   private long ticketCount;

@@ -19,7 +19,7 @@
 package org.bedework.eventreg.requests;
 
 import org.bedework.util.jms.events.SysEvent;
-import org.bedework.util.misc.ToString;
+import org.bedework.base.ToString;
 
 import java.io.Serial;
 

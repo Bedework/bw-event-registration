@@ -21,7 +21,7 @@ package org.bedework.eventreg.db;
 import org.bedework.eventreg.common.Event;
 import org.bedework.eventreg.common.Registration;
 import org.bedework.eventreg.common.Ticket;
-import org.bedework.util.misc.ToString;
+import org.bedework.base.ToString;
 
 import java.sql.Timestamp;
 import java.util.Map;
