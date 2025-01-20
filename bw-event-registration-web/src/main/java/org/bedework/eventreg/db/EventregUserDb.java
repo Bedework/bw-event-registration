@@ -18,12 +18,12 @@
 */
 package org.bedework.eventreg.db;
 
+import org.bedework.base.exc.BedeworkException;
 import org.bedework.eventreg.common.Event;
 import org.bedework.eventreg.common.EventregException;
 import org.bedework.eventreg.common.Registration;
 import org.bedework.eventreg.common.RegistrationInfo;
 import org.bedework.util.calendar.XcalUtil;
-import org.bedework.util.hibernate.HibException;
 
 import java.util.Collection;
 import java.util.List;
@@ -50,8 +50,8 @@ public class EventregUserDb extends EventregDb {
   public void addChange(final Change c) {
     try {
       sess.save(c);
-    } catch (final HibException he) {
-      throw new EventregException(he);
+    } catch (final BedeworkException be) {
+      throw new EventregException(be);
     }
   }
 
@@ -381,8 +381,8 @@ public class EventregUserDb extends EventregDb {
     }
     try {
       sess.save(val);
-    } catch (final HibException he) {
-      throw new EventregException(he);
+    } catch (final BedeworkException be) {
+      throw new EventregException(be);
     }
   }
 
@@ -396,8 +396,8 @@ public class EventregUserDb extends EventregDb {
     }
     try {
       sess.update(val);
-    } catch (final HibException he) {
-      throw new EventregException(he);
+    } catch (final BedeworkException be) {
+      throw new EventregException(be);
     }
   }
 
@@ -413,8 +413,8 @@ public class EventregUserDb extends EventregDb {
 
     try {
       sess.delete(val);
-    } catch (final HibException he) {
-      throw new EventregException(he);
+    } catch (final BedeworkException be) {
+      throw new EventregException(be);
     } finally {
       if (opened) {
         close();

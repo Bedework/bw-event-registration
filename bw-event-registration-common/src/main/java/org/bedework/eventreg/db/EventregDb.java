@@ -18,13 +18,13 @@
 */
 package org.bedework.eventreg.db;
 
+import org.bedework.base.exc.BedeworkException;
 import org.bedework.eventreg.common.Event;
 import org.bedework.eventreg.common.EventregException;
 import org.bedework.eventreg.common.EventregProperties;
 import org.bedework.eventreg.common.Registration;
 import org.bedework.eventreg.common.RegistrationInfo;
 import org.bedework.util.calendar.XcalUtil;
-import org.bedework.util.hibernate.HibException;
 import org.bedework.util.hibernate.HibSession;
 import org.bedework.util.hibernate.HibSessionFactory;
 import org.bedework.util.hibernate.HibSessionImpl;
@@ -220,8 +220,8 @@ public class EventregDb implements AutoCloseable, Logged, Serializable {
   public void addChange(final Change c) {
     try {
       sess.save(c);
-    } catch (final HibException he) {
-      throw new EventregException(he);
+    } catch (final BedeworkException be) {
+      throw new EventregException(be);
     }
   }
 
@@ -563,8 +563,8 @@ public class EventregDb implements AutoCloseable, Logged, Serializable {
     }
     try {
       sess.save(val);
-    } catch (final HibException he) {
-      throw new EventregException(he);
+    } catch (final BedeworkException be) {
+      throw new EventregException(be);
     }
   }
 
@@ -578,8 +578,8 @@ public class EventregDb implements AutoCloseable, Logged, Serializable {
     }
     try {
       sess.update(val);
-    } catch (final HibException he) {
-      throw new EventregException(he);
+    } catch (final BedeworkException be) {
+      throw new EventregException(be);
     }
   }
 
@@ -595,8 +595,8 @@ public class EventregDb implements AutoCloseable, Logged, Serializable {
 
     try {
       sess.delete(val);
-    } catch (final HibException he) {
-      throw new EventregException(he);
+    } catch (final BedeworkException be) {
+      throw new EventregException(be);
     } finally {
       if (opened) {
         close();
@@ -645,8 +645,8 @@ public class EventregDb implements AutoCloseable, Logged, Serializable {
           debug("Open session for " + objTimestamp);
         }
       }
-    } catch (final HibException he) {
-      throw new EventregException(he);
+    } catch (final BedeworkException be) {
+      throw new EventregException(be);
     }
 
     beginTransaction();
@@ -674,7 +674,7 @@ public class EventregDb implements AutoCloseable, Logged, Serializable {
         if (sess.transactionStarted()) {
           sess.rollback();
         }
-//        sess.disconnect();
+
         sess.close();
       }
     } catch (final Throwable t) {
@@ -698,8 +698,8 @@ public class EventregDb implements AutoCloseable, Logged, Serializable {
     }
     try {
       sess.beginTransaction();
-    } catch (final HibException he) {
-      throw new EventregException(he);
+    } catch (final BedeworkException be) {
+      throw new EventregException(be);
     }
   }
 
@@ -714,12 +714,12 @@ public class EventregDb implements AutoCloseable, Logged, Serializable {
       if (!sess.rolledback()) {
         sess.commit();
       }
-    } catch (final HibException he) {
+    } catch (final BedeworkException be) {
       try {
         sess.rollback();
-      } catch (final HibException ignored) {
+      } catch (final BedeworkException ignored) {
       }
-      throw new EventregException(he);
+      throw new EventregException(be);
     }
   }
 
@@ -727,8 +727,8 @@ public class EventregDb implements AutoCloseable, Logged, Serializable {
     try {
       checkOpen();
       sess.rollback();
-    } catch (final HibException he) {
-      throw new EventregException(he);
+    } catch (final BedeworkException be) {
+      throw new EventregException(be);
     }
   }
 
@@ -739,8 +739,8 @@ public class EventregDb implements AutoCloseable, Logged, Serializable {
   protected void createQuery(final String query) {
     try {
       sess.createQuery(query);
-    } catch (final HibException he) {
-      throw new EventregException(he);
+    } catch (final BedeworkException be) {
+      throw new EventregException(be);
     }
   }
 
@@ -748,8 +748,8 @@ public class EventregDb implements AutoCloseable, Logged, Serializable {
                          final String value) {
     try {
       sess.setString(name, value);
-    } catch (final HibException he) {
-      throw new EventregException(he);
+    } catch (final BedeworkException be) {
+      throw new EventregException(be);
     }
   }
 
@@ -757,24 +757,24 @@ public class EventregDb implements AutoCloseable, Logged, Serializable {
                        final Long value) {
     try {
       sess.setLong(name, value);
-    } catch (final HibException he) {
-      throw new EventregException(he);
+    } catch (final BedeworkException be) {
+      throw new EventregException(be);
     }
   }
 
   protected Object getUnique() {
     try {
       return sess.getUnique();
-    } catch (final HibException he) {
-      throw new EventregException(he);
+    } catch (final BedeworkException be) {
+      throw new EventregException(be);
     }
   }
 
   protected List<?> getList() {
     try {
       return sess.getList();
-    } catch (final HibException he) {
-      throw new EventregException(he);
+    } catch (final BedeworkException be) {
+      throw new EventregException(be);
     }
   }
 
