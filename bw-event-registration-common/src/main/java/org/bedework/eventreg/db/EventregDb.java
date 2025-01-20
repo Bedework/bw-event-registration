@@ -25,9 +25,9 @@ import org.bedework.eventreg.common.EventregProperties;
 import org.bedework.eventreg.common.Registration;
 import org.bedework.eventreg.common.RegistrationInfo;
 import org.bedework.util.calendar.XcalUtil;
-import org.bedework.util.hibernate.HibSession;
-import org.bedework.util.hibernate.HibSessionFactory;
-import org.bedework.util.hibernate.HibSessionImpl;
+import org.bedework.database.hibernate.HibSession;
+import org.bedework.database.hibernate.HibSessionFactory;
+import org.bedework.database.hibernate.HibSessionImpl;
 import org.bedework.util.logging.BwLogger;
 import org.bedework.util.logging.Logged;
 
