@@ -56,7 +56,7 @@ public class EventregAdminDb extends EventregDb {
    */
   public void addChange(final Change c) {
     try {
-      sess.save(c);
+      sess.add(c);
     } catch (final BedeworkException be) {
       throw new EventregException(be);
     }
@@ -387,7 +387,7 @@ public class EventregAdminDb extends EventregDb {
       throw new EventregException("Not a dbitem: " + val.getClass());
     }
     try {
-      sess.save(val);
+      sess.add(val);
     } catch (final BedeworkException be) {
       throw new EventregException(be);
     }

@@ -19,15 +19,15 @@
 package org.bedework.eventreg.db;
 
 import org.bedework.base.exc.BedeworkException;
+import org.bedework.database.db.DbSession;
+import org.bedework.database.hibernate.HibSessionFactory;
+import org.bedework.database.hibernate.HibSessionImpl;
 import org.bedework.eventreg.common.Event;
 import org.bedework.eventreg.common.EventregException;
 import org.bedework.eventreg.common.EventregProperties;
 import org.bedework.eventreg.common.Registration;
 import org.bedework.eventreg.common.RegistrationInfo;
 import org.bedework.util.calendar.XcalUtil;
-import org.bedework.database.hibernate.HibSession;
-import org.bedework.database.hibernate.HibSessionFactory;
-import org.bedework.database.hibernate.HibSessionImpl;
 import org.bedework.util.logging.BwLogger;
 import org.bedework.util.logging.Logged;
 
@@ -67,7 +67,7 @@ public class EventregDb implements AutoCloseable, Logged, Serializable {
 
   /** Current hibernate session - exists only across one user interaction
    */
-  protected HibSession sess;
+  protected DbSession sess;
 
   private EventregProperties sysInfo;
 
@@ -219,7 +219,7 @@ public class EventregDb implements AutoCloseable, Logged, Serializable {
    */
   public void addChange(final Change c) {
     try {
-      sess.save(c);
+      sess.add(c);
     } catch (final BedeworkException be) {
       throw new EventregException(be);
     }
@@ -562,7 +562,7 @@ public class EventregDb implements AutoCloseable, Logged, Serializable {
       throw new EventregException("Not a dbitem: " + val.getClass());
     }
     try {
-      sess.save(val);
+      sess.add(val);
     } catch (final BedeworkException be) {
       throw new EventregException(be);
     }
