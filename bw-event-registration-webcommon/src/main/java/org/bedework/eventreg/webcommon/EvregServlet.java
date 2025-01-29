@@ -26,7 +26,7 @@ import org.bedework.util.servlet.ServletBase;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 
-/** This servlet handles the categories requests and respondes.
+/** This servlet handles the categories requests and responses.
  *
  * @author Mike Douglass   bedework.com
  * @version 1.0
