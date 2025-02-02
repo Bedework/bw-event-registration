@@ -233,13 +233,11 @@ public class EventregDb implements AutoCloseable, Logged, Serializable {
   public List<Change> getChanges(final String ts) {
     final StringBuilder sb = new StringBuilder();
 
-    sb.append("from ");
-    sb.append(Change.class.getName());
-    sb.append(" chg");
+    sb.append("select chg from Change chg ");
     if (ts != null) {
-      sb.append(" where chg.lastmod>:lm");
+      sb.append("where chg.lastmod>:lm ");
     }
-    sb.append(" order by chg.lastmod");
+    sb.append("order by chg.lastmod");
 
     createQuery(sb.toString());
     if (ts != null) {
@@ -262,12 +260,7 @@ public class EventregDb implements AutoCloseable, Logged, Serializable {
    */
   @SuppressWarnings("unchecked")
   public List<Registration> getAllRegistrations() {
-    final StringBuilder sb = new StringBuilder();
-
-    sb.append("from ");
-    sb.append(RegistrationImpl.class.getName());
-
-    createQuery(sb.toString());
+    createQuery("select reg from Registration reg");
 
     return (List<Registration>)getList();
   }
@@ -285,9 +278,9 @@ public class EventregDb implements AutoCloseable, Logged, Serializable {
   }
 
   private final static String getByUserQuery =
-          "from " + RegistrationImpl.class.getName() +
-                  " reg where reg.authid=:user" +
-                  " and reg.type=:type";
+          "select reg from RegistrationImpl reg " +
+                  "where reg.authid=:user " +
+                  "and reg.type=:type";
 
   /** Registrations for a user.
    *
@@ -304,10 +297,10 @@ public class EventregDb implements AutoCloseable, Logged, Serializable {
   }
 
   private final static String getUserRegistrationQuery =
-          "from " + RegistrationImpl.class.getName() +
-                  " reg where reg.href=:href" +
-                  " and reg.authid=:user" +
-                  " and reg.type=:type";
+          "select reg from RegistrationImpl reg " +
+                  "where reg.href=:href " +
+                  "and reg.authid=:user " +
+                  "and reg.type=:type";
 
   /**
    * @param eventHref to identify event
@@ -325,8 +318,8 @@ public class EventregDb implements AutoCloseable, Logged, Serializable {
   }
 
   private final static String getByEventQuery =
-          "from " + RegistrationImpl.class.getName() +
-                  " reg where reg.href=:href";
+          "select reg from RegistrationImpl reg " +
+                  "where reg.href=:href";
 
   /** Registrations for an event.
    *
@@ -342,10 +335,9 @@ public class EventregDb implements AutoCloseable, Logged, Serializable {
   }
 
   private final static String getRegistrantCountQuery =
-          "select count(*) from " +
-                  RegistrationImpl.class.getName() +
-                  " reg where reg.href=:href" +
-                  " and reg.type=:type";
+          "select count(*) from RegistrationImpl reg " +
+                  "where reg.href=:href " +
+                  "and reg.type=:type";
 
   /**
    * @param eventHref to identify event
@@ -399,9 +391,8 @@ public class EventregDb implements AutoCloseable, Logged, Serializable {
   }
 
   private final static String getRegTicketCountQuery =
-          "select size(reg.tickets) from " +
-                  RegistrationImpl.class.getName() +
-                  " reg where reg.href=:href";
+          "select size(reg.tickets) from RegistrationImpl reg " +
+                  "where reg.href=:href";
 
   /**
    * @param eventHref to identify event
@@ -427,9 +418,8 @@ public class EventregDb implements AutoCloseable, Logged, Serializable {
   }
 
   private final static String getWaitingTicketCountQuery =
-          "select sum(ticketsRequested) from " +
-                  RegistrationImpl.class.getName() +
-                  " reg where reg.href=:href";
+          "select sum(ticketsRequested) from RegistrationImpl reg " +
+                  "where reg.href=:href";
 
   /**
    * @param eventHref href of event
@@ -451,11 +441,10 @@ public class EventregDb implements AutoCloseable, Logged, Serializable {
   }
 
   private final String getWaitingQuery =
-          "from " +
-                  RegistrationImpl.class.getName() +
-                  " reg where reg.href=:href" +
-                  " and size(reg.tickets) < reg.ticketsRequested" +
-                  " order by reg.waitqDate";
+          "select reg from RegistrationImpl reg " +
+                  "where reg.href=:href " +
+                  "and size(reg.tickets) < reg.ticketsRequested " +
+                  "order by reg.waitqDate";
 
   /**
    * @param eventHref to identify event
@@ -469,9 +458,8 @@ public class EventregDb implements AutoCloseable, Logged, Serializable {
   }
 
   private final String getTicketCountQuery =
-          "select count(*) from " +
-                  TicketImpl.class.getName() +
-                  " tkt where tkt.href=:href";
+          "select count(*) from TicketImpl tkt " +
+                  "where tkt.href=:href";
 
   /**
    * @param eventHref to identify event
@@ -493,10 +481,9 @@ public class EventregDb implements AutoCloseable, Logged, Serializable {
   }
 
   private final static String getUserTicketCountQuery =
-          "select count(*) from " +
-                  TicketImpl.class.getName() +
-                  " tkt where tkt.href=:href" +
-                  " and tkt.authid=:user";
+          "select count(*) from TicketImpl tkt " +
+                  "where tkt.href=:href " +
+                  "and tkt.authid=:user";
 
   /**
    * @param eventHref to identify event
@@ -525,8 +512,8 @@ public class EventregDb implements AutoCloseable, Logged, Serializable {
    * ======================================================== */
 
   private final static String getCalSuiteFormsQuery =
-          "from " + FormDef.class.getName() +
-                  " form where form.owner=:owner";
+          "select form from FormDef form " +
+                  "where form.owner=:owner";
 
   public List<FormDef> getCalSuiteForms(final String calsuite) {
     createQuery(getCalSuiteFormsQuery);
@@ -536,9 +523,9 @@ public class EventregDb implements AutoCloseable, Logged, Serializable {
   }
 
   private final static String getCalSuiteFormQuery =
-          "from " + FormDef.class.getName() +
-                  " form where form.owner=:owner and" +
-                  " form.formName=:formName";
+          "select form from FormDef form " +
+                  "where form.owner=:owner " +
+                  "and form.formName=:formName";
 
   public FormDef getCalSuiteForm(final String formName,
                                  final String calsuite) {
@@ -779,8 +766,7 @@ public class EventregDb implements AutoCloseable, Logged, Serializable {
   }
 
   private static final String maxRegistrationIdQuery =
-          "select max(registrationId) from " +
-                  RegistrationImpl.class.getName() + " reg";
+          "select max(registrationId) from RegistrationImpl reg";
 
   /**
    * @return max registrationid
@@ -792,8 +778,7 @@ public class EventregDb implements AutoCloseable, Logged, Serializable {
   }
 
   private static final String regIdQuery =
-          "from " +
-                  RegId.class.getName();
+          "select ri from RegId ri";
 
   /**
    * @return max registrationid
