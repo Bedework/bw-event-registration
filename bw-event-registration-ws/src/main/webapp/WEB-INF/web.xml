@@ -6,10 +6,11 @@
                         http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"
     version="2.4">
   <display-name>Bedework event registration web service</display-name>
-
+<!--
   <listener>
     <listener-class>org.bedework.eventreg.ws.ContextListener</listener-class>
   </listener>
+  -->
 
   <!-- Context params here -->
 
@@ -20,6 +21,12 @@
   <servlet>
     <servlet-name>eventregws</servlet-name>
     <servlet-class>org.bedework.eventreg.ws.EvregwsServlet</servlet-class>
+
+    <init-param>
+      <param-name>useAppInfo</param-name>
+      <param-value>true</param-value>
+    </init-param>
+
     <load-on-startup>1</load-on-startup>
   </servlet>
 

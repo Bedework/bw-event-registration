@@ -19,8 +19,9 @@ under the License.
 package org.bedework.eventreg.ws.gethelpers;
 
 import org.bedework.eventreg.requests.EventChangeRequest;
+import org.bedework.eventreg.service.EventregSenderHandler;
+import org.bedework.eventreg.service.SvcRequestSender;
 import org.bedework.eventreg.webcommon.EvregMethodHelper;
-import org.bedework.eventreg.ws.ContextListener;
 
 import java.util.List;
 
@@ -33,6 +34,7 @@ import javax.servlet.http.HttpServletResponse;
  *
  */
 public class ProcessEventChange extends EvregMethodHelper {
+  private static EventregSenderHandler sender;
   @Override
   public void evProcess(final List<String> resourceUri,
                         final HttpServletRequest req,
@@ -50,8 +52,17 @@ public class ProcessEventChange extends EvregMethodHelper {
 
     final var ecr = new EventChangeRequest(href);
 
-    if (!ContextListener.getSysInfo().queueRequest(ecr)) {
-      warn("Unable to queue event change request " + ecr);
+    getSender().addRequest(ecr);
+  }
+
+  private EventregSenderHandler getSender() {
+    if (sender == null) {
+      synchronized (this) {
+        if (sender == null) {
+          sender = new SvcRequestSender(emb.getConfig());
+        }
+      }
     }
+    return sender;
   }
 }

@@ -61,6 +61,7 @@ public class EvregUserServlet extends EvregServlet {
 
   private static final Configuration conf = new Configuration("eventreg", "eventreg");
 
+  @Override
   protected ConfBase<?> getConfigurator() {
     return conf;
   }

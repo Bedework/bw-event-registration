@@ -612,6 +612,8 @@ public class EventregSvc extends ConfBase<EventregPropertiesImpl>
 
   @Override
   public synchronized void start() {
+    loadConfig();
+    hdlr = new SvcRequestHandler(this);
     hdlr.start();
   }
 

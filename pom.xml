@@ -34,5 +34,6 @@
     <module>bw-event-registration-webcommon</module>
 		<module>bw-event-registration-ws</module>
 		<module>bw-event-registration-wsimpl</module>
+    <module>bw-event-registration-sar</module>
   </modules>
 </project>
