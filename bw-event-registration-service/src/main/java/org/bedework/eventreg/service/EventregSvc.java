@@ -619,6 +619,7 @@ public class EventregSvc extends ConfBase<EventregPropertiesImpl>
 
   @Override
   public synchronized void stop() {
+    info("Stop called for " + getClass().getSimpleName());
     hdlr.stop();
   }
 }

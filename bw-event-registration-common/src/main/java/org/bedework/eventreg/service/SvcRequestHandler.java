@@ -55,6 +55,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import static org.bedework.util.misc.AbstractProcessorThread.stopProcess;
 import static org.bedework.util.xml.tagdefs.WebdavTags.href;
 import static org.bedework.util.xml.tagdefs.WebdavTags.namespace;
 import static org.bedework.util.xml.tagdefs.WebdavTags.principalURL;
@@ -201,7 +202,7 @@ public class SvcRequestHandler extends JmsSysEventListener
   }
 
   public void close() {
-    stop();
+    //stop();
     super.close();
   }
 
@@ -223,12 +224,7 @@ public class SvcRequestHandler extends JmsSysEventListener
       return true;
     }
 
-    /* Kill it and return false */
-    processor.interrupt();
-    try {
-      processor.join(5000);
-    } catch (final Throwable ignored) {}
-
+    stopProcess(processor);
     if (!processor.isAlive()) {
       processor = null;
       return false;
@@ -261,6 +257,7 @@ public class SvcRequestHandler extends JmsSysEventListener
   }
 
   public synchronized void stop() {
+    info("Stop called for " + getClass().getSimpleName());
     if (delayHandler.isRunning()) {
       delayHandler.stop();
     }
@@ -270,27 +267,8 @@ public class SvcRequestHandler extends JmsSysEventListener
       return;
     }
 
-    info("************************************************************");
-    info(" * Stopping event reg action processor");
-    info("************************************************************");
-
-    processor.setRunning(false);
-    //?? ProcessorThread.stopProcess(processor);
-
-    processor.interrupt();
-    try {
-      processor.join(20 * 1000);
-    } catch (final InterruptedException ignored) {
-    } catch (final Throwable t) {
-      error("Error waiting for processor termination");
-      error(t);
-    }
-
+    stopProcess(processor);
     processor = null;
-
-    info("************************************************************");
-    info(" * Event reg action processor terminated");
-    info("************************************************************");
   }
 
   private boolean handle(final EventregRequest request) {
@@ -522,8 +500,7 @@ public class SvcRequestHandler extends JmsSysEventListener
 
   protected boolean postXml(final String xml) {
     try {
-      final PooledHttpClient.ResponseHolder resp =
-              getClient().postXml("", xml);
+      final var resp = getClient().postXml("", xml);
 
       return !resp.failed;
     } catch (final HttpException he) {
@@ -567,11 +544,9 @@ public class SvcRequestHandler extends JmsSysEventListener
       return null;
     }
 
-    final Headers authheaders = new Headers();
-    authheaders.add("X-BEDEWORK-NOTE", id + ":" + token);
-    authheaders.add("X-BEDEWORK-EXTENSIONS", "true");
-
-    return authheaders;
+    return new Headers()
+            .add("X-BEDEWORK-NOTE", id + ":" + token)
+            .add("X-BEDEWORK-EXTENSIONS", "true");
   }
 
   protected XmlEmit startDavEmit() {

@@ -22,18 +22,17 @@ import org.bedework.eventreg.common.EventregException;
 import org.bedework.eventreg.common.EventregProperties;
 import org.bedework.eventreg.requests.EventregRequest;
 import org.bedework.util.config.ConfigBase;
-import org.bedework.util.jms.JmsNotificationsHandlerImpl;
-import org.bedework.util.jms.NotificationException;
-import org.bedework.util.jms.NotificationsHandler;
 import org.bedework.util.jms.events.SysEvent;
 import org.bedework.util.jms.listeners.JmsSysEventListener;
 import org.bedework.util.misc.AbstractProcessorThread;
 import org.bedework.util.misc.Util;
 
+import static org.bedework.util.misc.AbstractProcessorThread.stopProcess;
+
 /** This just delays requests that appear to be having problems. They
  * get requeued after a period of time.
  *
- * This is a simple queue in which each event is delayed for the same
+ * <p>This is a simple queue in which each event is delayed for the same
  * amount of time - so events can just be queued and the listener can
  * fetch an event from the front and wait till it's expiry time.
  *
@@ -47,7 +46,7 @@ public class SvcRequestDelayHandler extends JmsSysEventListener {
 
   private final SvcRequestHandler handler;
 
-  private final NotificationsHandler sender;
+  private final EventregSenderHandler sender;
 
   private static class Processor extends AbstractProcessorThread {
     private final SvcRequestDelayHandler handler;
@@ -68,6 +67,7 @@ public class SvcRequestDelayHandler extends JmsSysEventListener {
     @Override
     public void runProcess() {
       handler.listen();
+      running = false;
     }
 
     @Override
@@ -92,18 +92,11 @@ public class SvcRequestDelayHandler extends JmsSysEventListener {
       props.setDelayMillis(30 * 1000);
     }
 
-    try {
-      sender = new JmsNotificationsHandlerImpl(
-              props.getActionDelayQueueName(),
-              ConfigBase.toProperties(props.getSyseventsProperties()));
-    } catch (final NotificationException e) {
-      throw new EventregException(e);
-    }
+    sender = new SvcRequestSender(props);
   }
 
   @Override
-  public void action(final SysEvent ev)
-          throws NotificationException {
+  public void action(final SysEvent ev) {
     if (ev == null) {
       return;
     }
@@ -143,7 +136,7 @@ public class SvcRequestDelayHandler extends JmsSysEventListener {
   }
 
   public void close() {
-    stop();
+//    stop();
     super.close();
   }
 
@@ -165,11 +158,7 @@ public class SvcRequestDelayHandler extends JmsSysEventListener {
 
     req.setWaitUntil(System.currentTimeMillis() + props.getDelayMillis());
 
-    try {
-      sender.post(req);
-    } catch (final NotificationException ne) {
-      throw new EventregException(ne);
-    }
+    sender.addRequest(req);
     return true;
   }
 
@@ -183,13 +172,14 @@ public class SvcRequestDelayHandler extends JmsSysEventListener {
       if (debug()) {
         debug("Eventregdelay returned from process");
       }
+
     } catch (final Throwable t) {
       if (Util.causeIs(t, InterruptedException.class)) {
         warn("Received interrupted exception");
       } else {
         error(t);
       }
-      throw new RuntimeException(t);
+      throw new EventregException(t);
     }
   }
 
@@ -212,11 +202,7 @@ public class SvcRequestDelayHandler extends JmsSysEventListener {
     }
 
     /* Kill it and return false */
-    processor.interrupt();
-    try {
-      processor.join(5000);
-    } catch (final Throwable ignored) {}
-
+    stopProcess(processor);
     if (!processor.isAlive()) {
       processor = null;
       return false;
@@ -245,31 +231,13 @@ public class SvcRequestDelayHandler extends JmsSysEventListener {
   }
 
   public synchronized void stop() {
+    info("Stop called for " + getClass().getSimpleName());
     if (processor == null) {
       error("Already stopped");
       return;
     }
 
-    info("************************************************************");
-    info(" * Stopping event reg action delay processor");
-    info("************************************************************");
-
-    processor.setRunning(false);
-    //?? ProcessorThread.stopProcess(processor);
-
-    processor.interrupt();
-    try {
-      processor.join(20 * 1000);
-    } catch (final InterruptedException ignored) {
-    } catch (final Throwable t) {
-      error("Error waiting for processor termination");
-      error(t);
-    }
-
+    stopProcess(processor);
     processor = null;
-
-    info("************************************************************");
-    info(" * Event reg action delay processor terminated");
-    info("************************************************************");
   }
 }
