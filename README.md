@@ -86,3 +86,17 @@ For full details, see [Sonatype's documentation for using Maven to publish relea
 #### 5.0.4
 * Upgrade library versions
 * Fix needed to deal with util.hibernate bug relating to static sessionFactory variable.
+
+#### 5.0.5
+* Upgrade library versions
+* Fix bad hsql
+* Remove unused dependency
+* New module to reinstate common resources
+* Make EventregException subclass of RuntimeException.
+
+#### 5.0.6
+* Upgrade library versions
+* Changes for updated deployment
+* Dependency needs meta-inf (for spring)
+* Very many changes as this is reimplemented to drop Spring and use the servlet support in bw-util-network. See git commits for details. 
+* Pre-jakarta
