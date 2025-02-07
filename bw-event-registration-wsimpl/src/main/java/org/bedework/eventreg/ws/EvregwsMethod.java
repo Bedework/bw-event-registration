@@ -20,8 +20,8 @@ package org.bedework.eventreg.ws;
 
 import org.bedework.eventreg.webcommon.EvregMethodBase;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 /** Base class for all webdav servlet methods.
  */

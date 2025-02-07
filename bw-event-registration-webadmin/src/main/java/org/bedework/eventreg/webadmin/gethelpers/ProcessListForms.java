@@ -4,8 +4,8 @@ import org.bedework.eventreg.webadmin.EvregAdminMethodHelper;
 
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 public class ProcessListForms extends EvregAdminMethodHelper {
   @Override

@@ -21,7 +21,7 @@
 
   <resource-ref>
     <res-ref-name>jms/BedeworkConnectionFactory</res-ref-name>
-    <res-type>javax.jms.ConnectionFactory</res-type>
+    <res-type>jakarta.jms.ConnectionFactory</res-type>
     <jndi-name>java:/jms/BedeworkConnectionFactory</jndi-name>
   </resource-ref>
 </jboss-web>

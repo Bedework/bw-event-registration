@@ -18,7 +18,7 @@
 */
 package org.bedework.eventreg.common;
 
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletResponse;
 
 /** Exception thrown by event registration classes
  *

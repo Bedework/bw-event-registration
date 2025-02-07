@@ -20,7 +20,7 @@ package org.bedework.eventreg.db;
 
 import org.bedework.base.exc.BedeworkException;
 import org.bedework.database.db.DbSession;
-import org.bedework.database.hibernate.HibSessionFactory;
+import org.bedework.database.hibernate.HibSessionFactoryProvider;
 import org.bedework.database.hibernate.HibSessionImpl;
 import org.bedework.eventreg.common.Event;
 import org.bedework.eventreg.common.EventregException;
@@ -608,7 +608,7 @@ public class EventregDb implements AutoCloseable, Logged, Serializable {
 
     try {
       if (sessionFactory == null) {
-        sessionFactory = HibSessionFactory.
+        sessionFactory = HibSessionFactoryProvider.
                 getSessionFactory(sysInfo.getHibernateProperties());
       }
 
