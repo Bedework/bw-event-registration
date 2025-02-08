@@ -19,7 +19,7 @@
 package org.bedework.eventreg.common;
 
 import org.bedework.util.config.ConfInfo;
-import org.bedework.util.config.HibernateConfigI;
+import org.bedework.util.config.OrmConfigI;
 import org.bedework.util.jmx.MBeanInfo;
 
 import java.util.List;
@@ -29,7 +29,7 @@ import java.util.List;
  * @author douglm
  */
 @ConfInfo(elementName = "eventreg-properties")
-public interface EventregProperties extends HibernateConfigI {
+public interface EventregProperties extends OrmConfigI {
   /* ========================================================================
    * Attributes
    * ======================================================================== */

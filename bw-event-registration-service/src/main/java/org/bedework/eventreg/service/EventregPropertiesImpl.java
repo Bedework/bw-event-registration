@@ -20,7 +20,7 @@ package org.bedework.eventreg.service;
 
 import org.bedework.eventreg.common.EventregProperties;
 import org.bedework.util.config.ConfInfo;
-import org.bedework.util.config.HibernateConfigBase;
+import org.bedework.util.config.OrmConfigBase;
 
 import java.util.List;
 
@@ -30,7 +30,7 @@ import java.util.List;
  */
 @ConfInfo(elementName = "eventreg-properties",
           type = "org.bedework.eventreg.service.EventregProperties")
-public class EventregPropertiesImpl extends HibernateConfigBase<EventregPropertiesImpl>
+public class EventregPropertiesImpl extends OrmConfigBase<EventregPropertiesImpl>
         implements EventregProperties {
   /* =========================================================
    * Attributes

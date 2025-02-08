@@ -609,7 +609,7 @@ public class EventregDb implements AutoCloseable, Logged, Serializable {
     try {
       if (sessionFactory == null) {
         sessionFactory = HibSessionFactoryProvider.
-                getSessionFactory(sysInfo.getHibernateProperties());
+                getSessionFactory(sysInfo.getOrmProperties());
       }
 
       open = true;
