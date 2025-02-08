@@ -20,8 +20,8 @@ package org.bedework.eventreg.db;
 
 import org.bedework.base.exc.BedeworkException;
 import org.bedework.database.db.DbSession;
-import org.bedework.database.hibernate.HibSessionFactoryProvider;
-import org.bedework.database.hibernate.HibSessionImpl;
+import org.bedework.database.db.DbSessionFactoryProvider;
+import org.bedework.database.db.DbSessionFactoryProviderImpl;
 import org.bedework.eventreg.common.Event;
 import org.bedework.eventreg.common.EventregException;
 import org.bedework.eventreg.common.EventregProperties;
@@ -30,8 +30,6 @@ import org.bedework.eventreg.common.RegistrationInfo;
 import org.bedework.util.calendar.XcalUtil;
 import org.bedework.util.logging.BwLogger;
 import org.bedework.util.logging.Logged;
-
-import org.hibernate.SessionFactory;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
@@ -63,7 +61,7 @@ public class EventregDb implements AutoCloseable, Logged, Serializable {
 
   /* Factory used to obtain a session
    */
-  private static SessionFactory sessionFactory;
+  private static DbSessionFactoryProvider factoryProvider;
 
   /** Current hibernate session - exists only across one user interaction
    */
@@ -607,9 +605,10 @@ public class EventregDb implements AutoCloseable, Logged, Serializable {
     }
 
     try {
-      if (sessionFactory == null) {
-        sessionFactory = HibSessionFactoryProvider.
-                getSessionFactory(sysInfo.getOrmProperties());
+      if (factoryProvider == null) {
+        factoryProvider =
+                new DbSessionFactoryProviderImpl()
+                        .init(sysInfo.getOrmProperties());
       }
 
       open = true;
@@ -624,10 +623,10 @@ public class EventregDb implements AutoCloseable, Logged, Serializable {
 
       if (sess == null) {
         if (debug()) {
-          debug("New hibernate session for " + objTimestamp);
+          debug("New orm session for " + objTimestamp);
         }
-        sess = new HibSessionImpl();
-        sess.init(sessionFactory);
+        sess = factoryProvider.getNewSession();
+
         if (debug()) {
           debug("Open session for " + objTimestamp);
         }
