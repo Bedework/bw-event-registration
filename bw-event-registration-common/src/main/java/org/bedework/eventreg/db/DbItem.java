@@ -37,7 +37,7 @@ public class DbItem<T> extends SerializableProperties
   // hibernate
   private int seq;
 
-  /** null constructor for hibernate
+  /** null constructor for orm
    *
    */
   public DbItem() {

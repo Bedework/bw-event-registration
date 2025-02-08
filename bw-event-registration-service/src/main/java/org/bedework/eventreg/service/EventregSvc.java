@@ -19,10 +19,7 @@
 package org.bedework.eventreg.service;
 
 import org.bedework.eventreg.requests.EventregRequest;
-import org.bedework.database.hibernate.HibConfig;
-import org.bedework.database.hibernate.SchemaThread;
 import org.bedework.util.jmx.ConfBase;
-import org.bedework.util.jmx.InfoLines;
 import org.bedework.util.jmx.MBeanInfo;
 
 import java.util.ArrayList;
@@ -46,6 +43,7 @@ public class EventregSvc extends ConfBase<EventregPropertiesImpl>
    * Dump/restore
    * ======================================================= */
 
+  /*
   private class SchemaBuilder extends SchemaThread {
 
     SchemaBuilder(final String outFile, 
@@ -68,6 +66,7 @@ public class EventregSvc extends ConfBase<EventregPropertiesImpl>
   }
   
   private SchemaBuilder buildSchema;
+   */
 
   private final static String nm = "eventreg";
 
@@ -194,7 +193,7 @@ public class EventregSvc extends ConfBase<EventregPropertiesImpl>
   }
 
   /* =======================================================
-   * Hibernate properties
+   * Orm properties
    * ======================================================= */
 
   @Override
@@ -410,6 +409,8 @@ public class EventregSvc extends ConfBase<EventregPropertiesImpl>
 
   @Override
   public String schema() {
+    return "Unimplemented";
+    /*
     try {
       buildSchema = new SchemaBuilder(
               getSchemaOutFile(),
@@ -425,10 +426,13 @@ public class EventregSvc extends ConfBase<EventregPropertiesImpl>
 
       return "Exception: " + t.getLocalizedMessage();
     }
+     */
   }
 
   @Override
   public synchronized List<String> schemaStatus() {
+    return null;
+    /*
     if (buildSchema == null) {
       final InfoLines infoLines = new InfoLines();
 
@@ -438,10 +442,11 @@ public class EventregSvc extends ConfBase<EventregPropertiesImpl>
     }
 
     return buildSchema.infoLines;
+     */
   }
 
   @Override
-  public String listHibernateProperties() {
+  public String listOrmProperties() {
     final StringBuilder res = new StringBuilder();
 
     final List<String> ps = getConfig().getOrmProperties();
@@ -455,7 +460,7 @@ public class EventregSvc extends ConfBase<EventregPropertiesImpl>
   }
 
   @Override
-  public String displayHibernateProperty(final String name) {
+  public String displayOrmProperty(final String name) {
     final String val = getConfig().getOrmProperty(name);
 
     if (val != null) {

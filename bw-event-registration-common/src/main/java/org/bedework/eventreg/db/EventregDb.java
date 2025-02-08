@@ -63,7 +63,7 @@ public class EventregDb implements AutoCloseable, Logged, Serializable {
    */
   private static DbSessionFactoryProvider factoryProvider;
 
-  /** Current hibernate session - exists only across one user interaction
+  /** Current orm session - exists only across one user interaction
    */
   protected DbSession sess;
 

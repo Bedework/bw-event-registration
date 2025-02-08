@@ -66,20 +66,20 @@ public interface EventregSvcMBean extends ConfBaseMBean,
   @MBeanInfo("Status of the database schema build.")
   List<String> schemaStatus();
 
-  /** List the hibernate properties
+  /** List the orm properties
    *
    * @return properties
    */
-  @MBeanInfo("List the hibernate properties")
-  String listHibernateProperties();
+  @MBeanInfo("List the orm properties")
+  String listOrmProperties();
 
   /** Display the named property
    *
-   * @param name
+   * @param name of property
    * @return value
    */
-  @MBeanInfo("Display the named hibernate property")
-  String displayHibernateProperty(@MBeanInfo("name") final String name);
+  @MBeanInfo("Display the named orm property")
+  String displayOrmProperty(@MBeanInfo("name") final String name);
 
   /** Restores the data from the DataIn path. Will not restore if there appears
    * to be any data already in the db.
