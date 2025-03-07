@@ -10,10 +10,10 @@ import org.bedework.eventreg.db.FormDef;
 import org.bedework.eventreg.service.EventregNotifier;
 import org.bedework.util.servlet.MethodHelper;
 
-import java.util.List;
-
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+
+import java.util.List;
 
 import static java.lang.String.format;
 
@@ -120,6 +120,14 @@ public abstract class EvregMethodHelper extends MethodHelper {
   public boolean requireFormName() {
     if (globals.getFormName() == null) {
       errorReturn("Bad resource url - no form name specified");
+      return false;
+    }
+    return true;
+  }
+
+  public boolean requireCurrentEvent() {
+    if (globals.getCurrentEvent() == null) {
+      errorReturn("No current event available");
       return false;
     }
     return true;
@@ -578,11 +586,17 @@ public abstract class EvregMethodHelper extends MethodHelper {
 
   protected void errorReturn(final Throwable t) {
     globals.setMessage(t.getLocalizedMessage());
+    if (debug()) {
+      debug("Exception- error return " + t.getLocalizedMessage());
+    }
     forward("error");
   }
 
   protected void errorReturn(final String msg) {
     globals.setMessage(msg);
+    if (debug()) {
+      debug("Error return " + msg);
+    }
     forward("error");
   }
 }

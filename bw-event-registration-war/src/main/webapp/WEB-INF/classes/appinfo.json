@@ -53,7 +53,7 @@
     },
     {
       "name": "showRegistrations.do",
-      "className": "org.bedework.eventreg.web.gethelpers.ProcessShowReqistrations",
+      "className": "org.bedework.eventreg.web.gethelpers.ProcessShowRegistrations",
       "forwards": [
         {
           "name": "success",
@@ -79,7 +79,7 @@
       "helpers": [
         {
           "name": "eventreg.do",
-          "className": "org.bedework.eventreg.web.posthelpers.ProcessEventReg",
+          "className": "org.bedework.eventreg.web.posthelpers.ProcessEventreg",
           "forwards": [
             {
               "name": "success",

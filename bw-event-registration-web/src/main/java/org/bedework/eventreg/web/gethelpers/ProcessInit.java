@@ -22,11 +22,11 @@ import org.bedework.eventreg.db.FormDef;
 import org.bedework.eventreg.db.FormFields;
 import org.bedework.eventreg.web.EvregUserMethodHelper;
 
-import java.util.Date;
-import java.util.List;
-
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+
+import java.util.Date;
+import java.util.List;
 
 /**
  * @author douglm
@@ -37,9 +37,7 @@ public class ProcessInit extends EvregUserMethodHelper {
   public void evProcess(final List<String> resourceUri,
                         final HttpServletRequest req,
                         final HttpServletResponse resp) {
-    if (!requireHref() ||
-            !requireCalsuite() ||
-            !requireFormName()) {
+    if (!requireHref()) {
       return;
     }
 
@@ -55,6 +53,8 @@ public class ProcessInit extends EvregUserMethodHelper {
         errorReturn("Cannot retrieve the event.");
         return;
       }
+
+      globals.setCurrentEvent(ev);
 
       /* Set registrationFull to true or false */
       final int maxTickets = ev.getMaxTickets();
@@ -81,6 +81,19 @@ public class ProcessInit extends EvregUserMethodHelper {
       globals.setDeadlinePassed(new Date().after(end));
 
       final String formName = globals.getFormName();
+
+      if (formName == null) {
+        if (debug()) {
+          debug("No form specified");
+        }
+        forward("success");
+        return;
+      }
+
+      if (!requireCalsuite()) {
+        return;
+      }
+
       final FormDef form = getCalSuiteForm();
 
       if (form == null) {
@@ -88,10 +101,9 @@ public class ProcessInit extends EvregUserMethodHelper {
         return;
       }
 
-      globals.setFormName(formName);
       if (debug()) {
-        debug("Set form name " + formName +
-                      " for form with " + form.getFields().size() +
+        debug("Got form " + formName +
+                      " with " + form.getFields().size() +
                       " fields");
       }
 

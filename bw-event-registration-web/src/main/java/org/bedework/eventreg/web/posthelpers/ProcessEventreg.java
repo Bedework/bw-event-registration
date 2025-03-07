@@ -29,13 +29,13 @@ import org.bedework.eventreg.db.FormFields;
 import org.bedework.eventreg.db.RegistrationImpl;
 import org.bedework.eventreg.web.EvregUserMethodHelper;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 
 /** We will get at least the required fields.
  *
@@ -50,6 +50,10 @@ public class ProcessEventreg extends EvregUserMethodHelper {
   public void evProcess(final List<String> resourceUri,
                         final HttpServletRequest req,
                         final HttpServletResponse resp) {
+    if (!requireCurrentEvent()) {
+      return;
+    }
+
     try (final var db = getEventregDb()) {
       db.open();
 
@@ -161,7 +165,8 @@ public class ProcessEventreg extends EvregUserMethodHelper {
       return false;
     }
 
-    if (!handleFormInfo(db, reg)) {
+    if ((globals.getFormName() != null) &&
+            !handleFormInfo(db, reg)) {
       return false;
     }
 

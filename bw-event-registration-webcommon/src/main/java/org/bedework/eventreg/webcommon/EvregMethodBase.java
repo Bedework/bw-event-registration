@@ -30,13 +30,12 @@ import org.bedework.util.servlet.config.AppInfo;
 import org.bedework.util.timezones.Timezones;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-
-import java.util.List;
-
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+
+import java.util.List;
 
 /** Base class for all event registration servlet methods.
    Subclasses should provide a static block registering
@@ -70,9 +69,14 @@ public abstract class EvregMethodBase extends MethodBase {
 
     webGlobals = (WebGlobals)rutil.getSessionAttr(WebGlobals.webGlobalsAttrName);
     if (webGlobals == null) {
+      if (debug()) {
+        debug("No WebGlobals attribute found in request - creating");
+      }
       webGlobals = newWebGlobals();
       rutil.setSessionAttr(WebGlobals.webGlobalsAttrName,
                            webGlobals);
+    } else if (debug()) {
+      debug("WebGlobals attribute found in request");
     }
 
     webGlobals.reset(getRequest());
@@ -88,12 +92,14 @@ public abstract class EvregMethodBase extends MethodBase {
       webGlobals.setFormName(validName(formName));
     }
 
-    webGlobals.setHref(rutil.getReqPar("href"));
+    final var href = rutil.getReqPar("href");
+    if (href != null) {
+      webGlobals.setHref(href);
+    }
 
     return true;
   }
 
-  @SuppressWarnings({"unchecked"})
   @Override
   public void doMethod(final HttpServletRequest req,
                        final HttpServletResponse resp) throws ServletException {
