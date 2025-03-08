@@ -298,6 +298,11 @@ public class SvcRequestHandler extends JmsSysEventListener
     cnctr.flush();
     final Event ev = cnctr.getEvent(href);
 
+    if (ev == null) {
+      warn("No event found for " + href);
+      return true; // effectively ignore
+    }
+
     final String status = ev.getStatus();
 
     if (debug()) {
