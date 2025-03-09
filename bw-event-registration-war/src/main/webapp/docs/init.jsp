@@ -14,7 +14,7 @@
           Your tickets will be allocated if space becomes available.
         </p>
         <p class="unregister">
-          <a href="removeReg.do?regid=<c:out value="${globals.registration.registrationId}"/>&amp;href=${globals.href}&calsuite=${globals.calsuite}&amp;name=${globals.formDef.formName}&amp;email=${globals.currEmail}" onclick="return confirmRemoveTicket('<c:out value="${globals.currentEvent.summary}"/>')">remove me</a>
+          <a href="removeReg.do?regid=<c:out value="${globals.registration.registrationId}"/>&amp;href=${globals.href}&calsuite=${globals.calsuite}&amp;name=${globals.formDef.formName}&amp;email=${globals.currentEmail}" onclick="return confirmRemoveTicket('<c:out value="${globals.currentEvent.summary}"/>')">remove me</a>
         </p>
       </div>
     </c:when>
@@ -25,7 +25,7 @@
           <span class="checkmark">&#x2713;</span> You are registered for this event.
         </p>
         <p class="unregister">
-          <a href="removeReg.do?regid=<c:out value="${globals.registration.registrationId}"/>&amp;href=${globals.href}&calsuite=${globals.calsuite}&amp;name=${globals.formDef.formName}&amp;email=${globals.currEmail}" onclick="return confirmRemoveTicket('<c:out value="${globals.currentEvent.summary}')"/>">unregister</a>
+          <a href="removeReg.do?regid=<c:out value="${globals.registration.registrationId}"/>&amp;href=${globals.href}&calsuite=${globals.calsuite}&amp;name=${globals.formDef.formName}&amp;email=${globals.currentEmail}" onclick="return confirmRemoveTicket('<c:out value="${globals.currentEvent.summary}')"/>">unregister</a>
         </p>
       </div>
     </c:when>
@@ -43,7 +43,7 @@
           <input type="hidden" name="href" value="${globals.href}"/>
           <input type="hidden" name="calsuite" value="${globals.calsuite}"/>
           <input type="hidden" name="name" value="${globals.formDef.formName}"/>
-          <input type="hidden" name="email" value="${globals.currEmail}"/>
+          <input type="hidden" name="email" value="${globals.currentEmail}"/>
           <c:choose>
             <c:when test="${globals.currentEvent.maxTicketsPerUser > 1}">
               <div id="bwNumtickets">
@@ -80,7 +80,7 @@
           <input type="hidden" name="href" value="${globals.href}"/>
           <input type="hidden" name="calsuite" value="${globals.calsuite}"/>
           <input type="hidden" name="name" value="${globals.formDef.formName}"/>
-          <input type="hidden" name="email" value="${globals.currEmail}"/>
+          <input type="hidden" name="email" value="${globals.currentEmail}"/>
           <c:choose>
             <c:when test="${globals.currentEvent.maxTicketsPerUser > 1}">
               <div id="bwNumtickets">
