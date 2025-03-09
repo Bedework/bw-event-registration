@@ -169,7 +169,7 @@ public class SvcRequestHandler extends JmsSysEventListener
 
     if (ok) {
       if (debug()) {
-        debug("Sucess processing message.");
+        debug("Success processing message.");
       }
       return;
     }

@@ -30,6 +30,7 @@ import org.bedework.eventreg.common.RegistrationInfo;
 import org.bedework.util.calendar.XcalUtil;
 import org.bedework.util.logging.BwLogger;
 import org.bedework.util.logging.Logged;
+import org.bedework.util.misc.Util;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
@@ -155,6 +156,13 @@ public class EventregDb implements AutoCloseable, Logged, Serializable {
   @Override
   public void close() {
     boolean ok = true;
+
+    if (debug()) {
+      debug("Closing EventregDb: callers: ");
+      for (final var caller: Util.getCallers(2)) {
+        debug("  " + caller);
+      }
+    }
 
     try {
       endTransaction();
