@@ -156,6 +156,10 @@ public class WebGlobals implements Logged, Serializable {
     return reg;
   }
 
+  public boolean isRegistered() {
+    return reg != null;
+  }
+
   public void setRegInfo(final RegistrationInfo val) {
     regInfo = val;
   }
