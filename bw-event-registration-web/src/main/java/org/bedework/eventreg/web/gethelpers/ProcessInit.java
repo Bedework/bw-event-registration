@@ -110,15 +110,16 @@ public class ProcessInit extends EvregUserMethodHelper {
       final var reg = db.getUserRegistration(href,
                                              globals.getCurrentUser());
       if (reg == null) {
-        errorReturn("Application error: " +
+/*        errorReturn("Application error: " +
                             "missing registration for href " +
                             href);
         return;
-      }
+      }*/
 
-      globals.setRegistration(reg);
-      globals.setWaiting(reg.getNumTickets() <
-                                 reg.getTicketsRequested());
+        globals.setRegistration(reg);
+        globals.setWaiting(reg.getNumTickets() <
+                                   reg.getTicketsRequested());
+      }
 
       setSessionAttr("form", form);
       setSessionAttr("fields", new FormFields(form.getFields()));
