@@ -4,7 +4,7 @@
 
     <div class="fullpage">
       <div class="rightLinks">
-        Welcome <c:out value="${globals.currentUser}"/> | <a href="logout.do">logout</a><br/>
+        Welcome <c:out value="${globals.currentUser}"/> | <a href="logout.do" id="bwLogoutButton">logout</a><br/>
         <c:set var="fileName" scope="page">EventReg-<c:out value="${fn:substring(fn:replace(globals.currentEvent.summary, ' ',''),0,9)}"/>-<c:out value="${fn:substring(globals.currentEvent.dateTime,0,7)}"/>.csv</c:set>
         <a href="download.do?href=${req.href}&amp;fn=${fileName}&amp;calsuite=${globals.calsuite}&amp;formName=${globals.formName}">download registrations</a> |
         <a href="listForms.do?calsuite=${globals.calsuite}">manage custom fields</a> |

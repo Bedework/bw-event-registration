@@ -4,7 +4,7 @@
 
   <div class="fullpage">
     <div class="rightLinks">
-      Welcome <c:out value="${globals.currentUser}"/> | <a href="logout.do">logout</a> <br/>
+      Welcome <c:out value="${globals.currentUser}"/> | <a href="logout.do" id="bwLogoutButton">logout</a> <br/>
       <a href="javascript:print();">print</a> |
       <a href="javascript:self.close();">close this window</a>
     </div>

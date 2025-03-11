@@ -41,7 +41,7 @@ under the License.
   <body>
     <div class="fullpage">
       <div class="rightLinks">
-        Welcome <c:out value="${globals.currentUser}"/> (admin) | <a href="logout.do">logout</a><br/>
+        Welcome <c:out value="${globals.currentUser}"/> (admin) | <a href="logout.do" id="bwLogoutButton">logout</a><br/>
       </div>
       <h1>Manage Custom Fields</h1>
       <p class="calsuiteName">
