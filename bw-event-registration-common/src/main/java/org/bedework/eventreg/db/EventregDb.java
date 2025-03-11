@@ -107,7 +107,7 @@ public class EventregDb implements AutoCloseable, Logged, Serializable {
         final long wait = attempts * 500L;
         warn("Retrying in " + wait + " millisecs");
         try {
-          this.wait(wait);
+          nextRegid.wait(wait);
         } catch (final InterruptedException ie) {
           return null; // Presumably shutting down
         }
