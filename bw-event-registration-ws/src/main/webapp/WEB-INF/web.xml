@@ -23,6 +23,12 @@
     <servlet-class>org.bedework.eventreg.ws.EvregwsServlet</servlet-class>
 
     <init-param>
+      <!-- Only applies if debug on - causes responses to be wrapped. -->
+      <param-name>dumpContent</param-name>
+      <param-value>true</param-value>
+    </init-param>
+
+    <init-param>
       <param-name>useAppInfo</param-name>
       <param-value>true</param-value>
     </init-param>
