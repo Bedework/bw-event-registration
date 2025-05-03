@@ -152,7 +152,8 @@ public abstract class EvregMethodHelper extends MethodHelper {
    * @return par or null for no parameter
    */
   public String reqGroup() {
-    return emb.validName(getReqUtil().getReqPar(reqparGroup));
+    return EvregMethodBase.validName(
+            getReqUtil().getReqPar(reqparGroup));
   }
 
   /**
@@ -194,7 +195,7 @@ public abstract class EvregMethodHelper extends MethodHelper {
    * @return par or null for no parameter
    */
   public String reqName() {
-    return emb.validName(getReqUtil().getReqPar("name"));
+    return EvregMethodBase.validName(getReqUtil().getReqPar("name"));
   }
 
   /**
@@ -413,7 +414,7 @@ public abstract class EvregMethodHelper extends MethodHelper {
     if (change < 0) {
       reg.removeTickets(-change);
       addChange(db, reg, Change.typeUpdReg,
-                       ChangeItem.makeUpdNumTickets(change));
+                ChangeItem.makeUpdNumTickets(change));
       reallocate(db, -change, reg.getHref());
 
       return AdjustResult.removed;
@@ -422,7 +423,7 @@ public abstract class EvregMethodHelper extends MethodHelper {
     reg.addTickets(change);
 
     addChange(db, reg, Change.typeUpdReg,
-                     ChangeItem.makeUpdNumTickets(change));
+              ChangeItem.makeUpdNumTickets(change));
     return AdjustResult.added;
   }
 
@@ -551,16 +552,14 @@ public abstract class EvregMethodHelper extends MethodHelper {
                         final Registration reg,
                         final String type,
                         final ChangeItem ci) {
-    final Change c = new Change();
-
-    c.setAuthid(globals.getCurrentUser());
-    c.setRegistrationId(reg.getRegistrationId());
-    c.setLastmod(reg.getLastmod());
-    c.setType(type);
-    c.setName(ci.getName());
-    c.setValue(ci.getValue());
-
-    db.addChange(c);
+    db.add(new Change.Builder()
+                   .authid(globals.getCurrentUser())
+                   .registrationId(reg.getRegistrationId())
+                   .lastmod(reg.getLastmod())
+                   .type(type)
+                   .name(ci.getName())
+                   .value(ci.getValue())
+                   .build());
   }
 
   /**
@@ -570,14 +569,12 @@ public abstract class EvregMethodHelper extends MethodHelper {
   public void addChange(final EventregDb db,
                         final Registration reg,
                         final String type) {
-    final Change c = new Change();
-
-    c.setAuthid(globals.getCurrentUser());
-    c.setRegistrationId(reg.getRegistrationId());
-    c.setLastmod(reg.getLastmod());
-    c.setType(type);
-
-    db.addChange(c);
+    db.add(new Change.Builder()
+                   .authid(globals.getCurrentUser())
+                   .registrationId(reg.getRegistrationId())
+                   .lastmod(reg.getLastmod())
+                   .type(type)
+                   .build());
   }
 
   protected BwConnector getConnector() {

@@ -221,25 +221,14 @@ public class EventregDb implements AutoCloseable, Logged, Serializable {
    * ===================================================== */
 
   /**
-   * @param c Change
-   */
-  public void addChange(final Change c) {
-    try {
-      sess.add(c);
-    } catch (final BedeworkException be) {
-      throw new EventregException(be);
-    }
-  }
-
-  /**
    * @param ts - timestamp value - get changes after this
    * @return - list of changes since ts
    */
   @SuppressWarnings("unchecked")
   public List<Change> getChanges(final String ts) {
-    final StringBuilder sb = new StringBuilder();
-
-    sb.append("select chg from Change chg ");
+    final StringBuilder sb =
+            new StringBuilder()
+                    .append("select chg from Change chg ");
     if (ts != null) {
       sb.append("where chg.lastmod>:lm ");
     }
@@ -266,9 +255,9 @@ public class EventregDb implements AutoCloseable, Logged, Serializable {
    */
   @SuppressWarnings("unchecked")
   public List<Registration> getAllRegistrations() {
-    createQuery("select reg from Registration reg");
-
-    return (List<Registration>)getList();
+    return (List<Registration>)createQuery(
+            "select reg from Registration reg")
+            .getList();
   }
 
   /** Registrations for a user.
@@ -277,10 +266,9 @@ public class EventregDb implements AutoCloseable, Logged, Serializable {
    * @return a matching registration
    */
   public Registration getByid(final Long id) {
-    createQuery(regIdQuery);
-    setLong("id", id);
-
-    return (Registration)getUnique();
+    return (Registration)createQuery(regIdQuery)
+            .setLong("id", id)
+            .getUnique();
   }
 
   private final static String getByUserQuery =
@@ -295,11 +283,10 @@ public class EventregDb implements AutoCloseable, Logged, Serializable {
    */
   @SuppressWarnings("unchecked")
   public List<Registration> getByUser(final String user) {
-    createQuery(getByUserQuery);
-    setString("user", user);
-    setString("type", Registration.typeRegistered);
-
-    return (List<Registration>)getList();
+    return (List<Registration>)createQuery(getByUserQuery)
+            .setString("user", user)
+            .setString("type", Registration.typeRegistered)
+            .getList();
   }
 
   private final static String getUserRegistrationQuery =
@@ -315,12 +302,11 @@ public class EventregDb implements AutoCloseable, Logged, Serializable {
    */
   public Registration getUserRegistration(final String eventHref,
                                           final String user) {
-    createQuery(getUserRegistrationQuery);
-    setString("href", eventHref);
-    setString("user", user);
-    setString("type", RegistrationImpl.typeRegistered);
-
-    return (Registration)getUnique();
+    return (Registration)createQuery(getUserRegistrationQuery)
+            .setString("href", eventHref)
+            .setString("user", user)
+            .setString("type", RegistrationImpl.typeRegistered)
+            .getUnique();
   }
 
   private final static String getByEventQuery =
@@ -332,12 +318,11 @@ public class EventregDb implements AutoCloseable, Logged, Serializable {
    * @param href to identify event
    * @return matching registrations
    */
-  @SuppressWarnings("unchecked")
   public List<Registration> getByEvent(final String href) {
-    createQuery(getByEventQuery);
-    setString("href", href);
-
-    return (List<Registration>)getList();
+    //noinspection unchecked
+    return (List<Registration>)createQuery(getByEventQuery)
+            .setString("href", href)
+            .getList();
   }
 
   private final static String getRegistrantCountQuery =
@@ -350,12 +335,12 @@ public class EventregDb implements AutoCloseable, Logged, Serializable {
    * @return number of registration entries for that event
    */
   public long getRegistrantCount(final String eventHref) {
-    createQuery(getRegistrantCountQuery);
-    setString("href", eventHref);
-    setString("type", Registration.typeRegistered);
-
     @SuppressWarnings("unchecked")
-    final Collection<Long> counts = (Collection<Long>)getList();
+    final var counts =
+            (Collection<Long>)createQuery(getRegistrantCountQuery)
+                    .setString("href", eventHref)
+                    .setString("type", Registration.typeRegistered)
+                    .getList();
 
     long total = 0;
 
@@ -405,11 +390,11 @@ public class EventregDb implements AutoCloseable, Logged, Serializable {
    * @return number of registrations not on the waiting list for the event
    */
   public long getRegTicketCount(final String eventHref) {
-    createQuery(getRegTicketCountQuery);
-    setString("href", eventHref);
-
     @SuppressWarnings("unchecked")
-    final List<Integer> cts = (List<Integer>)getList();
+    final var cts =
+            (List<Integer>)createQuery(getRegTicketCountQuery)
+                    .setString("href", eventHref)
+                    .getList();
 
     if (cts == null) {
       return 0;
@@ -432,10 +417,9 @@ public class EventregDb implements AutoCloseable, Logged, Serializable {
    * @return number of tickets requested on the waiting list for the event
    */
   public long getWaitingTicketCount(final String eventHref) {
-    createQuery(getWaitingTicketCountQuery);
-    setString("href", eventHref);
-
-    final Long ct = (Long)getUnique();
+    final var ct = (Long)createQuery(getWaitingTicketCountQuery)
+            .setString("href", eventHref)
+            .getUnique();
     if (debug()) {
       debug("Count returned " + ct);
     }
@@ -457,10 +441,10 @@ public class EventregDb implements AutoCloseable, Logged, Serializable {
    * @return registrations on the waiting list for the event
    */
   public List<Registration> getWaiting(final String eventHref) {
-    createQuery(getWaitingQuery);
-    setString("href", eventHref);
-
-    return (List<Registration>)getList();
+    //noinspection unchecked
+    return (List<Registration>)createQuery(getWaitingQuery)
+            .setString("href", eventHref)
+            .getList();
   }
 
   private final String getTicketCountQuery =
@@ -472,10 +456,9 @@ public class EventregDb implements AutoCloseable, Logged, Serializable {
    * @return total number of registration entries for that event, including waiting list
    */
   public long getTicketCount(final String eventHref) {
-    createQuery(getTicketCountQuery);
-    setString("href", eventHref);
-
-    final Long ct = (Long)getUnique();
+    final var ct = (Long)createQuery(getTicketCountQuery)
+            .setString("href", eventHref)
+            .getUnique();
     if (debug()) {
       debug("Count returned " + ct);
     }
@@ -498,11 +481,12 @@ public class EventregDb implements AutoCloseable, Logged, Serializable {
    */
   public long getUserTicketCount(final String eventHref,
                                  final String user) {
-    createQuery(getUserTicketCountQuery);
-    setString("href", eventHref);
-    setString("user", user);
     @SuppressWarnings("unchecked")
-    final Collection<Long> counts = (Collection<Long>)getList();
+    final var counts =
+            (Collection<Long>)createQuery(getUserTicketCountQuery)
+                    .setString("href", eventHref)
+                    .setString("user", user)
+                    .getList();
 
     long total = 0;
 
@@ -522,10 +506,10 @@ public class EventregDb implements AutoCloseable, Logged, Serializable {
                   "where form.owner=:owner";
 
   public List<FormDef> getCalSuiteForms(final String calsuite) {
-    createQuery(getCalSuiteFormsQuery);
-    setString("owner", calsuite);
-
-    return (List<FormDef>)getList();
+    //noinspection unchecked
+    return (List<FormDef>)createQuery(getCalSuiteFormsQuery)
+            .setString("owner", calsuite)
+            .getList();
   }
 
   private final static String getCalSuiteFormQuery =
@@ -535,11 +519,10 @@ public class EventregDb implements AutoCloseable, Logged, Serializable {
 
   public FormDef getCalSuiteForm(final String formName,
                                  final String calsuite) {
-    createQuery(getCalSuiteFormQuery);
-    setString("formName", formName);
-    setString("owner", calsuite);
-
-    return (FormDef)getUnique();
+    return (FormDef)createQuery(getCalSuiteFormQuery)
+            .setString("formName", formName)
+            .setString("owner", calsuite)
+            .getUnique();
   }
 
   /* =========================================================
@@ -730,33 +713,36 @@ public class EventregDb implements AutoCloseable, Logged, Serializable {
    *                   protected methods
    * ===================================================== */
 
-  protected void createQuery(final String query) {
+  protected EventregDb createQuery(final String query) {
     try {
       sess.createQuery(query);
+      return this;
     } catch (final BedeworkException be) {
       throw new EventregException(be);
     }
   }
 
-  protected void setString(final String name,
-                         final String value) {
+  public EventregDb setString(final String name,
+                              final String value) {
     try {
       sess.setString(name, value);
+      return this;
     } catch (final BedeworkException be) {
       throw new EventregException(be);
     }
   }
 
-  protected void setLong(final String name,
-                       final Long value) {
+  protected EventregDb setLong(final String name,
+                               final Long value) {
     try {
       sess.setLong(name, value);
+      return this;
     } catch (final BedeworkException be) {
       throw new EventregException(be);
     }
   }
 
-  protected Object getUnique() {
+  public Object getUnique() {
     try {
       return sess.getUnique();
     } catch (final BedeworkException be) {
@@ -764,7 +750,7 @@ public class EventregDb implements AutoCloseable, Logged, Serializable {
     }
   }
 
-  protected List<?> getList() {
+  public List<?> getList() {
     try {
       return sess.getList();
     } catch (final BedeworkException be) {

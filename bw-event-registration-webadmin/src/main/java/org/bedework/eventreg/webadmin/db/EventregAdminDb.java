@@ -24,12 +24,10 @@ import org.bedework.eventreg.common.EventregException;
 import org.bedework.eventreg.common.Registration;
 import org.bedework.eventreg.common.RegistrationInfo;
 import org.bedework.eventreg.db.Change;
-import org.bedework.eventreg.db.DbItem;
 import org.bedework.eventreg.db.EventregDb;
 import org.bedework.eventreg.db.FormDef;
 import org.bedework.eventreg.db.RegistrationImpl;
 import org.bedework.eventreg.db.RegistrationInfoImpl;
-import org.bedework.eventreg.db.TicketImpl;
 import org.bedework.util.calendar.XcalUtil;
 
 import java.util.Collection;
@@ -70,9 +68,7 @@ public class EventregAdminDb extends EventregDb {
   public List<Change> getChanges(final String ts) {
     final StringBuilder sb = new StringBuilder();
 
-    sb.append("from ");
-    sb.append(Change.class.getName());
-    sb.append(" chg");
+    sb.append("select chg from Change chg");
     if (ts != null) {
       sb.append(" where chg.lastmod>:lm");
     }
@@ -90,29 +86,20 @@ public class EventregAdminDb extends EventregDb {
    *                   Registrations Object methods
    * ====================================================== */
 
-  public Registration getNewRegistration() {
-    return new RegistrationImpl();
-  }
-
   /**
    * @return list of registrations
    */
-  @SuppressWarnings("unchecked")
   public List<Registration> getAllRegistrations() {
-    final StringBuilder sb = new StringBuilder();
-
-    sb.append("from ");
-    sb.append(RegistrationImpl.class.getName());
-
-    createQuery(sb.toString());
-
-    return (List<Registration>)getList();
+    //noinspection unchecked
+    return (List<Registration>)createQuery(
+            "select reg from RegistrationImpl reg")
+            .getList();
   }
 
   private final static String getByUserQuery =
-          "from " + RegistrationImpl.class.getName() +
-                  " reg where reg.authid=:user" +
-                  " and reg.type=:type";
+          "select reg from RegistrationImpl reg " +
+                  "where reg.authid=:user " +
+                  "and reg.type=:type";
 
   /** Registrations for a user.
    *
@@ -121,18 +108,17 @@ public class EventregAdminDb extends EventregDb {
    */
   @SuppressWarnings("unchecked")
   public List<Registration> getByUser(final String user) {
-    createQuery(getByUserQuery);
-    setString("user", user);
-    setString("type", Registration.typeRegistered);
-
-    return (List<Registration>)getList();
+    return (List<Registration>)createQuery(getByUserQuery)
+            .setString("user", user)
+            .setString("type", Registration.typeRegistered)
+            .getList();
   }
 
   private final static String getUserRegistrationQuery =
-          "from " + RegistrationImpl.class.getName() +
-                  " reg where reg.href=:href" +
-                  " and reg.authid=:user" +
-                  " and reg.type=:type";
+          "select reg from RegistrationImpl reg " +
+                  "where reg.href=:href " +
+                  "and reg.authid=:user " +
+                  "and reg.type=:type";
 
   /**
    * @param eventHref to identify event
@@ -141,48 +127,44 @@ public class EventregAdminDb extends EventregDb {
    */
   public Registration getUserRegistration(final String eventHref,
                                           final String user) {
-    createQuery(getUserRegistrationQuery);
-    setString("href", eventHref);
-    setString("user", user);
-    setString("type", RegistrationImpl.typeRegistered);
-
-    return (Registration)getUnique();
+    return (Registration)createQuery(getUserRegistrationQuery)
+            .setString("href", eventHref)
+            .setString("user", user)
+            .setString("type", RegistrationImpl.typeRegistered)
+            .getUnique();
   }
 
   private final static String getByEventQuery =
-          "from " + RegistrationImpl.class.getName() +
-                  " reg where reg.href=:href";
+          "select reg from RegistrationImpl reg " +
+                  "where reg.href=:href";
 
   /** Registrations for an event.
    *
    * @param href to identify event
    * @return matching registrations
    */
-  @SuppressWarnings("unchecked")
   public List<Registration> getByEvent(final String href) {
-    createQuery(getByEventQuery);
-    setString("href", href);
-
-    return (List<Registration>)getList();
+    //noinspection unchecked
+    return (List<Registration>)createQuery(getByEventQuery)
+            .setString("href", href)
+            .getList();
   }
 
   private final static String getRegistrantCountQuery =
-          "select count(*) from " +
-                  RegistrationImpl.class.getName() +
-                  " reg where reg.href=:href" +
-                  " and reg.type=:type";
+          "select count(*) from RegistrationImpl reg " +
+                  "where reg.href=:href and " +
+                  "reg.type=:type";
 
   /**
    * @param eventHref to identify event
    * @return number of registration entries for that event
    */
   public long getRegistrantCount(final String eventHref) {
-    createQuery(getRegistrantCountQuery);
-    setString("href", eventHref);
-    setString("type", Registration.typeRegistered);
-
     @SuppressWarnings("unchecked")
-    final Collection<Long> counts = (Collection<Long>)getList();
+    final var counts = (Collection<Long>)createQuery(getRegistrantCountQuery)
+            .setString("href", eventHref)
+            .setString("type", Registration.typeRegistered)
+            .getList();
 
     long total = 0;
 
@@ -224,20 +206,18 @@ public class EventregAdminDb extends EventregDb {
   }
 
   private final static String getRegTicketCountQuery =
-          "select size(reg.tickets) from " +
-                  RegistrationImpl.class.getName() +
-                  " reg where reg.href=:href";
+          "select size(reg.tickets) from RegistrationImpl reg " +
+                  "where reg.href=:href";
 
   /**
    * @param eventHref to identify event
    * @return number of registrations not on the waiting list for the event
    */
   public long getRegTicketCount(final String eventHref) {
-    createQuery(getRegTicketCountQuery);
-    setString("href", eventHref);
-
     @SuppressWarnings("unchecked")
-    final List<Integer> cts = (List<Integer>)getList();
+    final var cts = (List<Integer>)createQuery(getRegTicketCountQuery)
+            .setString("href", eventHref)
+            .getList();
 
     if (cts == null) {
       return 0;
@@ -252,19 +232,18 @@ public class EventregAdminDb extends EventregDb {
   }
 
   private final static String getWaitingTicketCountQuery =
-          "select sum(ticketsRequested) from " +
-                  RegistrationImpl.class.getName() +
-                  " reg where reg.href=:href";
+          "select sum(ticketsRequested) from RegistrationImpl reg " +
+                  "where reg.href=:href";
 
   /**
    * @param eventHref href of event
    * @return number of tickets requested on the waiting list for the event
    */
   public long getWaitingTicketCount(final String eventHref) {
-    createQuery(getWaitingTicketCountQuery);
-    setString("href", eventHref);
+    final var ct = (Long)createQuery(getWaitingTicketCountQuery)
+            .setString("href", eventHref)
+            .getUnique();
 
-    final Long ct = (Long)getUnique();
     if (debug()) {
       debug("Count returned " + ct);
     }
@@ -276,37 +255,35 @@ public class EventregAdminDb extends EventregDb {
   }
 
   private final String getWaitingQuery =
-          "from " +
-                  RegistrationImpl.class.getName() +
-                  " reg where reg.href=:href" +
-                  " and size(reg.tickets) < reg.ticketsRequested" +
-                  " order by reg.waitqDate";
+          """
+            select reg from RegistrationImpl reg \
+            where reg.href=:href and \
+              size(reg.tickets) < reg.ticketsRequested \
+            order by reg.waitqDate""";
 
   /**
    * @param eventHref to identify event
    * @return registrations on the waiting list for the event
    */
   public List<Registration> getWaiting(final String eventHref) {
-    createQuery(getWaitingQuery);
-    setString("href", eventHref);
-
-    return (List<Registration>)getList();
+    //noinspection unchecked
+    return (List<Registration>)createQuery(getWaitingQuery)
+            .setString("href", eventHref)
+            .getList();
   }
 
   private final String getTicketCountQuery =
-          "select count(*) from " +
-                  TicketImpl.class.getName() +
-                  " tkt where tkt.href=:href";
+          "select count(*) from TicketImpl tkt " +
+                  "where tkt.href=:href";
 
   /**
    * @param eventHref to identify event
    * @return total number of registration entries for that event, including waiting list
    */
   public long getTicketCount(final String eventHref) {
-    createQuery(getTicketCountQuery);
-    setString("href", eventHref);
-
-    final Long ct = (Long)getUnique();
+    final var ct = (Long)createQuery(getTicketCountQuery)
+            .setString("href", eventHref)
+            .getUnique();
     if (debug()) {
       debug("Count returned " + ct);
     }
@@ -318,9 +295,8 @@ public class EventregAdminDb extends EventregDb {
   }
 
   private final static String getUserTicketCountQuery =
-          "select count(*) from " +
-                  TicketImpl.class.getName() +
-                  " tkt where tkt.href=:href" +
+          "select count(*) from TicketImpl tkt " +
+                  "where tkt.href=:href" +
                   " and tkt.authid=:user";
 
   /**
@@ -330,11 +306,12 @@ public class EventregAdminDb extends EventregDb {
    */
   public long getUserTicketCount(final String eventHref,
                                  final String user) {
-    createQuery(getUserTicketCountQuery);
-    setString("href", eventHref);
-    setString("user", user);
     @SuppressWarnings("unchecked")
-    final Collection<Long> counts = (Collection<Long>)getList();
+    final var counts =
+            (Collection<Long>)createQuery(getUserTicketCountQuery)
+                    .setString("href", eventHref)
+                    .setString("user", user)
+                    .getList();
 
     long total = 0;
 
@@ -350,82 +327,26 @@ public class EventregAdminDb extends EventregDb {
    * ======================================================== */
 
   private final static String getCalSuiteFormsQuery =
-          "from " + FormDef.class.getName() +
-                  " form where form.owner=:owner";
+          "select form from FormDef form " +
+                  "where form.owner=:owner";
 
   public List<FormDef> getCalSuiteForms(final String calsuite) {
-    createQuery(getCalSuiteFormsQuery);
-    setString("owner", calsuite);
-
-    return (List<FormDef>)getList();
+    //noinspection unchecked
+    return (List<FormDef>)createQuery(getCalSuiteFormsQuery)
+            .setString("owner", calsuite)
+            .getList();
   }
 
   private final static String getCalSuiteFormQuery =
-          "from " + FormDef.class.getName() +
-                  " form where form.owner=:owner and" +
+          "select form from FormDef form " +
+                  "where form.owner=:owner and" +
                   " form.formName=:formName";
 
   public FormDef getCalSuiteForm(final String formName,
                                  final String calsuite) {
-    createQuery(getCalSuiteFormQuery);
-    setString("formName", formName);
-    setString("owner", calsuite);
-
-    return (FormDef)getUnique();
-  }
-
-  /* =========================================================
-   *                   Dbitem methods
-   * ========================================================= */
-
-  /** Add the item.
-   *
-   * @param val the dbitem
-   */
-  public void add(final Object val) {
-    if (!(val instanceof DbItem<?>)) {
-      throw new EventregException("Not a dbitem: " + val.getClass());
-    }
-    try {
-      sess.add(val);
-    } catch (final BedeworkException be) {
-      throw new EventregException(be);
-    }
-  }
-
-  /** Update the persisted state of the item.
-   *
-   * @param val the dbitem
-   */
-  public void update(final Object val) {
-    if (!(val instanceof DbItem<?>)) {
-      throw new EventregException("Not a dbitem: " + val.getClass());
-    }
-    try {
-      sess.update(val);
-    } catch (final BedeworkException be) {
-      throw new EventregException(be);
-    }
-  }
-
-  /** Delete the dbitem.
-   *
-   * @param val the dbitem
-   */
-  public void delete(final Object val) {
-    if (!(val instanceof DbItem<?>)) {
-      throw new EventregException("Not a dbitem: " + val.getClass());
-    }
-    final boolean opened = open();
-
-    try {
-      sess.delete(val);
-    } catch (final BedeworkException be) {
-      throw new EventregException(be);
-    } finally {
-      if (opened) {
-        close();
-      }
-    }
+    return (FormDef)createQuery(getCalSuiteFormQuery)
+            .setString("formName", formName)
+            .setString("owner", calsuite)
+            .getUnique();
   }
 }

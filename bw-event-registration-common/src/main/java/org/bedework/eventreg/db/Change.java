@@ -164,6 +164,48 @@ public class Change extends DbItem<Change> {
   }
 
   /* ====================================================
+   *                   Builder
+   * ==================================================== */
+
+  public static class Builder {
+    private final Change change = new Change();
+
+    public Builder authid(final String val) {
+      change.setAuthid(val);
+      return this;
+    }
+
+    public Builder registrationId(final Long val) {
+      change.setRegistrationId(val);
+      return this;
+    }
+
+    public Builder lastmod(final String val) {
+      change.setLastmod(val);
+      return this;
+    }
+
+    public Builder type(final String val) {
+      change.setType(val);
+      return this;
+    }
+
+    public Builder name(final String val) {
+      change.setName(val);
+      return this;
+    }
+
+    public Builder value(final String val) {
+      change.setValue(val);
+      return this;
+    }
+
+    public Change build() {
+      return change;
+    }
+  }
+
+  /* ====================================================
    *                   Object methods
    * The following are required for a db object.
    * ==================================================== */

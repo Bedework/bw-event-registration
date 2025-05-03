@@ -110,7 +110,7 @@ public abstract class EvregMethodBase extends MethodBase {
         throw new ServletException("Bad resource url - no path specified");
       }
 
-      final String resName = resourceUri.get(0);
+      final String resName = resourceUri.getFirst();
       final var helper = getMethodHelper(resName);
       if (helper == null) {
         resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
