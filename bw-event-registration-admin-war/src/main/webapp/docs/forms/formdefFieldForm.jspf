@@ -125,7 +125,7 @@ under the License.
             <span class="note fieldVal">* denotes required field. Quotes and special characters are disallowed on most fields.</span>
           </li>
           <li class="submit">
-            <button type="submit" class="button" id="addFieldCancelButton"><span id="addFieldSubmitText">Cancel</span></button>
+            <button type="submit" class="button" id="addFieldCancelButton" formnovalidate><span id="addFieldSubmitText">Cancel</span></button>
           </li>
         </ul>
       </form>
