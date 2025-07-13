@@ -12,7 +12,7 @@
       "forwards": [
         {
           "name": "success",
-          "path": "/docs/forms/editForm.do",
+          "path": "/editForm.do",
           "redirect": true
         }
       ]
@@ -23,7 +23,7 @@
       "forwards": [
         {
           "name": "success",
-          "path": "/docs/reg/showRegistrations.do"
+          "path": "/showRegistrations.do"
         }
       ]
     },
@@ -37,7 +37,7 @@
       "forwards": [
         {
           "name": "success",
-          "path": "/docs/forms/listForms.do",
+          "path": "/listForms.do",
           "redirect": true
         }
       ]
@@ -62,7 +62,7 @@
       "forwards": [
         {
           "name": "success",
-          "path": "/docs/forms/listForms.do",
+          "path": "/listForms.do",
           "redirect": true
         }
       ]

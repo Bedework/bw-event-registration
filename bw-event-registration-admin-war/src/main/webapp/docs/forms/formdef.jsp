@@ -175,14 +175,14 @@ under the License.
             <option value="radio">options list</option>
             <option value="checkbox">checkbox</option>
           </select>
-          <a href="#modFieldContainer" id="addNewFieldButton" class="button">add</a>
+          <button id="addNewFieldButton">add</button>
         </div>
       </c:otherwise>
     </c:choose>
 
-    <%@ include file="/docs/forms/formdefJavaScript.jspf" %>
-
     <%@ include file="/docs/forms/formdefFieldForm.jspf" %>
+
+    <%@ include file="/docs/forms/formdefJavaScript.jspf" %>
 
   </c:if>
 

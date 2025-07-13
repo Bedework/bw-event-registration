@@ -21,8 +21,8 @@ under the License.
  */
 --%>
 
-    <div id="modFieldContainer" class="bwPopup mfp-hide">
-      <form id="modFieldForm" action="#" onsubmit="return doUpdateField();">
+    <dialog id="modFieldContainer">
+      <form id="modFieldForm" method="dialog" >
         <input type="hidden" name="type" id="fieldType" value=""/>
         <input type="hidden" name="calsuite" value="${globals.calsuite}"/>
         <input type="hidden" name="formName" value="${globals.formName}"/>
@@ -121,9 +121,12 @@ under the License.
             </div>
           </li>
           <li class="submit">
-            <button type="submit" class="button" id="addFieldSubmitButton"><span id="addFieldSubmitText">add field</span></button>
+            <button type="submit" class="button" id="addFieldSubmitButton"><span id="addFieldSubmitText">Add field</span></button>
             <span class="note fieldVal">* denotes required field. Quotes and special characters are disallowed on most fields.</span>
+          </li>
+          <li class="submit">
+            <button type="submit" class="button" id="addFieldCancelButton"><span id="addFieldSubmitText">Cancel</span></button>
           </li>
         </ul>
       </form>
-    </div>
+    </dialog>

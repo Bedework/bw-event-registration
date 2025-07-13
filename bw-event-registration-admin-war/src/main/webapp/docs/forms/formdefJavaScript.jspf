@@ -22,28 +22,34 @@ under the License.
 --%>
 
     <script type="text/javascript">
-      var fieldTypeLabel = "Text Input";
-      var fieldType = "textinput";
-      var addingField = false;
-      var fieldNames = new Array();
+      let fieldTypeLabel = "Text Input";
+      let fieldType = "textinput";
+      let addingField = false;
+      const fieldNames = [];
+      const newFieldButton =
+              document.getElementById("addNewFieldButton");
+      const newFieldDialog =
+              document.getElementById("modFieldContainer");
+      const modFieldForm =
+              document.getElementById("modFieldForm");
+
       <c:if test="${not empty fields}">
         <c:forEach var="fld" items="${fields.formEls}" varStatus="loopStatus">
           fieldNames.push("${fld.name}");
         </c:forEach>
       </c:if>
 
-      $(function() {
-        $("#addNewFieldButton").magnificPopup({
-          type: 'inline',
-          midClick: true,
-          focus: '#fieldName',
-          callbacks: {
-            beforeOpen: function() {
-              setupNewFieldForm();
-            }
-          }
-        });
+      newFieldButton.addEventListener("click", () => {
+          setupNewFieldForm();
+          newFieldDialog.showModal();
+          openCheck(dialog);
+      });
 
+      modFieldForm.addEventListener("submit", (event) => {
+          doUpdateField(event);
+      });
+
+      $(function() {
         $("#fieldRequired").click(function() {
           if ($(this).is(':checked')) {
             $("#req").val("true");
@@ -66,7 +72,7 @@ under the License.
               dataType: 'json'
             })
             .done(function (data) {
-              if (data.message == "ok") {
+              if (data.message === "ok") {
                 $("#" + fieldName).remove(); // remove row (tr) from the dom
                 // also remove from the validation array:
                 var nameIndex = $.inArray(fieldName, fieldNames);
@@ -92,10 +98,12 @@ under the License.
       });
 
       function setupNewFieldForm() {
+        const popUp = $(".bwPopup");
+
         // set up default state
         addingField = true;
         fieldType = $("#addNewFieldType").val();
-        $(".bwPopup").removeClass("bwPopupWide");
+        popUp.removeClass("bwPopupWide");
         $(".optionsListComponent").hide();
         $(".hiddenForCheckbox").show();
         $("#fieldTypeCheckboxValueSetter").hide();
@@ -105,7 +113,7 @@ under the License.
           case "radio":
             fieldTypeLabel = "Options List";
             $(".optionsListComponent").show();
-            $(".bwPopup").addClass("bwPopupWide");
+            popUp.addClass("bwPopupWide");
             break;
           case "checkbox":
             fieldTypeLabel = "Checkbox";
@@ -128,47 +136,59 @@ under the License.
         $("#fieldType").val(fieldType);
       }
 
-      function doUpdateField() {
+      function doUpdateField(event) {
+        const submitter = event.submitter;
+        if (submitter !== null) {
+          if (submitter.id === "addFieldCancelButton") {
+              newFieldDialog.close();
+              return false;
+          }
+        }
+        const fieldLabel = $("#fieldLabel");
 
         // some basic validation first
-        if (!isValid($("#fieldLabel").val())) {
-          $("#fieldLabel").closest(".fieldVal").find(".validationError").text('Please enter a valid label.');
-          $("#fieldLabel").addClass("invalid");
-          $("#fieldLabel").focus();
+        if (!isValid(fieldLabel.val())) {
+          fieldLabel.closest(".fieldVal").find(".validationError").text('Please enter a valid label.');
+          fieldLabel.addClass("invalid");
+          fieldLabel.focus();
           return false;
         }
-        if (!isUnique($("#fieldName").val(),fieldNames)) {
-          $("#fieldName").closest(".fieldVal").find(".validationError").text('This name is already in use. Please enter a unique name.');
-          $("#fieldName").addClass("invalid");
-          $("#fieldName").focus();
+
+          const fieldName = $("#fieldName");
+
+          if (!isUnique(fieldName.val(),fieldNames)) {
+              fieldName.closest(".fieldVal").find(".validationError").text('This name is already in use. Please enter a unique name.');
+              fieldName.addClass("invalid");
+              fieldName.focus();
           return false;
         }
-        if (!isValid($("#fieldName").val(),'alphanumeric')) {
-          $("#fieldName").closest(".fieldVal").find(".validationError").text('Please enter a valid name.');
-          $("#fieldName").addClass("invalid");
-          $("#fieldName").focus();
+        if (!isValid(fieldName.val(),'alphanumeric')) {
+          fieldName.closest(".fieldVal").find(".validationError").text('Please enter a valid name.');
+          fieldName.addClass("invalid");
+          fieldName.focus();
           return false;
         }
-        if (fieldType == "radio") {
-          if ($.trim($("#fieldOptions").val()) == "") {
-            $("#fieldOptions").closest(".fieldVal").find(".validationError").text('Please enter options.');
-            $("#fieldOptions").addClass("invalid");
-            $("#fieldOptions").focus();
+        const fieldOptions = $("#fieldOptions");
+
+        if (fieldType === "radio") {
+          if ($.trim(fieldOptions.val()) === "") {
+            fieldOptions.closest(".fieldVal").find(".validationError").text('Please enter options.');
+            fieldOptions.addClass("invalid");
+            fieldOptions.focus();
             return false;
           }
 
-          var optionsArray = $('#fieldOptions').val().split("\n");
-          var regxTest = /^[^\|]+\|[^\|]+$/; // match just one pipe in the middle
+          var optionsArray = fieldOptions.val().split("\n");
+          var regxTest = /^[^|]+\|[^|]+$/; // match just one pipe in the middle
           var valid = true;
           $(optionsArray).each(function(index,value){
             if (!regxTest.test(value)) {
               valid = false;
             }
           });
-          if (!valid) {$(
-            "#fieldOptions").closest(".fieldVal").find(".validationError").text('You must enter value|label pairs.');
-            $("#fieldOptions").addClass("invalid");
-            $("#fieldOptions").focus();
+          if (!valid) {fieldOptions.closest(".fieldVal").find(".validationError").text('You must enter value|label pairs.');
+            fieldOptions.addClass("invalid");
+            fieldOptions.focus();
             return false;
           }
         }
@@ -186,15 +206,17 @@ under the License.
           dataType: 'json'
         })
         .done(function(data) {
-          if (data.message == "ok") {
+          if (data.message === "ok") {
              // XXX for now just request the page again; next: build dom object and insert it without refresh
             location.href = "editForm.do?calsuite=${globals.calsuite}&formName=${form.formName}";
           } else {
             alert("There was a problem saving the field: " + data.message);
           }
+          newFieldDialog.close();
         })
         .error(function(msg) {
           alert("There was an error");
+          newFieldDialog.close();
         });
 
         return false;

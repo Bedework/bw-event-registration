@@ -28,7 +28,8 @@ under the License.
       <input type="checkbox" id="showDisabledSwitch" onclick="showDisabled(this.checked);"/>
       <label for="showDisabledSwitch">show disabled</label>
     </div>
-    <a href="#newCustomCollectionNameDialog" class="button" id="addNewCustomCollection">Add New Custom Field Collection</a>
+
+    <button id="addNewCustomCollection">Add New Custom Field Collection</button>
 
     <table id="customFields" class="commonTable">
       <thead>
@@ -113,49 +114,62 @@ under the License.
     </table>
   </div>
 
+  <dialog id="newCustomCollectionNameDialog">
+    <form method="dialog" onsubmit="return doAddFieldCollection()">
+      <label for="newFieldCollectionName">Custom Field Collection Name:</label>
+      <span class="validationError"></span><br/>
+      <input type="text" value="" size="65"
+             id="newFieldCollectionName" tabindex="1"/>
+      <button type="submit" class="button"
+              tabindex="3">add</button><br/>
+      <p class="note">
+        A short name identifying this set of fields for events administration<br/>
+        May not include spaces or special characters
+      </p>
+      <label for="newFieldCollectionDesc">Description: <span class="note">(optional)</span></label><br/>
+      <input type="text" value="" size="65"
+             id="newFieldCollectionDesc" tabindex="2"/>
+      <p class="note">
+        The description will appear in the list of field collections
+      </p>
+    </form>
+  </dialog>
+
   <script type="text/javascript">
-    $(function() {
-      $("#addNewCustomCollection").magnificPopup({
-        type: 'inline',
-        midClick: true,
-        focus: '#newFieldCollectionName'
-      });
+    const showButton = document.getElementById("addNewCustomCollection");
+    const dialog = document.getElementById("newCustomCollectionNameDialog");
+
+    function openCheck(dialog) {
+      if (dialog.open) {
+        console.log("Dialog open");
+      } else {
+        console.log("Dialog closed");
+      }
+    }
+
+    showButton.addEventListener("click", () => {
+      dialog.showModal();
+      openCheck(dialog);
     });
 
     function doAddFieldCollection() {
-      var newCollectionName = $("#newFieldCollectionName").val();
+      var nfcn = $("#newFieldCollectionName");
+      var newCollectionName = nfcn.val();
       var newCollectionDesc = $("#newFieldCollectionDesc").val();
       if (!isValid(newCollectionName,'alphanumeric')) {
         $(".validationError").text('Please enter a valid name.');
-        $("#newFieldCollectionName").addClass("invalid");
-        $("#newFieldCollectionName").focus();
+        nfcn.addClass("invalid");
+        nfcn.focus();
         return false;
       }
-      if (newCollectionName != "") {
-        $.magnificPopup.close();
-        $("#newFieldCollectionName").val(""); // empty the field
+      if (newCollectionName !== "") {
+        dialog.close();
+        openCheck(dialog);
+        nfcn.val(""); // empty the field
         location.href = "addForm.do?calsuite=${globals.calsuite}&formName=" + newCollectionName + "&comment=" + newCollectionDesc;
       }
       return false;
     }
   </script>
-
-  <div id="newCustomCollectionNameDialog" class="bwPopup mfp-hide">
-    <form action="#" onsubmit="return doAddFieldCollection()">
-      <label for="newFieldCollectionName">Custom Field Collection Name:</label>
-      <span class="validationError"></span><br/>
-      <input type="text" value="" size="65" id="newFieldCollectionName" tabindex="1"/>
-      <button type="submit" class="button" tabindex="3">add</button><br/>
-      <p class="note">
-        a short name identifying this set of fields for events administration<br/>
-        may not include spaces or special characters
-      </p>
-      <label for="newFieldCollectionDesc">Description: <span class="note">(optional)</span></label><br/>
-      <input type="text" value="" size="65" id="newFieldCollectionDesc" tabindex="2"/>
-      <p class="note">
-        the description will appear in the list of field collections
-      </p>
-    </form>
-  </div>
 
 <%@ include file="/docs/forms/fdefFoot.jspf" %>
