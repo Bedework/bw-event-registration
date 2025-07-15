@@ -1,0 +1,8 @@
+[[introduction]]
+== Introduction
+This project provides an event-registration service for https://www.apereo.org/projects/bedework[Bedework] that allows authenticated users to register for events. Users may view and modify their registrations, such as unregistering or changing the number of tickets they've requested. When registration is full, users may choose to be placed on a waiting list. Users on waiting lists will automatically be moved up in the queue if space becomes available.
+
+image::/eventRegRegistered.png[Registered Event]
+
+
+

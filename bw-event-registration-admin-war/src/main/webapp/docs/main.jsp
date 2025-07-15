@@ -2,9 +2,8 @@
 
 <%@ include file="/docs/head.jsp" %>
 
-  <p>
-    Total number registrants: ${registrantCount}<br/>
-    Total number Tickets: ${ticketCount}<br/>
-  </p>
+  <ul id="mainMenu">
+    <li><a href="listForms.do?calsuite=${globals.calsuite}">View custom forms</a></li>
+  </ul>
 
  <%@ include file="/docs/foot.jsp" %>

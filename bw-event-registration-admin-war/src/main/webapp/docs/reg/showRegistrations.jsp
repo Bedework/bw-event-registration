@@ -216,4 +216,4 @@
       </form>
     </div>
 
- <%@ include file="foot.jsp" %>
+ <%@ include file="/docs/foot.jsp" %>

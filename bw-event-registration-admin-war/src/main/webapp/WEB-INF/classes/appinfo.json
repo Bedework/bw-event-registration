@@ -112,6 +112,16 @@
       ]
     },
     {
+      "name": "main.do",
+      "className": "org.bedework.eventreg.webadmin.gethelpers.ProcessMain",
+      "forwards": [
+        {
+          "name": "success",
+          "path": "main.jsp"
+        }
+      ]
+    },
+    {
       "name": "removeReg.do",
       "className": "org.bedework.eventreg.webadmin.gethelpers.ProcessRemoveReq",
       "forwards": [

@@ -1,0 +1,30 @@
+[[admin]]
+== Event Registration Administration client
+With this client, administrators can view and modify a registration list and download CSV files of their registrations on-demand.
+
+=== Main view
+The main view is reached by a link in the calendr admin client. The view seen is dependent on the calendar suite and shows
+
+=== Action: List forms
+Path:: listForms.do
+Parameters:: calsuite
+
+This lists the current
+=== GET Actions
+==== addForm.do
+==== adjustTkts.do
+==== changes.do
+==== commitForm.do
+==== deleteField.do
+==== deleteForm.do
+==== disableForm.do
+==== download.do
+==== editForm.do
+==== logout.do
+==== removeReg.do
+==== showRegistrations.do
+==== updateReg.do
+
+=== POST Actions
+==== addField.do
+==== hold.do
