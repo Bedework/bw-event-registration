@@ -4,7 +4,7 @@
   <parent>
     <groupId>org.bedework</groupId>
     <artifactId>bedework-parent</artifactId>
-    <version>200-SNAPSHOT</version>
+    <version>216</version>
   </parent>
 
   <groupId>org.bedework.evreg</groupId>
@@ -25,6 +25,7 @@
 
   <modules>
     <module>bw-event-registration-admin-war</module>
+    <module>bw-event-registration-asciidocs</module>
 		<module>bw-event-registration-common</module>
     <module>bw-event-registration-common-war</module>
 		<module>bw-event-registration-war</module>

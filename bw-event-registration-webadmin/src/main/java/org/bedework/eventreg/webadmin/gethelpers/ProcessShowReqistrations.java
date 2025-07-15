@@ -21,11 +21,11 @@ package org.bedework.eventreg.webadmin.gethelpers;
 import org.bedework.eventreg.common.Registration;
 import org.bedework.eventreg.webadmin.EvregAdminMethodHelper;
 
-import java.util.List;
-import java.util.TreeSet;
-
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+
+import java.util.List;
+import java.util.TreeSet;
 
 /**
  * @author douglm
@@ -47,13 +47,12 @@ public class ProcessShowReqistrations extends EvregAdminMethodHelper {
       final var ev = getConnector().flush(href)
                                    .getEvent(href);
 
-      final TreeSet<Registration> regs = new TreeSet<>();
+      final var regs = new TreeSet<Registration>();
 
-      for (final var reg: db.getByEvent(href)) {
+      db.getByEvent(href).forEach(reg -> {
         reg.setEvent(ev);
-
         regs.add(reg);
-      }
+      });
 
       globals.setCurrentEvent(ev);
 
