@@ -15,7 +15,7 @@
         <c:out value="${globals.message}"/>
       </div>
     </c:if>
-    <table id="userAgenda" cellspacing="2" class="tablesorter">
+    <table id="userAgenda" cellspacing="2" class="tablesorter-blue">
       <thead>
         <tr>
           <th>

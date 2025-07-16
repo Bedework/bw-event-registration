@@ -287,7 +287,7 @@ a {
   padding: 0 0.5em 0.5em 0.5em;
 }
 #bwCustomFields label.required-true {
-  padding-left: 0.75em; /* allows us to align the labels with or without an * indicator */
+  padding-left: 0.75em;
 }
 #bwCustomFields .fieldVal {
   display: table-cell;

@@ -3,13 +3,13 @@
   <head>
     <title>Bedework Event Registration System</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <script src="/approots/evreg/jquery-1.11.3.min.js" type="text/javascript"></script>
-    <script src="/approots/evreg/jquery-ui-1.11.4/jquery-ui.min.js" type="text/javascript"></script>
-    <link rel="stylesheet" href="/approots/evreg/jquery-ui-1.11.4/jquery-ui.min.css" type="text/css" media="all"/>
-    <link rel="stylesheet" href="/approots/evreg/jquery-ui-1.11.4/jquery-ui.theme.min.css" type="text/css" media="all"/>
+    <script src="/javascript/jquery-3/jquery-3.7.1.min.js" type="text/javascript"></script>
+    <script src="/javascript/jquery-3/jquery-ui/jquery-ui-1.14.1/jquery-ui.js" type="text/javascript"></script>
+    <link rel="stylesheet" href="/javascript/jquery-3/jquery-ui/jquery-ui-1.14.1/jquery-ui.css" type="text/css" media="all"/>
+    <link rel="stylesheet" href="/javascript/jquery-3/jquery-ui/jquery-ui-1.14.1/jquery-ui.theme.css" type="text/css" media="all"/>
     <c:if test="${regs != null}">
-      <script src="/approots/evreg/tablesorter-2.0.5/jquery.tablesorter.min.js" type="text/javascript"></script>
-      <link rel="stylesheet" href="/approots/evreg/tablesorter-2.0.5/style.css" type="text/css" media="all"/>
+      <script src="/javascript/tablesorter/2.31.3/jquery.tablesorter.min.js" type="text/javascript"></script>
+      <link rel="stylesheet" href="/javascript/tablesorter/2.31.3/css/theme.blue.css" type="text/css" media="all"/>
       <script type="text/javascript">
         $(document).ready(function() {
           <c:if test="${pageContext.request.servletPath == '/docs/reg/showRegistrations.jsp'}">

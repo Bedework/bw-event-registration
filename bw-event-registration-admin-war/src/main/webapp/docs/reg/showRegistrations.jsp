@@ -83,7 +83,7 @@
             <c:out value="${globals.message}"/>
           </div>
         </c:if>
-        <table id="registrationList" cellspacing="2" class="tablesorter">
+        <table id="registrationList" cellspacing="2" class="tablesorter-blue">
         <thead>
           <tr>
             <%-- thText classes are needed to keep the table sorter
@@ -105,12 +105,12 @@
             </th>
             <th>
               <span class="thText">
-                Tickets<br/>Requested
+                Tickets Requested
               </span>
             </th>
             <th>
               <span class="thText">
-                Tickets<br/>Allocated
+                Tickets Allocated
               </span>
             </th>
             <th>
