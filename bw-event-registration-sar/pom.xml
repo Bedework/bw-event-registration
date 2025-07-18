@@ -10,6 +10,7 @@
   </parent>
 
   <artifactId>bw-event-registration-sar</artifactId>
+  <name>Bedework Event Registration config sar</name>
   <packaging>pom</packaging>
 
   <properties>
