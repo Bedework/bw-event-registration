@@ -17,7 +17,14 @@
 <ul class="sectlevel1">
 <li><a href="#introduction">Introduction</a>
 <ul class="sectlevel2">
-<li><a href="#_using_this_project">.1. Using this project</a></li>
+<li><a href="#configure-events-registration">.1. Enabling and Disabling Public Events Registration</a>
+<ul class="sectlevel3">
+<li><a href="#_enabling_public_events_registration">.1.1. Enabling Public Events Registration</a></li>
+<li><a href="#_disabling_public_events_registration">.1.2. Disabling Public Events Registration</a></li>
+<li><a href="#_enabling_public_events_registration_possibly_after_upgrade_from_a_previous_release">.1.3. Enabling Public Events Registration (possibly after upgrade from a previous release)</a></li>
+<li><a href="#_notifications_from_eventreg">.1.4. Notifications from EventReg</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li><a href="#calendarAdmin">1. Event Registration Bedework Calendar Administration</a>
@@ -55,9 +62,151 @@
 </div>
 </div>
 <div class="sect2">
-<h3 id="_using_this_project">.1. Using this project</h3>
+<h3 id="configure-events-registration">.1. Enabling and Disabling Public Events Registration</h3>
+<div class="sect3">
+<h4 id="_enabling_public_events_registration">.1.1. Enabling Public Events Registration</h4>
 <div class="paragraph">
-<p>Deployed as a war to the wildfly server when selected or included in a layer.</p>
+<p>The public events registration system is enabled by default if you have installed Bedework with the data available in the quickstart.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_disabling_public_events_registration">.1.2. Disabling Public Events Registration</h4>
+<div class="paragraph">
+<p>If you wish to disable the public events registration system, remove the "Eventreg admin token" from the System Preferences in the jmx console:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Log into the Bedework jmx console, e.g., <a href="http://localhost:8080/hawtio" class="bare">http://localhost:8080/hawtio</a></p>
+<div class="ulist">
+<ul>
+<li>
+<p>Click "org.bedework.bwengine" in the left menu, then "service=System" in the right menu</p>
+</li>
+<li>
+<p>Remove the value in the EventRegAdminToken field</p>
+</li>
+<li>
+<p>Click "Apply Changes"</p>
+</li>
+<li>
+<p>Invoke "saveConfig" to save your changes.</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_enabling_public_events_registration_possibly_after_upgrade_from_a_previous_release">.1.3. Enabling Public Events Registration (possibly after upgrade from a previous release)</h4>
+<div class="paragraph">
+<p>First, ensure that the CalWs interface is available. This is the SOAP service that the event registration service uses o communicate with bedework. In system.xml make sure the &lt;calSoapWsURI&gt; element is present and has the same value as the soap:address element in pubcalws-soap/wssvc.wsdl (this requires better explanation—it&#8217;s a file deployed in the bw-xml ear)</p>
+</div>
+<div class="paragraph">
+<p>If you have upgraded from an older release, you may not have the data required for event registration in your system yet. Follow these steps to turn on the event registration system: (Please note: the process outlined below is only set up for the default quickstart and postgresql configs at the moment.)</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Start up jboss and apacheDS</p>
+</li>
+<li>
+<p>Log into the JMX-Console shipped with Bedework&#8217;s JBoss, e.g., <a href="http://localhost:8080/hawtio" class="bare">http://localhost:8080/hawtio</a></p>
+<div class="ulist">
+<ul>
+<li>
+<p>Click "org.bedework.eventreg" in the left menu, then "service=Eventreg" in the right menu</p>
+<div class="ulist">
+<ul>
+<li>
+<p>If no database exists:</p>
+</li>
+<li>
+<p>Set “create” and “export” attributes to "True"</p>
+</li>
+<li>
+<p>Click "Apply changes" button (at the bottom of the list of attribute values)</p>
+</li>
+<li>
+<p>Find the "schema" operation in the lower list, and click the “Invoke” button to export schema and create database</p>
+</li>
+<li>
+<p>You should see a successful result; click "Back to MBean" button to return to "service=Eventreg"</p>
+</li>
+<li>
+<p>Point at needed systems:</p>
+</li>
+<li>
+<p>Set the WsdlUri attribute value to: <a href="http://localhost:8080/wsdls/pubcalws-soap/wssvc.wsdl" class="bare">http://localhost:8080/wsdls/pubcalws-soap/wssvc.wsdl</a></p>
+</li>
+<li>
+<p>Set the TzsUri attribute value to:  <a href="http://localhost:8080/tzsvr" class="bare">http://localhost:8080/tzsvr</a></p>
+</li>
+<li>
+<p>Click "Apply changes" button</p>
+</li>
+<li>
+<p>Admin token:</p>
+</li>
+<li>
+<p>If no admin token exists, click “generateAdminToken”</p>
+</li>
+<li>
+<p>You should see a successful result; click "Back to MBean" button to return to "service=Eventreg"</p>
+</li>
+<li>
+<p>You should see a string such as "c0e93685-93cd-4bee-bed2-9996b89be28c" in the EventRegAdminToken attribute value.</p>
+</li>
+<li>
+<p>Copy the EventRegAdminToken value (for use in the next step)</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Click "org.bedework.bwengine" in the left menu, then "service=System" in the right menu</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Paste the value into the EventRegAdminToken field</p>
+</li>
+<li>
+<p>Click "Apply Changes" button</p>
+</li>
+<li>
+<p>Invoke the "saveConfig" operation to save your changes.</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Test:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Add a new public event.  You should be able to select the checkbox "Users may register for this event", and make the event registerable.</p>
+</li>
+<li>
+<p>Visit the event in public client&#8201;&#8212;&#8201;you should be able to register for it.</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_notifications_from_eventreg">.1.4. Notifications from EventReg</h4>
+<div class="paragraph">
+<p>The event registration service will send notifications to the calendar engine when changes take place that might require notifying users. The event registration service calls the calendar engine notification web service (not to be confused with the notification engine). This web service allows the core engine to add notifications to the accounts of subscribed users. It is the job of the notification engine to forward those via email or some other service.</p>
+</div>
+<div class="paragraph">
+<p>To configure notifications from eventreg, you need to set the BwId, BwToken and BwUri properties in "service=Eventreg"and the NotifierId and NotifierToken values in  "org.bedework.bwengine" &#8594; "notifications"</p>
+</div>
 </div>
 </div>
 </div>
@@ -174,7 +323,7 @@ With this client, administrators can view and modify a registration list and dow
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2025-07-18 02:40:09 UTC
+Last updated 2025-07-13 12:56:06 -0400
 </div>
 </div>
 </body>
