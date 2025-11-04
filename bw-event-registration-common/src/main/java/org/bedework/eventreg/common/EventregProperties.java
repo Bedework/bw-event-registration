@@ -30,15 +30,15 @@ import java.util.List;
  */
 @ConfInfo(elementName = "eventreg-properties")
 public interface EventregProperties extends OrmConfigI {
-  /* ========================================================================
+  /* ============================================================
    * Attributes
-   * ======================================================================== */
+   * ============================================================ */
 
   /** Set the token for event reg admins
    *
    * @param val the token for event reg admins
    */
-  void setEventregAdminToken(final String val);
+  void setEventregAdminToken(String val);
 
   /** Get the token for event reg admins
    *
@@ -102,7 +102,7 @@ public interface EventregProperties extends OrmConfigI {
    *
    * @param val the token for bedework webservice calls
    */
-  void setBwId(final String val);
+  void setBwId(String val);
 
   /** Get the token for bedework webservice calls
    *
@@ -115,7 +115,7 @@ public interface EventregProperties extends OrmConfigI {
    *
    * @param val the token for bedework webservice calls
    */
-  void setBwToken(final String val);
+  void setBwToken(String val);
 
   /** Get the token for bedework webservice calls
    *
@@ -128,7 +128,7 @@ public interface EventregProperties extends OrmConfigI {
    *
    * @param val the url for bedework webservice calls
    */
-  void setBwUrl(final String val);
+  void setBwUrl(String val);
 
   /** Get the url for bedework webservice calls
    *
@@ -141,7 +141,7 @@ public interface EventregProperties extends OrmConfigI {
    *
    * @param val batch size for registration ids
    */
-  void setRegidBatchSize(final int val);
+  void setRegidBatchSize(int val);
 
   /**
    *
@@ -150,9 +150,9 @@ public interface EventregProperties extends OrmConfigI {
   @MBeanInfo("batch size for registration ids")
   int getRegidBatchSize();
 
-  /* ========================================================================
+  /* ============================================================
    * Schema
-   * ======================================================================== */
+   * ============================================================ */
 
   /**
    *
@@ -166,9 +166,9 @@ public interface EventregProperties extends OrmConfigI {
   @MBeanInfo("Full path of schema output file")
   String getSchemaOutFile();
 
-  /* ========================================================================
+  /* ============================================================
    * Dump/restore
-   * ======================================================================== */
+   * ============================================================ */
 
   /**
    *
@@ -249,7 +249,7 @@ public interface EventregProperties extends OrmConfigI {
    *
    * @param val how long we delay failed actions
    */
-  void setDelayMillis(final int val);
+  void setDelayMillis(int val);
 
   /**
    *
@@ -262,7 +262,7 @@ public interface EventregProperties extends OrmConfigI {
    *
    * @param val how often we retry failed actions
    */
-  void setRetries(final int val);
+  void setRetries(int val);
 
   /**
    *
@@ -275,7 +275,7 @@ public interface EventregProperties extends OrmConfigI {
    *
    * @param val the list of properties
    */
-  void setSyseventsProperties(final List<String> val);
+  void setSyseventsProperties(List<String> val);
 
   /**
    *
@@ -289,8 +289,8 @@ public interface EventregProperties extends OrmConfigI {
    * @param name of property
    * @param val of property
    */
-  void addSyseventsProperty(final String name,
-                            final String val);
+  void addSyseventsProperty(String name,
+                            String val);
 
   /** Get a sysevents property
    *
@@ -298,13 +298,13 @@ public interface EventregProperties extends OrmConfigI {
    * @return value or null
    */
   @ConfInfo(dontSave = true)
-  String getSyseventsProperty(final String name);
+  String getSyseventsProperty(String name);
 
   /** Remove a sysevents property
    *
    * @param name of property
    */
-  void removeSyseventsProperty(final String name);
+  void removeSyseventsProperty(String name);
 
   /** Set a sysevents property
    *
@@ -312,6 +312,6 @@ public interface EventregProperties extends OrmConfigI {
    * @param val of property
    */
   @ConfInfo(dontSave = true)
-  void setSyseventsProperty(final String name,
-                            final String val);
+  void setSyseventsProperty(String name,
+                            String val);
 }
