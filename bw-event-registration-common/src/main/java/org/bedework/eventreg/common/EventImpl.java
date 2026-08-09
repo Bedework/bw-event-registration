@@ -21,7 +21,6 @@ package org.bedework.eventreg.common;
 
 import org.bedework.util.calendar.XcalUtil;
 import org.bedework.util.calendar.XcalUtil.TzGetter;
-import org.bedework.util.timezones.DateTimeUtil;
 import org.bedework.util.timezones.Timezones;
 import org.bedework.util.timezones.TimezonesException;
 
@@ -43,11 +42,15 @@ import ietf.params.xml.ns.icalendar_2.XBedeworkRegistrationEndPropType;
 import ietf.params.xml.ns.icalendar_2.XBedeworkRegistrationStartPropType;
 import ietf.params.xml.ns.icalendar_2.XBedeworkWaitListLimitPropType;
 
+import jakarta.xml.bind.JAXBElement;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import jakarta.xml.bind.JAXBElement;
+import static org.bedework.util.dates.DateFormatter.icalDateFormat;
+import static org.bedework.util.dates.DateFormatter.icalDateTimeFormat;
+import static org.bedework.util.dates.DateFormatter.icalDateTimeUTCFormat;
 
 /**
  * @author douglm
@@ -490,19 +493,19 @@ public class EventImpl implements Event {
     }
 
     if (dt.length() == 8) {
-      return DateTimeUtil.fromISODate(dt);
+      return icalDateFormat.toDate(dt);
     }
 
     if (dt.endsWith("Z")) {
-      return DateTimeUtil.fromISODateTimeUTC(dt);
+      return icalDateTimeUTCFormat.toDate(dt);
     }
 
     if (tz == null) {
-      return DateTimeUtil.fromISODateTime(dt);
+      return icalDateTimeFormat.toDate(dt);
     }
 
     try {
-      return DateTimeUtil.fromISODateTime(dt, Timezones.getTz(tz));
+      return icalDateTimeFormat.toDate(dt, Timezones.getTz(tz));
     } catch (final TimezonesException e) {
       throw new EventregException(e);
     }

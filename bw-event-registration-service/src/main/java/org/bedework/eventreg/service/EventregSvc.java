@@ -569,7 +569,7 @@ public class EventregSvc extends ConfBase<EventregPropertiesImpl>
       fname.append(getDataOutPrefix());
 
       /* append "yyyyMMddTHHmmss" * /
-      fname.append(DateTimeUtil.isoDateTime());
+      fname.append(icalDateTimeFormat.fromDate());
       fname.append(".xml");
 
       d.setFilename(fname.toString());
